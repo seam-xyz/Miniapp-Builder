@@ -3,7 +3,8 @@ import './App.css';
 import "./styles.css";
 import { makeStyles } from "@material-ui/core/styles";
 import { useState } from "react";
-import  { Responsive, WidthProvider } from "react-grid-layout";
+import { Responsive, WidthProvider } from "react-grid-layout";
+import Widget from "./Widget"
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -25,6 +26,27 @@ function App() {
     setLayouts(allLayouts);
   };
 
+  /* Add your block here! */
+  // _______________________
+
+  let model = {uuid: "test"}
+
+  // _______________________
+  /* End customization */
+
+  const renderBlock = (model: any) => {
+    //let block = BlockFactory.getBlock(model)
+    //block.onEditCallback = onEditItem
+    //return block.render()
+  }
+
+  const onRemoveItem = (itemId: any) => {
+
+  };
+  const onEditItem = (itemId: any) => {
+
+  };
+
   return (
     <div className={classes.root}>
       <h1>Seam Block SDK</h1>
@@ -38,14 +60,12 @@ function App() {
         resizeHandles={['se']}
         measureBeforeMount={true}
       >
-          {/* <Widget id={model.uuid}
-                    onRemoveItem={onRemoveItem}
-                    onEditItem={onEditItem}
-                    backgroundColor="transparent"
-                    isInEditMode={isInEditMode}>
-                    {renderBlock(model)}
-                  </Widget> */}
-          <h1>Block 1</h1>
+        <Widget id={model.uuid}
+          onRemoveItem={onRemoveItem}
+          onEditItem={onEditItem}>
+          {renderBlock(model)}
+        </Widget>
+        <h1>Block 1</h1>
       </ResponsiveReactGridLayout>
     </div>
   );
