@@ -2,18 +2,15 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import Content from "./Content";
 import { BlockModel } from "./blocks/types";
-
-const drawerWidth = 240;
+import "./styles.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    height: "100%",
-    width: "100%"
+    flexDirection: "column"
   },
   content: {
     flexGrow: 1,
-    height: "100%"
   },
 }));
 
@@ -34,9 +31,8 @@ export default function App() {
 
   return (
     <div className={classes.root}>
-      <main className={classes.content}>
+        <h1> Seam Block SDK </h1>
         <Content loadedBlocks={[yourBlock]} />
-      </main>
     </div>
   );
 }
