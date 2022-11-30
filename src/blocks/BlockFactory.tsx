@@ -1,7 +1,7 @@
 import Block from './Block'
 import { BlockModel, BlockTypes } from './types'
 import IFrameBlock from './IFrameBlock'
-// import TextEditBlock from './TextEditBlock'
+import TextEditBlock from './TextEditBlock'
 import LinkBlock from './LinkBlock'
 import ImageBlock from './ImageBlock'
 import TwitterBlock from './TwitterBlock'
@@ -20,7 +20,7 @@ export default class BlockFactory {
        case "link": return new LinkBlock(model)
        case "image": return new ImageBlock(model)
        case "twitter": return new TwitterBlock(model)
-    //   case "text": return new TextEditBlock(model)
+       case "text": return new TextEditBlock(model)
     //   case "Image Button": return new ImageButton(model)
     //   case "tweet": return new TweetBlock(model)
     //   case "Link Bookmark": return new BookmarkBlock(model)
