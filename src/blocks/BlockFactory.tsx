@@ -5,8 +5,7 @@ import TextEditBlock from './TextEditBlock'
 import LinkBlock from './LinkBlock'
 import ImageBlock from './ImageBlock'
 import TwitterBlock from './TwitterBlock'
-// import ImageButton from './ImageButton'
-// import TweetBlock from './Tweet'
+import TweetBlock from './TweetBlock'
 // import BookmarkBlock from './BookmarkBlock'
 import EmptyBlock from './EmptyBlock'
 // import ProfileBlock from './ProfileBlock'
@@ -21,8 +20,7 @@ export default class BlockFactory {
        case "image": return new ImageBlock(model)
        case "twitter": return new TwitterBlock(model)
        case "text": return new TextEditBlock(model)
-    //   case "Image Button": return new ImageButton(model)
-    //   case "tweet": return new TweetBlock(model)
+       case "tweet": return new TweetBlock(model)
     //   case "Link Bookmark": return new BookmarkBlock(model)
     //   case "Map": return new BookmarkBlock(model)
     //   case "Music": return new BookmarkBlock(model)
