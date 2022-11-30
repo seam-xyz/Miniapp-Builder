@@ -25,6 +25,7 @@
     "react-giphy-searchbox": "^1.5.4",
     "react-grid-layout": "^1.3.4",
     "react-scripts": "5.0.1",
+    "react-sizeme": "^3.0.2",
     "react-twitter-embed": "^4.0.4",
     "react-uploader": "^2.1.0",
     "typescript": "^4.4.2",
