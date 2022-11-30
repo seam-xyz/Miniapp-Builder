@@ -4,7 +4,7 @@ import { Avatar, Button, Form, Input, Upload, Space, Select } from "antd";
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import './BlockStyles.css'
 import BlockFactory from './BlockFactory';
-import { IconsSelector } from './utils/IconsRow';
+import IconsRow, { IconsSelector } from './utils/IconsRow';
 import UploadFormComponent from './utils/UploadFormComponent';
 const { TextArea } = Input;
 

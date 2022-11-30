@@ -7,10 +7,10 @@ import ErrorIcon from '@material-ui/icons/Error';
 import EmailIcon from '@material-ui/icons/Email';
 import YoutubeIcon from '@material-ui/icons/YouTube';
 import LinkedIn from "@material-ui/icons/LinkedIn";
-import Discord from "./blockIcons/discordLogo.png";
-import Tiktok from "./blockIcons/tiktokIcon.png";
+import Discord from "../blockIcons/discordLogo.png";
+import Tiktok from "../blockIcons/tiktokIcon.png";
 import LinkIcon from "@material-ui/icons/Link";
-import mediumIcon from "./blockIcons/mediumIcon.svg"
+import mediumIcon from "../blockIcons/mediumIcon.svg"
 import Stack from '@mui/material/Stack';
 
 const { Option } = Select;

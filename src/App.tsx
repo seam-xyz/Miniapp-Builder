@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useState } from "react";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import Widget from "./Widget"
+import BlockFactory from './blocks/BlockFactory';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -19,7 +20,7 @@ const useStyles = makeStyles(() => ({
 
 function App() {
   const classes = useStyles();
-  let defaultLayout: ReactGridLayout.Layouts = { lg: [{ w: 4, h: 15, x: 0, y: 0, i: "0" }] }
+  let defaultLayout: ReactGridLayout.Layouts = { lg: [{ w: 4, h: 15, x: 0, y: 0, i: "test" }] }
   const [layouts, setLayouts] = useState(defaultLayout);
 
   const onLayoutChange = (currentLayout: ReactGridLayout.Layout[], allLayouts: ReactGridLayout.Layouts) => {
@@ -35,9 +36,9 @@ function App() {
   /* End customization */
 
   const renderBlock = (model: any) => {
-    //let block = BlockFactory.getBlock(model)
+    let block = BlockFactory.getBlock(model)
     //block.onEditCallback = onEditItem
-    //return block.render()
+    return block.render()
   }
 
   const onRemoveItem = (itemId: any) => {

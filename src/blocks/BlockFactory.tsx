@@ -8,7 +8,7 @@ import TwitterBlock from './TwitterBlock'
 import TweetBlock from './TweetBlock'
 import IFramelyBlock from './IFramelyBlock'
 import EmptyBlock from './EmptyBlock'
-// import ProfileBlock from './ProfileBlock'
+import ProfileBlock from './ProfileBlock'
 import GiphyBlock from './GiphyBlock'
 
 export default class BlockFactory {
@@ -23,7 +23,7 @@ export default class BlockFactory {
       case "Map": return new IFramelyBlock(model)
       case "Music": return new IFramelyBlock(model)
       case "video": return new IFramelyBlock(model)
-      //   case "profile": return new ProfileBlock(model)
+      case "profile": return new ProfileBlock(model)
       case "giphy": return new GiphyBlock(model)
       default: return new IFrameBlock(model)
     }

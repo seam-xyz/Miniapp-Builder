@@ -1,4 +1,35 @@
-@import "../../SeamDesignSystem.css";
+h1 {
+    font-family: "Public Sans";
+    font-size: 40px;
+    margin: 0;
+    font-weight: bold;
+}
+
+h2 {
+    font-family: "Public Sans";
+    font-weight: bold;
+    font-size: 28px;
+    margin: 0;
+}
+
+h3 {
+    font-family: "Public Sans";
+    font-weight: 600;
+    font-size: 24px;
+    margin: 0;
+}
+
+h4 {
+    font-family: "Public Sans";
+    font-size: 16px;
+    margin: 0;
+}
+
+h5 {
+    font-family: "Public Sans";
+    font-size: 14px;
+    margin: 0;
+}
 
 .Editor {
     text-align: center;

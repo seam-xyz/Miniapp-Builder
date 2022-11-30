@@ -1,0 +1,9 @@
+.save-modal-button {
+    background-color: #B9D5FF;
+    color: #181818;
+    float: right;
+    display: flex;
+    font-family: "Public Sans";
+    border-radius: 8px;
+    border-color: #B9D5FF;
+}
