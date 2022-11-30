@@ -4,7 +4,7 @@ import IFrameBlock from './IFrameBlock'
 // import TextEditBlock from './TextEditBlock'
 import LinkBlock from './LinkBlock'
 import ImageBlock from './ImageBlock'
-// import TwitterBlock from './Twitter'
+import TwitterBlock from './TwitterBlock'
 // import ImageButton from './ImageButton'
 // import TweetBlock from './Tweet'
 // import BookmarkBlock from './BookmarkBlock'
@@ -19,7 +19,7 @@ export default class BlockFactory {
        case "iframe": return new IFrameBlock(model)
        case "link": return new LinkBlock(model)
        case "image": return new ImageBlock(model)
-    //   case "twitter": return new TwitterBlock(model)
+       case "twitter": return new TwitterBlock(model)
     //   case "text": return new TextEditBlock(model)
     //   case "Image Button": return new ImageButton(model)
     //   case "tweet": return new TweetBlock(model)
