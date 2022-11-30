@@ -2,7 +2,7 @@ import Block from './Block'
 import { BlockModel, BlockTypes } from './types'
 import IFrameBlock from './IFrameBlock'
 // import TextEditBlock from './TextEditBlock'
-// import LinkBlock from './LinkBlock'
+import LinkBlock from './LinkBlock'
 // import ImageBlock from './ImageBlock'
 // import TwitterBlock from './Twitter'
 // import ImageButton from './ImageButton'
@@ -17,7 +17,7 @@ export default class BlockFactory {
   static getBlock(model: BlockModel): Block {
     switch (model.type) {
        case "iframe": return new IFrameBlock(model)
-    //   case "link": return new LinkBlock(model)
+       case "link": return new LinkBlock(model)
     //   case "image": return new ImageBlock(model)
     //   case "twitter": return new TwitterBlock(model)
     //   case "text": return new TextEditBlock(model)

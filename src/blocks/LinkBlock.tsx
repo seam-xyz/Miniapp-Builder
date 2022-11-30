@@ -1,38 +1,46 @@
 import Block from './Block'
 import { BlockModel } from './types'
-import { Button, Form, Input, message, Space } from "antd";
+import { Button, Form, Input } from "antd";
 import BlockFactory from './BlockFactory';
-import './BlockStyles.css'
 
-export default class IFrameBlock extends Block {
+export default class LinkBlock extends Block {
   render() {
     if (Object.keys(this.model.data).length === 0) {
       return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
     }
 
     let url = this.model.data["url"]
+    let title = this.model.data["title"]
     if (url === undefined) {
       return this.renderErrorState()
     }
 
     return (
-      <iframe
-        key={url}
-        title="Iframe"
-        src={url}
-        style={{
-          height: `100%`,
-          width: `100%`
-        }}
-      />
+      <a href={url} target="_blank">
+        <Button
+          block
+          type="primary"
+          ghost
+          style={{
+            backgroundColor: `#0051E8`,
+            color: 'white',
+            whiteSpace: "normal",
+            height: '100%',
+            fontFamily: "Public Sans"
+          }}>
+          {title}
+        </Button>
+      </a>
     );
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
-    const onFinish = async (values: any) => {
+    const onFinish = (values: any) => {
       let url = values['url']
-      url = (url.indexOf('://') === -1) ? 'http://' + url : url;
+      url = (url.indexOf(':') === -1) ? 'http://' + url : url;
+      
       this.model.data['url'] = url
+      this.model.data['title'] = values['title']
       done(this.model)
     };
 
@@ -51,12 +59,24 @@ export default class IFrameBlock extends Block {
         }}
         initialValues={{
           remember: false,
-          url: this.model.data['url']
+          url: this.model.data['url'],
+          title: this.model.data['title']
         }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
+        <Form.Item
+          label="Title"
+          name="title"
+          rules={[
+            {
+              required: false,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
         <Form.Item
           label="URL"
           name="url"
