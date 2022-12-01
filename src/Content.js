@@ -3,7 +3,6 @@
 
 import React, { useState } from "react";
 import { Card, Modal } from "antd";
-//import 'antd/dist/antd.css';
 import { v1 as uuidv1 } from 'uuid';
 import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 import { withSize } from "react-sizeme";
@@ -25,11 +24,14 @@ function Content({ size: { width }, loadedBlocks }) {
   const onRemoveItem = (itemId) => {
     setBlocks(blocks.filter((model) => model.uuid !== itemId));
   };
+
   const onEditItem = (itemId) => {
-    const indexOfEditedBlock = blocks.findIndex(element => element.uuid == itemId)
+    const indexOfEditedBlock = blocks.findIndex(element => element.uuid === itemId)
     console.log("editing block " + indexOfEditedBlock)
     setIsEditingBlock(indexOfEditedBlock)
   };
+
+  // eslint-disable-next-line
   const onAddItem = (blockName) => {
     const newBlock = {
       type: blockName,
@@ -43,10 +45,10 @@ function Content({ size: { width }, loadedBlocks }) {
     return block.render()
   }
   const renderBlockEditModal = () => {
-    const block = isEditingBlock != -1 ? BlockFactory.getBlock(blocks[isEditingBlock]) : null
+    const block = isEditingBlock !== -1 ? BlockFactory.getBlock(blocks[isEditingBlock]) : null
     return (
       <Modal
-        visible={isEditingBlock != -1}
+        open={isEditingBlock !== -1}
         footer={null}
         onCancel={() => setIsEditingBlock(-1)}
         bodyStyle={{

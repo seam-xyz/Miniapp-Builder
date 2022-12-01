@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "seam-block-sdk",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -18,7 +18,7 @@
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@types/react-grid-layout": "^1.3.2",
-    "antd": "^5.0.2",
+    "antd": "^5.0.3",
     "draft-js": "^0.11.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
