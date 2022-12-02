@@ -47,6 +47,7 @@ read -r emptyDescription
 
 echo "Awesome! Sewing your $name block together..."
 
+# Add the new block to the types dictionary
 output="src/blocks/types.tsx"
 
 sed -i '' -e '$ d' $output
@@ -56,8 +57,15 @@ echo "  \"$name\": {
         displayDescription: \"$description\",
         emptyTitle: \"$emptyTitle\",
         emptySubtitle: \"$emptyDescription\",
-        icon: $name-icon,
+        icon: ${name}Icon,
         deprecated: false
     },
 };" >> $output
-sed -i '' -e '$ d' $output
+
+# Create a template file for the new block
+newBlock="src/blocks/${name}Block.tsx"
+cp "src/blocks/BlockTemplate.txt" $newBlock
+sed -i '' "s/%NAME%/${name}/g" $newBlock
+
+# Add the new block to the block factory
+

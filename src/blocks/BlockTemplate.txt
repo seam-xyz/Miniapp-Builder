@@ -1,0 +1,24 @@
+import Block from './Block'
+import { BlockModel } from './types'
+import BlockFactory from './BlockFactory';
+import './BlockStyles.css'
+
+export default class %NAME%Block extends Block {
+  render() {
+    return (
+      <h1>%NAME% Block!</h1>
+    );
+  }
+
+  renderEditModal(done: (data: BlockModel) => void) {
+    return (
+      <h1>Edit %NAME% Block!</h1>
+    )
+  }
+
+  renderErrorState() {
+    return (
+      <h1>Error!</h1>
+    )
+  }
+}
