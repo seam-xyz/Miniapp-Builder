@@ -25,6 +25,7 @@ export default class BlockFactory {
       case "video": return new IFramelyBlock(model)
       case "profile": return new ProfileBlock(model)
       case "giphy": return new GiphyBlock(model)
+      // new blocks go here
       default: return new IFrameBlock(model)
     }
   }

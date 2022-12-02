@@ -61,11 +61,19 @@ echo "  \"$name\": {
         deprecated: false
     },
 };" >> $output
+echo "✅ Added $name to types.tsx"
 
 # Create a template file for the new block
 newBlock="src/blocks/${name}Block.tsx"
 cp "src/blocks/BlockTemplate.txt" $newBlock
 sed -i '' "s/%NAME%/${name}/g" $newBlock
+echo "✅ Created ${name}Block.tsx for your new block"
 
 # Add the new block to the block factory
-
+placeholder="\/\/ new blocks go here"
+placeholderImport="import GiphyBlock from './GiphyBlock"
+importBlock="import ${name}Block from .\/${name}Block"
+newBlockCase="case \"$name\": return new ${name}Block(model)\n      $placeholder"
+sed -i '' "s/${placeholder}/${newBlockCase}/g" "src/blocks/BlockFactory.tsx"
+#sed -i'.tsx' "1i\ $importBlock" "src/blocks/BlockFactory.tsx"
+echo "✅ Added ${name} to the BlockFactory.tsx"
