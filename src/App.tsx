@@ -21,7 +21,7 @@ export default function App() {
   // vvvvvvvvvvvvvvvvv
 
   let yourBlock: BlockModel = {
-    type: "iframe", // rename to whatever you want your block name to be
+    type: "%NAME%",
     data: {},
     uuid: "test"
   }
