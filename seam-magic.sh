@@ -67,7 +67,7 @@ echo "  \"$shortName\": {
         displayDescription: \"$description\",
         emptyTitle: \"$emptyTitle\",
         emptySubtitle: \"$emptyDescription\",
-        icon: ${shortName}Icon,
+        icon: \"${shortName}Icon\", \/\/ TODO: insert your block icon here
         deprecated: false
     },
 };" >> $output
@@ -88,7 +88,7 @@ fi
 
 # Add the new block to the block factory
 placeholder="\/\/ new blocks go here"
-importBlock="import ${shortName}Block from \'./${shortName}Block\n${placeholderImport}\'"
+importBlock="import ${shortName}Block from \'./${shortName}Block\'\n"
 newBlockCase="case \"$shortName\": return new ${shortName}Block(model)\n      $placeholder"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
