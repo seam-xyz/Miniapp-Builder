@@ -67,7 +67,7 @@ echo "  \"$shortName\": {
         displayDescription: \"$description\",
         emptyTitle: \"$emptyTitle\",
         emptySubtitle: \"$emptyDescription\",
-        icon: \"${shortName}Icon\", \/\/ TODO: insert your block icon here
+        icon: \"${shortName}Icon\", // TODO: insert your block icon here
         deprecated: false
     },
 };" >> $output
@@ -108,9 +108,9 @@ echo "✅ Added ${name} to the BlockFactory.tsx"
 
 # Use your custom block as default in App.tsx
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        sed -i '' "s/%NAME%/${shortName}/g" "src/App.tsx"
-elif [[ "$OSTYPE" == "darwin"* ]]; then
         sed -i "s/%NAME%/${shortName}/g" "src/App.tsx"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' "s/%NAME%/${shortName}/g" "src/App.tsx"
 fi
 echo "✅ Using your ${name} block as default in App.tsx"
 
