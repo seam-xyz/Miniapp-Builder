@@ -88,14 +88,19 @@ fi
 
 # Add the new block to the block factory
 placeholder="\/\/ new blocks go here"
-placeholderImport="import GiphyBlock from './GiphyBlock"
-importBlock="import ${shortName}Block from .\/${shortName}Block"
+importBlock="import ${shortName}Block from \'./${shortName}Block\n${placeholderImport}\'"
 newBlockCase="case \"$shortName\": return new ${shortName}Block(model)\n      $placeholder"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         sed -i "s/${placeholder}/${newBlockCase}/g" "src/blocks/BlockFactory.tsx"
+        sed -i '1i\
+'"$importBlock"'
+' "src/blocks/BlockFactory.tsx"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
         sed -i '' "s/${placeholder}/${newBlockCase}/g" "src/blocks/BlockFactory.tsx"
+        sed -i '' '1i\
+'"$importBlock"'
+' "src/blocks/BlockFactory.tsx"
 fi
 
 #sed -i'.tsx' "1i\ $importBlock" "src/blocks/BlockFactory.tsx"
