@@ -82,8 +82,9 @@ fi
 
 # Add the new block to the block factory
 placeholder="\/\/ new blocks go here"
-importBlock="import ${shortName}Block from \'./${shortName}Block\'\n"
-newBlockCase="case \"$shortName\": return new ${shortName}Block(model)\n      $placeholder"
+importBlock="import ${shortName}Block from \'./${shortName}Block\'
+"
+newBlockCase="case \"$shortName\": return new ${shortName}Block(model)\\n      $placeholder"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         sed -i "s/${placeholder}/${newBlockCase}/g" "src/blocks/BlockFactory.tsx"
@@ -97,7 +98,6 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 ' "src/blocks/BlockFactory.tsx"
 fi
 
-#sed -i'.tsx' "1i\ $importBlock" "src/blocks/BlockFactory.tsx"
 echo "✅ Added ${name} to the BlockFactory.tsx"
 
 # Use your custom block as default in App.tsx
@@ -119,4 +119,4 @@ echo "
 "
 
 open $newBlock
-echo "When you're ready, run `yarn start` to see your block in action!"
+echo "When you're ready, run yarn start to see your block in action!"
