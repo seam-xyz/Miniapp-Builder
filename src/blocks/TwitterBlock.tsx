@@ -20,6 +20,11 @@ export default class TwitterBlock extends Block {
       <TwitterTimelineEmbed
         sourceType="profile"
         screenName={name}
+        options={{
+          height: "1200",
+        }}
+        noScrollbar={true}
+        noBorders={true}
       />
     );
   }

@@ -3,6 +3,7 @@ import { BlockModel } from './types'
 import { Button, Form, Input, message, Space } from "antd";
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
+import Iframely from './utils/Iframely';
 
 export default class IFrameBlock extends Block {
   render() {
@@ -11,28 +12,49 @@ export default class IFrameBlock extends Block {
     }
 
     let url = this.model.data["url"]
+    let iframeAllowed = this.model.data["iframeAllowed"] ?? true
     if (url === undefined) {
       return this.renderErrorState()
     }
 
-    return (
-      <iframe
-        key={url}
-        title="Iframe"
-        src={url}
-        style={{
-          height: `100%`,
-          width: `100%`
-        }}
-      />
-    );
+    if (iframeAllowed) {
+      return (
+        <iframe
+          key={url}
+          title="Iframe"
+          src={url}
+          style={{
+            height: `100%`,
+            width: `100%`
+          }}
+        />
+      );
+    } else {
+      return (
+        // fallback to a link bookmark
+        <Iframely
+          url={url}
+          style={{
+            position: "absolute",
+            display: "flex",
+            height: `100%`,
+            width: `100%`
+          }} />
+      );
+    }
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
     const onFinish = async (values: any) => {
       let url = values['url']
       url = (url.indexOf('://') === -1) ? 'http://' + url : url;
+      // Check to see if the iframe can embed properly. Many web2 walled gardens prevent direct embedding.
+      const allowedResponse = await fetch("https://www.seam.so/api/iframe.js?url=" + url)
+      const allowedJSON = await allowedResponse.json()
+      const iframeAllowed = allowedJSON["iframeAllowed"]
+      console.log("iframe response: " + iframeAllowed)
       this.model.data['url'] = url
+      this.model.data['iframeAllowed'] = iframeAllowed
       done(this.model)
     };
 
