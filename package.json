@@ -28,6 +28,7 @@
     "react-sizeme": "^3.0.2",
     "react-twitter-embed": "^4.0.4",
     "react-uploader": "^2.1.0",
+    "source-map-explorer": "^2.5.3",
     "typescript": "^4.4.2",
     "web-vitals": "^2.1.0"
   },
@@ -35,7 +36,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "eslintConfig": {
     "extends": [

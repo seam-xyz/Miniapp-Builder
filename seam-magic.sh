@@ -32,20 +32,14 @@ echo "                                ./(,
                                      .(%%#,                                     
 "
 echo "Welcome to the Seam Block Editor! Let's make some Seam Magic and create a new block together."
-echo "[1/5] What should your block be called? (Visible to users): "
+echo "[1/3] What should your block be called? (Visible to users): "
 read -r name
 
-echo "[2/5] What's the 1 word title of your block? (used only in code): "
+echo "[2/3] What's the 1 word title of your block? (used only in code): "
 read -r shortName
 
-echo "[3/5] What's the short description of your block? : "
+echo "[3/3] What's the short description of your block?"
 read -r description
-
-echo "[4/5] What should the title be when the block is empty? (Empty Title) : "
-read -r emptyTitle
-
-echo "[5/5] What should the description be when the block is empty? : "
-read -r emptyDescription
 
 echo "Awesome! Sewing your $name block together..."
 
@@ -65,8 +59,8 @@ echo "  \"$shortName\": {
         type: \"$shortName\",
         displayName: \"$name\",
         displayDescription: \"$description\",
-        emptyTitle: \"$emptyTitle\",
-        emptySubtitle: \"$emptyDescription\",
+        emptyTitle: \"Empty $name Block\",
+        emptySubtitle: \"Tap here to setup your $name block!\",
         icon: \"${shortName}Icon\", // TODO: insert your block icon here
         deprecated: false
     },
@@ -88,8 +82,9 @@ fi
 
 # Add the new block to the block factory
 placeholder="\/\/ new blocks go here"
-importBlock="import ${shortName}Block from \'./${shortName}Block\'\n"
-newBlockCase="case \"$shortName\": return new ${shortName}Block(model)\n      $placeholder"
+importBlock="import ${shortName}Block from \'./${shortName}Block\'
+"
+newBlockCase="case \"$shortName\": return new ${shortName}Block(model)\\n      $placeholder"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         sed -i "s/${placeholder}/${newBlockCase}/g" "src/blocks/BlockFactory.tsx"
@@ -103,7 +98,6 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 ' "src/blocks/BlockFactory.tsx"
 fi
 
-#sed -i'.tsx' "1i\ $importBlock" "src/blocks/BlockFactory.tsx"
 echo "✅ Added ${name} to the BlockFactory.tsx"
 
 # Use your custom block as default in App.tsx
@@ -125,3 +119,4 @@ echo "
 "
 
 open $newBlock
+echo "When you're ready, run yarn start to see your block in action!"

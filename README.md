@@ -1,21 +1,25 @@
 # Seam Block SDK
 ### 🚧 This SDK is in active development. Join us along the journey! 🚧
 
-[Seam](www.seam.so) is a community-developed platform to code, design, and curate your perfect social spaces. Each page is composed of blocks. We provide a testing harness, a mocked version of a card and data storage, which allows quick iteration on your block without ever touching production data.
-
-What do you get by creating blocks on Seam?
-- Learn to code Javascript and React. All of our blocks are open source so that you can learn from examples.
-
-# Quickstart
-
-1. git clone the repo
-2. `yarn install`
-3. `./seam-magic.sh` will guide you through creating a template of an empty block, given whatever name you choose!
-4. `yarn start` to see your new block in action.
+[Seam](https://www.seam.so) is a community-developed platform to code, design, and curate your perfect social spaces. Each page is composed of blocks. We provide a testing harness, a mocked version of a card and data storage, which allows quick iteration on your block without ever touching production data.
 
 ### What are blocks?
 
 Blocks are software Legos; they are small, re-usable components and functionality.
+
+What do you get by creating blocks on Seam?
+- Accepted blocks go like on [seam.so](https://www.seam.so) so you can add them into your profile!
+- Learn to code Javascript and React. All of our blocks are open source so that you can learn from examples.
+
+# Quickstart
+| Tutorial Pt. 1      | Tutorial Pt. 2 |
+| ----------- | ----------- |
+| [![Block Tutorial Pt. 1](https://cdn.loom.com/sessions/thumbnails/95c436357b5b4782a4803577b4a25ad7-with-play.gif)](https://www.loom.com/embed/95c436357b5b4782a4803577b4a25ad7)      | [![Block Tutorial Pt. 2](https://cdn.loom.com/sessions/thumbnails/603a4d998c354b01bb1ac44003f5f7ef-with-play.gif)](https://www.loom.com/embed/603a4d998c354b01bb1ac44003f5f7ef)       |
+
+1. git clone the repo, `cd Block-SDK`
+2. `yarn install`
+3. `./seam-magic.sh` will guide you through creating a template of an empty block, given whatever name you choose!
+4. `yarn start` to see your new block in action.
 
 ### Seam Data Access
 
