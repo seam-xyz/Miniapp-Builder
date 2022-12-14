@@ -75,6 +75,7 @@ export default class IFrameBlock extends Block {
           margin="normal"
           required
           fullWidth
+          defaultValue={this.model.data['url']}
           id="url"
           label="URL"
           name="url"

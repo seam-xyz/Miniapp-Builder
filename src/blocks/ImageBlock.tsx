@@ -52,6 +52,7 @@ export default class ImageBlock extends Block {
         <TextField
           margin="normal"
           required
+          defaultValue={this.model.data['url']}
           fullWidth
           id="url"
           label="URL"
