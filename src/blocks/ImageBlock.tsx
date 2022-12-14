@@ -1,8 +1,10 @@
 import Block from './Block'
 import { BlockModel } from './types'
-import { Button, Form, Input } from "antd";
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
 export default class ImageBlock extends Block {
   render() {
@@ -28,8 +30,10 @@ export default class ImageBlock extends Block {
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
-    const onFinish = (values: any) => {
-      let url = values['url']
+    const onFinish = (event: any) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      let url = data.get('url') as string
       url = (url.indexOf('://') === -1) ? 'http://' + url : url;
       this.model.data['url'] = url
       done(this.model)
@@ -40,40 +44,29 @@ export default class ImageBlock extends Block {
     };
 
     return (
-      <Form
-        name="basic"
-        labelCol={{
-          span: 8,
-        }}
-        wrapperCol={{
-          span: 16,
-        }}
-        initialValues={{
-          remember: false,
-          url: this.model.data['url']
-        }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
+      <Box
+        component="form"
+        onSubmit={onFinish}
+        style={{}}
       >
-        <Form.Item
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="url"
           label="URL"
           name="url"
-          rules={[
-            {
-              required: true,
-              message: 'Wait, you didn\'t add a url here',
-            },
-          ]}
+          autoFocus
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          className="save-modal-button"
+          sx={{ mt: 3, mb: 2 }}
         >
-          <Input />
-        </Form.Item>
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type="primary" htmlType="submit" className="save-modal-button">
-            Save
-          </Button>
-        </Form.Item>
-      </Form>
+          Save
+        </Button>
+      </Box>
     )
   }
 
