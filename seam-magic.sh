@@ -84,7 +84,7 @@ fi
 placeholder="\/\/ new blocks go here"
 importBlock="import ${shortName}Block from \'./${shortName}Block\'
 "
-newBlockCase="case \"$shortName\": return new ${shortName}Block(model)\\n      $placeholder"
+newBlockCase="case \"$shortName\": return new ${shortName}Block(model, theme)\\n      $placeholder"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         sed -i "s/${placeholder}/${newBlockCase}/g" "src/blocks/BlockFactory.tsx"
