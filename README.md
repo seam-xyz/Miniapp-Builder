@@ -38,6 +38,31 @@ Each block is given a `BlockModel` from our server, which holds a key/value stor
 
 When the block is added to a card in production, it hooks into a fully functioning data layer using the same api that was previously mocked for your local development.
 
+### Theming
+
+As the block developer, you decide how you want your block to reflect the global card theme. Each Seam card has a theme, which determines background color, block background color, font, and many other attributes. Themes are implemented as [`MUI Themes`](https://mui.com/material-ui/customization/theming/), which provides handy defaults and color palettes for theming components.
+
+To use the theme, you can find it in your block at `this.theme`. The key variables you might want are as follows:
+
+```
+palette: {
+    primary: {          // Card Background
+      main: "#020303"
+    },
+    secondary: {
+      main: "#1C1C1C"  // Block Background
+    },
+    info: {
+      main: "#CCFE07"  // Accent Color
+    }
+  },
+  typography: {
+    fontFamily: "monospace"
+  }
+```
+
+You can find working examples inside of the `LinkBlock.tsx` and the default theme in `App.tsx`. It is entirely optional to use the themes in your block, but it can add greater cohesion and make your block fit nicer inside of user's cards. If you don't use the theme variables, your block will have a white background by default, and it is up to you to define a font.
+
 # Block Submission
 Once you are happy with your block, it's time to create a pull request so your block can go live on the [seam.so](www.seam.so) site!
 
