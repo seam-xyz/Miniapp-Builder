@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, createTheme, ThemeProvider } from "@material-ui/core/styles";
 
 import Content from "./Content";
 import { BlockModel } from "./blocks/types";
@@ -13,6 +13,20 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
 }));
+
+const defaultTheme = createTheme({
+  palette: {
+    primary: {        // Card Background
+      main: "#FEFEFE"
+    },
+    secondary: {
+      main: "#FEFEFE"  // Block Background
+    },
+  },
+  typography: {
+    fontFamily: "Public Sans"
+  }
+});
 
 export default function App() {
   const classes = useStyles();
@@ -30,9 +44,11 @@ export default function App() {
   // ^^^^^^^^^^^^^^^^^
 
   return (
-    <div className={classes.root}>
+    <ThemeProvider theme={defaultTheme}>
+      <div className={classes.root}>
         <h1> Seam Block SDK </h1>
         <Content loadedBlocks={[yourBlock]} />
-    </div>
+      </div>
+    </ThemeProvider>
   );
 }
