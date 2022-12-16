@@ -21,7 +21,7 @@ export default function App() {
   // vvvvvvvvvvvvvvvvv
 
   let yourBlock: BlockModel = {
-    type: "%NAME%",
+    type: "link",
     data: {},
     uuid: "test"
   }
