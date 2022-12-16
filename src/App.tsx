@@ -17,14 +17,17 @@ const useStyles = makeStyles((theme) => ({
 const defaultTheme = createTheme({
   palette: {
     primary: {        // Card Background
-      main: "#FEFEFE"
+      main: "#020303"
     },
     secondary: {
-      main: "#FEFEFE"  // Block Background
+      main: "#1C1C1C"  // Block Background
     },
+    info: {
+      main: "#CCFE07"  // Accent Color
+    }
   },
   typography: {
-    fontFamily: "Public Sans"
+    fontFamily: "monospace"
   }
 });
 
