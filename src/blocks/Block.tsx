@@ -1,8 +1,10 @@
 import { BlockModel } from './types'
+import { Theme } from "@material-ui/core"
 
 interface IBlock {
     name: string
     model: BlockModel
+    theme: Theme
     onEditCallback?: () => void
 
     render(): React.ReactNode
@@ -13,11 +15,13 @@ interface IBlock {
 export default class Block implements IBlock {
     name: string;
     model: BlockModel;
+    theme: Theme;
     onEditCallback?: () => void;
 
-    constructor(model: BlockModel) {
+    constructor(model: BlockModel, theme: Theme) {
         this.name = model.type
         this.model = model
+        this.theme = theme
     }
 
     render(): React.ReactNode {

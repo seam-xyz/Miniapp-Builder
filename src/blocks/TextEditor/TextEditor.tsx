@@ -158,7 +158,7 @@ const TextEditor: React.FC<TextEditorProps> = (props) => {
       <Card className="editorBar">
         <button onMouseDown={(e) => handleBlockClick(e, "header-one")}>H1</button>
         <button onMouseDown={(e) => handleBlockClick(e, "header-two")}>H2</button>
-        <button onMouseDown={(e) => handleBlockClick(e, "header-three")}>H3</button>
+        <button onMouseDown={(e) => handleBlockClick(e, "header-four")}>H3</button>
         <button onMouseDown={(e) => handleBlockClick(e, "unstyled")}>P</button>
         <button onMouseDown={(e) => handleTogggleClick(e, "BOLD")}><img src={bold} /></button>
         <button onMouseDown={(e) => handleTogggleClick(e, "UNDERLINE")}><img src={underline} /></button>

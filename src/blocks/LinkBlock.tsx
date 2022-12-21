@@ -22,11 +22,11 @@ export default class LinkBlock extends Block {
         <Button
           variant="contained"
           style={{
-            backgroundColor: `#0051E8`,
-            color: 'white',
+            backgroundColor: this.theme.palette.info.main,
+            color: this.theme.palette.primary.main,
+            whiteSpace: "normal",
             height: '100%',
-            width: '100%',
-            fontFamily: "Public Sans",
+            fontFamily: this.theme.typography.fontFamily,
             textTransform: "none"
           }}>
           {title}

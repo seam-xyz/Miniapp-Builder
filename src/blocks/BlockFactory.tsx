@@ -1,4 +1,5 @@
 import Block from './Block'
+import { Theme } from "@material-ui/core"
 import { BlockModel, BlockTypes } from './types'
 import IFrameBlock from './IFrameBlock'
 import TextEditBlock from './TextEditBlock'
@@ -12,21 +13,21 @@ import ProfileBlock from './ProfileBlock'
 import GiphyBlock from './GiphyBlock'
 
 export default class BlockFactory {
-  static getBlock(model: BlockModel): Block {
+  static getBlock(model: BlockModel, theme: Theme): Block {
     switch (model.type) {
-      case "iframe": return new IFrameBlock(model)
-      case "link": return new LinkBlock(model)
-      case "image": return new ImageBlock(model)
-      case "twitter": return new TwitterBlock(model)
-      case "text": return new TextEditBlock(model)
-      case "tweet": return new TweetBlock(model)
-      case "Map": return new IFramelyBlock(model)
-      case "Music": return new IFramelyBlock(model)
-      case "video": return new IFramelyBlock(model)
-      case "profile": return new ProfileBlock(model)
-      case "giphy": return new GiphyBlock(model)
+      case "iframe": return new IFrameBlock(model, theme)
+      case "link": return new LinkBlock(model, theme)
+      case "image": return new ImageBlock(model, theme)
+      case "twitter": return new TwitterBlock(model, theme)
+      case "text": return new TextEditBlock(model, theme)
+      case "tweet": return new TweetBlock(model, theme)
+      case "Map": return new IFramelyBlock(model, theme)
+      case "Music": return new IFramelyBlock(model, theme)
+      case "video": return new IFramelyBlock(model, theme)
+      case "profile": return new ProfileBlock(model, theme)
+      case "giphy": return new GiphyBlock(model, theme)
       // new blocks go here
-      default: return new IFrameBlock(model)
+      default: return new IFrameBlock(model, theme)
     }
   }
 

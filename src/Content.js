@@ -11,10 +11,12 @@ import Modal from '@mui/material/Modal';
 
 // Blocks
 import BlockFactory from './blocks/BlockFactory';
+import { useTheme } from "@material-ui/core";
 
 function Content({ size: { width }, loadedBlocks }) {
   const [layouts, setLayouts] = useState({ lg: [{ x: 0, y: 0, w: 5, h: 15, i: "test" }] });
   const [blocks, setBlocks] = useState(loadedBlocks);
+  const theme = useTheme()
 
   const [isEditingBlock, setIsEditingBlock] = useState(-1) // number is the index of the block being edited
   const onLayoutChange = (_, allLayouts) => {
@@ -42,7 +44,7 @@ function Content({ size: { width }, loadedBlocks }) {
     setBlocks([...blocks, newBlock]);
   };
   const renderBlock = (model) => {
-    let block = BlockFactory.getBlock(model)
+    let block = BlockFactory.getBlock(model, theme)
     return block.render()
   }
   const renderBlockEditModal = () => {
