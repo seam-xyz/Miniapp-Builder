@@ -40,12 +40,14 @@ export default class ProfileBlock extends Block {
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
-    const onFinish = (values: any) => {
-      console.log('Success:', values);
-      this.model.data['bio'] = values['bio']
-      this.model.data['title'] = values['title']
-      this.model.data['icons'] = values['icons']
-      done(this.model)
+    const onFinish = (event: any) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      console.log('Success:', event.currentTarget);
+      this.model.data['bio'] = data.get('bio') as string
+      this.model.data['title'] = data.get('title') as string
+      this.model.data['icons'] = data.get('icons') as string
+      //done(this.model)
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -89,7 +91,7 @@ export default class ProfileBlock extends Block {
         />
         {uploaderComponent}
         <Form />
-         <Button
+        <Button
           type="submit"
           variant="contained"
           className="save-modal-button"
@@ -195,42 +197,48 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Form: React.FC = () => {
-  const classes = useStyles();
-  const [inputRows, setInputRows] = useState<JSX.Element[]>([
-    <FormControl key={0} className={classes.formControl}>
-      <InputLabel htmlFor="input-1">Input 1</InputLabel>
-      <TextField id="input-1" />
-      <Button variant="contained" color="secondary" className={classes.button} onClick={() => deleteInputRow(0)}>
-        Delete
-      </Button>
-    </FormControl>,
-  ]);
+  const [formFields, setFormFields] = useState([
+    { name: '', age: '' },
+  ])
 
-  const addInputRow = () => {
-    const newInputRow = (
-      <FormControl key={inputRows.length} className={classes.formControl}>
-        <InputLabel htmlFor={`input-${inputRows.length + 1}`}>Input {inputRows.length + 1}</InputLabel>
-        <TextField id={`input-${inputRows.length + 1}`} />
-        <Button variant="contained" color="secondary" className={classes.button} onClick={() => deleteInputRow(inputRows.length)}>
-          Delete
-        </Button>
-      </FormControl>
-    );
-    setInputRows([...inputRows, newInputRow]);
-  };
+  const handleFormChange = (event: any, index: number) => {
+    let data: any = [...formFields];
+    data[index][event.target.name] = event.target.value;
+    setFormFields(data);
+  }
 
-  const deleteInputRow = (index: number) => {
-    const newInputRows = [...inputRows];
-    newInputRows.splice(index, 1);
-    setInputRows(newInputRows);
-  };
+  const addFields = () => {
+    let object = {
+      name: '',
+      age: ''
+    }
+
+    setFormFields([...formFields, object])
+  }
+
+  const removeFields = (index: number) => {
+    let data = [...formFields];
+    data.splice(index, 1)
+    setFormFields(data)
+  }
 
   return (
-    <form>
-      {inputRows}
-      <Button variant="contained" color="primary" className={classes.button} onClick={addInputRow}>
-        Add input
-      </Button>
-    </form>
+    <div>
+      {formFields.map((form, index) => {
+        return (
+          <div key={index}>
+            <IconsSelector />
+            <input
+              name='age'
+              placeholder='Age'
+              onChange={event => handleFormChange(event, index)}
+              value={form.age}
+            />
+            <button onClick={() => removeFields(index)}>Remove</button>
+          </div>
+        )
+      })}
+      <button onClick={addFields}>Add More..</button>
+    </div>
   );
 };
