@@ -54,7 +54,9 @@ function Content({ size: { width }, loadedBlocks }) {
         open={isEditingBlock !== -1}
         footer={null}
         onClose={() => setIsEditingBlock(-1)}
-        style={{ 
+        style={{
+          overflow:'scroll',
+          display:'block', 
           fontSize: "16px", 
           fontWeight: "500" 
         }}
