@@ -15,6 +15,7 @@ export default class IFrameBlock extends Block {
 
     let url = this.model.data["url"]
     let iframeAllowed = this.model.data["iframeAllowed"] ?? true
+    console.log(iframeAllowed)
     if (url === undefined) {
       return this.renderErrorState()
     }
@@ -53,9 +54,16 @@ export default class IFrameBlock extends Block {
       let url = data.get('url') as string
       url = (url.indexOf('://') === -1) ? 'http://' + url : url;
       // Check to see if the iframe can embed properly. Many web2 walled gardens prevent direct embedding.
-      const allowedResponse = await fetch("https://www.seam.so/api/iframe.js?url=" + url)
-      const allowedJSON = await allowedResponse.json()
-      const iframeAllowed = allowedJSON["iframeAllowed"]
+      let iframeAllowed;
+      try {
+        const allowedResponse = await fetch("https://www.seam.so/api/iframe.js?url=" + url)
+        const allowedJSON = await allowedResponse.json()
+        iframeAllowed = allowedJSON["iframeAllowed"]
+      } catch (error) {
+        // default to direct iframe embed
+        iframeAllowed = true
+      }
+
       this.model.data['url'] = url
       this.model.data['iframeAllowed'] = iframeAllowed
       done(this.model)
@@ -95,7 +103,7 @@ export default class IFrameBlock extends Block {
 
   renderErrorState() {
     return (
-      <h1>Error: Coudn't figure out the url</h1>
+      <h1>Broken URL, please try again.</h1>
     )
   }
 }
