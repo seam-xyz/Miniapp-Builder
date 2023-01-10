@@ -4,12 +4,10 @@ import './BlockStyles.css'
 import BlockFactory from './BlockFactory';
 import IconsRow, { IconsSelector } from './utils/IconsRow';
 import UploadFormComponent from './utils/UploadFormComponent';
-import Avatar from '@material-ui/core/Avatar';
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import React, { useState } from 'react';
-import { FormControl, InputLabel, makeStyles, Theme, createStyles } from '@material-ui/core';
+import { makeStyles, Theme, createStyles } from '@material-ui/core';
+import { Avatar, Button, Form, Input, Upload, Space } from "antd";
+import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
+const { TextArea } = Input;
 
 export default class ProfileBlock extends Block {
   render() {
@@ -40,14 +38,12 @@ export default class ProfileBlock extends Block {
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
-    const onFinish = (event: any) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      console.log('Success:', event.currentTarget);
-      this.model.data['bio'] = data.get('bio') as string
-      this.model.data['title'] = data.get('title') as string
-      this.model.data['icons'] = data.get('icons') as string
-      //done(this.model)
+    const onFinish = (values: any) => {
+      console.log('Success:', values);
+      this.model.data['bio'] = values['bio']
+      this.model.data['title'] = values['title']
+      this.model.data['icons'] = values['icons']
+      done(this.model)
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -61,120 +57,80 @@ export default class ProfileBlock extends Block {
         this.model.data["imageURL"] = files[0].fileUrl
       }
     }} />
-
-    let iconList = this.model.data['icons']
+    
     return (
-      <Box
-        component="form"
-        onSubmit={onFinish}
-        style={{}}
+      <Form
+        name="basic"
+        initialValues={{
+          remember: true,
+          bio: this.model.data['bio'],
+          title: this.model.data['title'],
+          icons: this.model.data['icons']
+        }}
+        labelCol={{
+          span: 8,
+        }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
       >
-        <TextField
-          margin="normal"
-          required
-          defaultValue={this.model.data['title']}
-          fullWidth
-          id="title"
-          label="Title"
+        <Form.Item
+          label="Name"
           name="title"
-        />
-        <TextField
-          margin="normal"
-          required
-          defaultValue={this.model.data['bio']}
-          fullWidth
-          id="bio"
+          rules={[
+            {
+              required: false,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
           label="Bio"
           name="bio"
-          multiline
-          maxRows={2}
-        />
-        {uploaderComponent}
-        <Form />
-        <Button
-          type="submit"
-          variant="contained"
-          className="save-modal-button"
-          sx={{ mt: 3, mb: 2 }}
         >
-          Save
-        </Button>
-      </Box>
+          <TextArea showCount maxLength={280} />
+        </Form.Item>
+        <Form.Item label="Profile Photo">
+          {uploaderComponent}
+        </Form.Item>
+        <Form.List name="icons">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map(({ key, name, ...restField }) => (
+                <Space key={key} align="baseline">
+                  <Form.Item
+                    {...restField}
+                    name={[name, 'icon']}
+                    rules={[{ required: true, message: 'Missing icon' }]}
+                  >
+                    {IconsSelector()}
+                  </Form.Item>
+                  <Form.Item
+                    {...restField}
+                    name={[name, 'url']}
+                    rules={[{ required: true, message: 'Missing icon url' }]}
+                  >
+                    <Input placeholder="URL" style={{width: "350px"}}/>
+                  </Form.Item>
+                  <MinusCircleOutlined onClick={() => remove(name)} />
+                </Space>
+              ))}
+              <Form.Item>
+                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                  Add Social Icon
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
+        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+          <Button type="primary" htmlType="submit" className="save-modal-button">
+            Save
+          </Button>
+        </Form.Item>
+      </Form>
     )
-
-    // return (
-    //   <Form
-    //     name="basic"
-    //     initialValues={{
-    //       remember: true,
-    //       bio: this.model.data['bio'],
-    //       title: this.model.data['title'],
-    //       icons: this.model.data['icons']
-    //     }}
-    //     labelCol={{
-    //       span: 8,
-    //     }}
-    //     onFinish={onFinish}
-    //     onFinishFailed={onFinishFailed}
-    //     autoComplete="off"
-    //   >
-    //     <Form.Item
-    //       label="Name"
-    //       name="title"
-    //       rules={[
-    //         {
-    //           required: false,
-    //         },
-    //       ]}
-    //     >
-    //       <Input />
-    //     </Form.Item>
-    //     <Form.Item
-    //       label="Bio"
-    //       name="bio"
-    //     >
-    //       <TextArea showCount maxLength={280} />
-    //     </Form.Item>
-    //     <Form.Item label="Profile Photo">
-    //       {uploaderComponent}
-    //     </Form.Item>
-    //     <Form.List name="icons">
-    //       {(fields, { add, remove }) => (
-    //         <>
-    //           {fields.map(({ key, name, ...restField }) => (
-    //             <Space key={key} style={{ marginBottom: 8 }} align="baseline">
-    //               <Form.Item
-    //                 {...restField}
-    //                 name={[name, 'icon']}
-    //                 rules={[{ required: true, message: 'Missing icon' }]}
-    //               >
-    //                 {IconsSelector()}
-    //               </Form.Item>
-    //               <Form.Item
-    //                 {...restField}
-    //                 name={[name, 'url']}
-    //                 rules={[{ required: true, message: 'Missing icon url' }]}
-    //               >
-    //                 <Input placeholder="URL" />
-    //               </Form.Item>
-    //               <MinusCircleOutlined onClick={() => remove(name)} />
-    //             </Space>
-    //           ))}
-    //           <Form.Item>
-    //             <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-    //               Add Social Icon
-    //             </Button>
-    //           </Form.Item>
-    //         </>
-    //       )}
-    //     </Form.List>
-    //     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-    //       <Button type="primary" htmlType="submit" className="save-modal-button">
-    //         Save
-    //       </Button>
-    //     </Form.Item>
-    //   </Form>
-    // )
   }
 
   renderErrorState() {
@@ -195,50 +151,3 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-
-const Form: React.FC = () => {
-  const [formFields, setFormFields] = useState([
-    { name: '', age: '' },
-  ])
-
-  const handleFormChange = (event: any, index: number) => {
-    let data: any = [...formFields];
-    data[index][event.target.name] = event.target.value;
-    setFormFields(data);
-  }
-
-  const addFields = () => {
-    let object = {
-      name: '',
-      age: ''
-    }
-
-    setFormFields([...formFields, object])
-  }
-
-  const removeFields = (index: number) => {
-    let data = [...formFields];
-    data.splice(index, 1)
-    setFormFields(data)
-  }
-
-  return (
-    <div>
-      {formFields.map((form, index) => {
-        return (
-          <div key={index}>
-            <IconsSelector />
-            <input
-              name='age'
-              placeholder='Age'
-              onChange={event => handleFormChange(event, index)}
-              value={form.age}
-            />
-            <button onClick={() => removeFields(index)}>Remove</button>
-          </div>
-        )
-      })}
-      <button onClick={addFields}>Add More..</button>
-    </div>
-  );
-};

@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 export function IconsSelector() {
   return (
-    <Select style={{ width: "75px" }} id="icon">
+    <Select style={{ width: "75px" }} variant="standard" size="small" id="icon">
       <MenuItem value="twitter"><TwitterIcon /></MenuItem>
       <MenuItem value="instagram"><InstagramIcon /></MenuItem>
       <MenuItem value="linkedin"><LinkedIn /></MenuItem>
