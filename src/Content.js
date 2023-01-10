@@ -2,11 +2,12 @@
 // Don't edit anything in this file, it won't be reflected in production.
 
 import React, { useState } from "react";
-import { Card, Modal } from "antd";
 import { v1 as uuidv1 } from 'uuid';
 import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 import { withSize } from "react-sizeme";
 import Widget from "./Widget";
+import Card from '@mui/material/Card';
+import Modal from '@mui/material/Modal';
 
 // Blocks
 import BlockFactory from './blocks/BlockFactory';
@@ -52,22 +53,25 @@ function Content({ size: { width }, loadedBlocks }) {
       <Modal
         open={isEditingBlock !== -1}
         footer={null}
-        onCancel={() => setIsEditingBlock(-1)}
-        bodyStyle={{
-          padding: "15px",
-          fontSize: "17px",
-          fontWeight: "500",
+        onClose={() => setIsEditingBlock(-1)}
+        style={{ 
+          fontSize: "16px", 
+          fontWeight: "500" 
         }}
-        style={{ fontSize: "16px", fontWeight: "500" }}
       >
-        {"Edit Block " + isEditingBlock}
         <Card
           style={{
             marginTop: "10px",
             borderRadius: "1rem",
+            padding: "15px",
+            width: "50%",
+            position: 'absolute',
+            top: '10%',
+            left: '50%',
+            transform: 'translate(-50%, 0)',
           }}
-          bodyStyle={{ padding: "15px" }}
         >
+          {"Edit Block " + isEditingBlock}
           {block?.renderEditModal(saveBlockData)}
         </Card>
       </Modal>

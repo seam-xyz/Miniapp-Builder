@@ -1,7 +1,9 @@
 import { TwitterTweetEmbed } from 'react-twitter-embed';
 import Block from './Block'
 import { BlockModel } from './types'
-import { Button, Form, Input } from "antd";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 
@@ -24,9 +26,9 @@ export default class TweetBlock extends Block {
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
-    const onFinish = (values: any) => {
-      console.log('Success:', values);
-      this.model.data = values
+    const onFinish = (event: any) => {
+      const data = new FormData(event.currentTarget);
+      this.model.data['tweetId'] = data.get('tweetId') as string
       done(this.model)
     };
 
@@ -35,40 +37,30 @@ export default class TweetBlock extends Block {
     };
 
     return (
-      <Form
-        name="basic"
-        labelCol={{
-          span: 8,
-        }}
-        wrapperCol={{
-          span: 16,
-        }}
-        initialValues={{
-          remember: false,
-          url: this.model.data['tweetId']
-        }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
+      <Box
+        component="form"
+        onSubmit={onFinish}
+        style={{}}
       >
-        <Form.Item
+        <TextField
+          margin="normal"
+          required
+          defaultValue={this.model.data['tweetId']}
+          fullWidth
+          id="tweetId"
           label="Tweet Id"
           name="tweetId"
-          rules={[
-            {
-              required: true,
-              message: 'Wait, you didn\'t add an ID here',
-            },
-          ]}
+          autoFocus
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          className="save-modal-button"
+          sx={{ mt: 3, mb: 2 }}
         >
-          <Input />
-        </Form.Item>
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type="primary" htmlType="submit" className="save-modal-button">
-            Save
-          </Button>
-        </Form.Item>
-      </Form>
+          Save
+        </Button>
+      </Box>
     )
   }
 

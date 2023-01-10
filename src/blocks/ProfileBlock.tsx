@@ -1,11 +1,12 @@
 import Block from './Block'
 import { BlockModel } from './types'
-import { Avatar, Button, Form, Input, Upload, Space, Select } from "antd";
-import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import './BlockStyles.css'
 import BlockFactory from './BlockFactory';
 import IconsRow, { IconsSelector } from './utils/IconsRow';
 import UploadFormComponent from './utils/UploadFormComponent';
+import { makeStyles, Theme, createStyles } from '@material-ui/core';
+import { Avatar, Button, Form, Input, Space } from "antd";
+import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 
 export default class ProfileBlock extends Block {
@@ -56,7 +57,7 @@ export default class ProfileBlock extends Block {
         this.model.data["imageURL"] = files[0].fileUrl
       }
     }} />
-
+    
     return (
       <Form
         name="basic"
@@ -97,7 +98,7 @@ export default class ProfileBlock extends Block {
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...restField }) => (
-                <Space key={key} style={{ marginBottom: 8 }} align="baseline">
+                <Space key={key} align="baseline">
                   <Form.Item
                     {...restField}
                     name={[name, 'icon']}
@@ -110,7 +111,7 @@ export default class ProfileBlock extends Block {
                     name={[name, 'url']}
                     rules={[{ required: true, message: 'Missing icon url' }]}
                   >
-                    <Input placeholder="URL" />
+                    <Input placeholder="URL" style={{width: "350px"}}/>
                   </Form.Item>
                   <MinusCircleOutlined onClick={() => remove(name)} />
                 </Space>
@@ -138,3 +139,15 @@ export default class ProfileBlock extends Block {
     )
   }
 }
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+    },
+    button: {
+      margin: theme.spacing(1),
+    },
+  }),
+);

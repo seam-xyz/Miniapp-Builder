@@ -1,4 +1,5 @@
-import { Select } from 'antd';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import { makeStyles } from "@material-ui/core/styles";
 import TwitterIcon from '@material-ui/icons/Twitter';
 import FacebookIcon from '@material-ui/icons/Facebook';
@@ -24,17 +25,17 @@ const useStyles = makeStyles((theme) => ({
 
 export function IconsSelector() {
   return (
-    <Select style={{ width: "75px" }} id="icon">
-      <Option value="twitter"><TwitterIcon /></Option>
-      <Option value="instagram"><InstagramIcon /></Option>
-      <Option value="linkedin"><LinkedIn /></Option>
-      <Option value="discord"><img src={Discord} style={{ height: 20, color: "red" }} /></Option>
-      <Option value="tiktok"><img src={Tiktok} style={{ height: 20 }} /></Option>
-      <Option value="medium"><img src={mediumIcon} style={{ height: 20 }} /></Option>
-      <Option value="link"><LinkIcon /></Option>
-      <Option value="email"><EmailIcon /></Option>
-      <Option value="youtube"><YoutubeIcon /></Option>
-      <Option value="facebook"><FacebookIcon /></Option>
+    <Select style={{ width: "75px" }} variant="standard" size="small" id="icon">
+      <MenuItem value="twitter"><TwitterIcon /></MenuItem>
+      <MenuItem value="instagram"><InstagramIcon /></MenuItem>
+      <MenuItem value="linkedin"><LinkedIn /></MenuItem>
+      <MenuItem value="discord"><img src={Discord} style={{ height: 20, color: "red" }} /></MenuItem>
+      <MenuItem value="tiktok"><img src={Tiktok} style={{ height: 20 }} /></MenuItem>
+      <MenuItem value="medium"><img src={mediumIcon} style={{ height: 20 }} /></MenuItem>
+      <MenuItem value="link"><LinkIcon /></MenuItem>
+      <MenuItem value="email"><EmailIcon /></MenuItem>
+      <MenuItem value="youtube"><YoutubeIcon /></MenuItem>
+      <MenuItem value="facebook"><FacebookIcon /></MenuItem>
     </Select>
   )
 }

@@ -38,6 +38,10 @@ Each block is given a `BlockModel` from our server, which holds a key/value stor
 
 When the block is added to a card in production, it hooks into a fully functioning data layer using the same api that was previously mocked for your local development.
 
+### Design Systems
+
+With Seam blocks, you don't have to start from scratch. Learn from examples of existing blocks, and in addition, we use the [Material UI system (MUI)](https://mui.com/material-ui/getting-started/overview/). Browse the docs to use common components like buttons, selectors, and more. We are in the process of deprecating the `antd` library.
+
 ### Theming
 
 As the block developer, you decide how you want your block to reflect the global card theme. Each Seam card has a theme, which determines background color, block background color, font, and many other attributes. Themes are implemented as [`MUI Themes`](https://mui.com/material-ui/customization/theming/), which provides handy defaults and color palettes for theming components.
