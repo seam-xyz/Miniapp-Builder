@@ -5,7 +5,7 @@ import BlockFactory from './BlockFactory';
 import IconsRow, { IconsSelector } from './utils/IconsRow';
 import UploadFormComponent from './utils/UploadFormComponent';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
-import { Avatar, Button, Form, Input, Upload, Space } from "antd";
+import { Avatar, Button, Form, Input, Space } from "antd";
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 
