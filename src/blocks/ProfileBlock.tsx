@@ -111,7 +111,7 @@ export default class ProfileBlock extends Block {
                     name={[name, 'url']}
                     rules={[{ required: true, message: 'Missing icon url' }]}
                   >
-                    <Input placeholder="URL" style={{width: "350px"}}/>
+                    <Input placeholder="URL" style={{width: "250px"}}/>
                   </Form.Item>
                   <MinusCircleOutlined onClick={() => remove(name)} />
                 </Space>
@@ -124,7 +124,7 @@ export default class ProfileBlock extends Block {
             </>
           )}
         </Form.List>
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Form.Item>
           <Button type="primary" htmlType="submit" className="save-modal-button">
             Save
           </Button>
