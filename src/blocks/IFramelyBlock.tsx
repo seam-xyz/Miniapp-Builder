@@ -31,9 +31,10 @@ export default class BookmarkBlock extends Block {
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
-    const onFinish = (values: any) => {
-      console.log('Success:', values);
-      let url = values['url']
+    const onFinish = (event: any) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      let url = data.get('url') as string
       this.model.data['url'] = url
       done(this.model)
     };
