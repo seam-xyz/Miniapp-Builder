@@ -1,3 +1,4 @@
+import RefreshingGIFBlock from './RefreshingGIFBlock'
 import Block from './Block'
 import { Theme } from "@material-ui/core"
 import { BlockModel, BlockTypes } from './types'
@@ -26,6 +27,7 @@ export default class BlockFactory {
       case "video": return new IFramelyBlock(model, theme)
       case "profile": return new ProfileBlock(model, theme)
       case "giphy": return new GiphyBlock(model, theme)
+      case "RefreshingGIF": return new RefreshingGIFBlock(model, theme)
       // new blocks go here
       default: return new IFrameBlock(model, theme)
     }
