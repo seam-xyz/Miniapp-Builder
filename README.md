@@ -1,17 +1,31 @@
-# Seam Block SDK
-### 🚧 This SDK is in active development. Join us along the journey! 🚧
+<p align="center">
+  <a href="#">
+    <img src="https://user-images.githubusercontent.com/7350670/212753058-373e9a5c-3247-44a5-8455-19c093aed511.svg" width="450">
+  </a>
+</p>
+<h1 align="center">
+  Seam Block Builder
+</h1>
 
-[Seam](https://www.seam.so) is a community-developed platform to code, design, and curate your perfect social spaces. Each page is composed of blocks. We provide a testing harness, a mocked version of a card and data storage, which allows quick iteration on your block without ever touching production data.
+https://user-images.githubusercontent.com/7350670/212757467-69afc52b-2aca-4308-b5a5-323182b99e9f.mov
+
+[Seam](https://www.seam.so) is a community-developed platform to code, design, and curate your perfect social spaces. You can make new cards filled with anything from around the internet, from profiles for yourself or moodboards for your favorite things. Then you can publish your card as a website to share it with your friends.
+
+Many people ask how to make cool blocks like the ones that already live inside the Seam editor. The answer is React components. It is very simple to learn and anyone can do it. You don't need to be a programmer, and you can use the examples of other blocks that already exist to get started.
+
+We've made it easy in this repository to make a new block, and then publish it live so that anyone else in the world can use your new creation, too. We're all building this together!
 
 ### What are blocks?
 
-Blocks are software Legos; they are small, re-usable components and functionality.
+Blocks are software Legos; they are small, re-usable components and functionality. Each profile is made of blocks. Use the music block to play your anthem, the video block to showcase your projects, the text block to write anything you want. And if you need something that isn't already available, you can make it here, yourself. 
 
-What do you get by creating blocks on Seam?
-- Accepted blocks go like on [seam.so](https://www.seam.so) so you can add them into your profile!
-- Learn to code Javascript and React. All of our blocks are open source so that you can learn from examples.
+**What happens when you make a block on Seam?**
+- Accepted blocks go inside [seam.so](https://www.seam.so), and then you can add them into your profile!
+- Anyone else can also use your block on their profile.
+  - Eventually, you'll be able to earn points + rewards when your block goes viral after being added to many different profiles.
+- You'll learn to code Javascript and React, one of the most used languages on the Internet.
 
-# Quickstart
+# Start Here
 | Tutorial Pt. 1      | Tutorial Pt. 2 |
 | ----------- | ----------- |
 | [![Block Tutorial Pt. 1](https://cdn.loom.com/sessions/thumbnails/95c436357b5b4782a4803577b4a25ad7-with-play.gif)](https://www.loom.com/embed/95c436357b5b4782a4803577b4a25ad7)      | [![Block Tutorial Pt. 2](https://cdn.loom.com/sessions/thumbnails/603a4d998c354b01bb1ac44003f5f7ef-with-play.gif)](https://www.loom.com/embed/603a4d998c354b01bb1ac44003f5f7ef)       |
@@ -21,16 +35,14 @@ What do you get by creating blocks on Seam?
 3. `./seam-magic.sh` will guide you through creating a template of an empty block, given whatever name you choose!
 4. `yarn start` to see your new block in action.
 
-### Seam Data Access
-
-# Block Development Guide
+# Block Maker's Guide
 
 After creating your new block using our magic script, there are only 3 functions you need to write to make your block.
 - The `render()` function renders the block based on the data it has in its `BlockModel`.
 - The `renderEditModal` function renders what goes inside the edit modal, which is typically a form for the user to add their customization options into. It also has a `done` function, which will call with the finished model.
 - The `renderErrorState` function, which is shown whenever there is an error.
 
-Lastly, don't forget to add your block icon to `types.tsx`! This is the icon that will show when the user is browsing the block list inside the Seam editor.
+Lastly, don't forget to add your **icon** to `types.tsx`! This is the icon that will show when the user is browsing the block list inside the Seam editor.
 
 ### Saving and Accessing data
 
@@ -74,7 +86,7 @@ Once you are happy with your block, it's time to create a pull request so your b
 
 # Q&A
 - My block needs a dependency. How should I include it?
-    - Add your new package using `yarn add`, and the main Seam application will bundle it when your block is accepted
+    - Add your new package using `yarn add`, and the main Seam application will bundle it when your block is accepted. Please don't add any extra UI libraries, as those can be very large, slowing down the entire Seam site.
 - My block needs an external API key. How do I make it work?
     - The unfortunate reality of our current walled garden internet is that much of it is gated behind API keys. Use `process.env` in your local development to insert an API key, and on block submission we'll work with you to see if it makes sense for Seam to apply for a global API key for the service you want to make a block for.
 - I found a bug, and something is not working. How do I fix it?
