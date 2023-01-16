@@ -3,9 +3,15 @@
     <img src="https://user-images.githubusercontent.com/7350670/212753058-373e9a5c-3247-44a5-8455-19c093aed511.svg" width="450">
   </a>
 </p>
+<p align="center">
+<a href="https://twitter.com/intent/follow?screen_name=seam_xyz">
+        <img src="https://img.shields.io/twitter/follow/seam_xyz?style=social&logo=twitter"
+            alt="follow on Twitter"></a>
+</p>
 <h1 align="center">
   Seam Block Builder
 </h1>
+
 
 https://user-images.githubusercontent.com/7350670/212757467-69afc52b-2aca-4308-b5a5-323182b99e9f.mov
 
