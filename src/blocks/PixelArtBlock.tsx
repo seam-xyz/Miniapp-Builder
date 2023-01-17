@@ -4,7 +4,6 @@ import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 
 import React, {useEffect, useRef, useState} from 'react';
-import { ContactSupportOutlined } from '@material-ui/icons';
 import { Button, Stack } from '@mui/material';
 
 interface PixelCanvasProps {
