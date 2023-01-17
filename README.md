@@ -32,9 +32,8 @@ Blocks are software Legos; they are small, re-usable components and functionalit
 - You'll learn to code Javascript and React, one of the most used languages on the Internet.
 
 # Start Here
-| Tutorial Pt. 1      | Tutorial Pt. 2 |
-| ----------- | ----------- |
-| [![Block Tutorial Pt. 1](https://cdn.loom.com/sessions/thumbnails/95c436357b5b4782a4803577b4a25ad7-with-play.gif)](https://www.loom.com/embed/95c436357b5b4782a4803577b4a25ad7)      | [![Block Tutorial Pt. 2](https://cdn.loom.com/sessions/thumbnails/603a4d998c354b01bb1ac44003f5f7ef-with-play.gif)](https://www.loom.com/embed/603a4d998c354b01bb1ac44003f5f7ef)       |
+
+https://user-images.githubusercontent.com/7350670/213023742-116abf08-51d8-4b9e-a289-7b601b5d458a.mp4
 
 1. git clone the repo, `cd Block-SDK`
 2. `yarn install`
