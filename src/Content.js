@@ -47,6 +47,7 @@ function Content({ size: { width }, loadedBlocks }) {
   };
   const renderBlock = (model) => {
     let block = BlockFactory.getBlock(model, theme)
+    block.onEditCallback = onEditItem
     return block.render()
   }
   const renderBlockEditModal = () => {
