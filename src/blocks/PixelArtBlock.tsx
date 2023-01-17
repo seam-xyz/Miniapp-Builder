@@ -224,7 +224,6 @@ export default class PixelArtBlock extends Block {
       numPixelsPerSide,
       pixelsArrStringified,
     } = this.model.data;
-    console.log('loading pixels', pixelsArrStringified);
     const pixels = JSON.parse(pixelsArrStringified);
 
     return (
@@ -242,12 +241,9 @@ export default class PixelArtBlock extends Block {
       numPixelsPerSide,
       pixelsArrStringified,
     } = this.model.data;
-    console.log('loading pixels', pixelsArrStringified);
-
     const onSave = (pixels: string[][]) => {
       this.model.data['numPixelsPerSide'] = numPixels.toString();
       this.model.data['pixelsArrStringified'] = JSON.stringify(pixels);
-      console.log('saving pixels: ', this.model.data['pixelsArrStringified']);
       done(this.model);
     }
     return (
