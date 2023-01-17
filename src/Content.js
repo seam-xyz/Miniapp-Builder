@@ -105,7 +105,7 @@ function Content({ size: { width }, loadedBlocks }) {
           <div
             key={model.uuid}
             className="widget"
-            data-grid={{ w: 3, h: 2, x: 0, y: Infinity }}
+            data-grid={{ w: 5, h: 15, x: 0, y: Infinity }}
           >
             <Widget id={model.uuid}
               onRemoveItem={onRemoveItem}
