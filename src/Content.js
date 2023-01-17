@@ -16,6 +16,8 @@ import { useTheme } from "@material-ui/core";
 function Content({ size: { width }, loadedBlocks }) {
   const [layouts, setLayouts] = useState({ lg: [{ x: 0, y: 0, w: 5, h: 15, i: "test" }] });
   const [blocks, setBlocks] = useState(loadedBlocks);
+  const breakpoint = 620
+  const isMobileScreen = window.innerWidth < breakpoint
   const theme = useTheme()
 
   const [isEditingBlock, setIsEditingBlock] = useState(-1) // number is the index of the block being edited
@@ -66,7 +68,7 @@ function Content({ size: { width }, loadedBlocks }) {
             marginTop: "10px",
             borderRadius: "1rem",
             padding: "15px",
-            width: "50%",
+            width: isMobileScreen ? "95%" : "500px",
             position: 'absolute',
             top: '10%',
             left: '50%',
