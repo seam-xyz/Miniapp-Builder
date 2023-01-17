@@ -38,7 +38,7 @@ export default function App() {
   // vvvvvvvvvvvvvvvvv
 
   let yourBlock: BlockModel = {
-    type: "RefreshingGIF",
+    type: "%NAME%",
     data: {},
     uuid: "test"
   }
