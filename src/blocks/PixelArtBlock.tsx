@@ -5,21 +5,30 @@ import './BlockStyles.css'
 
 import React, {useEffect, useRef, useState} from 'react';
 import { ContactSupportOutlined } from '@material-ui/icons';
+import { Stack } from '@mui/material';
 
 interface PixelCanvasProps {
-  numPixelsPerSide: number;  // e.g. '5' represents a 5x5 pixel grid
+  numPixelsPerSide: number;                 // e.g. '5' represents a 5x5 pixel grid
+  isEditMode: boolean;                      // True if edit mode, false if display mode
+  initialPixels?: string[][];               // Used to render from an existing state
+  onSave?: ((pixels: string[][]) => void);  // Callback for saving state when editing
 }
 
-function PixelCanvas({ numPixelsPerSide }: PixelCanvasProps) {
+function PixelCanvas({
+  numPixelsPerSide,
+  isEditMode,
+  initialPixels,
+  onSave,
+}: PixelCanvasProps) {
   const generateDefaultPixelsState = () => {
-    return Array.from({length: numPixelsPerSide}, _ => Array(numPixelsPerSide).fill('#00fff0'));
+    return Array.from(
+      {length: numPixelsPerSide}, _ => Array(numPixelsPerSide).fill('#00fff0'));
   }
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [color, setColor] = useState('#000000');
-  const [showGrid, setShowGrid] = useState(true);
-  const [pixels, setPixels] = useState(generateDefaultPixelsState());
-  const [error, setError] = useState<Error | null>(null);
+  const [showGrid, setShowGrid] = useState(isEditMode);
+  const [pixels, setPixels] = useState<string[][]>(initialPixels || generateDefaultPixelsState());
   
   const setPixelColor = (x: number, y: number, color: string) => {
     let updatedPixels = [...pixels];
@@ -36,7 +45,11 @@ function PixelCanvas({ numPixelsPerSide }: PixelCanvasProps) {
 
   useEffect(() => {
     drawPixelArt(showGrid);
-  }, [pixels]);
+  }, [pixels, showGrid]);
+
+  useEffect(() => {
+    initialPixels && setPixels(initialPixels);
+  }, [initialPixels])
 
   const clearCanvas = () => {
     const canvasContext = canvasRef?.current?.getContext('2d');
@@ -132,23 +145,37 @@ function PixelCanvas({ numPixelsPerSide }: PixelCanvasProps) {
     setPixelColor(pixelIdxX, pixelIdxY, color);
   }
 
+  const savePixelState = () => {
+    if (onSave) {
+      onSave(pixels);
+    }
+  }
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <div style={{ display: 'flex', flexDirection: 'row'}}>
-        <div>
-          <label htmlFor='colorInput'>Set Color: </label>
-          <input type='color' id='colorInput' value={color} onChange={(e) => setColor(e.target.value)} />
-        </div>
-        <div>
-          <label htmlFor='toggleGuide'>Show Guide: </label>
-          <input type='checkbox' id='toggleGuide' checked={showGrid} onChange={() => {setShowGrid(!showGrid)}} />
-        </div>
-        <div>
-          <button type='button' id='clearButton' onClick={clearCanvas}>
-            Clear
-          </button>
-        </div>
-      </div>
+    <div style={{ display: 'flex', flexDirection: 'column', maxWidth: '1000px' }}>
+      {isEditMode &&
+        // <div style={{ display: 'flex', flexDirection: 'row'}}>
+        <Stack direction='row' spacing={2} paddingBottom={1}>
+          <div>
+            <label htmlFor='colorInput'>Set Color: </label>
+            <input type='color' id='colorInput' value={color} onChange={(e) => setColor(e.target.value)} />
+          </div>
+          <div>
+            <label htmlFor='toggleGuide'>Show Guide: </label>
+            <input type='checkbox' id='toggleGuide' checked={showGrid} onChange={() => {setShowGrid(!showGrid)}} />
+          </div>
+          <div>
+            <button type='button' id='clearButton' onClick={clearCanvas}>
+              Clear
+            </button>
+          </div>
+          <div>
+            <button type='button' id='saveButton' onClick={savePixelState}>
+              Save
+            </button>
+          </div>
+        </Stack>
+      }
       <canvas ref={canvasRef} width={width} height={height} style={{ cursor: 'pointer '}} onMouseDown={handleCanvasClick} />
     </div>
   )
@@ -156,15 +183,40 @@ function PixelCanvas({ numPixelsPerSide }: PixelCanvasProps) {
 
 export default class PixelArtBlock extends Block {
   render() {
+    if (Object.keys(this.model.data).length === 0) {
+      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
+    }
+
+    const {
+      numPixelsPerSide,
+      pixelsArrStringified,
+    } = this.model.data;
+    console.log('loading pixels', pixelsArrStringified);
+    const pixels = JSON.parse(pixelsArrStringified);
+
     return (
-      <h1>PixelArt Block!</h1>
+      <PixelCanvas
+        numPixelsPerSide={parseInt(numPixelsPerSide)}
+        isEditMode={false}
+        initialPixels={pixels}
+      />
     );
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
     const numPixels = 5;
+    const onSave = (pixels: string[][]) => {
+      this.model.data['numPixelsPerSide'] = numPixels.toString();
+      this.model.data['pixelsArrStringified'] = JSON.stringify(pixels);
+      console.log('saving pixels: ', this.model.data['pixelsArrStringified']);
+      done(this.model);
+    }
     return (
-      <PixelCanvas numPixelsPerSide={numPixels} />
+      <PixelCanvas
+        numPixelsPerSide={numPixels}
+        isEditMode={true}
+        onSave={onSave}
+      />
     )
   }
 
