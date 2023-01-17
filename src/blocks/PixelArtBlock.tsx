@@ -5,7 +5,7 @@ import './BlockStyles.css'
 
 import React, {useEffect, useRef, useState} from 'react';
 import { ContactSupportOutlined } from '@material-ui/icons';
-import { Stack } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 
 interface PixelCanvasProps {
   numPixelsPerSide: number;                 // e.g. '5' represents a 5x5 pixel grid
@@ -22,7 +22,7 @@ function PixelCanvas({
 }: PixelCanvasProps) {
   const generateDefaultPixelsState = () => {
     return Array.from(
-      {length: numPixelsPerSide}, _ => Array(numPixelsPerSide).fill('#00fff0'));
+      {length: numPixelsPerSide}, _ => Array(numPixelsPerSide).fill('#f2f2f2'));
   }
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -75,7 +75,10 @@ function PixelCanvas({
     }
   }
 
-  const fillPixelGrid = (canvasContext: CanvasRenderingContext2D, pixels: string[][]) => {
+  const fillPixelGrid = (
+    canvasContext: CanvasRenderingContext2D,
+    pixels: string[][]
+  ) => {
     for(let i = 0; i < pixels.length; i++) {
       for (let j = 0; j < pixels[0].length; j++) {
         fillPixel(canvasContext, i, j, pixels[i][j]);
@@ -83,7 +86,12 @@ function PixelCanvas({
     }
   }
 
-  const fillPixel = (canvasContext: CanvasRenderingContext2D, x: number, y: number, colorHex: string) => {
+  const fillPixel = (
+    canvasContext: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    colorHex: string,
+  ) => {
     canvasContext.fillStyle = colorHex;
 
     const startX = x * pixelWidth;
@@ -91,7 +99,10 @@ function PixelCanvas({
     canvasContext.fillRect(startX, startY, pixelWidth, pixelHeight);
   }
 
-  const drawGrid = (canvasContext: CanvasRenderingContext2D, colorHex: string) => {
+  const drawGrid = (
+    canvasContext: CanvasRenderingContext2D,
+    colorHex: string,
+  ) => {
     canvasContext.strokeStyle = colorHex;
     canvasContext.lineWidth = 4;
 
@@ -152,31 +163,54 @@ function PixelCanvas({
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', maxWidth: '1000px' }}>
-      {isEditMode &&
-        // <div style={{ display: 'flex', flexDirection: 'row'}}>
-        <Stack direction='row' spacing={2} paddingBottom={1}>
-          <div>
-            <label htmlFor='colorInput'>Set Color: </label>
-            <input type='color' id='colorInput' value={color} onChange={(e) => setColor(e.target.value)} />
-          </div>
-          <div>
-            <label htmlFor='toggleGuide'>Show Guide: </label>
-            <input type='checkbox' id='toggleGuide' checked={showGrid} onChange={() => {setShowGrid(!showGrid)}} />
-          </div>
-          <div>
-            <button type='button' id='clearButton' onClick={clearCanvas}>
-              Clear
-            </button>
-          </div>
-          <div>
-            <button type='button' id='saveButton' onClick={savePixelState}>
-              Save
-            </button>
-          </div>
-        </Stack>
-      }
-      <canvas ref={canvasRef} width={width} height={height} style={{ cursor: 'pointer '}} onMouseDown={handleCanvasClick} />
+    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: isEditMode ? 'center' : 'start'}}>
+      <div style={{ display: 'flex', flexDirection: 'column', maxWidth: isEditMode ? '500px' : '2000px', width: '100%'}}>
+        {isEditMode &&
+          <Stack direction='row' spacing={2} paddingBottom={1} justifyContent='center'>
+            <div>
+              <label>Set Color: </label>
+              <input
+                type='color'
+                id='colorInput'
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+              />
+            </div>
+            <div>
+              <label>Show Guide: </label>
+              <input
+                type='checkbox'
+                id='toggleGrid'
+                checked={showGrid}
+                onChange={() => {setShowGrid(!showGrid)}}
+              />
+            </div>
+            <div>
+              <button type='button' id='clearButton' onClick={clearCanvas}>
+                Clear
+              </button>
+            </div>
+          </Stack>
+        }
+        <canvas
+          ref={canvasRef}
+          width={width}
+          height={height}
+          style={{ cursor: 'pointer '}}
+          onMouseDown={handleCanvasClick}
+        />
+        {isEditMode &&
+          <Button
+            type='submit'
+            variant='contained'
+            className='save-modal-button'
+            sx={{ mt: 3, mb: 2 }}
+            onClick={savePixelState}
+          >
+            Save
+          </Button>
+        }
+      </div>
     </div>
   )
 }
@@ -205,6 +239,12 @@ export default class PixelArtBlock extends Block {
 
   renderEditModal(done: (data: BlockModel) => void) {
     const numPixels = 5;
+    const {
+      numPixelsPerSide,
+      pixelsArrStringified,
+    } = this.model.data;
+    console.log('loading pixels', pixelsArrStringified);
+
     const onSave = (pixels: string[][]) => {
       this.model.data['numPixelsPerSide'] = numPixels.toString();
       this.model.data['pixelsArrStringified'] = JSON.stringify(pixels);
@@ -213,7 +253,8 @@ export default class PixelArtBlock extends Block {
     }
     return (
       <PixelCanvas
-        numPixelsPerSide={numPixels}
+        numPixelsPerSide={(numPixelsPerSide && parseInt(numPixelsPerSide)) || numPixels}
+        initialPixels={pixelsArrStringified && JSON.parse(pixelsArrStringified)}
         isEditMode={true}
         onSave={onSave}
       />
