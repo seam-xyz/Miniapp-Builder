@@ -38,7 +38,7 @@ export default function App() {
   // vvvvvvvvvvvvvvvvv
 
   let yourBlock: BlockModel = {
-    type: "PixelArt",
+    type: "%NAME%",
     data: {},
     uuid: "test"
   }
