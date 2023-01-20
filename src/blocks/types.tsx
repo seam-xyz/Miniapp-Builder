@@ -10,8 +10,7 @@ import giphyIcon from "./blockIcons/giphyLogo.png";
 import profileIcon from "./blockIcons/profileHeaderIcon.png";
 import musicIcon from "./blockIcons/musicIcon.png";
 import randomGiphyIcon from "./blockIcons/randomGiphyIcon.png";
-import pixelArtIcon from ".blockIcons/pixelArtIcon.png";
-
+import pixelArtIcon from "./blockIcons/pixelArtIcon.png";
 
 export type BlockModel = {
   type: string;
