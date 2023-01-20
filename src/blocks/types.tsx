@@ -10,6 +10,8 @@ import giphyIcon from "./blockIcons/giphyLogo.png";
 import profileIcon from "./blockIcons/profileHeaderIcon.png";
 import musicIcon from "./blockIcons/musicIcon.png";
 import randomGiphyIcon from "./blockIcons/randomGiphyIcon.png";
+import pixelArtIcon from ".blockIcons/pixelArtIcon.png";
+
 
 export type BlockModel = {
   type: string;
@@ -165,6 +167,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptyTitle: "Empty RefreshingGIF Block",
     emptySubtitle: "Tap here to setup your RefreshingGIF block!",
     icon: randomGiphyIcon,
+    deprecated: false,
+  },
+  "PixelArt": { 
+    type: "PixelArt",
+    displayName: "Pixel Art",
+    displayDescription: "A block to make then display pixel art",
+    emptyTitle: "Empty Pixel Art Block",
+    emptySubtitle: "Tap here to setup your Pixel Art block!",
+    icon: pixelArtIcon,
     deprecated: false,
   },
 };
