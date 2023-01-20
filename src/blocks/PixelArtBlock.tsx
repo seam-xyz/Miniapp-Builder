@@ -53,7 +53,6 @@ function PixelCanvas({
   const clearCanvas = () => {
     const canvasContext = canvasRef?.current?.getContext('2d');
     if (!canvasContext) {
-      console.log('no canvas context');  // FOR-REVIEWER: What is the recommended way to handle null errors?
       return;
     }
 
@@ -64,7 +63,6 @@ function PixelCanvas({
   const drawPixelArt = (showGrid: boolean) => {
     const canvasContext = canvasRef?.current?.getContext('2d');
     if (!canvasContext) {
-      console.log('no canvas context');  // FOR-REVIEWER: What is the recommended way to handle null errors?
       return;
     }
 
@@ -128,13 +126,11 @@ function PixelCanvas({
     }
     const canvas = canvasRef?.current;
     if (!canvas) {
-      console.log('missing canvas');  // FOR-REVIEWER: What is the recommended way to handle null errors?
       return;
     }
 
     const canvasContext = canvas.getContext('2d');
     if (!canvasContext) {
-      console.log('no canvas context');  // FOR-REVIEWER: What is the recommended way to handle null errors?
       return;
     }
 
