@@ -17,13 +17,14 @@ interface PixelCanvasProps {
   ) => void);
 }
 
-function PixelCanvas({
-  numPixelsPerSide,
-  isEditMode,
-  initialPixels,
-  shouldShowGridInViewMode,
-  onSave,
-}: PixelCanvasProps) {
+function PixelCanvas(props: PixelCanvasProps) {
+  const {
+    numPixelsPerSide,
+    isEditMode,
+    initialPixels,
+    shouldShowGridInViewMode,
+    onSave,
+  } = props;
   const generateDefaultPixelsState = () => {
     return Array.from(
       {length: numPixelsPerSide}, _ => Array(numPixelsPerSide).fill('#f2f2f2'));
@@ -56,12 +57,10 @@ function PixelCanvas({
   }, [pixels, showGrid]);
 
   useEffect(() => {
+    // Update state variables based on changes to props
     initialPixels && setPixels(initialPixels);
-  }, [initialPixels])
-
-  useEffect(() => {
-    setShowGrid(shouldShowGridInViewMode || isEditMode)
-  }, [shouldShowGridInViewMode])
+    setShowGrid(shouldShowGridInViewMode || isEditMode);
+  }, [props])
 
   const clearCanvas = () => {
     const canvasContext = canvasRef?.current?.getContext('2d');
