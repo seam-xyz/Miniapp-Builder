@@ -4,9 +4,8 @@
   </a>
 </p>
 <p align="center">
-<a href="https://twitter.com/intent/follow?screen_name=seam_xyz">
-        <img src="https://img.shields.io/twitter/follow/seam_xyz?style=social&logo=twitter"
-            alt="follow on Twitter"></a>
+  <img src="https://img.shields.io/github/commit-activity/m/seam-xyz/Block-SDK"/>
+  <img src="https://img.shields.io/github/stars/seam-xyz/Block-SDK?style=social"/>
 </p>
 <h1 align="center">
   Seam Block Builder
