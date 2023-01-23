@@ -17,7 +17,7 @@ https://user-images.githubusercontent.com/7350670/212757467-69afc52b-2aca-4308-b
 
 [Seam](https://www.seam.so) is a community-developed platform to code, design, and curate your perfect social spaces. You can make new cards filled with anything from around the internet, from profiles for yourself or moodboards for your favorite things. Then you can publish your card as a website to share it with your friends.
 
-Many people ask how to make cool blocks like the ones that already live inside the Seam editor. The answer is React components. It is very simple to learn and anyone can do it. You don't need to be a programmer, and you can use the examples of other blocks that already exist to get started.
+Many people ask how to make cool blocks like the ones that already live inside the Seam editor. The answer is React components. It is simple to learn and anyone can do it. You don't need to already be a programmer, and you can use the examples of other blocks that already exist to get started.
 
 We've made it easy in this repository to make a new block, and then publish it live so that anyone else in the world can use your new creation, too. We're all building this together!
 
@@ -47,7 +47,11 @@ After creating your new block using our magic script, there are only 3 functions
 - The `renderEditModal` function renders what goes inside the edit modal, which is typically a form for the user to add their customization options into. It also has a `done` function, which will call with the finished model.
 - The `renderErrorState` function, which is shown whenever there is an error.
 
+### Icons
+
 Lastly, don't forget to add your **icon** to `types.tsx`! This is the icon that will show when the user is browsing the block list inside the Seam editor.
+
+The best way to find an icon is to use [Google's icons here](https://fonts.google.com/icons), search for the one you want, and download it as a PNG. Then add it to the `blockIcons` folder.
 
 ### Saving and Accessing data
 
@@ -87,7 +91,27 @@ You can find working examples inside of the `LinkBlock.tsx` and the default them
 # Block Submission
 Once you are happy with your block, it's time to create a pull request so your block can go live on the [seam.so](www.seam.so) site!
 
-### Submission Guidelines
+### Before you Submit
+
+To help your pull request go as smoothly as possible, review the steps listed below that can slow down a review. Make sure you:
+- Test your block for crashes and bugs
+- Remove all `console.log` statements, commented code, and unused code. Remember, your block will live open source as an example for new developers who come behind you!
+- Make a Seam profile so that we know who to credit
+- Don't include any large new dependencies that would slow down the entire Seam loading experience
+
+### Making the Submission
+
+For easiest review, please format the title of your pull request like so:
+- Title: [Block Submission]: Title of block
+
+Then in the body, make sure to have these sections:
+- Photos! We want to see your block in action.
+- Author: Seam username, Twitter handle if you have one so we can include you in our block release tweets 
+- Seam card: What's your Seam profile card? This is how we can credit you!
+- Summary: What does your block do?
+- Remixes: Did you remix or copy code from another block? Which ones?
+
+We'll accept any blocks that are genuine and fun and come from your own imagination. We strongly support all points of view being represented on Seam, as long as the blocks are respectful to users with differing opinions and the quality of the block is great. We won't merge any blocks for any content or behavior that we believe is over the line.
 
 # Q&A
 - My block needs a dependency. How should I include it?
