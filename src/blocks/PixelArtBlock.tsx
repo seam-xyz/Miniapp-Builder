@@ -10,13 +10,18 @@ interface PixelCanvasProps {
   numPixelsPerSide: number;                 // e.g. '5' represents a 5x5 pixel grid
   isEditMode: boolean;                      // True if edit mode, false if display mode
   initialPixels?: string[][];               // Used to render from an existing state
-  onSave?: ((pixels: string[][]) => void);  // Callback for saving state when editing
+  shouldShowGridInViewMode?: boolean;       // User sets this value
+  onSave?: ((                               // Callback for saving state when editing
+    pixels: string[][],
+    showGridInViewMode: boolean
+  ) => void);
 }
 
 function PixelCanvas({
   numPixelsPerSide,
   isEditMode,
   initialPixels,
+  shouldShowGridInViewMode,
   onSave,
 }: PixelCanvasProps) {
   const generateDefaultPixelsState = () => {
@@ -26,8 +31,12 @@ function PixelCanvas({
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [color, setColor] = useState('#000000');
-  const [showGrid, setShowGrid] = useState(isEditMode);
   const [pixels, setPixels] = useState<string[][]>(initialPixels || generateDefaultPixelsState());
+  const [
+    showGridInViewMode,
+    setShowGridInViewMode,
+  ] = useState(shouldShowGridInViewMode || false);
+  const [showGrid, setShowGrid] = useState(showGridInViewMode || isEditMode);
   
   const setPixelColor = (x: number, y: number, color: string) => {
     let updatedPixels = [...pixels];
@@ -49,6 +58,10 @@ function PixelCanvas({
   useEffect(() => {
     initialPixels && setPixels(initialPixels);
   }, [initialPixels])
+
+  useEffect(() => {
+    setShowGrid(shouldShowGridInViewMode || isEditMode)
+  }, [shouldShowGridInViewMode])
 
   const clearCanvas = () => {
     const canvasContext = canvasRef?.current?.getContext('2d');
@@ -153,7 +166,7 @@ function PixelCanvas({
 
   const savePixelState = () => {
     if (onSave) {
-      onSave(pixels);
+      onSave(pixels, showGridInViewMode);
     }
   }
 
@@ -195,15 +208,26 @@ function PixelCanvas({
           onMouseDown={handleCanvasClick}
         />
         {isEditMode &&
-          <Button
-            type='submit'
-            variant='contained'
-            className='save-modal-button'
-            sx={{ mt: 3, mb: 2 }}
-            onClick={savePixelState}
-          >
-            Save
-          </Button>
+          <div>
+            <div>
+            <label>Show Guide in View Mode: </label>
+              <input
+                type='checkbox'
+                id='toggleShowGridInViewMode'
+                checked={showGridInViewMode}
+                onChange={() => {setShowGridInViewMode(!showGridInViewMode)}}
+              />
+            </div>
+            <Button
+              type='submit'
+              variant='contained'
+              className='save-modal-button'
+              sx={{ mt: 3, mb: 2 }}
+              onClick={savePixelState}
+            >
+              Save
+            </Button>
+          </div>
         }
       </div>
     </div>
@@ -219,14 +243,19 @@ export default class PixelArtBlock extends Block {
     const {
       numPixelsPerSide,
       pixelsArrStringified,
+      shouldShowGridInViewMode,
     } = this.model.data;
     const pixels = JSON.parse(pixelsArrStringified);
+    const showGridInViewMode = shouldShowGridInViewMode
+      ? Boolean(parseInt(shouldShowGridInViewMode))
+      : false;
 
     return (
       <PixelCanvas
         numPixelsPerSide={parseInt(numPixelsPerSide)}
         isEditMode={false}
         initialPixels={pixels}
+        shouldShowGridInViewMode={showGridInViewMode}
       />
     );
   }
@@ -236,17 +265,22 @@ export default class PixelArtBlock extends Block {
     const {
       numPixelsPerSide,
       pixelsArrStringified,
+      shouldShowGridInViewMode,
     } = this.model.data;
-    const onSave = (pixels: string[][]) => {
+
+    const onSave = (pixels: string[][], showGridInViewMode: boolean) => {
       this.model.data['numPixelsPerSide'] = numPixels.toString();
       this.model.data['pixelsArrStringified'] = JSON.stringify(pixels);
+      this.model.data['shouldShowGridInViewMode'] = Number(showGridInViewMode).toString();
       done(this.model);
     }
+
     return (
       <PixelCanvas
         numPixelsPerSide={(numPixelsPerSide && parseInt(numPixelsPerSide)) || numPixels}
         initialPixels={pixelsArrStringified && JSON.parse(pixelsArrStringified)}
         isEditMode={true}
+        shouldShowGridInViewMode={Boolean(parseInt(shouldShowGridInViewMode))}
         onSave={onSave}
       />
     )
