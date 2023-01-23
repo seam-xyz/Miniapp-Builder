@@ -191,7 +191,7 @@ function PixelCanvas({
           ref={canvasRef}
           width={width}
           height={height}
-          style={{ cursor: 'pointer '}}
+          style={{ cursor: isEditMode ? 'pointer' : 'default' }}
           onMouseDown={handleCanvasClick}
         />
         {isEditMode &&
