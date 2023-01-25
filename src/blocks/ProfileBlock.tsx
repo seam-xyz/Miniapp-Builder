@@ -4,7 +4,6 @@ import './BlockStyles.css'
 import BlockFactory from './BlockFactory';
 import IconsRow, { IconsSelector } from './utils/IconsRow';
 import UploadFormComponent from './utils/UploadFormComponent';
-import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import { Avatar, Button, Form, Input, Space } from "antd";
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
@@ -139,15 +138,3 @@ export default class ProfileBlock extends Block {
     )
   }
 }
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-    },
-    button: {
-      margin: theme.spacing(1),
-    },
-  }),
-);

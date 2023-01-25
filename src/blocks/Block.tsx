@@ -1,5 +1,5 @@
 import { BlockModel } from './types'
-import { Theme } from "@material-ui/core"
+import { Theme } from "@mui/material"
 
 interface IBlock {
     name: string

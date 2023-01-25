@@ -1,7 +1,7 @@
 import RefreshingGIFBlock from './RefreshingGIFBlock'
 import PixelArtBlock from './PixelArtBlock'
 import Block from './Block'
-import { Theme } from "@material-ui/core"
+import { Theme } from "@mui/material"
 import { BlockModel, BlockTypes } from './types'
 import IFrameBlock from './IFrameBlock'
 import TextEditBlock from './TextEditBlock'

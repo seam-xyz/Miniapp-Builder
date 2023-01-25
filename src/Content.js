@@ -11,7 +11,7 @@ import Modal from '@mui/material/Modal';
 
 // Blocks
 import BlockFactory from './blocks/BlockFactory';
-import { useTheme } from "@material-ui/core";
+import { useTheme } from "@mui/material";
 
 function Content({ size: { width }, loadedBlocks }) {
   const [layouts, setLayouts] = useState({ lg: [{ x: 0, y: 0, w: 5, h: 15, i: "test" }] });

@@ -1,9 +1,9 @@
-import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import CreateIcon from '@material-ui/icons/Create';
-import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@mui/styles";
+import Card from "@mui/material/Card";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import CreateIcon from '@mui/icons-material/Create';
+import Typography from "@mui/material/Typography";
 
 const useStyles = makeStyles({
   root: {

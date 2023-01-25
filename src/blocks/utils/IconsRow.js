@@ -1,16 +1,16 @@
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { makeStyles } from "@material-ui/core/styles";
-import TwitterIcon from '@material-ui/icons/Twitter';
-import FacebookIcon from '@material-ui/icons/Facebook';
-import InstagramIcon from '@material-ui/icons/Instagram';
-import ErrorIcon from '@material-ui/icons/Error';
-import EmailIcon from '@material-ui/icons/Email';
-import YoutubeIcon from '@material-ui/icons/YouTube';
-import LinkedIn from "@material-ui/icons/LinkedIn";
+import { makeStyles } from "@mui/styles";
+import TwitterIcon from '@mui/icons-material/Twitter';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import ErrorIcon from '@mui/icons-material/Error';
+import EmailIcon from '@mui/icons-material/Email';
+import YoutubeIcon from '@mui/icons-material/YouTube';
+import LinkedIn from "@mui/icons-material/LinkedIn";
 import Discord from "../blockIcons/discordLogo.png";
 import Tiktok from "../blockIcons/tiktokIcon.png";
-import LinkIcon from "@material-ui/icons/Link";
+import LinkIcon from "@mui/icons-material/Link";
 import mediumIcon from "../blockIcons/mediumIcon.svg"
 import Stack from '@mui/material/Stack';
 

@@ -1,4 +1,5 @@
-import { makeStyles, createTheme, ThemeProvider } from "@material-ui/core/styles";
+import { makeStyles, ThemeProvider } from "@mui/styles";
+import { createTheme } from "@mui/material/styles";
 
 import Content from "./Content";
 import { BlockModel } from "./blocks/types";
