@@ -181,6 +181,10 @@ function PixelCanvas(props: PixelCanvasProps) {
   };
 
   const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    if (!isEditMode) {
+      return;
+    }
+
     if (e.button !== 0) {
       return;
     }
