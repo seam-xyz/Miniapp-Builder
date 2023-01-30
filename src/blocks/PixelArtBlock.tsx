@@ -7,11 +7,12 @@ import React, {useEffect, useRef, useState} from 'react';
 import { Button, Stack } from '@mui/material';
 
 interface PixelCanvasProps {
-  numPixelsPerSide: number;                 // e.g. '5' represents a 5x5 pixel grid
+  initialNumPixelsPerSide: number;          // e.g. '5' represents a 5x5 pixel grid
   isEditMode: boolean;                      // True if edit mode, false if display mode
   initialPixels?: string[][];               // Used to render from an existing state
   shouldShowGridInViewMode?: boolean;       // User sets this value
   onSave?: ((                               // Callback for saving state when editing
+    numPixelsPerSide: number,
     pixels: string[][],
     showGridInViewMode: boolean
   ) => void);
@@ -19,15 +20,17 @@ interface PixelCanvasProps {
 
 function PixelCanvas(props: PixelCanvasProps) {
   const {
-    numPixelsPerSide,
+    initialNumPixelsPerSide,
     isEditMode,
     initialPixels,
     shouldShowGridInViewMode,
     onSave,
   } = props;
+  const [backgroundColor, setBackgroundColor] = useState('#f2f2f2');
+  const [numPixelsPerSide, setNumPixelsPerSide] = useState<number>(initialNumPixelsPerSide);
   const generateDefaultPixelsState = () => {
     return Array.from(
-      {length: numPixelsPerSide}, _ => Array(numPixelsPerSide).fill('#f2f2f2'));
+      {length: numPixelsPerSide}, _ => Array(numPixelsPerSide).fill(backgroundColor));
   }
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -53,8 +56,10 @@ function PixelCanvas(props: PixelCanvasProps) {
   const pixelHeight = height / numPixelsPerSide;
 
   useEffect(() => {
+    ensureValidPixelsArray();
+    resetBackground(backgroundColor);
     drawPixelArt(showGrid);
-  }, [pixels, showGrid]);
+  }, [backgroundColor, pixels, showGrid, numPixelsPerSide]);
 
   useEffect(() => {
     // Update state variables based on changes to props
@@ -70,6 +75,21 @@ function PixelCanvas(props: PixelCanvasProps) {
 
     setPixels(generateDefaultPixelsState());
     drawPixelArt(showGrid);
+  }
+
+  const ensureValidPixelsArray = () => {
+    if (pixels.length === numPixelsPerSide) {
+      return;
+    }
+    const newPixels = generateDefaultPixelsState();
+    for (let i = 0; i < newPixels.length; i++) {
+      for (let j = 0; j < newPixels.length; j++) {
+        if (i < pixels.length && j < pixels.length) {
+          newPixels[i][j] = pixels[i][j];
+        }
+      }
+    }
+    setPixels(newPixels);
   }
 
   const drawPixelArt = (showGrid: boolean) => {
@@ -108,15 +128,29 @@ function PixelCanvas(props: PixelCanvasProps) {
     canvasContext.fillRect(startX, startY, pixelWidth, pixelHeight);
   }
 
+  const resetBackground = (
+    colorHex: string,
+  ) => {
+    const canvasContext = canvasRef?.current?.getContext('2d');
+    if (!canvasContext) {
+      return;
+    }
+    for (let i = 0; i < pixels.length; i++) {
+      for (let j = 0; j < pixels.length; j++) {
+        if (pixels[i][j] === backgroundColor) {
+          pixels[i][j] = colorHex;
+        }
+      }
+    }
+  }
+
   const drawGrid = (
     canvasContext: CanvasRenderingContext2D,
     colorHex: string,
   ) => {
+    canvasContext.beginPath();
     canvasContext.strokeStyle = colorHex;
-    canvasContext.lineWidth = 4;
-
-    // Bounding box
-    canvasContext.rect(0, 0, width, height);
+    canvasContext.lineWidth = getGridLineWidth();
 
     for (let i = 1; i < numPixelsPerSide; i++) {
       // Vertical line
@@ -127,10 +161,20 @@ function PixelCanvas(props: PixelCanvasProps) {
       canvasContext.moveTo(0, (height / numPixelsPerSide) * i);
       canvasContext.lineTo(width, (height / numPixelsPerSide) * i);
     }
-    
+
     // Draw
     canvasContext.stroke();
   }
+
+  const getGridLineWidth = () => {
+    if (numPixelsPerSide < 10) {
+      return 4;
+    } else if (numPixelsPerSide < 20) {
+      return 2;
+    } else {
+      return 1;
+    }
+  };
 
   const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     if (e.button !== 0) {
@@ -165,7 +209,7 @@ function PixelCanvas(props: PixelCanvasProps) {
 
   const savePixelState = () => {
     if (onSave) {
-      onSave(pixels, showGridInViewMode);
+      onSave(numPixelsPerSide, pixels, showGridInViewMode);
     }
   }
 
@@ -190,6 +234,18 @@ function PixelCanvas(props: PixelCanvasProps) {
                 id='toggleGrid'
                 checked={showGrid}
                 onChange={() => {setShowGrid(!showGrid)}}
+              />
+            </div>
+            <div>
+              {/* TODO: How can i make this a set of exclusive radio buttons? */}
+              <label>Pixels Per Side: </label>
+              <input
+                type='range'
+                id='pixelsPerSideInput'
+                min={2}
+                max={30}
+                value={numPixelsPerSide}
+                onChange={(e) => setNumPixelsPerSide(parseInt(e.target.value))}
               />
             </div>
             <div>
@@ -251,7 +307,7 @@ export default class PixelArtBlock extends Block {
 
     return (
       <PixelCanvas
-        numPixelsPerSide={parseInt(numPixelsPerSide)}
+        initialNumPixelsPerSide={parseInt(numPixelsPerSide)}
         isEditMode={false}
         initialPixels={pixels}
         shouldShowGridInViewMode={showGridInViewMode}
@@ -260,15 +316,15 @@ export default class PixelArtBlock extends Block {
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
-    const numPixels = 5;
+    const defaultNumPixels = 5;
     const {
       numPixelsPerSide,
       pixelsArrStringified,
       shouldShowGridInViewMode,
     } = this.model.data;
 
-    const onSave = (pixels: string[][], showGridInViewMode: boolean) => {
-      this.model.data['numPixelsPerSide'] = numPixels.toString();
+    const onSave = (numPixelsPerSide: number, pixels: string[][], showGridInViewMode: boolean) => {
+      this.model.data['numPixelsPerSide'] = numPixelsPerSide.toString();
       this.model.data['pixelsArrStringified'] = JSON.stringify(pixels);
       this.model.data['shouldShowGridInViewMode'] = Number(showGridInViewMode).toString();
       done(this.model);
@@ -276,7 +332,7 @@ export default class PixelArtBlock extends Block {
 
     return (
       <PixelCanvas
-        numPixelsPerSide={(numPixelsPerSide && parseInt(numPixelsPerSide)) || numPixels}
+        initialNumPixelsPerSide={(numPixelsPerSide && parseInt(numPixelsPerSide)) || defaultNumPixels}
         initialPixels={pixelsArrStringified && JSON.parse(pixelsArrStringified)}
         isEditMode={true}
         shouldShowGridInViewMode={Boolean(parseInt(shouldShowGridInViewMode))}
