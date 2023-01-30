@@ -137,7 +137,6 @@ function PixelCanvas(props: PixelCanvasProps) {
     if (!canvasContext) {
       return;
     }
-    console.log('old color: ', backgroundColor, 'new color: ', colorHex)
     for (let i = 0; i < pixels.length; i++) {
       for (let j = 0; j < pixels.length; j++) {
         if (pixels[i][j] === backgroundColor) {
@@ -185,7 +184,6 @@ function PixelCanvas(props: PixelCanvasProps) {
       return;
     }
 
-    console.log('button: ', e.button);
     if (!(e.button === 0 || e.button === 2)) {
       return;
     }
