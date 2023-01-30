@@ -185,9 +185,11 @@ function PixelCanvas(props: PixelCanvasProps) {
       return;
     }
 
-    if (e.button !== 0) {
+    console.log('button: ', e.button);
+    if (!(e.button === 0 || e.button === 2)) {
       return;
     }
+
     const canvas = canvasRef?.current;
     if (!canvas) {
       return;
@@ -210,9 +212,9 @@ function PixelCanvas(props: PixelCanvasProps) {
     const pixelIdxX = Math.floor(relativeX * numPixelsPerSide / boundingXLen);
     const boundingYLen = canvasBoundingRect.bottom - canvasBoundingRect.top;
     const pixelIdxY = Math.floor(relativeY * numPixelsPerSide / boundingYLen);
-    
+
     // Cache pixel color and useEffect will re-draw
-    setPixelColor(pixelIdxX, pixelIdxY, color);
+    setPixelColor(pixelIdxX, pixelIdxY, e.button === 0 ? color : backgroundColor);
   }
 
   const savePixelState = () => {
@@ -278,17 +280,19 @@ function PixelCanvas(props: PixelCanvasProps) {
           height={height}
           style={{ cursor: isEditMode ? 'pointer' : 'default' }}
           onMouseDown={handleCanvasClick}
+          onContextMenu={(e) => e.preventDefault()}
         />
         {isEditMode &&
           <div>
             <div>
-            <label>Show Guide in View Mode: </label>
+              <label>Show Guide in View Mode: </label>
               <input
                 type='checkbox'
                 id='toggleShowGridInViewMode'
                 checked={showGridInViewMode}
                 onChange={() => {setShowGridInViewMode(!showGridInViewMode)}}
               />
+              <p>Tip: Right-click to undo</p>
             </div>
             <Button
               type='submit'
