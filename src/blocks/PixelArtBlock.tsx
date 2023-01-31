@@ -7,27 +7,43 @@ import React, {useEffect, useRef, useState} from 'react';
 import { Button, Stack } from '@mui/material';
 
 interface PixelCanvasProps {
-  numPixelsPerSide: number;                 // e.g. '5' represents a 5x5 pixel grid
+  initialNumPixelsPerSide: number;          // e.g. '5' represents a 5x5 pixel grid
   isEditMode: boolean;                      // True if edit mode, false if display mode
   initialPixels?: string[][];               // Used to render from an existing state
-  onSave?: ((pixels: string[][]) => void);  // Callback for saving state when editing
+  shouldShowGridInViewMode?: boolean;       // User sets this value
+  initialBackgroundColor?: string;         // Sets the initial background color, important for loading state
+  onSave?: ((                               // Callback for saving state when editing
+    numPixelsPerSide: number,
+    pixels: string[][],
+    showGridInViewMode: boolean,
+    backgroundColor: string,
+  ) => void);
 }
 
-function PixelCanvas({
-  numPixelsPerSide,
-  isEditMode,
-  initialPixels,
-  onSave,
-}: PixelCanvasProps) {
+function PixelCanvas(props: PixelCanvasProps) {
+  const {
+    initialNumPixelsPerSide,
+    isEditMode,
+    initialPixels,
+    shouldShowGridInViewMode,
+    initialBackgroundColor,
+    onSave,
+  } = props;
+  const [backgroundColor, setBackgroundColor] = useState(initialBackgroundColor || '#f2f2f2');
+  const [numPixelsPerSide, setNumPixelsPerSide] = useState<number>(initialNumPixelsPerSide);
   const generateDefaultPixelsState = () => {
     return Array.from(
-      {length: numPixelsPerSide}, _ => Array(numPixelsPerSide).fill('#f2f2f2'));
+      {length: numPixelsPerSide}, _ => Array(numPixelsPerSide).fill(backgroundColor));
   }
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [color, setColor] = useState('#000000');
-  const [showGrid, setShowGrid] = useState(isEditMode);
   const [pixels, setPixels] = useState<string[][]>(initialPixels || generateDefaultPixelsState());
+  const [
+    showGridInViewMode,
+    setShowGridInViewMode,
+  ] = useState(shouldShowGridInViewMode || false);
+  const [showGrid, setShowGrid] = useState(showGridInViewMode || isEditMode);
   
   const setPixelColor = (x: number, y: number, color: string) => {
     let updatedPixels = [...pixels];
@@ -43,12 +59,15 @@ function PixelCanvas({
   const pixelHeight = height / numPixelsPerSide;
 
   useEffect(() => {
+    ensureValidPixelsArray();
     drawPixelArt(showGrid);
-  }, [pixels, showGrid]);
+  }, [backgroundColor, pixels, showGrid, numPixelsPerSide]);
 
   useEffect(() => {
+    // Update state variables based on changes to props
     initialPixels && setPixels(initialPixels);
-  }, [initialPixels])
+    setShowGrid(shouldShowGridInViewMode || isEditMode);
+  }, [props])
 
   const clearCanvas = () => {
     const canvasContext = canvasRef?.current?.getContext('2d');
@@ -58,6 +77,21 @@ function PixelCanvas({
 
     setPixels(generateDefaultPixelsState());
     drawPixelArt(showGrid);
+  }
+
+  const ensureValidPixelsArray = () => {
+    if (pixels.length === numPixelsPerSide) {
+      return;
+    }
+    const newPixels = generateDefaultPixelsState();
+    for (let i = 0; i < newPixels.length; i++) {
+      for (let j = 0; j < newPixels.length; j++) {
+        if (i < pixels.length && j < pixels.length) {
+          newPixels[i][j] = pixels[i][j];
+        }
+      }
+    }
+    setPixels(newPixels);
   }
 
   const drawPixelArt = (showGrid: boolean) => {
@@ -96,15 +130,30 @@ function PixelCanvas({
     canvasContext.fillRect(startX, startY, pixelWidth, pixelHeight);
   }
 
+  const resetBackground = (
+    colorHex: string,
+  ) => {
+    const canvasContext = canvasRef?.current?.getContext('2d');
+    if (!canvasContext) {
+      return;
+    }
+    for (let i = 0; i < pixels.length; i++) {
+      for (let j = 0; j < pixels.length; j++) {
+        if (pixels[i][j] === backgroundColor) {
+          pixels[i][j] = colorHex;
+        }
+      }
+    }
+    setBackgroundColor(colorHex);
+  }
+
   const drawGrid = (
     canvasContext: CanvasRenderingContext2D,
     colorHex: string,
   ) => {
+    canvasContext.beginPath();
     canvasContext.strokeStyle = colorHex;
-    canvasContext.lineWidth = 4;
-
-    // Bounding box
-    canvasContext.rect(0, 0, width, height);
+    canvasContext.lineWidth = getGridLineWidth();
 
     for (let i = 1; i < numPixelsPerSide; i++) {
       // Vertical line
@@ -115,15 +164,30 @@ function PixelCanvas({
       canvasContext.moveTo(0, (height / numPixelsPerSide) * i);
       canvasContext.lineTo(width, (height / numPixelsPerSide) * i);
     }
-    
+
     // Draw
     canvasContext.stroke();
   }
 
+  const getGridLineWidth = () => {
+    if (numPixelsPerSide < 10) {
+      return 4;
+    } else if (numPixelsPerSide < 20) {
+      return 2;
+    } else {
+      return 1;
+    }
+  };
+
   const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
-    if (e.button !== 0) {
+    if (!isEditMode) {
       return;
     }
+
+    if (!(e.button === 0 || e.button === 2)) {
+      return;
+    }
+
     const canvas = canvasRef?.current;
     if (!canvas) {
       return;
@@ -146,14 +210,14 @@ function PixelCanvas({
     const pixelIdxX = Math.floor(relativeX * numPixelsPerSide / boundingXLen);
     const boundingYLen = canvasBoundingRect.bottom - canvasBoundingRect.top;
     const pixelIdxY = Math.floor(relativeY * numPixelsPerSide / boundingYLen);
-    
+
     // Cache pixel color and useEffect will re-draw
-    setPixelColor(pixelIdxX, pixelIdxY, color);
+    setPixelColor(pixelIdxX, pixelIdxY, e.button === 0 ? color : backgroundColor);
   }
 
   const savePixelState = () => {
     if (onSave) {
-      onSave(pixels);
+      onSave(numPixelsPerSide, pixels, showGridInViewMode, backgroundColor);
     }
   }
 
@@ -163,12 +227,21 @@ function PixelCanvas({
         {isEditMode &&
           <Stack direction='row' spacing={2} paddingBottom={1} justifyContent='center'>
             <div>
-              <label>Set Color: </label>
+              <label>Set Pixel Color: </label>
               <input
                 type='color'
                 id='colorInput'
                 value={color}
                 onChange={(e) => setColor(e.target.value)}
+              />
+            </div>
+            <div>
+              <label>Set Background Color: </label>
+              <input
+                type='color'
+                id='colorInput'
+                value={backgroundColor}
+                onChange={(e) => resetBackground(e.target.value)}
               />
             </div>
             <div>
@@ -178,6 +251,18 @@ function PixelCanvas({
                 id='toggleGrid'
                 checked={showGrid}
                 onChange={() => {setShowGrid(!showGrid)}}
+              />
+            </div>
+            <div>
+              {/* TODO: How can i make this a set of exclusive radio buttons? */}
+              <label>Pixels Per Side: </label>
+              <input
+                type='range'
+                id='pixelsPerSideInput'
+                min={2}
+                max={30}
+                value={numPixelsPerSide}
+                onChange={(e) => setNumPixelsPerSide(parseInt(e.target.value))}
               />
             </div>
             <div>
@@ -191,19 +276,32 @@ function PixelCanvas({
           ref={canvasRef}
           width={width}
           height={height}
-          style={{ cursor: 'pointer '}}
+          style={{ cursor: isEditMode ? 'pointer' : 'default' }}
           onMouseDown={handleCanvasClick}
+          onContextMenu={(e) => e.preventDefault()}
         />
         {isEditMode &&
-          <Button
-            type='submit'
-            variant='contained'
-            className='save-modal-button'
-            sx={{ mt: 3, mb: 2 }}
-            onClick={savePixelState}
-          >
-            Save
-          </Button>
+          <div>
+            <div>
+              <label>Show Guide in View Mode: </label>
+              <input
+                type='checkbox'
+                id='toggleShowGridInViewMode'
+                checked={showGridInViewMode}
+                onChange={() => {setShowGridInViewMode(!showGridInViewMode)}}
+              />
+              <p>Tip: Right-click to undo</p>
+            </div>
+            <Button
+              type='submit'
+              variant='contained'
+              className='save-modal-button'
+              sx={{ mt: 3, mb: 2 }}
+              onClick={savePixelState}
+            >
+              Save
+            </Button>
+          </div>
         }
       </div>
     </div>
@@ -219,34 +317,54 @@ export default class PixelArtBlock extends Block {
     const {
       numPixelsPerSide,
       pixelsArrStringified,
+      shouldShowGridInViewMode,
+      backgroundColor,
     } = this.model.data;
     const pixels = JSON.parse(pixelsArrStringified);
+    const showGridInViewMode = shouldShowGridInViewMode
+      ? Boolean(parseInt(shouldShowGridInViewMode))
+      : false;
 
     return (
       <PixelCanvas
-        numPixelsPerSide={parseInt(numPixelsPerSide)}
+        initialNumPixelsPerSide={parseInt(numPixelsPerSide)}
         isEditMode={false}
         initialPixels={pixels}
+        shouldShowGridInViewMode={showGridInViewMode}
+        initialBackgroundColor={backgroundColor}
       />
     );
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
-    const numPixels = 5;
+    const defaultNumPixels = 5;
     const {
       numPixelsPerSide,
       pixelsArrStringified,
+      shouldShowGridInViewMode,
+      backgroundColor,
     } = this.model.data;
-    const onSave = (pixels: string[][]) => {
-      this.model.data['numPixelsPerSide'] = numPixels.toString();
+
+    const onSave = (
+      numPixelsPerSide: number,
+      pixels: string[][],
+      showGridInViewMode: boolean,
+      backgroundColor: string
+    ) => {
+      this.model.data['numPixelsPerSide'] = numPixelsPerSide.toString();
       this.model.data['pixelsArrStringified'] = JSON.stringify(pixels);
+      this.model.data['shouldShowGridInViewMode'] = Number(showGridInViewMode).toString();
+      this.model.data['backgroundColor'] = backgroundColor;
       done(this.model);
     }
+
     return (
       <PixelCanvas
-        numPixelsPerSide={(numPixelsPerSide && parseInt(numPixelsPerSide)) || numPixels}
+        initialNumPixelsPerSide={(numPixelsPerSide && parseInt(numPixelsPerSide)) || defaultNumPixels}
         initialPixels={pixelsArrStringified && JSON.parse(pixelsArrStringified)}
         isEditMode={true}
+        shouldShowGridInViewMode={Boolean(parseInt(shouldShowGridInViewMode))}
+        initialBackgroundColor={backgroundColor}
         onSave={onSave}
       />
     )
