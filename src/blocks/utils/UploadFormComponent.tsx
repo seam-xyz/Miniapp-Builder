@@ -17,7 +17,6 @@ export default function UploadFormComponent(
     style: {
       fontSize: 16
     },
-    maxFileSizeBytes: 1024 ** 2,
     editor: {
       images: {
         crop: false // turn off crop because it's too easy to forget to hit done
