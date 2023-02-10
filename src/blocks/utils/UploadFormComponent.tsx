@@ -14,6 +14,7 @@ export default function UploadFormComponent(
   
   const options = { 
     multi: false,
+    mimeTypes: ["image/jpeg", "image/png", "image/jpg"],
     style: {
       fontSize: 16
     },
