@@ -1,18 +1,17 @@
 // https://github.com/bkrem/react-nft-gallery/blob/0ddc9b60cf5863229836564fab51430a9222a911/src/api.ts
 
-import { OpenseaAssetsAndNextCursor } from '../types/OpenseaAsset';
+import { OpenseaAssetsAndNextCursor } from "../types/OpenseaAsset";
 
 export const OPENSEA_API_OFFSET = 50;
-const OPENSEA_URL = 'https://api.opensea.io';
-const ENS_GRAPH_URL = 'https://api.thegraph.com/subgraphs/name/ensdomains/ens';
+const OPENSEA_URL = "https://api.opensea.io";
+const ENS_GRAPH_URL = "https://api.thegraph.com/subgraphs/name/ensdomains/ens";
 const MAX_AUTO_RETRY_ATTEMPT = 10;
 const AUTO_RETRY_ATTEMPT_INTERVAL = 2000;
 
 let requestRetryCount = 0;
 
 export const isEnsDomain = (ownerAddress: string) =>
-  ownerAddress.includes('.eth');
-
+  ownerAddress.includes(".eth");
 
 export const resolveEnsDomain = async (
   ensDomainName: string
@@ -29,7 +28,7 @@ export const resolveEnsDomain = async (
   const variables = { name: ensDomainName };
   try {
     const result = await fetch(ENS_GRAPH_URL, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({ query, variables }),
     });
     const { data } = await result.json();
@@ -56,9 +55,9 @@ export const fetchOpenseaAssets = async ({
   owner,
   cursor,
   apiKey,
-  isProxyApi,
   apiUrl,
   autoRetry,
+  contract,
 }: {
   owner: string | null;
   cursor?: string;
@@ -66,21 +65,22 @@ export const fetchOpenseaAssets = async ({
   isProxyApi?: boolean;
   apiUrl?: string;
   autoRetry?: boolean;
+  contract?: string;
 }): Promise<OpenseaAssetsAndNextCursor> => {
   try {
-    const apiUrlFinal =
-      apiKey || isProxyApi
-        ? `${
-            apiUrl ? apiUrl : OPENSEA_URL
-          }/api/v1/assets?limit=50&cursor=${cursor}${
-            owner ? '&owner=' + owner : ''
-          }`
-        : `${apiUrl ? apiUrl : OPENSEA_URL}/api/v1/assets?${
-            owner ? '&owner=' + owner : ''
-          }`;
+    console.log("Fetching assets with owner", owner)
+    let ownerArg = owner ? "&owner=" + owner : "";
+    let contractArg = contract ? "&asset_contract_address=" + contract : "";
+    const apiUrlFinal = apiKey
+      ? `${
+          apiUrl ? apiUrl : OPENSEA_URL
+        }/api/v1/assets?limit=50&cursor=${cursor}${ownerArg}${contractArg}`
+      : `${
+          apiUrl ? apiUrl : OPENSEA_URL
+        }/api/v1/assets?${ownerArg}${contractArg}`;
     const result = await fetch(
       apiUrlFinal,
-      apiKey ? { headers: { 'X-API-KEY': apiKey } } : {}
+      apiKey ? { headers: { "X-API-KEY": apiKey } } : {}
     );
     if (result.status !== 200) {
       const error = await result.text();
@@ -112,16 +112,15 @@ export const fetchOpenseaAssets = async ({
           owner,
           cursor,
           apiKey,
-          isProxyApi,
           apiUrl,
           autoRetry,
         })
       );
     } else {
-      console.error('fetchAssets failed:', error);
+      console.error("fetchAssets failed:", error);
       return {
         assets: [],
-        nextCursor: '',
+        nextCursor: "",
         hasError: true,
       };
     }
