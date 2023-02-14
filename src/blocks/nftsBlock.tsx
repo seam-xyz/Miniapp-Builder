@@ -16,7 +16,7 @@ import { BlockModel } from './types'
 
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
-import { Grid } from '@mui/material';
+import { Grid, ImageList, ImageListItem } from '@mui/material';
 
 interface NftGridProps {
   /**
@@ -91,35 +91,47 @@ function NFTGrid(props: NftGridProps) {
     // </Grid>
 
 
-    // <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridAutoFlow:'row dense', gridAutoRows:'20%', gridTemplateRows:'unset', width: '100%', height:'100%', overflowY: 'auto', rowGap:'0px' }}>
+    // <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridAutoFlow:'row dense', gridAutoRows:'100%', gridTemplateRows:'unset', width: '100%', height:'100%', overflowY: 'auto', overflowX: 'hidden', rowGap:'0px' }}>
     //   {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
-    //   <div style={{}}>
-    //     <img src={asset.image_preview_url} key={index} style={{ maxHeight:'100%', maxWidth: '100%', aspectRatio: 1}} />
-    //     </div>
+    //   // <div style={{}}>
+    //     <img src={asset.image_preview_url} key={index} style={{ maxHeight:'100px', maxWidth: '100px', aspectRatio: 1, display:'block'}} />
+    //     // </div>
     //   )}
 
     // </div>
 
+    <div style={{position:"relative", height:'100%', width:"100%"}}>
 
-    <div style={{ overflow: 'hidden', height: '100%' }}>
+    <ImageList cols={2} style={{maxHeight: '100%', position:'absolute'}}>
+       {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
+           <ImageListItem key={index}>
+               <img src={asset.image_preview_url} key={index} style={{ aspectRatio: 1}} loading="lazy" />
+            </ImageListItem>
+       )}
 
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto' }}>
-        {leftCol.map((leftAsset, index) =>
-          <div style={{ display: 'flex', flexDirection: 'row', minHeight: 'min-content' }}>
-            <div style={{ width: '50%', aspectRatio: 1}} >
-              <img src={leftAsset.image_preview_url} key={index} style={{ width: '100%', aspectRatio: 1, display: 'inline-block' }} />
-            </div>
-            <div style={{ width: '50%', aspectRatio: 1}} >
-              {rightCol.at(index) ?
-                <img src={rightCol[index].image_preview_url} key={index} style={{ width: '100%', aspectRatio: 1, display: 'inline-block' }} /> : <div />}
-            </div>
-          </div>
-
-        )
-        }
-
-      </div>
+    </ImageList>
     </div>
+
+
+    // <div style={{ overflow: 'hidden', height: '100%' }}>
+
+    //   <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto' }}>
+    //     {leftCol.map((leftAsset, index) =>
+    //       <div style={{ display: 'flex', flexDirection: 'row', minHeight: 'min-content' }}>
+    //         <div style={{ width: '50%', aspectRatio: 1}} >
+    //           <img src={leftAsset.image_preview_url} key={index} style={{ width: '100%', aspectRatio: 1, display: 'inline-block' }} />
+    //         </div>
+    //         <div style={{ width: '50%', aspectRatio: 1}} >
+    //           {rightCol.at(index) ?
+    //             <img src={rightCol[index].image_preview_url} key={index} style={{ width: '100%', aspectRatio: 1, display: 'inline-block' }} /> : <div />}
+    //         </div>
+    //       </div>
+
+    //     )
+    //     }
+
+    //   </div>
+    // </div>
   )
 
 
