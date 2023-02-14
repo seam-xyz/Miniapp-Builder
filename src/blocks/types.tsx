@@ -177,4 +177,13 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: pixelArtIcon,
     deprecated: false,
   },
+  "NFTs": { 
+        type: "NFTs",
+        displayName: "NFTs",
+        displayDescription: "View the first twenty NFTs in your ethereum wallet.",
+        emptyTitle: "Empty NFTs Block",
+        emptySubtitle: "Tap here to setup your NFTs block!",
+        icon: "nftsIcon", // TODO: insert your block icon here
+        deprecated: false
+    },
 };
