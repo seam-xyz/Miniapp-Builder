@@ -1,0 +1,16 @@
+{
+  "javascript.suggest.completeFunctionCalls": true,
+  "typescript.suggest.completeFunctionCalls": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": false,
+    "source.fixAll.eslint": false
+  },
+  "javascript.format.enable": true,
+  "typescript.format.enable": true,
+  "json.format.enable": true,
+  "html.format.enable": true,
+  "editor.formatOnSave": false,
+  "eslint.enable": false,
+  "prettier.enable": false,
+  "files.autoSave": "off"
+}
