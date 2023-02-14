@@ -16,6 +16,7 @@ import { BlockModel } from './types'
 
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
+import { Grid } from '@mui/material';
 
 interface NftGridProps {
   /**
@@ -65,12 +66,59 @@ function NFTGrid(props: NftGridProps) {
   }
 
 
-  return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', width: '100%', margin: '0 auto' }}>
-      {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
-        <img src={asset.image_preview_url} key={index} style={{ width: '100%', aspectRatio: 1 }} />
-      )}
+  var leftCol = [] as OpenseaAsset[]
+  var rightCol = [] as OpenseaAsset[]
 
+  for (var i = 0; i < assets.length; i++) {
+    if (i % 2 == 0) {
+      leftCol.push(assets[i])
+    } else {
+      rightCol.push(assets[i])
+    }
+  }
+
+  return (
+
+    // TODO: Make scrollable...
+
+    // <Grid container columns={2} style={{overflowY: 'scroll'}} >
+
+    //   {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
+    //     <Grid item>
+    //       <img src={asset.image_preview_url} key={index} style={{ width: '100%', aspectRatio: 1 }} />
+    //     </Grid>
+    //   )}
+    // </Grid>
+
+
+    // <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridAutoFlow:'row dense', gridAutoRows:'20%', gridTemplateRows:'unset', width: '100%', height:'100%', overflowY: 'auto', rowGap:'0px' }}>
+    //   {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
+    //   <div style={{}}>
+    //     <img src={asset.image_preview_url} key={index} style={{ maxHeight:'100%', maxWidth: '100%', aspectRatio: 1}} />
+    //     </div>
+    //   )}
+
+    // </div>
+
+
+    <div style={{ overflow: 'hidden', height: '100%' }}>
+
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto' }}>
+        {leftCol.map((leftAsset, index) =>
+          <div style={{ display: 'flex', flexDirection: 'row', minHeight: 'min-content' }}>
+            <div style={{ width: '50%', aspectRatio: 1}} >
+              <img src={leftAsset.image_preview_url} key={index} style={{ width: '100%', aspectRatio: 1, display: 'inline-block' }} />
+            </div>
+            <div style={{ width: '50%', aspectRatio: 1}} >
+              {rightCol.at(index) ?
+                <img src={rightCol[index].image_preview_url} key={index} style={{ width: '100%', aspectRatio: 1, display: 'inline-block' }} /> : <div />}
+            </div>
+          </div>
+
+        )
+        }
+
+      </div>
     </div>
   )
 
@@ -86,9 +134,9 @@ export default class NFTsBlock extends Block {
     let ownerAddress = this.model.data["ownerAddress"]
 
     return (
-      <div>
-        <NFTGrid ownerAddress={ownerAddress} />
-      </div>
+
+      <NFTGrid ownerAddress={ownerAddress} />
+
     );
   }
 
@@ -125,7 +173,8 @@ export default class NFTsBlock extends Block {
           Save
         </Button>
       </Box>
-    )  }
+    )
+  }
 
   renderErrorState() {
     return (
