@@ -39,7 +39,7 @@ export default function App() {
   // vvvvvvvvvvvvvvvvv
 
   let yourBlock: BlockModel = {
-    type: "NFTs",
+    type: "%NAME%",
     data: {},
     uuid: "test"
   }

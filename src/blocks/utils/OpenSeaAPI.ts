@@ -1,3 +1,6 @@
+// API built based on
+// https://github.com/bkrem/react-nft-gallery
+
 import { OpenseaAssetsAndNextCursor } from "../types/OpenseaAsset";
 
 export const OPENSEA_API_OFFSET = 50;
@@ -65,7 +68,6 @@ export const fetchOpenseaAssets = async ({
   contract?: string;
 }): Promise<OpenseaAssetsAndNextCursor> => {
   try {
-    console.log("Fetching assets with owner", owner);
     let ownerArg = owner ? "&owner=" + owner : "";
     let contractArg = contract ? "&asset_contract_address=" + contract : "";
     const apiUrlFinal = apiKey
