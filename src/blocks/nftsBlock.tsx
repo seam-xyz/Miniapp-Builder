@@ -19,8 +19,6 @@ import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 import { ImageList, ImageListItem, ToggleButton, ToggleButtonGroup } from '@mui/material';
 
-export const PIXELS_FARM_CONTRACT = "0x5C1A0CC6DAdf4d0fB31425461df35Ba80fCBc110"
-
 interface NftGridProps {
   /**
    * Ethereum address (`0x...`) or ENS domain (`vitalik.eth`) for which the gallery should contain associated NFTs.
@@ -49,26 +47,30 @@ function NFTGrid(props: NftGridProps) {
 
   const [assets, setAssets] = useState([] as OpenseaAsset[]);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingError, setLoadingError] = useState(undefined as string | undefined)
 
   useEffect(() => {
     const loadAssetsPage = async (
       ownerAddress: NftGridProps['ownerAddress'],
     ) => {
       setIsLoading(true);
+      setLoadingError(undefined);
       const owner = isEnsDomain(ownerAddress)
         ? await resolveEnsDomain(ownerAddress)
         : ownerAddress;
 
       const {
         assets: rawAssets,
-        hasError,
+        error,
       } = await fetchOpenseaAssets({
         owner,
         contract: props.contract
 
       });
-      if (!hasError) {
+      if (!error) {
         setAssets(rawAssets)
+      } else {
+        setLoadingError(error)
       }
       setIsLoading(false);
 
@@ -98,10 +100,23 @@ function NFTGrid(props: NftGridProps) {
             <div style={{ width: '100%', height: '60px', margin: '10px', alignItems: 'center', display: 'flex' }}>#{asset.token_id}</div>
           </div>
         )}
+      </div>
+    )
 
+  }
+
+  if (loadingError) {
+    return (
+      <div style={{ position: "relative", height: '100%', width: "100%", alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column' }}>
+        <div>
+          {loadingError}
+        </div>
+        <br />
+        <div>Please try again ♡</div>
       </div>
     )
   }
+
 
   return (
     <div style={{ position: "relative", height: '100%', width: "100%" }}>
@@ -169,7 +184,6 @@ export default class NFTsBlock extends Block {
         </div>
       );
     }
-
 
     return (
       <Box

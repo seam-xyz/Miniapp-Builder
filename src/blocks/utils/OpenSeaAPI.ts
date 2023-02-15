@@ -89,7 +89,7 @@ export const fetchOpenseaAssets = async ({
     return {
       assets,
       nextCursor,
-      hasError: false,
+      error: undefined,
     };
   } catch (error) {
     if (autoRetry && requestRetryCount < MAX_AUTO_RETRY_ATTEMPT) {
@@ -118,7 +118,7 @@ export const fetchOpenseaAssets = async ({
       return {
         assets: [],
         nextCursor: "",
-        hasError: true,
+        error: (error as Error).message,
       };
     }
   }

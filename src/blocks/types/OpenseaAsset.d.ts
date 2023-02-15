@@ -159,7 +159,7 @@ interface LastSale {
 export interface OpenseaAssetsAndNextCursor {
   assets: OpenseaAsset[];
   nextCursor: string;
-  hasError: boolean;
+  error?: string;
 }
 export interface OpenseaAsset {
   id: number;
