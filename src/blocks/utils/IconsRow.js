@@ -29,7 +29,7 @@ export function IconsSelector() {
       <MenuItem value="twitter"><TwitterIcon /></MenuItem>
       <MenuItem value="instagram"><InstagramIcon /></MenuItem>
       <MenuItem value="linkedin"><LinkedIn /></MenuItem>
-      <MenuItem value="discord"><img src={Discord} style={{ height: 20, color: "red" }} /></MenuItem>
+      <MenuItem value="discord"><img src={Discord} style={{ height: 20 }} /></MenuItem>
       <MenuItem value="tiktok"><img src={Tiktok} style={{ height: 20 }} /></MenuItem>
       <MenuItem value="medium"><img src={mediumIcon} style={{ height: 20 }} /></MenuItem>
       <MenuItem value="link"><LinkIcon /></MenuItem>
@@ -40,33 +40,33 @@ export function IconsSelector() {
   )
 }
 
-export default function IconsRow({ icons }) {
+export default function IconsRow({ icons, color }) {
   const classes = useStyles();
 
   function getIconForName(name) {
     switch (name) {
       case "twitter":
-        return <TwitterIcon key={name} />
+        return <TwitterIcon key={name} sx={{ color: color }}/>
       case "discord":
-        return <img src={Discord} className={classes.iconImage} />
+        return <img src={Discord} className={classes.iconImage} sx={{ color: color }} />
       case "tiktok":
-        return <img src={Tiktok} className={classes.iconImage} />
+        return <img src={Tiktok} className={classes.iconImage} sx={{ color: color }}/>
       case "medium":
-        return <img src={mediumIcon} className={classes.iconImage} />
+        return <img src={mediumIcon} className={classes.iconImage} sx={{ color: color }}/>
       case "facebook":
-        return <FacebookIcon key={name} />
+        return <FacebookIcon key={name} sx={{ color: color }}/>
       case "linkedin":
-        return <LinkedIn key={name} />
+        return <LinkedIn key={name} sx={{ color: color }}/>
       case "link":
-        return <LinkIcon key={name} />
+        return <LinkIcon key={name} sx={{ color: color }}/>
       case "instagram":
-        return <InstagramIcon key={name} />
+        return <InstagramIcon key={name} sx={{ color: color }}/>
       case "email":
-        return <EmailIcon key={name} />
+        return <EmailIcon key={name} sx={{ color: color }}/>
       case "youtube":
-        return <YoutubeIcon key={name} />
+        return <YoutubeIcon key={name} sx={{ color: color }}/>
       default:
-        return <ErrorIcon key={name} />
+        return <ErrorIcon key={name} sx={{ color: color }}/>
     }
   }
 

@@ -31,7 +31,7 @@ export default class ProfileBlock extends Block {
         {imageURL && <Avatar src={imageURL} style={{ width: "160px", height: "160px", marginTop: "10px" }}></Avatar>}
         <h2 style={{ textAlign: "center", marginTop: "16px" }}> {title} </h2>
         <h4 style={{ textAlign: "center", marginBottom: "16px" }}> {bio} </h4>
-        <IconsRow icons={icons} />
+        <IconsRow icons={icons} color={"black"}/>
       </div>
     );
   }
