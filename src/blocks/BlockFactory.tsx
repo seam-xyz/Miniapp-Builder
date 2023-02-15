@@ -1,3 +1,4 @@
+import NFTsBlock from './NFTsBlock'
 import RefreshingGIFBlock from './RefreshingGIFBlock'
 import PixelArtBlock from './PixelArtBlock'
 import Block from './Block'
@@ -30,6 +31,7 @@ export default class BlockFactory {
       case "giphy": return new GiphyBlock(model, theme)
       case "RefreshingGIF": return new RefreshingGIFBlock(model, theme)
       case "PixelArt": return new PixelArtBlock(model, theme)
+      case "NFTs": return new NFTsBlock(model, theme)
       // new blocks go here
       default: return new IFrameBlock(model, theme)
     }
