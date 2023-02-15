@@ -11,6 +11,7 @@ import profileIcon from "./blockIcons/profileHeaderIcon.png";
 import musicIcon from "./blockIcons/musicIcon.png";
 import randomGiphyIcon from "./blockIcons/randomGiphyIcon.png";
 import pixelArtIcon from "./blockIcons/pixelArtIcon.png";
+import nftIcon from "./blockIcons/nftIcon.png"
 
 export type BlockModel = {
   type: string;
@@ -168,7 +169,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: randomGiphyIcon,
     deprecated: false,
   },
-  "PixelArt": { 
+  "PixelArt": {
     type: "PixelArt",
     displayName: "Pixel Art",
     displayDescription: "A block to make then display pixel art",
@@ -177,13 +178,13 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: pixelArtIcon,
     deprecated: false,
   },
-  "NFTs": { 
-        type: "NFTs",
-        displayName: "NFTs",
-        displayDescription: "View the first twenty NFTs in your ethereum wallet.",
-        emptyTitle: "Empty NFTs Block",
-        emptySubtitle: "Tap here to setup your NFTs block!",
-        icon: "nftsIcon", // TODO: insert your block icon here
-        deprecated: false
-    },
+  "NFTs": {
+    type: "NFTs",
+    displayName: "NFTs",
+    displayDescription: "View the first twenty NFTs in your ethereum wallet.",
+    emptyTitle: "Empty NFTs Block",
+    emptySubtitle: "Tap here to setup your NFTs block!",
+    icon: nftIcon,
+    deprecated: false
+  },
 };
