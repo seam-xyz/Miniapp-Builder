@@ -9,6 +9,9 @@ import { OpenseaAsset } from './types/OpenseaAsset';
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import ViewListIcon from '@mui/icons-material/ViewList';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+
 
 import Block from './Block'
 import { BlockModel } from './types'
@@ -16,8 +19,10 @@ import { BlockModel } from './types'
 
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
-import { Grid, ImageList, ImageListItem } from '@mui/material';
+import { ImageList, ImageListItem, Switch, Theme, ToggleButton, ToggleButtonGroup } from '@mui/material';
 
+
+export const PIXELS_FARM_CONTRACT = "0x5C1A0CC6DAdf4d0fB31425461df35Ba80fCBc110"
 interface NftGridProps {
   /**
    * Ethereum address (`0x...`) or ENS domain (`vitalik.eth`) for which the gallery should contain associated NFTs.
@@ -44,14 +49,13 @@ function NFTGrid(props: NftGridProps) {
       ? await resolveEnsDomain(ownerAddress)
       : ownerAddress;
 
-    const contract = ''
     const {
       assets: rawAssets,
       hasError,
       nextCursor,
     } = await fetchOpenseaAssets({
       owner,
-      contract
+      contract: PIXELS_FARM_CONTRACT
 
     });
     if (hasError) {
@@ -65,101 +69,90 @@ function NFTGrid(props: NftGridProps) {
 
   }
 
-
-  var leftCol = [] as OpenseaAsset[]
-  var rightCol = [] as OpenseaAsset[]
-
-  for (var i = 0; i < assets.length; i++) {
-    if (i % 2 == 0) {
-      leftCol.push(assets[i])
-    } else {
-      rightCol.push(assets[i])
-    }
-  }
-
   return (
 
-    // TODO: Make scrollable...
+    <div style={{ position: "relative", height: '100%', width: "100%" }}>
 
-    // <Grid container columns={2} style={{overflowY: 'scroll'}} >
+      <ImageList cols={2} style={{ maxHeight: '100%', position: 'absolute' }}>
+        {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
+          <ImageListItem key={index}>
+            <img src={asset.image_preview_url} key={index} style={{ aspectRatio: 1 }} loading="lazy" />
+          </ImageListItem>
+        )}
 
-    //   {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
-    //     <Grid item>
-    //       <img src={asset.image_preview_url} key={index} style={{ width: '100%', aspectRatio: 1 }} />
-    //     </Grid>
-    //   )}
-    // </Grid>
-
-
-    // <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridAutoFlow:'row dense', gridAutoRows:'100%', gridTemplateRows:'unset', width: '100%', height:'100%', overflowY: 'auto', overflowX: 'hidden', rowGap:'0px' }}>
-    //   {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
-    //   // <div style={{}}>
-    //     <img src={asset.image_preview_url} key={index} style={{ maxHeight:'100px', maxWidth: '100px', aspectRatio: 1, display:'block'}} />
-    //     // </div>
-    //   )}
-
-    // </div>
-
-    <div style={{position:"relative", height:'100%', width:"100%"}}>
-
-    <ImageList cols={2} style={{maxHeight: '100%', position:'absolute'}}>
-       {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
-           <ImageListItem key={index}>
-               <img src={asset.image_preview_url} key={index} style={{ aspectRatio: 1}} loading="lazy" />
-            </ImageListItem>
-       )}
-
-    </ImageList>
+      </ImageList>
     </div>
 
-
-    // <div style={{ overflow: 'hidden', height: '100%' }}>
-
-    //   <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto' }}>
-    //     {leftCol.map((leftAsset, index) =>
-    //       <div style={{ display: 'flex', flexDirection: 'row', minHeight: 'min-content' }}>
-    //         <div style={{ width: '50%', aspectRatio: 1}} >
-    //           <img src={leftAsset.image_preview_url} key={index} style={{ width: '100%', aspectRatio: 1, display: 'inline-block' }} />
-    //         </div>
-    //         <div style={{ width: '50%', aspectRatio: 1}} >
-    //           {rightCol.at(index) ?
-    //             <img src={rightCol[index].image_preview_url} key={index} style={{ width: '100%', aspectRatio: 1, display: 'inline-block' }} /> : <div />}
-    //         </div>
-    //       </div>
-
-    //     )
-    //     }
-
-    //   </div>
-    // </div>
   )
 
-
-
 }
+
 export default class NFTsBlock extends Block {
   render() {
-    if (Object.keys(this.model.data).length === 0) {
+
+    if (!this.model.data['imageViewMode']) {
+      this.model.data['imageViewMode'] = 'grid'
+    }
+    if (Object.keys(this.model.data).length === 0 || !this.model.data['ownerAddress']) {
       return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
     }
 
-    let ownerAddress = this.model.data["ownerAddress"]
+    const ownerAddress = this.model.data["ownerAddress"]
 
     return (
-
       <NFTGrid ownerAddress={ownerAddress} />
-
     );
   }
 
+
+
   renderEditModal(done: (data: BlockModel) => void) {
+
     const onFinish = (event: any) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
-      let ownerAddress = data.get('ownerAddress') as string
-      this.model.data['ownerAddress'] = ownerAddress
+      this.model.data['ownerAddress'] = data.get('ownerAddress') as string
+      this.model.data['contractAddress'] = data.get('contractAddress') as string
+      const mode = data.get('imageViewMode')
+      console.log("Got mode", mode)
       done(this.model)
     };
+
+    const ImageViewModeToggle = () => {
+      const [imageViewMode, setImageViewMode] = useState<string | null>(this.model.data['imageViewMode']);
+      const handleToggleChange = (
+        event: React.MouseEvent<HTMLElement>,
+        value: string,
+      ) => {
+        const val = value ?? this.model.data['imageViewMode']
+        this.model.data['imageViewMode'] = val
+        setImageViewMode(val)
+        console.log("model", this.model.data['imageViewMode'])
+      };
+    
+      return (
+
+        <div style={{marginTop:'10px'}}
+        >
+        <div style={{marginBottom: '5px'}}>Image Layout:</div>
+        <ToggleButtonGroup
+          exclusive
+          value={imageViewMode}
+          onChange={handleToggleChange}
+          id="imageViewMode"
+        >
+          <ToggleButton value="grid" key="grid" aria-label="grid">
+            <ViewModuleIcon />
+          </ToggleButton>
+
+          <ToggleButton value="list" key="list" aria-label="list">
+            <ViewListIcon />
+          </ToggleButton>
+        </ToggleButtonGroup>
+        </div>
+      );
+    }
+
 
     return (
       <Box
@@ -176,6 +169,14 @@ export default class NFTsBlock extends Block {
           label="NFT Wallet Address"
           name="ownerAddress"
         />
+        <TextField
+          defaultValue={this.model.data['contractAddress']}
+          fullWidth
+          id="contractAddress"
+          label="NFT contract address (optional)"
+          name="contractAddress"
+        />
+        <ImageViewModeToggle />
         <Button
           type="submit"
           variant="contained"
