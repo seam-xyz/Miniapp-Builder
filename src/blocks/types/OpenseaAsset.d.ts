@@ -1,4 +1,5 @@
 // https://github.com/bkrem/react-nft-gallery/blob/0ddc9b60cf5863229836564fab51430a9222a911/src/types/OpenseaAsset.d.ts
+// OpenSea api, v1, Feb 14th, 2023
 
 // All types/interfaces in this namespace were inferred from json2ts tooling,
 // based on the response shape of Opensea's `/v1/assets` endpoint.

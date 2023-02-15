@@ -1,5 +1,5 @@
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   fetchOpenseaAssets,
   resolveEnsDomain,
@@ -17,7 +17,7 @@ import { BlockModel } from './types'
 
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
-import { ImageList, ImageListItem, Switch, Theme, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { ImageList, ImageListItem, ToggleButton, ToggleButtonGroup } from '@mui/material';
 
 export const PIXELS_FARM_CONTRACT = "0x5C1A0CC6DAdf4d0fB31425461df35Ba80fCBc110"
 
@@ -28,66 +28,61 @@ interface NftGridProps {
    */
   ownerAddress: string;
 
-      /**
-   * Layout option for images.
-   * 'grid' and 'list' are valid options.
-   * Required.
-   */
+  /**
+  * Layout option for images.
+  * 'grid' and 'list' are valid options.
+  * Required.
+  */
   imageViewMode: string;
 
-  
-    /**
-   * Ethereum address (`0x...`) for an NFT contract to filter to.
-   * Optional.
-   */
+
+  /**
+  * Ethereum address (`0x...`) for an NFT contract to filter to.
+  * Optional.
+  */
 
   contract?: string;
-  
+
 }
 
 function NFTGrid(props: NftGridProps) {
 
   const [assets, setAssets] = useState([] as OpenseaAsset[]);
-  const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    const loadAssetsPage = async (
+      ownerAddress: NftGridProps['ownerAddress'],
+    ) => {
+      setIsLoading(true);
+      const owner = isEnsDomain(ownerAddress)
+        ? await resolveEnsDomain(ownerAddress)
+        : ownerAddress;
+
+      const {
+        assets: rawAssets,
+        hasError,
+      } = await fetchOpenseaAssets({
+        owner,
+        contract: props.contract
+
+      });
+      if (!hasError) {
+        setAssets(rawAssets)
+      }
+      setIsLoading(false);
+
+    }
+
     loadAssetsPage(props.ownerAddress)
   }, [props])
-
-  const loadAssetsPage = async (
-    ownerAddress: NftGridProps['ownerAddress'],
-  ) => {
-    setIsLoading(true);
-    const owner = isEnsDomain(ownerAddress)
-      ? await resolveEnsDomain(ownerAddress)
-      : ownerAddress;
-
-    const {
-      assets: rawAssets,
-      hasError,
-      nextCursor,
-    } = await fetchOpenseaAssets({
-      owner,
-      contract: props.contract
-
-    });
-    if (hasError) {
-      setHasError(true);
-    } else {
-      setHasError(false);
-      setAssets(rawAssets)
-    }
-    setIsLoading(false);
-
-  }
 
   const GridMode = () => {
     return (
       <ImageList cols={2} style={{ maxHeight: '100%', position: 'absolute' }}>
         {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
           <ImageListItem key={index}>
-            <img src={asset.image_preview_url} key={index} style={{ aspectRatio: 1 }} loading="lazy" />
+            <img src={asset.image_preview_url} key={index} style={{ aspectRatio: 1 }} alt="NFT" loading="lazy" />
           </ImageListItem>
         )}
       </ImageList>
@@ -96,12 +91,12 @@ function NFTGrid(props: NftGridProps) {
 
   const ListMode = () => {
     return (
-      <div style={{display:'flex', flexDirection:'column', maxHeight: '100%', position: 'absolute', width: '100%', overflowY: 'auto' }}>
-         {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
-          <div style={{height:'80px', display:'flex', flexDirection:'row'}}>
-            <img src={asset.image_preview_url} key={index} style={{ aspectRatio: 1, height:'60px', margin: '10px' }} loading="lazy" />
-            <div style={{width:'100%', height: '60px', margin:'10px', alignItems:'center', display:'flex'}}>#{asset.token_id}</div>
-            </div>
+      <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '100%', position: 'absolute', width: '100%', overflowY: 'auto' }}>
+        {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
+          <div style={{ height: '80px', display: 'flex', flexDirection: 'row' }}>
+            <img src={asset.image_preview_url} key={index} style={{ aspectRatio: 1, height: '60px', margin: '10px' }} alt="NFT" loading="lazy" />
+            <div style={{ width: '100%', height: '60px', margin: '10px', alignItems: 'center', display: 'flex' }}>#{asset.token_id}</div>
+          </div>
         )}
 
       </div>
@@ -110,16 +105,14 @@ function NFTGrid(props: NftGridProps) {
 
   return (
     <div style={{ position: "relative", height: '100%', width: "100%" }}>
-    {props.imageViewMode == "grid" ? <GridMode /> : null}
-    {props.imageViewMode == "list" ? <ListMode /> : null}
-
+      {props.imageViewMode === "grid" ? <GridMode /> : null}
+      {props.imageViewMode === "list" ? <ListMode /> : null}
     </div>
   )
-
 }
 
 export default class NFTsBlock extends Block {
-  
+
   render() {
     if (!this.model.data['imageViewMode']) {
       this.model.data['imageViewMode'] = 'grid'
@@ -132,15 +125,10 @@ export default class NFTsBlock extends Block {
     const contract = this.model.data["contractAddress"]
     const imageViewMode = this.model.data['imageViewMode']
 
-    // TODO: Trigger re-render after EditModal save
-    console.log("Render NFTsBlock", ownerAddress, contract)
-
     return (
       <NFTGrid ownerAddress={ownerAddress} imageViewMode={imageViewMode} contract={contract} />
     );
   }
-
-
 
   renderEditModal(done: (data: BlockModel) => void) {
     const onFinish = (event: any) => {
@@ -148,8 +136,6 @@ export default class NFTsBlock extends Block {
       const data = new FormData(event.currentTarget);
       this.model.data['ownerAddress'] = data.get('ownerAddress') as string
       this.model.data['contractAddress'] = data.get('contractAddress') as string
-      const mode = data.get('imageViewMode')
-      console.log("Got mode", mode)
       done(this.model)
     };
 
@@ -163,25 +149,23 @@ export default class NFTsBlock extends Block {
         this.model.data['imageViewMode'] = val
         setImageViewMode(val)
       };
-    
+
       return (
-
-        <div style={{marginTop:'10px'}}>
-        <div style={{marginBottom: '5px'}}>Image Layout:</div>
-        <ToggleButtonGroup
-          exclusive
-          value={imageViewMode}
-          onChange={handleToggleChange}
-          id="imageViewMode"
-        >
-          <ToggleButton value="grid" key="grid" aria-label="grid">
-            <ViewModuleIcon />
-          </ToggleButton>
-
-          <ToggleButton value="list" key="list" aria-label="list">
-            <ViewListIcon />
-          </ToggleButton>
-        </ToggleButtonGroup>
+        <div style={{ marginTop: '10px' }}>
+          <div style={{ marginBottom: '5px' }}>Image Layout:</div>
+          <ToggleButtonGroup
+            exclusive
+            value={imageViewMode}
+            onChange={handleToggleChange}
+            id="imageViewMode"
+          >
+            <ToggleButton value="grid" key="grid" aria-label="grid">
+              <ViewModuleIcon />
+            </ToggleButton>
+            <ToggleButton value="list" key="list" aria-label="list">
+              <ViewListIcon />
+            </ToggleButton>
+          </ToggleButtonGroup>
         </div>
       );
     }
@@ -199,7 +183,7 @@ export default class NFTsBlock extends Block {
           defaultValue={this.model.data['ownerAddress']}
           fullWidth
           id="ownerAddress"
-          label="NFT Wallet Address"
+          label="NFT Wallet Address or ENS"
           name="ownerAddress"
         />
         <TextField
@@ -224,7 +208,7 @@ export default class NFTsBlock extends Block {
 
   renderErrorState() {
     return (
-      <h1>Error!</h1>
+      <h1>Error loading NFT Block</h1>
     )
   }
 }
