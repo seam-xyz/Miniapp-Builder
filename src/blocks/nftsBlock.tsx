@@ -29,6 +29,13 @@ interface NftGridProps {
    * Required.
    */
   ownerAddress: string;
+  
+    /**
+   * Ethereum address (`0x...`) for an NFT contract to filter to.
+   * Optional.
+   */
+
+  contract?: string;
 
 }
 function NFTGrid(props: NftGridProps) {
@@ -55,7 +62,7 @@ function NFTGrid(props: NftGridProps) {
       nextCursor,
     } = await fetchOpenseaAssets({
       owner,
-      contract: PIXELS_FARM_CONTRACT
+      contract: props.contract
 
     });
     if (hasError) {
@@ -98,9 +105,11 @@ export default class NFTsBlock extends Block {
     }
 
     const ownerAddress = this.model.data["ownerAddress"]
+    const contract = this.model.data["contractAddress"]
+
 
     return (
-      <NFTGrid ownerAddress={ownerAddress} />
+      <NFTGrid ownerAddress={ownerAddress} contract={contract} />
     );
   }
 
