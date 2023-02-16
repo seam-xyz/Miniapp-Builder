@@ -44,6 +44,8 @@ function PixelCanvas(props: PixelCanvasProps) {
     setShowGridInViewMode,
   ] = useState(shouldShowGridInViewMode || false);
   const [showGrid, setShowGrid] = useState(showGridInViewMode || isEditMode);
+  const [isMouseDownOnCanvas, setIsMouseDownOnCanvas] = useState(false);
+  const [buttonClicked, setButtonClicked] = useState<number | null>(null);
   
   const setPixelColor = (x: number, y: number, color: string) => {
     let updatedPixels = [...pixels];
@@ -180,11 +182,24 @@ function PixelCanvas(props: PixelCanvasProps) {
   };
 
   const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    setIsMouseDownOnCanvas(true);
+    setButtonClicked(e.button);
+    handleMouseOverPixel(e);
+  }
+
+  const handleCanvasDrag = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    if (!isMouseDownOnCanvas) {
+      return;
+    }
+    handleMouseOverPixel(e);
+  }
+
+  const handleMouseOverPixel = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     if (!isEditMode) {
       return;
     }
 
-    if (!(e.button === 0 || e.button === 2)) {
+    if (!(buttonClicked === 0 || buttonClicked === 2)) {
       return;
     }
 
@@ -212,13 +227,18 @@ function PixelCanvas(props: PixelCanvasProps) {
     const pixelIdxY = Math.floor(relativeY * numPixelsPerSide / boundingYLen);
 
     // Cache pixel color and useEffect will re-draw
-    setPixelColor(pixelIdxX, pixelIdxY, e.button === 0 ? color : backgroundColor);
+    setPixelColor(pixelIdxX, pixelIdxY, buttonClicked === 0 ? color : backgroundColor);
   }
 
   const savePixelState = () => {
     if (onSave) {
       onSave(numPixelsPerSide, pixels, showGridInViewMode, backgroundColor);
     }
+  }
+
+  const handleCanvasMouseUp = () => {
+    setIsMouseDownOnCanvas(false);
+    setButtonClicked(null);
   }
 
   return (
@@ -278,6 +298,8 @@ function PixelCanvas(props: PixelCanvasProps) {
           height={height}
           style={{ cursor: isEditMode ? 'pointer' : 'default' }}
           onMouseDown={handleCanvasClick}
+          onMouseMove={handleCanvasDrag}
+          onMouseUp={() => setIsMouseDownOnCanvas(false)}
           onContextMenu={(e) => e.preventDefault()}
         />
         {isEditMode &&
