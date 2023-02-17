@@ -14,6 +14,7 @@ import ViewModuleIcon from '@mui/icons-material/ViewModule';
 
 import Block from './Block'
 import { BlockModel } from './types'
+import TitleComponent from './utils/TitleComponent';
 
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
@@ -139,9 +140,13 @@ export default class NFTsBlock extends Block {
     const ownerAddress = this.model.data["ownerAddress"]
     const contract = this.model.data["contractAddress"]
     const imageViewMode = this.model.data['imageViewMode']
+    const title = this.model.data['title']
 
     return (
+      <>
+      {title && TitleComponent(this.theme, title)}
       <NFTGrid ownerAddress={ownerAddress} imageViewMode={imageViewMode} contract={contract} />
+      </>
     );
   }
 
@@ -151,6 +156,7 @@ export default class NFTsBlock extends Block {
       const data = new FormData(event.currentTarget);
       this.model.data['ownerAddress'] = data.get('ownerAddress') as string
       this.model.data['contractAddress'] = data.get('contractAddress') as string
+      this.model.data['title'] = data.get('title') as string
       done(this.model)
     };
 
@@ -166,7 +172,7 @@ export default class NFTsBlock extends Block {
       };
 
       return (
-        <div style={{ marginTop: '10px' }}>
+        <div style={{ marginTop: '5px' }}>
           <div style={{ marginBottom: '5px' }}>Image Layout:</div>
           <ToggleButtonGroup
             exclusive
@@ -207,12 +213,19 @@ export default class NFTsBlock extends Block {
           label="NFT contract address (optional)"
           name="contractAddress"
         />
+        <TextField
+          defaultValue={this.model.data['title'] ?? "My NFTs"}
+          fullWidth
+          id="title"
+          label="Title"
+          name="title"
+        />
         <ImageViewModeToggle />
         <Button
           type="submit"
           variant="contained"
           className="save-modal-button"
-          sx={{ mt: 3, mb: 2 }}
+          sx={{ mt: 3, mb: 1 }}
         >
           Save
         </Button>
