@@ -6,6 +6,7 @@ import './BlockStyles.css'
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import TitleComponent from './utils/TitleComponent';
 
 export default class BookmarkBlock extends Block {
   render() {
@@ -14,11 +15,14 @@ export default class BookmarkBlock extends Block {
     }
 
     let url = this.model.data["url"]
+    let title = this.model.data["title"]
     if (url === undefined) {
       return this.renderErrorState()
     }
 
     return (
+      <div style={{backgroundColor: this.theme.palette.secondary.main}}>
+      {title && TitleComponent(this.theme, title)}
       <Iframely
         url={url}
         style={{
@@ -27,6 +31,7 @@ export default class BookmarkBlock extends Block {
           height: `100%`,
           width: `100%`
         }} />
+        </div>
     );
   }
 
@@ -35,7 +40,9 @@ export default class BookmarkBlock extends Block {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
       let url = data.get('url') as string
+      let title = data.get('header') as string
       this.model.data['url'] = url
+      this.model.data['title'] = title
       done(this.model)
     };
 
@@ -58,6 +65,14 @@ export default class BookmarkBlock extends Block {
           name="url"
           defaultValue={this.model.data['url']}
           autoFocus
+        />
+        <TextField
+          margin="normal"
+          fullWidth
+          id="header"
+          label="Header Title"
+          name="header"
+          defaultValue={this.model.data['header']}
         />
         <Button
           type="submit"
