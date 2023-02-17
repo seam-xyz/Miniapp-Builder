@@ -23,7 +23,7 @@ export default class LinkBlock extends Block {
           variant="contained"
           style={{
             backgroundColor: this.theme.palette.info.main,
-            color: this.theme.palette.primary.main,
+            color: this.theme.palette.secondary.main,
             whiteSpace: "normal",
             height: '100%',
             width: '100%',
