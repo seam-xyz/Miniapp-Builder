@@ -172,7 +172,7 @@ export default class NFTsBlock extends Block {
       };
 
       return (
-        <div style={{ marginTop: '5px' }}>
+        <div style={{ marginTop: '10px' }}>
           <div style={{ marginBottom: '5px' }}>Image Layout:</div>
           <ToggleButtonGroup
             exclusive
@@ -207,6 +207,7 @@ export default class NFTsBlock extends Block {
           name="ownerAddress"
         />
         <TextField
+        margin="normal"
           defaultValue={this.model.data['contractAddress']}
           fullWidth
           id="contractAddress"
@@ -214,6 +215,7 @@ export default class NFTsBlock extends Block {
           name="contractAddress"
         />
         <TextField
+        margin="normal"
           defaultValue={this.model.data['title'] ?? "My NFTs"}
           fullWidth
           id="title"
