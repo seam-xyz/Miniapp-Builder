@@ -349,8 +349,6 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
   )
 }
 
-// const PixelCanvasWithSize = withSize()(PixelCanvas);
-
 const PixelCanvasWithSize = (props: BasePixelCanvasProps) => {
   return (
     <SizeMe monitorHeight refreshMode='debounce'>
