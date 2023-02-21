@@ -242,91 +242,89 @@ function PixelCanvas(props: PixelCanvasProps) {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: isEditMode ? 'center' : 'start'}}>
-      <div style={{ display: 'flex', flexDirection: 'column', maxWidth: isEditMode ? '500px' : '2000px', width: '100%'}}>
-        {isEditMode &&
-          <Stack direction='row' spacing={2} paddingBottom={1} justifyContent='center'>
-            <div>
-              <label>Set Pixel Color: </label>
-              <input
-                type='color'
-                id='colorInput'
-                value={color}
-                onChange={(e) => setColor(e.target.value)}
-              />
-            </div>
-            <div>
-              <label>Set Background Color: </label>
-              <input
-                type='color'
-                id='colorInput'
-                value={backgroundColor}
-                onChange={(e) => resetBackground(e.target.value)}
-              />
-            </div>
-            <div>
-              <label>Show Guide: </label>
-              <input
-                type='checkbox'
-                id='toggleGrid'
-                checked={showGrid}
-                onChange={() => {setShowGrid(!showGrid)}}
-              />
-            </div>
-            <div>
-              {/* TODO: How can i make this a set of exclusive radio buttons? */}
-              <label>Pixels Per Side: </label>
-              <input
-                type='range'
-                id='pixelsPerSideInput'
-                min={2}
-                max={30}
-                value={numPixelsPerSide}
-                onChange={(e) => setNumPixelsPerSide(parseInt(e.target.value))}
-              />
-            </div>
-            <div>
-              <button type='button' id='clearButton' onClick={clearCanvas}>
-                Clear
-              </button>
-            </div>
-          </Stack>
-        }
-        <canvas
-          ref={canvasRef}
-          width={width}
-          height={height}
-          style={{ cursor: isEditMode ? 'pointer' : 'default' }}
-          onMouseDown={handleCanvasClick}
-          onMouseMove={handleCanvasDrag}
-          onMouseUp={() => setIsMouseDownOnCanvas(false)}
-          onContextMenu={(e) => e.preventDefault()}
-        />
-        {isEditMode &&
+    <>
+      {isEditMode &&
+        <Stack direction='row' spacing={2} paddingBottom={1} justifyContent='center'>
           <div>
-            <div>
-              <label>Show Guide in View Mode: </label>
-              <input
-                type='checkbox'
-                id='toggleShowGridInViewMode'
-                checked={showGridInViewMode}
-                onChange={() => {setShowGridInViewMode(!showGridInViewMode)}}
-              />
-              <p>Tip: Right-click to undo</p>
-            </div>
-            <Button
-              type='submit'
-              variant='contained'
-              className='save-modal-button'
-              sx={{ mt: 3, mb: 2 }}
-              onClick={savePixelState}
-            >
-              Save
-            </Button>
+            <label>Set Pixel Color: </label>
+            <input
+              type='color'
+              id='colorInput'
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+            />
           </div>
-        }
-      </div>
-    </div>
+          <div>
+            <label>Set Background Color: </label>
+            <input
+              type='color'
+              id='colorInput'
+              value={backgroundColor}
+              onChange={(e) => resetBackground(e.target.value)}
+            />
+          </div>
+          <div>
+            <label>Show Guide: </label>
+            <input
+              type='checkbox'
+              id='toggleGrid'
+              checked={showGrid}
+              onChange={() => {setShowGrid(!showGrid)}}
+            />
+          </div>
+          <div>
+            {/* TODO: How can i make this a set of exclusive radio buttons? */}
+            <label>Pixels Per Side: </label>
+            <input
+              type='range'
+              id='pixelsPerSideInput'
+              min={2}
+              max={30}
+              value={numPixelsPerSide}
+              onChange={(e) => setNumPixelsPerSide(parseInt(e.target.value))}
+            />
+          </div>
+          <div>
+            <button type='button' id='clearButton' onClick={clearCanvas}>
+              Clear
+            </button>
+          </div>
+        </Stack>
+      }
+      <canvas
+        ref={canvasRef}
+        width={width}
+        height={height}
+        style={{ cursor: isEditMode ? 'pointer' : 'default', width: '100%', aspectRatio: 1 }}
+        onMouseDown={handleCanvasClick}
+        onMouseMove={handleCanvasDrag}
+        onMouseUp={() => setIsMouseDownOnCanvas(false)}
+        onContextMenu={(e) => e.preventDefault()}
+      />
+      {isEditMode &&
+        <div>
+          <div>
+            <label>Show Guide in View Mode: </label>
+            <input
+              type='checkbox'
+              id='toggleShowGridInViewMode'
+              checked={showGridInViewMode}
+              onChange={() => {setShowGridInViewMode(!showGridInViewMode)}}
+            />
+            <p>Tip: Right-click to undo</p>
+          </div>
+          <Button
+            type='submit'
+            variant='contained'
+            className='save-modal-button'
+            sx={{ mt: 3, mb: 2 }}
+            onClick={savePixelState}
+          >
+            Save
+          </Button>
+        </div>
+      }
+    </>
   )
 }
 
