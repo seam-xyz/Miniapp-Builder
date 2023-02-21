@@ -3,10 +3,12 @@ import { BlockModel } from './types'
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 
+import CSS from 'csstype';
 import React, {useEffect, useRef, useState} from 'react';
+import { SizeMe, SizeMeProps } from 'react-sizeme';
 import { Button, Stack } from '@mui/material';
 
-interface PixelCanvasProps {
+interface BasePixelCanvasProps {
   initialNumPixelsPerSide: number;          // e.g. '5' represents a 5x5 pixel grid
   isEditMode: boolean;                      // True if edit mode, false if display mode
   initialPixels?: string[][];               // Used to render from an existing state
@@ -20,8 +22,13 @@ interface PixelCanvasProps {
   ) => void);
 }
 
-function PixelCanvas(props: PixelCanvasProps) {
+interface PixelCanvasProps extends BasePixelCanvasProps {
+  size: SizeMeProps['size'];
+}
+
+const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
   const {
+    size,
     initialNumPixelsPerSide,
     isEditMode,
     initialPixels,
@@ -166,8 +173,13 @@ function PixelCanvas(props: PixelCanvasProps) {
       canvasContext.moveTo(0, (height / numPixelsPerSide) * i);
       canvasContext.lineTo(width, (height / numPixelsPerSide) * i);
     }
-
     // Draw
+    canvasContext.stroke();
+
+    // Bounding rectangle
+    canvasContext.beginPath();
+    canvasContext.lineWidth = canvasContext.lineWidth;
+    canvasContext.rect(0, 0, width, height);
     canvasContext.stroke();
   }
 
@@ -241,8 +253,17 @@ function PixelCanvas(props: PixelCanvasProps) {
     setButtonClicked(null);
   }
 
+  const canvasStyles: CSS.Properties = {
+    cursor: isEditMode ? 'pointer' : 'default',
+    aspectRatio: 1,
+    backgroundColor: backgroundColor,
+    display: 'block',
+  }
+  const hundredPercentKey = size && size.width && size.height && size.width > size.height ? 'height' : 'width';
+  canvasStyles[hundredPercentKey] = '100%';
+
   return (
-    <>
+    <div>
       {isEditMode &&
         <Stack direction='row' spacing={2} paddingBottom={1} justifyContent='center'>
           <div>
@@ -295,7 +316,7 @@ function PixelCanvas(props: PixelCanvasProps) {
         ref={canvasRef}
         width={width}
         height={height}
-        style={{ cursor: isEditMode ? 'pointer' : 'default', width: '100%', aspectRatio: 1 }}
+        style={canvasStyles}
         onMouseDown={handleCanvasClick}
         onMouseMove={handleCanvasDrag}
         onMouseUp={() => setIsMouseDownOnCanvas(false)}
@@ -324,7 +345,32 @@ function PixelCanvas(props: PixelCanvasProps) {
           </Button>
         </div>
       }
-    </>
+    </div>
+  )
+}
+
+// const PixelCanvasWithSize = withSize()(PixelCanvas);
+
+const PixelCanvasWithSize = (props: BasePixelCanvasProps) => {
+  return (
+    <SizeMe monitorHeight refreshMode='debounce'>
+      {({ size }) => (
+        <div style={{
+          backgroundColor: props.initialBackgroundColor,
+          height: '100%',
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+
+        }}>
+          <PixelCanvas
+            {...props}
+            size={size}
+          />
+        </div>
+      )}
+    </SizeMe>
   )
 }
 
@@ -346,13 +392,23 @@ export default class PixelArtBlock extends Block {
       : false;
 
     return (
-      <PixelCanvas
-        initialNumPixelsPerSide={parseInt(numPixelsPerSide)}
-        isEditMode={false}
-        initialPixels={pixels}
-        shouldShowGridInViewMode={showGridInViewMode}
-        initialBackgroundColor={backgroundColor}
-      />
+        <div style={{
+          backgroundColor: backgroundColor,
+          height: '100%',
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+
+        }}>
+          <PixelCanvasWithSize
+            initialNumPixelsPerSide={parseInt(numPixelsPerSide)}
+            isEditMode={false}
+            initialPixels={pixels}
+            shouldShowGridInViewMode={showGridInViewMode}
+            initialBackgroundColor={backgroundColor}
+          />
+        </div>
     );
   }
 
@@ -379,7 +435,7 @@ export default class PixelArtBlock extends Block {
     }
 
     return (
-      <PixelCanvas
+      <PixelCanvasWithSize
         initialNumPixelsPerSide={(numPixelsPerSide && parseInt(numPixelsPerSide)) || defaultNumPixels}
         initialPixels={pixelsArrStringified && JSON.parse(pixelsArrStringified)}
         isEditMode={true}
