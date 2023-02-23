@@ -154,7 +154,7 @@ export default class NFTsBlock extends Block {
     const onFinish = (event: any) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
-      this.model.data['ownerAddress'] = data.get('ownerAddress') as string
+      this.model.data['ownerAddress'] = (data.get('ownerAddress') as string).toLowerCase()
       this.model.data['contractAddress'] = data.get('contractAddress') as string
       this.model.data['title'] = data.get('title') as string
       done(this.model)
