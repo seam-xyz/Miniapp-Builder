@@ -25,7 +25,7 @@ export default function EmptyBlock({ title, onClick }) {
   return (
     <div className={classes.root}>
       <h2>{title}</h2>
-      <div className={classes.empty} onClick={onClick}>
+      <div className={classes.empty} onClick={onClick} onTouchStart={onClick}>
         <h4 style={{color: "#818181"}}>{"Tap to customize the " + title}</h4>
       </div>
     </div>

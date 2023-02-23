@@ -49,6 +49,7 @@ export default class BlockFactory {
   static renderEmptyState(model: BlockModel, onClick: (id: string) => void): React.ReactNode {
     return (
       <EmptyBlock title={BlockFactory.getPrintableBlockName(model)} onClick={() => {
+        console.log("pooped")
         onClick(model.uuid)
       }} />
     );
