@@ -187,4 +187,13 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: nftIcon,
     deprecated: false
   },
+  "feelings": { 
+        type: "feelings",
+        displayName: "My Feelings",
+        displayDescription: "an update on how I'm feeling",
+        emptyTitle: "Empty My Feelings Block",
+        emptySubtitle: "Tap here to setup your My Feelings block!",
+        icon: "feelingsIcon", // TODO: insert your block icon here
+        deprecated: false
+    },
 };
