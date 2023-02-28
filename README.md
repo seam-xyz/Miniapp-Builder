@@ -1,9 +1,4 @@
 <p align="center">
-  <a href="#">
-    <img src="https://user-images.githubusercontent.com/7350670/212753058-373e9a5c-3247-44a5-8455-19c093aed511.svg" width="450">
-  </a>
-</p>
-<p align="center">
   <img src="https://img.shields.io/github/commit-activity/m/seam-xyz/Block-SDK"/>
   <img src="https://img.shields.io/github/stars/seam-xyz/Block-SDK?style=social"/>
 </p>
