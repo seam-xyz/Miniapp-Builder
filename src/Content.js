@@ -84,10 +84,8 @@ function Content({ size: { width }, loadedBlocks }) {
   }
 
   const saveBlockData = (data) => {
-    console.log("updating block data")
     let blocksCopy = blocks
     blocksCopy[isEditingBlock] = data
-    console.log(blocksCopy)
     setBlocks(blocksCopy)
     setIsEditingBlock(-1)
   }
