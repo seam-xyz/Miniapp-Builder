@@ -120,7 +120,7 @@ function NFTGrid(props: NftGridProps) {
 
 
   return (
-    <div style={{ position: "relative", height: '100%', width: "100%" }}>
+    <div style={{ position: "relative", height: 'calc(100% - 40px)', width: "100%" }}>
       {props.imageViewMode === "grid" ? <GridMode /> : null}
       {props.imageViewMode === "list" ? <ListMode /> : null}
     </div>
