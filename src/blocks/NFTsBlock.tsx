@@ -82,7 +82,7 @@ function NFTGrid(props: NftGridProps) {
 
   const GridMode = () => {
     return (
-      <ImageList cols={2} style={{ maxHeight: '100%', position: 'absolute' }}>
+      <ImageList cols={3} style={{ maxHeight: '100%', position: 'absolute' }}>
         {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
           <ImageListItem key={index}>
             <img src={asset.image_preview_url} key={index} style={{ aspectRatio: 1 }} alt="NFT" loading="lazy" />
