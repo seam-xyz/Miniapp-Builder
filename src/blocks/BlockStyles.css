@@ -7,3 +7,15 @@
     border-radius: 8px;
     border-color: #B9D5FF;
 }
+
+#scroll::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar for Chrome, Safari and Opera */
+}
+
+#scroll {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
