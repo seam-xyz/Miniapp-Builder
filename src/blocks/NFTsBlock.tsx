@@ -121,7 +121,8 @@ function NFTGrid(props: NftGridProps) {
   let primaryColor = props.theme.palette.primary.main
   let secondaryColor = props.theme.palette.secondary.main
   let teritaryColor = props.theme.palette.info.main
-  let bg = secondaryColor + 'e6'
+  let isEmpty = assets.length === 0
+  let bg = isEmpty ? secondaryColor + 'e6' : teritaryColor
 
   return (
     <div style={{ position: "relative", height: 'calc(100% - 40px)', width: "100%", backgroundColor: bg }}>
