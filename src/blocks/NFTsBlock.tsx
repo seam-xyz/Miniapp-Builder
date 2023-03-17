@@ -18,7 +18,7 @@ import TitleComponent from './utils/TitleComponent';
 
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
-import { ImageList, ImageListItem, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { ImageList, ImageListItem, Theme, ToggleButton, ToggleButtonGroup } from '@mui/material';
 
 interface NftGridProps {
   /**
@@ -42,6 +42,7 @@ interface NftGridProps {
 
   contract?: string;
 
+  theme: Theme
 }
 
 function NFTGrid(props: NftGridProps) {
@@ -117,9 +118,13 @@ function NFTGrid(props: NftGridProps) {
     )
   }
 
+  let primaryColor = props.theme.palette.primary.main
+  let secondaryColor = props.theme.palette.secondary.main
+  let teritaryColor = props.theme.palette.info.main
+  let bg = secondaryColor + 'e6'
 
   return (
-    <div style={{ position: "relative", height: 'calc(100% - 40px)', width: "100%" }}>
+    <div style={{ position: "relative", height: 'calc(100% - 40px)', width: "100%", backgroundColor: bg }}>
       {props.imageViewMode === "grid" ? <GridMode /> : null}
       {props.imageViewMode === "list" ? <ListMode /> : null}
     </div>
@@ -144,7 +149,7 @@ export default class NFTsBlock extends Block {
     return (
       <>
       {title && TitleComponent(this.theme, title)}
-      <NFTGrid ownerAddress={ownerAddress} imageViewMode={imageViewMode} contract={contract} />
+      <NFTGrid ownerAddress={ownerAddress} imageViewMode={imageViewMode} contract={contract} theme={this.theme} />
       </>
     );
   }
