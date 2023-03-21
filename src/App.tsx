@@ -39,7 +39,7 @@ export default function App() {
   // vvvvvvvvvvvvvvvvv
 
   let yourBlock: BlockModel = {
-    type: "Pokemon",
+    type: "%NAME%",
     data: {},
     uuid: "test"
   }

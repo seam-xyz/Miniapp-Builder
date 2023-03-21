@@ -12,6 +12,7 @@ import musicIcon from "./blockIcons/musicIcon.png";
 import randomGiphyIcon from "./blockIcons/randomGiphyIcon.png";
 import pixelArtIcon from "./blockIcons/pixelArtIcon.png";
 import nftIcon from "./blockIcons/nftIcon.png"
+import pokemonIcon from "./blockIcons/pokeball.png"
 
 export type BlockModel = {
   type: string;
@@ -187,13 +188,13 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: nftIcon,
     deprecated: false
   },
-  "Pokemon": { 
-        type: "Pokemon",
-        displayName: "PokemonBlock",
-        displayDescription: "Pokemon",
-        emptyTitle: "Empty PokemonBlock Block",
-        emptySubtitle: "Tap here to setup your PokemonBlock block!",
-        icon: "PokemonIcon", // TODO: insert your block icon here
-        deprecated: false
-    },
+  "Pokemon": {
+    type: "Pokemon",
+    displayName: "Random Pokemon",
+    displayDescription: "Displays a random Pokemon!",
+    emptyTitle: "Empty PokemonBlock Block",
+    emptySubtitle: "Tap here to setup your PokemonBlock block!",
+    icon: pokemonIcon, // TODO: insert your block icon here
+    deprecated: false
+  },
 };
