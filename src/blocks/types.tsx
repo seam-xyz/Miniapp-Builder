@@ -187,4 +187,13 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: nftIcon,
     deprecated: false
   },
+  "Pokemon": { 
+        type: "Pokemon",
+        displayName: "PokemonBlock",
+        displayDescription: "Pokemon",
+        emptyTitle: "Empty PokemonBlock Block",
+        emptySubtitle: "Tap here to setup your PokemonBlock block!",
+        icon: "PokemonIcon", // TODO: insert your block icon here
+        deprecated: false
+    },
 };
