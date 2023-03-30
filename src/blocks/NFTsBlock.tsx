@@ -93,9 +93,15 @@ function NFTGrid(props: NftGridProps) {
   const shouldScroll = !inIframe()
   const scrollAttribute = shouldScroll ? "scroll" : "hidden"
 
+  let primaryColor = props.theme.palette.primary.main
+  let secondaryColor = props.theme.palette.secondary.main
+  let teritaryColor = props.theme.palette.info.main
+  let isEmpty = assets.length === 0 && !isLoading
+  let bg = isEmpty ? secondaryColor + 'e6' : teritaryColor
+
   const GridMode = () => {
     return (
-      <ImageList cols={3} style={{ maxHeight: '100%', position: 'absolute', overflow: scrollAttribute }} sx={{'&::-webkit-scrollbar': { display: 'none' }}}>
+      <ImageList cols={3} style={{ maxHeight: '100%', position: 'absolute', overflow: scrollAttribute }} sx={{ '&::-webkit-scrollbar': { display: 'none' } }}>
         {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
           <ImageListItem key={index}>
             <img src={asset.image_preview_url} key={index} style={{ aspectRatio: 1 }} alt="NFT" loading="lazy" />
@@ -118,6 +124,14 @@ function NFTGrid(props: NftGridProps) {
     )
   }
 
+  const EmptyState = () => {
+    return (
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", width: "100%", height: 'calc(100% - 40px)' }}>
+        <h3 style={{ color: teritaryColor }}>No NFTs to display</h3>
+      </div>
+    )
+  }
+
   if (loadingError) {
     return (
       <div style={{ position: "relative", height: '100%', width: "100%", alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column' }}>
@@ -130,14 +144,9 @@ function NFTGrid(props: NftGridProps) {
     )
   }
 
-  let primaryColor = props.theme.palette.primary.main
-  let secondaryColor = props.theme.palette.secondary.main
-  let teritaryColor = props.theme.palette.info.main
-  let isEmpty = assets.length === 0
-  let bg = isEmpty ? secondaryColor + 'e6' : teritaryColor
-
   return (
     <div style={{ position: "relative", height: 'calc(100% - 40px)', width: "100%", backgroundColor: bg }}>
+      {isEmpty && <EmptyState />}
       {props.imageViewMode === "grid" ? <GridMode /> : null}
       {props.imageViewMode === "list" ? <ListMode /> : null}
     </div>
@@ -161,8 +170,8 @@ export default class NFTsBlock extends Block {
 
     return (
       <>
-      {title && TitleComponent(this.theme, title)}
-      <NFTGrid ownerAddress={ownerAddress} imageViewMode={imageViewMode} contract={contract} theme={this.theme} />
+        {title && TitleComponent(this.theme, title)}
+        <NFTGrid ownerAddress={ownerAddress} imageViewMode={imageViewMode} contract={contract} theme={this.theme} />
       </>
     );
   }
@@ -224,7 +233,7 @@ export default class NFTsBlock extends Block {
           name="ownerAddress"
         />
         <TextField
-        margin="normal"
+          margin="normal"
           defaultValue={this.model.data['contractAddress']}
           fullWidth
           id="contractAddress"
@@ -232,7 +241,7 @@ export default class NFTsBlock extends Block {
           name="contractAddress"
         />
         <TextField
-        margin="normal"
+          margin="normal"
           defaultValue={this.model.data['title'] ?? "My NFTs"}
           fullWidth
           id="title"
