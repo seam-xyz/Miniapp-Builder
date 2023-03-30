@@ -15,7 +15,6 @@ export default class IFrameBlock extends Block {
 
     let url = this.model.data["url"]
     let iframeAllowed = this.model.data["iframeAllowed"] ?? true
-    console.log(iframeAllowed)
     if (url === undefined) {
       return this.renderErrorState()
     }

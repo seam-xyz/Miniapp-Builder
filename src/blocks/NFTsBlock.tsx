@@ -81,9 +81,21 @@ function NFTGrid(props: NftGridProps) {
     loadAssetsPage(props.ownerAddress)
   }, [props])
 
+  function inIframe() {
+    try {
+      return window.self !== window.top;
+    } catch (e) {
+      return true;
+    }
+  }
+
+  // for pixels and embedded usecases, do not scroll and have a see more link back into Seam
+  const shouldScroll = !inIframe()
+  const scrollAttribute = shouldScroll ? "scroll" : "hidden"
+
   const GridMode = () => {
     return (
-      <ImageList cols={3} style={{ maxHeight: '100%', position: 'absolute' }} sx={{'&::-webkit-scrollbar': { display: 'none' }}}>
+      <ImageList cols={3} style={{ maxHeight: '100%', position: 'absolute', overflow: scrollAttribute }} sx={{'&::-webkit-scrollbar': { display: 'none' }}}>
         {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
           <ImageListItem key={index}>
             <img src={asset.image_preview_url} key={index} style={{ aspectRatio: 1 }} alt="NFT" loading="lazy" />
@@ -95,7 +107,7 @@ function NFTGrid(props: NftGridProps) {
 
   const ListMode = () => {
     return (
-      <div id="scroll" style={{ display: 'flex', flexDirection: 'column', maxHeight: '100%', position: 'absolute', width: '100%', overflowY: 'auto' }}>
+      <div id="scroll" style={{ display: 'flex', flexDirection: 'column', maxHeight: '100%', position: 'absolute', width: '100%', overflowY: scrollAttribute }}>
         {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
           <div style={{ height: '80px', display: 'flex', flexDirection: 'row', backgroundColor: teritaryColor }}>
             <img src={asset.image_preview_url} key={index} style={{ aspectRatio: 1, height: '60px', margin: '10px' }} alt="NFT" loading="lazy" />
