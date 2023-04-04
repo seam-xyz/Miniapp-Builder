@@ -43,6 +43,9 @@ interface NftGridProps {
   contract?: string;
 
   theme: Theme
+
+  // if the NFT block has data, we want to display a 'see all' label when the Seam page is embedded into a game
+  setExpandable: (expandable: boolean) => void
 }
 
 function NFTGrid(props: NftGridProps) {
@@ -71,6 +74,7 @@ function NFTGrid(props: NftGridProps) {
       });
       if (!error) {
         setAssets(rawAssets)
+        props.setExpandable(rawAssets.length > 0)
       } else {
         setLoadingError(error)
       }
@@ -168,10 +172,19 @@ export default class NFTsBlock extends Block {
     const imageViewMode = this.model.data['imageViewMode']
     const title = this.model.data['title']
 
+    this.canBlockExpand = true;
+
     return (
       <>
         {title && TitleComponent(this.theme, title)}
-        <NFTGrid ownerAddress={ownerAddress} imageViewMode={imageViewMode} contract={contract} theme={this.theme} />
+        <NFTGrid ownerAddress={ownerAddress}
+          imageViewMode={imageViewMode}
+          contract={contract}
+          theme={this.theme}
+          setExpandable={(expandable: boolean) => {
+            // if the NFT block has data, we want to display a 'see all' label when the Seam page is embedded into a game
+            this.canBlockExpand = expandable;
+          }} />
       </>
     );
   }

@@ -20,7 +20,6 @@ export type BlockModel = {
   uuid: string; // must be unique to avoid layout issues
 };
 
-// eventually this will exist on the serverside once we have UGC blocks
 export type BlockType = {
   type: string;
   displayName: string; // in add block menu
