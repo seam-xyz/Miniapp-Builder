@@ -3,7 +3,7 @@
   <img src="https://img.shields.io/github/stars/seam-xyz/Block-SDK?style=social"/>
 </p>
 <h1 align="center">
-  Seam Block Builder
+  [Alpha]: Seam Block Builder
 </h1>
 
 
@@ -14,6 +14,8 @@ https://user-images.githubusercontent.com/7350670/212757467-69afc52b-2aca-4308-b
 Many people ask how to make cool blocks like the ones that already live inside the Seam editor. The answer is React components. It is simple to learn and anyone can do it. You don't need to already be a programmer, and you can use the examples of other blocks that already exist to get started.
 
 We've made it easy in this repository to make a new block, and then publish it live so that anyone else in the world can use your new creation, too. We're all building this together!
+
+🚧 Note: The Seam platform is under constant development, and occasionally the block builder might lag behind the functionality on the Seam platform. If there currently isn't a way to build what you're dreaming up, feel free to file a github issue as a feature request.
 
 ### What are blocks?
 
