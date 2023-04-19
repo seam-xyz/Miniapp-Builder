@@ -10,7 +10,7 @@ type MarqueeProps = React.HTMLAttributes<HTMLElement>
 
 function TypescriptMarquee(props: MarqueeProps) {
   // @ts-ignore
-  return <marquee scrollamount="30" direction="left" {...props} />
+  return <marquee scrollamount="15" direction="left" {...props} />
 }
 
 export default class MarqueeBlock extends Block {
@@ -25,9 +25,21 @@ export default class MarqueeBlock extends Block {
     }
 
     return (
-      <TypescriptMarquee style={{fontSize: '64px'}}>
-        {text}
-      </TypescriptMarquee>
+      <div style={{
+        backgroundColor: this.theme.palette.info.main,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        height: "100%"
+      }}>
+        <TypescriptMarquee style={{
+          color: this.theme.palette.secondary.main,
+          fontFamily: this.theme.typography.fontFamily,
+          fontSize: "64px",
+        }}>
+          {text}
+        </TypescriptMarquee>
+      </div>
     );
   }
 
