@@ -13,6 +13,7 @@ import randomGiphyIcon from "./blockIcons/randomGiphyIcon.png";
 import pixelArtIcon from "./blockIcons/pixelArtIcon.png";
 import nftIcon from "./blockIcons/nftIcon.png"
 import pokemonIcon from "./blockIcons/pokeball.png"
+import marqueeIcon from "./blockIcons/marqueeIcon.png"
 
 export type BlockModel = {
   type: string;
@@ -193,16 +194,16 @@ export const BlockTypes: { [key: string]: BlockType } = {
     displayDescription: "Displays a random Pokemon!",
     emptyTitle: "Empty PokemonBlock Block",
     emptySubtitle: "Tap here to setup your PokemonBlock block!",
-    icon: pokemonIcon, // TODO: insert your block icon here
+    icon: pokemonIcon,
     deprecated: false
   },
-  "Marquee": { 
-        type: "Marquee",
-        displayName: "Marquee",
-        displayDescription: "Displays a scrolling banner of text",
-        emptyTitle: "Empty Marquee Block",
-        emptySubtitle: "Tap here to setup your Marquee block!",
-        icon: "MarqueeIcon", // TODO: insert your block icon here
-        deprecated: false
-    },
+  "Marquee": {
+    type: "Marquee",
+    displayName: "Marquee",
+    displayDescription: "Displays a scrolling banner of text",
+    emptyTitle: "Empty Marquee Block",
+    emptySubtitle: "Tap here to setup your Marquee block!",
+    icon: marqueeIcon,
+    deprecated: false
+  },
 };
