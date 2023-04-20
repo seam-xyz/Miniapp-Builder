@@ -206,13 +206,4 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: marqueeIcon,
     deprecated: false
   },
-  "Marquee": { 
-        type: "Marquee",
-        displayName: "Marquee",
-        displayDescription: "Displays a scrolling banner of text",
-        emptyTitle: "Empty Marquee Block",
-        emptySubtitle: "Tap here to setup your Marquee block!",
-        icon: "MarqueeIcon", // TODO: insert your block icon here
-        deprecated: false
-    },
 };
