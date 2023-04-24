@@ -1,5 +1,4 @@
 import { makeStyles, ThemeProvider } from "@mui/styles";
-import { createTheme } from "@mui/material/styles";
 
 import Content from "./Content";
 import { BlockModel } from "./blocks/types";
@@ -14,23 +13,6 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
 }));
-
-const defaultTheme = createTheme({
-  palette: {
-    primary: {        // Card Background
-      main: "#020303"
-    },
-    secondary: {
-      main: "#1C1C1C"  // Block Background
-    },
-    info: {
-      main: "#CCFE07"  // Accent Color
-    }
-  },
-  typography: {
-    fontFamily: "monospace"
-  }
-});
 
 export default function App() {
   const classes = useStyles();
@@ -48,11 +30,9 @@ export default function App() {
   // ^^^^^^^^^^^^^^^^^
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <div className={classes.root}>
-        <h1> Seam Block SDK </h1>
-        <Content loadedBlocks={[yourBlock]} />
-      </div>
-    </ThemeProvider>
+    <div className={classes.root}>
+      <h1> Seam Block SDK </h1>
+      <Content loadedBlocks={[yourBlock]} />
+    </div>
   );
 }

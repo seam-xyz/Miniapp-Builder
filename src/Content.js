@@ -8,17 +8,33 @@ import { withSize } from "react-sizeme";
 import Widget from "./Widget";
 import Card from '@mui/material/Card';
 import Modal from '@mui/material/Modal';
+import { createTheme } from "@mui/material/styles";
 
 // Blocks
 import BlockFactory from './blocks/BlockFactory';
-import { useTheme } from "@mui/material";
+
+const defaultTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#020303"
+    },
+    secondary: {
+      main: "#1C1C1C"
+    },
+    info: {
+      main: "#CCFE07" // Button Background
+    }
+  },
+  typography: {
+    fontFamily: "monospace"
+  },
+});
 
 function Content({ size: { width }, loadedBlocks }) {
   const [layouts, setLayouts] = useState({ lg: [{ x: 0, y: 0, w: 5, h: 15, i: "test" }] });
   const [blocks, setBlocks] = useState(loadedBlocks);
   const breakpoint = 620
   const isMobileScreen = window.innerWidth < breakpoint
-  const theme = useTheme()
 
   const [isEditingBlock, setIsEditingBlock] = useState(-1) // number is the index of the block being edited
   const onLayoutChange = (_, allLayouts) => {
@@ -46,7 +62,7 @@ function Content({ size: { width }, loadedBlocks }) {
     setBlocks([...blocks, newBlock]);
   };
   const renderBlock = (model) => {
-    let block = BlockFactory.getBlock(model, theme)
+    let block = BlockFactory.getBlock(model, defaultTheme)
     block.onEditCallback = onEditItem
     return block.render()
   }
