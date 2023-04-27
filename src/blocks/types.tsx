@@ -29,6 +29,7 @@ export type BlockType = {
   emptySubtitle: string; // before configuration in card
   icon: string; // in add block menu
   deprecated: boolean; // if users can continue to add the block
+  feedConstrained: boolean; // does this block have a defined aspect ratio for the feed?
 };
 
 // In order of how they should show up in the drop-down
@@ -41,6 +42,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Configure your profile header.",
     icon: profileIcon,
     deprecated: false,
+    feedConstrained: true
   },
   text: {
     type: "text",
@@ -50,6 +52,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add some text here.",
     icon: textIcon,
     deprecated: false,
+    feedConstrained: false
   },
   iframe: {
     type: "iframe",
@@ -59,6 +62,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add a website here.",
     icon: websiteIcon,
     deprecated: false,
+    feedConstrained: false
   },
   video: {
     type: "video",
@@ -68,6 +72,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add a video link here.",
     icon: videoIcon,
     deprecated: false,
+    feedConstrained: false
   },
   image: {
     type: "image",
@@ -77,6 +82,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add an image here.",
     icon: imageIcon,
     deprecated: false,
+    feedConstrained: true
   },
   link: {
     type: "link",
@@ -86,6 +92,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add a url for the button.",
     icon: linkIcon,
     deprecated: false,
+    feedConstrained: false
   },
   "Link Bookmark": {
     type: "Link Bookmark",
@@ -95,6 +102,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add a url for a bookmark.",
     icon: bookmarkIcon,
     deprecated: true,
+    feedConstrained: true
   },
   twitter: {
     type: "twitter",
@@ -105,6 +113,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add a twitter screen name.",
     icon: twitterIcon,
     deprecated: false,
+    feedConstrained: false
   },
   tweet: {
     type: "tweet",
@@ -114,6 +123,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add a tweet ID here.",
     icon: twitterIcon,
     deprecated: false,
+    feedConstrained: false
   },
   Music: {
     type: "Music",
@@ -123,6 +133,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add a music link.",
     icon: musicIcon,
     deprecated: false,
+    feedConstrained: false
   },
   Map: {
     type: "Map",
@@ -132,6 +143,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add a Google maps link.",
     icon: mapIcon,
     deprecated: false,
+    feedConstrained: true
   },
   "Image Button": {
     type: "Image Button",
@@ -141,6 +153,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add an image and url to link to.",
     icon: twitterIcon,
     deprecated: true,
+    feedConstrained: true
   },
   giphy: {
     type: "giphy",
@@ -150,6 +163,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Choose your gif.",
     icon: giphyIcon,
     deprecated: false,
+    feedConstrained: true
   },
   instagram: {
     type: "instagram",
@@ -159,6 +173,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Choose your Instagram.",
     icon: giphyIcon,
     deprecated: true,
+    feedConstrained: true
   },
   RefreshingGIF: {
     type: "RefreshingGIF",
@@ -169,6 +184,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Tap here to setup your RefreshingGIF block!",
     icon: randomGiphyIcon,
     deprecated: false,
+    feedConstrained: true
   },
   "PixelArt": {
     type: "PixelArt",
@@ -178,6 +194,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Tap here to setup your Pixel Art block!",
     icon: pixelArtIcon,
     deprecated: false,
+    feedConstrained: true
   },
   "NFTs": {
     type: "NFTs",
@@ -186,7 +203,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptyTitle: "Empty NFTs Block",
     emptySubtitle: "Tap here to setup your NFTs block!",
     icon: nftIcon,
-    deprecated: false
+    deprecated: false,
+    feedConstrained: true
   },
   "Pokemon": {
     type: "Pokemon",
@@ -195,7 +213,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptyTitle: "Empty PokemonBlock Block",
     emptySubtitle: "Tap here to setup your PokemonBlock block!",
     icon: pokemonIcon,
-    deprecated: false
+    deprecated: false,
+    feedConstrained: true
   },
   "Marquee": {
     type: "Marquee",
@@ -204,6 +223,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptyTitle: "Empty Marquee Block",
     emptySubtitle: "Tap here to setup your Marquee block!",
     icon: marqueeIcon,
-    deprecated: false
+    deprecated: false,
+    feedConstrained: false
   },
 };
