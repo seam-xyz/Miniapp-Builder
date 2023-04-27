@@ -50,6 +50,11 @@ export default class BlockFactory {
     return BlockTypes[type].displayName
   }
 
+  static doesBlockPost(model: BlockModel): boolean {
+    let type = model.type
+    return BlockTypes[type].doesBlockPost
+  }
+
   static renderEmptyState(model: BlockModel, onClick: (id: string) => void): React.ReactNode {
     return (
       <EmptyBlock title={BlockFactory.getPrintableBlockName(model)} onClick={() => {
