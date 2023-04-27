@@ -62,7 +62,9 @@ echo "  \"$shortName\": {
         emptyTitle: \"Empty $name Block\",
         emptySubtitle: \"Tap here to setup your $name block!\",
         icon: \"${shortName}Icon\", // TODO: insert your block icon here
-        deprecated: false
+        deprecated: false,
+        feedConstrained: false,
+        doesBlockPost: false
     },
 };" >> $output
 echo "✅ Added $name to types.tsx"
