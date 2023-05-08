@@ -8,7 +8,7 @@ interface IBlock {
     onEditCallback?: () => void
     canBlockExpand: boolean; // when Seam pages are embedded into games, blocks do not scroll. Blocks can have a 'see all' label if they are expandable.
 
-    render(): React.ReactNode
+    render(width?: string, height?: string): React.ReactNode // units in px
     renderEditModal(done: () => void): React.ReactNode
     renderErrorState(): React.ReactNode
 }
