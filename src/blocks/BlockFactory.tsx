@@ -41,10 +41,6 @@ export default class BlockFactory {
     }
   }
 
-  static getBlockNames() {
-    return Object.keys(BlockTypes)
-  }
-
   static getPrintableBlockName(model: BlockModel): string {
     let type = model.type
     return BlockTypes[type].displayName

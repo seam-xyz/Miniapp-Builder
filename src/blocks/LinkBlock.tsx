@@ -4,6 +4,7 @@ import BlockFactory from './BlockFactory';
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
 
 export default class LinkBlock extends Block {
   render() {
@@ -18,7 +19,8 @@ export default class LinkBlock extends Block {
     }
 
     return (
-      <a href={url} target="_blank" style={{textDecoration: "none"}}>
+      // <a href={url} target="_blank" style={{textDecoration: "none"}}>
+        <Link to={url}>
         <Button
           variant="contained"
           style={{
@@ -32,7 +34,8 @@ export default class LinkBlock extends Block {
           }}>
           {title}
         </Button>
-      </a>
+        </Link>
+      // </a>
     );
   }
 
