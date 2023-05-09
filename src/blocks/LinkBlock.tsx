@@ -19,8 +19,7 @@ export default class LinkBlock extends Block {
     }
 
     return (
-      // <a href={url} target="_blank" style={{textDecoration: "none"}}>
-        <Link to={url}>
+      <a href={url} target="_blank" style={{ textDecoration: "none" }}>
         <Button
           variant="contained"
           style={{
@@ -34,8 +33,7 @@ export default class LinkBlock extends Block {
           }}>
           {title}
         </Button>
-        </Link>
-      // </a>
+      </a>
     );
   }
 
