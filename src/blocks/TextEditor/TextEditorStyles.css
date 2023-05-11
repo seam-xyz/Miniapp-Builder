@@ -1,6 +1,6 @@
 h1 {
 
-    font-size: 40px;
+    font-size: 32px;
     margin: 0;
     font-weight: bold;
 }
@@ -8,26 +8,20 @@ h1 {
 h2 {
 
     font-weight: bold;
-    font-size: 28px;
+    font-size: 24px;
     margin: 0;
 }
 
 h3 {
 
     font-weight: 600;
-    font-size: 24px;
+    font-size: 20px;
     margin: 0;
 }
 
 h4 {
 
     font-size: 16px;
-    margin: 0;
-}
-
-h5 {
-
-    font-size: 14px;
     margin: 0;
 }
 
