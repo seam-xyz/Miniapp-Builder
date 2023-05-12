@@ -28,6 +28,8 @@ export type BlockType = {
   emptyTitle: string; // before configuration in card
   emptySubtitle: string; // before configuration in card
   icon: string; // in add block menu
+  minHeight?: number, // in rows, each row being 5px
+  minWidth?: number, // in column units
   deprecated: boolean; // if users can continue to add the block
   feedConstrained: boolean; // does this block have a defined aspect ratio for the feed?
   doesBlockPost: boolean; // do updates of this block show up in the feed?
@@ -97,6 +99,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptyTitle: "This is an empty link block!",
     emptySubtitle: "Add a url for the button.",
     icon: linkIcon,
+    minHeight: 5,
     deprecated: false,
     feedConstrained: false,
     doesBlockPost: true
@@ -209,6 +212,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptyTitle: "Empty Pixel Art Block",
     emptySubtitle: "Tap here to setup your Pixel Art block!",
     icon: pixelArtIcon,
+    minWidth: 2,
     deprecated: false,
     feedConstrained: true,
     doesBlockPost: true
