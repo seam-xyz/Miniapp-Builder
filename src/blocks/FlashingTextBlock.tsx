@@ -20,7 +20,7 @@ function FlashingText({ content, contentColor, backgroundColor } : FlashingTextP
   /*
   This conditional is important when changing themes. If we only had setColors() without the surrounding
   conditional, then the component crashes because React thinks it's too many rerenders. The conditional
-  makes sure that only when there is a new color combination do we change state
+  makes sure that when there is a new color combination, the state changes to reflect that
   */
   if ((contentColor !== textColor && contentColor !== bgColor) || 
       (backgroundColor !== textColor && backgroundColor !== bgColor)) {
