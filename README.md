@@ -43,7 +43,7 @@ Under the folder `src/blocks/blockIcons`, add a picture for your block icon, whi
 import marqueeIcon from "./blockIcons/marqueeIcon.png"
 ```
 
-Then, add your block to the types dictionary. It should be in the following format, where ***shortName***, ***name***, and ***description*** are strings of your choosing.
+Then, add your block to the types dictionary. It should be in the following format, where ***shortName***, ***name***, and ***description*** are strings of your choosing. ***icon*** is the icon you just imported.
 ```
 shortName: { 
         type: shortName,
@@ -71,7 +71,7 @@ For example, here's the Marquee block type:
     deprecated: false,
     feedConstrained: false,
     doesBlockPost: true
-  },
+  }
 ```
 
 Next, create a ***shortName***Block.tsx file for your block under `src/blocks`. Copy and paste the contents of `src/blocks/BlockTemplate.txt` into ***shortName***Block.tsx. Inside the ***shortName***Block.tsx file, replace %NAME% with ***shortName***. Note that when naming the file and replacing %NAME%, ***shortName*** should be capitalized, if it isn't already.
