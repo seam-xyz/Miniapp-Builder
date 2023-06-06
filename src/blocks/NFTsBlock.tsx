@@ -67,11 +67,11 @@ function NFTGrid(props: NftGridProps) {
       const {
         assets: rawAssets,
         error,
-      } = await fetchOpenseaAssets({
+      } = await fetchOpenseaAssets(
         owner,
-        contract: props.contract
-
-      });
+        undefined, // cursor
+        process.env.REACT_OPENSEA_KEY,
+    );
       if (!error) {
         setAssets(rawAssets)
         props.setExpandable(rawAssets.length > 0)
