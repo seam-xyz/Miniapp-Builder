@@ -52,28 +52,21 @@ const delay = (
   });
 };
 
-export const fetchOpenseaAssets = async ({
-  owner,
-  cursor,
-  apiKey,
-  apiUrl,
-  autoRetry,
-  contract,
-}: {
-  owner: string | null;
-  cursor?: string;
-  apiKey?: string;
-  apiUrl?: string;
-  autoRetry?: boolean;
-  contract?: string;
-}): Promise<OpenseaAssetsAndNextCursor> => {
+export const fetchOpenseaAssets = async (
+  owner: string | null,
+  cursor?: string,
+  apiKey?: string,
+  apiUrl?: string,
+  autoRetry?: boolean,
+  contract?: string): Promise<OpenseaAssetsAndNextCursor> => {
   try {
     let ownerArg = owner ? "&owner=" + owner : "";
     let contractArg = contract ? "&asset_contract_address=" + contract : "";
+    let cursorArg = cursor == undefined ? "" : cursor
     const apiUrlFinal = apiKey
       ? `${
           apiUrl ? apiUrl : OPENSEA_URL
-        }/api/v1/assets?limit=50&cursor=${cursor}${ownerArg}${contractArg}`
+        }/api/v1/assets?limit=50&cursor=${cursorArg}${ownerArg}${contractArg}`
       : `${
           apiUrl ? apiUrl : OPENSEA_URL
         }/api/v1/assets?${ownerArg}${contractArg}`;
@@ -107,13 +100,13 @@ export const fetchOpenseaAssets = async ({
       requestRetryCount++;
 
       return delay(() =>
-        fetchOpenseaAssets({
+        fetchOpenseaAssets(
           owner,
           cursor,
           apiKey,
           apiUrl,
           autoRetry,
-        })
+        )
       );
     } else {
       console.error("fetchAssets failed:", error);
