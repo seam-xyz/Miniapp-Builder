@@ -75,7 +75,6 @@ export default class FlashingTextBlock extends Block {
 
     let text = this.model.data['text'];
 
-    console.log("render")
     if (text === undefined) {
       return this.renderErrorState();
     }
@@ -90,7 +89,6 @@ export default class FlashingTextBlock extends Block {
 
   renderEditModal(done: (data: BlockModel) => void) {
 
-    let value = "#000000"
     const onChange = (even: any) => {
 
     }
