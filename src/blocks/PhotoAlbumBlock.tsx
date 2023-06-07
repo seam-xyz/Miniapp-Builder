@@ -125,7 +125,7 @@ export default class PhotoAlbumBlock extends Block {
                     <MinusCircleOutlined onClick={() => remove(name)} />
                   </Space>
                 ))}
-                {errors.length == 0 && (
+                {errors.length == 0 && ( // if under max album size include add image button
                   <Form.Item> 
                     <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}> 
                       Add Image
