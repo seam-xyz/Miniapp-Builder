@@ -2,18 +2,17 @@ import Block from './Block'
 import { BlockModel } from './types'
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+import { FormControlLabel, Checkbox, TextField, Box, Button } from '@mui/material';
 import { useState, useEffect } from "react";
 
 interface FlashingTextProps {
   content: string;
   contentColor: string;
   backgroundColor: string;
+  isAscii: string;
 }
 
-function FlashingText({ content, contentColor, backgroundColor } : FlashingTextProps) {
+function FlashingText({ content, contentColor, backgroundColor, isAscii } : FlashingTextProps) {
   const [colors, setColors] = useState({textColor: contentColor, bgColor: backgroundColor});
   const { textColor, bgColor }  = colors;
 
@@ -24,7 +23,7 @@ function FlashingText({ content, contentColor, backgroundColor } : FlashingTextP
   */
   if ((contentColor !== textColor && contentColor !== bgColor) || 
       (backgroundColor !== textColor && backgroundColor !== bgColor)) {
-    setColors({textColor: contentColor, bgColor: backgroundColor})
+    setColors({textColor: contentColor, bgColor: backgroundColor});
   }
 
   // swap colors after the component renders. changing the state triggers another render,
@@ -46,23 +45,29 @@ function FlashingText({ content, contentColor, backgroundColor } : FlashingTextP
     justifyContent: "center",
     width: "100%",
     height: "100%"
-  } as React.CSSProperties
+  } as React.CSSProperties;
 
   let textStyles = {
     color: textColor,
     backgroundColor: bgColor,
-    textAlign: "center",
-    fontSize: "64px",
-    overflowWrap: "break-word"
-  } as React.CSSProperties
+    margin: "auto"
+  } as React.CSSProperties;
   
   return (
-    <div style={backgroundStyles}>
-      <h1 style={textStyles}>
-        {content}
-      </h1>
-    </div>
-  )
+    isAscii === "true" ? (
+        <div style={backgroundStyles}>
+          <pre style={textStyles}>
+            {content}
+          </pre>
+        </div>
+      ) : (
+          <div style={backgroundStyles}>
+          <h1 style={{...textStyles, fontSize: 64, textAlign: "center"}}>
+            {content}
+          </h1>
+        </div>
+      )
+  );
 }
 
 export default class FlashingTextBlock extends Block {
@@ -74,6 +79,7 @@ export default class FlashingTextBlock extends Block {
     }
 
     let text = this.model.data['text'];
+    let isAscii = this.model.data['isAscii'];
 
     if (text === undefined) {
       return this.renderErrorState();
@@ -83,21 +89,27 @@ export default class FlashingTextBlock extends Block {
         <FlashingText
            content={text}
            contentColor={this.theme.palette.info.main}
-           backgroundColor={this.theme.palette.secondary.main}/>
+           backgroundColor={this.theme.palette.secondary.main}
+           isAscii={isAscii}/>
     );
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
 
-    const onChange = (even: any) => {
-
-    }
     const onFinish = (event: any) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
-      let text = data.get('text') as string
-      this.model.data['text'] = text
-      done(this.model)
+      let text = data.get('text') as string;
+
+      // if the checkbox was checked, ascii="yes" so data.get('ascii') returns yes
+      // if the checkbox wasn't checked, ascii won't be a key and so data.get('ascii') will return null
+      let isAscii = data.get('ascii');
+
+      // if ascii has a truthy value ("yes"), isAscii will be set to "true"
+      // if ascii has a falsy value (null), isAscii will be set to "false"
+      this.model.data['isAscii'] = isAscii ? "true" : "false";
+      this.model.data['text'] = text;
+      done(this.model);
     };
 
     return (
@@ -111,11 +123,13 @@ export default class FlashingTextBlock extends Block {
           required
           defaultValue={this.model.data['text']}
           fullWidth
+          multiline
           id="text"
           label="Text"
           name="text"
           autoFocus
         />
+        <FormControlLabel control={<Checkbox name="ascii" value="yes"/>} label="Fixed-width font (for ASCII art)" />
         <Button
           type="submit"
           variant="contained"
@@ -125,12 +139,12 @@ export default class FlashingTextBlock extends Block {
           Save
         </Button>
       </Box>
-    )
+    );
   }
 
   renderErrorState() {
     return (
       <h1>Error!</h1>
-    )
+    );
   }
 }
