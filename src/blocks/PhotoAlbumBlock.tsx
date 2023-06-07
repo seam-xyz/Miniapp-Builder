@@ -73,7 +73,7 @@ export default class PhotoAlbumBlock extends Block {
       return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
     }
     let images = convertToObjects(this.model.data['images']) // stores form data object in "images"
-    let duration = parseFloat(this.model.data['duration'] ?? "1000") * 1000; // turns duration string from form into float, 1000ms by default, converts to seconds
+    let duration = parseFloat(this.model.data['duration'] ?? "5000") * 1000; // turns duration string from form into float, 5000ms by default, converts to seconds
 
     return <ImageFader images={images} duration={duration}></ImageFader>
   }
