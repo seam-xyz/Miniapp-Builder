@@ -33,9 +33,95 @@ https://user-images.githubusercontent.com/7350670/213023742-116abf08-51d8-4b9e-a
 
 1. git clone the repo, `cd Block-SDK`
 2. `yarn install`
-3. `./seam-magic.sh` will guide you through creating a template of an empty block, given whatever name you choose!
+3. `./seam-magic.sh` will guide you through creating a template of an empty block, given whatever name you choose! If this doesn't work for you (Windows users), see below for instructions on how to set up the SDK manually.
 4. `yarn start` to see your new block in action.
 
+# Setting up the SDK Manually
+
+Under the folder `src/blocks/blockIcons`, add a picture for your block icon, which will be displayed to users. Then, import it into `src/blocks/types.tsx`. It should look like this:
+```
+import marqueeIcon from "./blockIcons/marqueeIcon.png"
+```
+
+Then, add your block to the types dictionary. It should be in the following format, where ***shortName***, ***name***, and ***description*** are strings of your choosing. ***icon*** is the icon you just imported.
+```
+shortName: { 
+        type: shortName,
+        displayName: name,
+        displayDescription: description,
+        emptyTitle: "Empty name Block",
+        emptySubtitle: "Tap here to setup your name block!",
+        icon: icon, // TODO: insert your block icon here
+        deprecated: false,
+        feedConstrained: false,
+        doesBlockPost: false
+    }
+```
+ ***shortName*** is the name of your block without spaces. For consistency purposes, it's recommended that this is capitalized. ***name*** is the name of the block, visible to users. ***description*** tells users what your block does.
+
+For example, here's the Marquee block type:
+```
+  "Marquee": {
+    type: "Marquee",
+    displayName: "Marquee",
+    displayDescription: "Displays a scrolling banner of text",
+    emptyTitle: "Empty Marquee Block",
+    emptySubtitle: "Tap here to setup your Marquee block!",
+    icon: marqueeIcon,
+    deprecated: false,
+    feedConstrained: false,
+    doesBlockPost: true
+  }
+```
+
+Next, create a ***shortName***Block.tsx file for your block under `src/blocks`. Copy and paste the contents of `src/blocks/BlockTemplate.txt` into ***shortName***Block.tsx. Inside the ***shortName***Block.tsx file, replace %NAME% with ***shortName***. Note that when naming the file and replacing %NAME%, ***shortName*** should be capitalized, if it isn't already.
+
+For example, here is what the `src/blocks/MarqueBlock.tsx` file would contain after this step:
+```
+import Block from './Block'
+import { BlockModel } from './types'
+import BlockFactory from './BlockFactory';
+import './BlockStyles.css'
+
+export default class MarqueeBlock extends Block {
+  render() {
+    return (
+      <h1>Marquee Block!</h1>
+    );
+  }
+
+  renderEditModal(done: (data: BlockModel) => void) {
+    return (
+      <h1>Edit Marquee Block!</h1>
+    )
+  }
+
+  renderErrorState() {
+    return (
+      <h1>Error!</h1>
+    )
+  }
+}
+```
+
+Afterwards, import your block into `src/blocks/BlockFactory.tsx` like this:
+```
+import MarqueeBlock from './MarqueeBlock'
+```
+And add a case for your block to the switch, like so:
+```
+case "Marquee": return new MarqueeBlock(model, theme)
+```
+Note that the string after `case` should be ***shortName***.
+
+Then, in `src/App.tsx`, replace %NAME% with ***shortName***:
+```
+  let yourBlock: BlockModel = {
+    type: "Marquee",
+    data: {},
+    uuid: "test"
+  }
+```
 # Block Maker's Guide
 
 After creating your new block using our magic script, there are only 3 functions you need to write to make your block.
