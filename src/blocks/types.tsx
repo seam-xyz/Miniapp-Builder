@@ -250,13 +250,13 @@ export const BlockTypes: { [key: string]: BlockType } = {
     feedConstrained: false,
     doesBlockPost: true
   },
-  "SlidingImage": { 
-    type: "SlidingImage",
-    displayName: "Sliding Image Block",
-    displayDescription: "Carousel photo viewer block that accepts an array of image URLs.",
-    emptyTitle: "Empty Sliding Image Block Block",
-    emptySubtitle: "Tap here to setup your Sliding Image Block block!",
-    icon: "SlidingImageBlockIcon", // TODO: insert your block icon here
+  "PhotoAlbum": { 
+    type: "PhotoAlbum",
+    displayName: "Photo Album Block",
+    displayDescription: "Fading photo viewer block that accepts an array of image URLs.",
+    emptyTitle: "Empty Photo Album Block",
+    emptySubtitle: "Tap here to setup your Photo Album block!",
+    icon: "PhotoAlbumBlockIcon", // TODO: insert your block icon here
     deprecated: false,
     feedConstrained: false,
     doesBlockPost: false

@@ -66,7 +66,7 @@ const convertToObjects = (imageURLString: string | undefined) => {
   })
 }
 
-export default class SlidingImageBlock extends Block {
+export default class PhotoAlbumBlock extends Block {
   render() {
     // renders tap to customize message by default
     if (Object.keys(this.model.data).length === 0 || this.model.data['images'].length === 0) { // default empty block if image array is empty
