@@ -14,6 +14,7 @@ import pixelArtIcon from "./blockIcons/pixelArtIcon.png";
 import nftIcon from "./blockIcons/nftIcon.png"
 import pokemonIcon from "./blockIcons/pokeball.png"
 import marqueeIcon from "./blockIcons/marqueeIcon.png"
+import photoAlbumIcon from "./blockIcons/photoAlbumIcon.png"
 import flashingTextIcon from "./blockIcons/flashingTextIcon.png";
 
 export type BlockModel = {
@@ -250,6 +251,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     feedConstrained: false,
     doesBlockPost: true
+  },
+  "PhotoAlbum": { 
+    type: "PhotoAlbum",
+    displayName: "Photo Album Block",
+    displayDescription: "Fading photo viewer block that accepts up to 10 image URLs.",
+    emptyTitle: "Empty Photo Album Block",
+    emptySubtitle: "Tap here to setup your Photo Album block!",
+    icon: photoAlbumIcon,
+    deprecated: false,
+    feedConstrained: false,
+    doesBlockPost: false
   },
   "FlashingText": { 
     type: "FlashingText",
