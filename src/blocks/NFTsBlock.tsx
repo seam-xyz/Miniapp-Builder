@@ -71,6 +71,9 @@ function NFTGrid(props: NftGridProps) {
         owner,
         undefined, // cursor
         process.env.REACT_OPENSEA_KEY,
+        undefined,
+        undefined,
+        props.contract,
     );
       if (!error) {
         setAssets(rawAssets)
