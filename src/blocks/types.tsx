@@ -15,6 +15,7 @@ import nftIcon from "./blockIcons/nftIcon.png"
 import pokemonIcon from "./blockIcons/pokeball.png"
 import marqueeIcon from "./blockIcons/marqueeIcon.png"
 import photoAlbumIcon from "./blockIcons/photoAlbumIcon.png"
+import flashingTextIcon from "./blockIcons/flashingTextIcon.png";
 
 export type BlockModel = {
   type: string;
@@ -262,4 +263,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     feedConstrained: false,
     doesBlockPost: false
   },
+  "FlashingText": { 
+    type: "FlashingText",
+    displayName: "Flashing Text",
+    displayDescription: "Text and background swap colors, creating a flashing effect.",
+    emptyTitle: "Empty Flashing Text Block",
+    emptySubtitle: "Tap here to setup your Flashing Text block!",
+    icon: flashingTextIcon,
+    deprecated: false,
+    feedConstrained: false,
+    doesBlockPost: false
+}
 };

@@ -17,6 +17,7 @@ import IFramelyBlock from './IFramelyBlock'
 import EmptyBlock from './EmptyBlock'
 import ProfileBlock from './ProfileBlock'
 import GiphyBlock from './GiphyBlock'
+import FlashingTextBlock from './FlashingTextBlock';
 
 export default class BlockFactory {
   static getBlock(model: BlockModel, theme: Theme): Block {
@@ -38,6 +39,7 @@ export default class BlockFactory {
       case "Pokemon": return new PokemonBlock(model, theme)
       case "Marquee": return new MarqueeBlock(model, theme)
       case "PhotoAlbum": return new PhotoAlbumBlock(model, theme)
+      case "FlashingText": return new FlashingTextBlock(model, theme)
       // new blocks go here
       default: return new IFrameBlock(model, theme)
     }
