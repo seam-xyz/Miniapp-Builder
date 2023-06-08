@@ -261,7 +261,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: photoAlbumIcon,
     deprecated: false,
     feedConstrained: false,
-    doesBlockPost: false
+    doesBlockPost: true
   },
   "FlashingText": { 
     type: "FlashingText",
@@ -272,6 +272,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: flashingTextIcon,
     deprecated: false,
     feedConstrained: false,
-    doesBlockPost: false
-}
+    doesBlockPost: true
+  },
 };
