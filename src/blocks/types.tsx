@@ -260,7 +260,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Tap here to setup your Photo Album block!",
     icon: photoAlbumIcon,
     deprecated: false,
-    feedConstrained: false,
+    feedConstrained: true,
     doesBlockPost: true
   },
   "FlashingText": { 
