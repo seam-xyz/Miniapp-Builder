@@ -261,7 +261,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: photoAlbumIcon,
     deprecated: false,
     feedConstrained: true,
-    doesBlockPost: true
+    doesBlockPost: false
   },
   "FlashingText": { 
     type: "FlashingText",
