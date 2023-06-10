@@ -21,9 +21,9 @@ export default function App() {
   // vvvvvvvvvvvvvvvvv
 
   let yourBlock: BlockModel = {
-    type: "%NAME%",
+    type: "history",
     data: {},
-    uuid: "test"
+    uuid: "test",
   }
 
   // End customization

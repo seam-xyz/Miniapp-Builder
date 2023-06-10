@@ -16,6 +16,7 @@ import pokemonIcon from "./blockIcons/pokeball.png"
 import marqueeIcon from "./blockIcons/marqueeIcon.png"
 import photoAlbumIcon from "./blockIcons/photoAlbumIcon.png"
 import flashingTextIcon from "./blockIcons/flashingTextIcon.png";
+import todayHistoryIcon from "./blockIcons/historyIcon.png";
 
 export type BlockModel = {
   type: string;
@@ -274,4 +275,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     feedConstrained: false,
     doesBlockPost: true
   },
+  "history": { 
+        type: "history",
+        displayName: "Today in History",
+        displayDescription: "Displays something interesting that happened today",
+        emptyTitle: "Empty Today in History Block",
+        emptySubtitle: "Tap here to setup your Today in History block!",
+        icon: todayHistoryIcon,
+        deprecated: false,
+        feedConstrained: false,
+        doesBlockPost: false
+    },
 };
