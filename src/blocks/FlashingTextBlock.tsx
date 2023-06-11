@@ -10,15 +10,17 @@ interface FlashingTextProps {
   contentColor: string;
   backgroundColor: string;
   isAscii: string;
-  lineHeight: string,
+  lineHeight: string;
+  transitionDuration: string;
 }
 
-function FlashingText({ content, contentColor, backgroundColor, isAscii, lineHeight } : FlashingTextProps) {
+function FlashingText({ content, contentColor, backgroundColor, isAscii, lineHeight, transitionDuration } : FlashingTextProps) {
   const [colors, setColors] = useState({textColor: contentColor, bgColor: backgroundColor});
   const { textColor, bgColor }  = colors;
 
   // we store lineHeight as a string in model.data['lineHeight'], so we convert it to a float
   let lineHeightFloat = parseFloat(lineHeight);
+  let durationMs = parseFloat(transitionDuration) * 1000;
   /*
   This conditional is important when changing themes. If we only had setColors() without the surrounding
   conditional, then the component crashes because React thinks it's too many rerenders. The conditional
@@ -36,9 +38,9 @@ function FlashingText({ content, contentColor, backgroundColor, isAscii, lineHei
       setColors({textColor: bgColor, bgColor: textColor});
     }
 
-    const timeoutId = setTimeout(swapColors, 1000);
+    const timeoutId = setTimeout(swapColors, durationMs);
     return () => clearTimeout(timeoutId);
-  }, [bgColor, textColor]);
+  }, [bgColor, textColor, durationMs]);
   
 
   // styles for the box background
@@ -132,6 +134,7 @@ export default class FlashingTextBlock extends Block {
     let text = this.model.data['text'];
     let isAscii = this.model.data['isAscii'];
     let lineHeight = this.model.data['lineHeight'];
+    let transitionDuration = this.model.data['transitionDuration'];
 
     if (text === undefined) {
       return this.renderErrorState();
@@ -143,7 +146,8 @@ export default class FlashingTextBlock extends Block {
            contentColor={this.theme.palette.info.main}
            backgroundColor={this.theme.palette.secondary.main}
            isAscii={isAscii}
-           lineHeight={lineHeight}/>
+           lineHeight={lineHeight}
+           transitionDuration={transitionDuration}/>
     );
   }
 
@@ -153,7 +157,7 @@ export default class FlashingTextBlock extends Block {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
       let text = data.get('text') as string;
-
+      let transitionDuration = data.get('transitionDuration') as string;
       // if the checkbox was checked, ascii="yes" so data.get('ascii') returns yes
       // if the checkbox wasn't checked, ascii won't be a key and so data.get('ascii') will return null
       let isAscii = data.get('ascii');
@@ -171,6 +175,7 @@ export default class FlashingTextBlock extends Block {
       }
 
       this.model.data['text'] = text;
+      this.model.data['transitionDuration'] = transitionDuration;
       done(this.model);
     };
 
@@ -191,6 +196,16 @@ export default class FlashingTextBlock extends Block {
           name="text"
           autoFocus
         />
+        <InputLabel>Transition Duration (seconds): </InputLabel>
+        <Slider
+          name="transitionDuration"
+          aria-label="Transition Duration"
+          defaultValue={parseFloat(this.model.data['transitionDuration']) || 1.0}
+          valueLabelDisplay="auto"
+          step={0.1}
+          min={0.1}
+          max={3}>
+          </Slider>
         {this.model.data['isAscii'] === "true" 
           ? <AsciiArtControls checked={true} lineHeight={this.model.data['lineHeight'] || "1.0"}></AsciiArtControls>
           : <AsciiArtControls checked={false} lineHeight={this.model.data['lineHeight'] || "1.0"}></AsciiArtControls>}
