@@ -2,7 +2,7 @@ import Block from './Block'
 import { BlockModel } from './types'
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
-import { FormControlLabel, Checkbox, TextField, Box, Button, Slider} from '@mui/material';
+import { FormControlLabel, Checkbox, TextField, Box, Button, Slider, InputLabel } from '@mui/material';
 import { useState, useEffect } from "react";
 
 interface FlashingTextProps {
@@ -102,6 +102,7 @@ function AsciiArtControls({ checked, lineHeight } : AsciiArtControlsProps) {
         <>
           <FormControlLabel control={<Checkbox name="ascii" value="yes"/>} 
           label="Fixed-width font (for ASCII art)" onChange={handleCheckboxChange} checked />
+          <InputLabel>Line Height:</InputLabel>
           <Slider   
             name="lineHeight"
             aria-label="Line Height"
