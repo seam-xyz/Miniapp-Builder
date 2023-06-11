@@ -70,7 +70,10 @@ function NFTGrid(props: NftGridProps) {
       } = await fetchOpenseaAssets(
         owner,
         undefined, // cursor
-        process.env.REACT_OPENSEA_KEY,
+        process.env.REACT_APP_OPENSEA_KEY,
+        undefined,
+        undefined,
+        props.contract,
     );
       if (!error) {
         setAssets(rawAssets)
