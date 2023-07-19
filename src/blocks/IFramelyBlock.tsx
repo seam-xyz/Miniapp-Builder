@@ -72,7 +72,7 @@ export default class BookmarkBlock extends Block {
           id="header"
           label="Header Title"
           name="header"
-          defaultValue={this.model.data['header']}
+          defaultValue={this.model.data['title']}
         />
         <Button
           type="submit"
