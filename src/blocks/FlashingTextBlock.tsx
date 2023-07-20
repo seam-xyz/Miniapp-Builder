@@ -20,7 +20,7 @@ function FlashingText({ content, contentColor, backgroundColor, isAscii, lineHei
 
   // we store lineHeight as a string in model.data['lineHeight'], so we convert it to a float
   let lineHeightFloat = parseFloat(lineHeight);
-  let durationMs = parseFloat(transitionDuration) * 1000;
+  let durationMs = transitionDuration == undefined ? 1000 : parseFloat(transitionDuration) * 1000;
   /*
   This conditional is important when changing themes. If we only had setColors() without the surrounding
   conditional, then the component crashes because React thinks it's too many rerenders. The conditional
@@ -38,7 +38,7 @@ function FlashingText({ content, contentColor, backgroundColor, isAscii, lineHei
       setColors({textColor: bgColor, bgColor: textColor});
     }
 
-    const timeoutId = setTimeout(swapColors, durationMs);
+    const timeoutId = setTimeout(swapColors, durationMs ?? 1000);
     return () => clearTimeout(timeoutId);
   }, [bgColor, textColor, durationMs]);
   
