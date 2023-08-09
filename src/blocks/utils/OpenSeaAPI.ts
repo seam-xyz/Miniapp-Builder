@@ -58,18 +58,18 @@ export const fetchOpenseaAssets = async (
   apiKey?: string,
   apiUrl?: string,
   autoRetry?: boolean,
+  collectionSlug?: string,
   contract?: string): Promise<OpenseaAssetsAndNextCursor> => {
   try {
     let ownerArg = owner ? "&owner=" + owner : "";
     let contractArg = contract ? "&asset_contract_address=" + contract : "";
+    let collectionArg = collectionSlug ? "&collection=" + collectionSlug : "";
     let cursorArg = cursor == undefined ? "" : cursor
+    const queryArgs = `?limit=100${cursorArg}${ownerArg}${contractArg}${collectionArg}`;
     const apiUrlFinal = apiKey
-      ? `${
-          apiUrl ? apiUrl : OPENSEA_URL
-        }/api/v1/assets?limit=50&cursor=${cursorArg}${ownerArg}${contractArg}`
-      : `${
-          apiUrl ? apiUrl : OPENSEA_URL
-        }/api/v1/assets?${ownerArg}${contractArg}`;
+      ? `${apiUrl ? apiUrl : OPENSEA_URL}/api/v1/assets${queryArgs}`
+      : `${apiUrl ? apiUrl : OPENSEA_URL}/api/v1/assets${queryArgs}`;
+
     const result = await fetch(
       apiUrlFinal,
       apiKey ? { headers: { "X-API-KEY": apiKey } } : {}
@@ -89,9 +89,7 @@ export const fetchOpenseaAssets = async (
   } catch (error) {
     if (autoRetry && requestRetryCount < MAX_AUTO_RETRY_ATTEMPT) {
       console.log(
-        `Failed to fetch assets, retrying in ${
-          AUTO_RETRY_ATTEMPT_INTERVAL / 1000
-        } seconds...`
+        `Failed to fetch assets, retrying in ${AUTO_RETRY_ATTEMPT_INTERVAL / 1000} seconds...`
       );
       console.log(
         `Retry Count: ${requestRetryCount}/${MAX_AUTO_RETRY_ATTEMPT}`
@@ -100,13 +98,7 @@ export const fetchOpenseaAssets = async (
       requestRetryCount++;
 
       return delay(() =>
-        fetchOpenseaAssets(
-          owner,
-          cursor,
-          apiKey,
-          apiUrl,
-          autoRetry,
-        )
+        fetchOpenseaAssets(owner, cursor, apiKey, apiUrl, autoRetry, collectionSlug, contract)
       );
     } else {
       console.error("fetchAssets failed:", error);
