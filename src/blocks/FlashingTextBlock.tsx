@@ -203,7 +203,7 @@ export default class FlashingTextBlock extends Block {
           defaultValue={parseFloat(this.model.data['transitionDuration']) || 1.0}
           valueLabelDisplay="auto"
           step={0.1}
-          min={0.1}
+          min={0.3}
           max={3}>
           </Slider>
         {this.model.data['isAscii'] === "true" 

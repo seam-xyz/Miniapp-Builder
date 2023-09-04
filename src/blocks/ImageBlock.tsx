@@ -4,6 +4,7 @@ import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import UploadFormComponent from './utils/UploadFormComponent';
 import Button from "@mui/material/Button";
 
 export default class ImageBlock extends Block {
@@ -29,19 +30,29 @@ export default class ImageBlock extends Block {
     );
   }
 
+  addHTTPS(url: string) {
+    return (url.indexOf('://') === -1) ? 'http://' + url : url
+  }
+
   renderEditModal(done: (data: BlockModel) => void) {
     const onFinish = (event: any) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
       let url = data.get('url') as string
-      url = (url.indexOf('://') === -1) ? 'http://' + url : url;
+      const hasInternetURL = url != ""
+      url = hasInternetURL ? this.addHTTPS(url) : this.model.data['url']
       this.model.data['url'] = url
       done(this.model)
     };
 
-    const onFinishFailed = (errorInfo: any) => {
-      console.log('Failed:', errorInfo);
-    };
+    const uploaderComponent = <UploadFormComponent onUpdate={files => {
+      if (files.length === 0) {
+        console.log('No files selected.')
+      } else {
+        console.log(files)
+        this.model.data['url'] = files[0].fileUrl
+      }
+    }} />
 
     return (
       <Box
@@ -49,9 +60,9 @@ export default class ImageBlock extends Block {
         onSubmit={onFinish}
         style={{}}
       >
-        <TextField
+          {uploaderComponent}
+          <TextField
           margin="normal"
-          required
           defaultValue={this.model.data['url']}
           fullWidth
           id="url"

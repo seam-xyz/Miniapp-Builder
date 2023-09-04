@@ -111,7 +111,7 @@ function NFTGrid(props: NftGridProps) {
       <ImageList cols={3} style={{ maxHeight: '100%', position: 'absolute', overflow: scrollAttribute }} sx={{ '&::-webkit-scrollbar': { display: 'none' } }}>
         {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
           <ImageListItem key={index}>
-            <img src={asset.image_preview_url} key={index} style={{ aspectRatio: 1 }} alt="NFT" loading="lazy" />
+            <img src={asset.image_thumbnail_url} key={index} style={{ aspectRatio: 1 }} alt="NFT" loading="lazy" />
           </ImageListItem>
         )}
       </ImageList>
@@ -123,7 +123,7 @@ function NFTGrid(props: NftGridProps) {
       <div id="scroll" style={{ display: 'flex', flexDirection: 'column', maxHeight: '100%', position: 'absolute', width: '100%', overflowY: scrollAttribute }}>
         {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
           <div style={{ height: '80px', display: 'flex', flexDirection: 'row', backgroundColor: teritaryColor }}>
-            <img src={asset.image_preview_url} key={index} style={{ aspectRatio: 1, height: '60px', margin: '10px' }} alt="NFT" loading="lazy" />
+            <img src={asset.image_thumbnail_url} key={index} style={{ aspectRatio: 1, height: '60px', margin: '10px' }} alt="NFT" loading="lazy" />
             <div style={{ width: '100%', height: '60px', margin: '10px', alignItems: 'center', display: 'flex' }}>#{asset.token_id}</div>
           </div>
         )}
