@@ -7,24 +7,32 @@ const alchemy = new Alchemy({ apiKey: ALCHEMY_API_KEY, network: ALCHEMY_NETWORK 
 
 export const getNftsForOwner = async (
     ownerAddress: string,
-    contractAddress?: string
+    contractAddress?: string,
+    pageCursor?: string // Add a parameter for the page cursor
 ) => {
     try {
         const options = {
             contractAddresses: contractAddress ? [contractAddress] : undefined,
-            pageSize: 50, // Mimicking the OpenSea's limit
+            pageSize: 50,
+            pageKey: pageCursor // Use the cursor for pagination
         };
         const response = await alchemy.nft.getNftsForOwner(ownerAddress, options);
+        
+        let allAssets = response.ownedNfts;
+
+        // If there's a next cursor, fetch the next page
+        if (response.pageKey) {
+            const nextPageAssets = await getNftsForOwner(ownerAddress, contractAddress, response.pageKey);
+            allAssets = allAssets.concat(nextPageAssets.assets);
+        }
 
         return {
-            assets: response.ownedNfts,
+            assets: allAssets,
             nextCursor: response.pageKey,
             error: undefined,
         };
     } catch (error) {
         console.error("getNftsForOwner failed:", error);
-
-        // Check if the error is an instance of Error, then access its message property
         let errorMessage: string;
         if (error instanceof Error) {
             errorMessage = error.message;
@@ -39,4 +47,5 @@ export const getNftsForOwner = async (
         };
     }
 }
+
 
