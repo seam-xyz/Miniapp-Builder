@@ -5,7 +5,7 @@ import {
   resolveEnsDomain,
   isEnsDomain
 } from './utils/OpenSeaAPI';
-import { AlchemyAsset } from './types/AlchemyAsset';
+import { OwnedNft } from 'alchemy-sdk'
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -50,7 +50,7 @@ interface NftGridProps {
 
 function NFTGrid(props: NftGridProps) {
 
-  const [assets, setAssets] = useState<AlchemyAsset[]>([]);
+  const [assets, setAssets] = useState<OwnedNft[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingError, setLoadingError] = useState<string | undefined>(undefined);
 
@@ -72,7 +72,7 @@ function NFTGrid(props: NftGridProps) {
 
         if (!error) {
           // Cast rawAssets to AlchemyAsset[]
-          setAssets(rawAssets as AlchemyAsset[]); 
+          setAssets(rawAssets as OwnedNft[]); 
           // console.log("Fetched Assets:", rawAssets);
 
           props.setExpandable(rawAssets.length > 0);
@@ -104,10 +104,10 @@ function NFTGrid(props: NftGridProps) {
   let isEmpty = assets.length === 0 && !isLoading
   let bg = isEmpty ? secondaryColor + 'e6' : teritaryColor
 
-  const getImageUrl = (asset: AlchemyAsset) => {
+const getImageUrl = (asset: OwnedNft) => {
     let imageUrl = '';
-    if (asset.media && asset.media[0] && asset.media[0].uri) {
-      imageUrl = asset.media[0].uri;
+    if (asset.media && asset.media[0] && asset.media[0].gateway) {
+      imageUrl = asset.media[0].gateway; // Use 'gateway' property
     } else if (asset.rawMetadata && asset.rawMetadata.image) {
       imageUrl = asset.rawMetadata.image;
     }
@@ -118,9 +118,8 @@ function NFTGrid(props: NftGridProps) {
     }
   
     return imageUrl;
-  }
+}
   
-
   const GridMode = () => {
     return (
       <ImageList cols={3} style={{ maxHeight: '100%', position: 'absolute', overflow: scrollAttribute }} sx={{ '&::-webkit-scrollbar': { display: 'none' } }}>
