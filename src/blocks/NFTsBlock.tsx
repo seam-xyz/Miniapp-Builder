@@ -73,8 +73,6 @@ function NFTGrid(props: NftGridProps) {
         if (!error) {
           // Cast rawAssets to AlchemyAsset[]
           setAssets(rawAssets as OwnedNft[]); 
-          // console.log("Fetched Assets:", rawAssets);
-
           props.setExpandable(rawAssets.length > 0);
         } else {
           setLoadingError(error);

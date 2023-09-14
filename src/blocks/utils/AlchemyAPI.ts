@@ -1,14 +1,14 @@
 import { Alchemy, Network } from "alchemy-sdk";
 
-const ALCHEMY_API_KEY = process.env.REACT_APP_ALCHEMY_API_KEY; // Replace with your Alchemy API key
-const ALCHEMY_NETWORK = Network.ETH_MAINNET; // You can replace this with any network you're working with
+const ALCHEMY_API_KEY = process.env.REACT_APP_ALCHEMY_API_KEY; 
+const ALCHEMY_NETWORK = Network.ETH_MAINNET; 
 
 const alchemy = new Alchemy({ apiKey: ALCHEMY_API_KEY, network: ALCHEMY_NETWORK });
 
 export const getNftsForOwner = async (
     ownerAddress: string,
     contractAddress?: string,
-    pageCursor?: string // Add a parameter for the page cursor
+    pageCursor?: string 
 ) => {
     try {
         const options = {
