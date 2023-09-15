@@ -1,3 +1,7 @@
+// NOTE: You need a local .env file with an alchemy API key otherwise Alchemy will run on the demo network.
+// NOTE: The demo network works for most uses, but will rate limit larger wallets if fetching NFTs. 
+
+
 import { Alchemy, Network } from "alchemy-sdk";
 
 const ALCHEMY_API_KEY = process.env.REACT_APP_ALCHEMY_API_KEY; 
