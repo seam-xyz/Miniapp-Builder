@@ -72,7 +72,7 @@ function NFTGrid(props: NftGridProps) {
 
         if (!error) {
           // Cast rawAssets to AlchemyAsset[]
-          setAssets(rawAssets as OwnedNft[]); 
+          setAssets(rawAssets as OwnedNft[]);
           props.setExpandable(rawAssets.length > 0);
         } else {
           setLoadingError(error);
@@ -82,7 +82,7 @@ function NFTGrid(props: NftGridProps) {
     }
 
     loadAssetsPage(props.ownerAddress);
-  }, [props.ownerAddress, props.contract]); 
+  }, [props.ownerAddress, props.contract]);
 
   function inIframe() {
     try {
@@ -102,7 +102,7 @@ function NFTGrid(props: NftGridProps) {
   let isEmpty = assets.length === 0 && !isLoading
   let bg = isEmpty ? secondaryColor + 'e6' : teritaryColor
 
-const getImageUrl = (asset: OwnedNft) => {
+  const getImageUrl = (asset: OwnedNft) => {
     let imageUrl = '';
     if (asset.media && asset.media[0] && asset.media[0].gateway) {
       imageUrl = asset.media[0].gateway; // Use 'gateway' property
@@ -115,18 +115,18 @@ const getImageUrl = (asset: OwnedNft) => {
       console.log("unable to find")
       console.log(asset)
     }
-    
+
     // Convert IPFS URL to a usable format
     if (imageUrl.startsWith('ipfs://')) {
       imageUrl = `https://ipfs.io/ipfs/${imageUrl.slice(7)}`;
     }
-  
+
     return imageUrl;
-}
-  
+  }
+
   const GridMode = () => {
     return (
-      <ImageList cols={3} style={{ maxHeight: '100%', position: 'absolute', overflow: scrollAttribute }} sx={{ '&::-webkit-scrollbar': { display: 'none' } }}>
+      <ImageList style={{ maxHeight: '100%', position: 'absolute', overflow: scrollAttribute }} sx={{ '&::-webkit-scrollbar': { display: 'none' } }}>
         {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
           <ImageListItem key={index} onClick={() => { window.open(asset.contract.openSea?.externalUrl, '_blank') }}>
             <img src={getImageUrl(asset)} key={index} style={{ aspectRatio: 1 }} alt="NFT" loading="lazy" />
@@ -134,23 +134,22 @@ const getImageUrl = (asset: OwnedNft) => {
         )}
       </ImageList>
     );
-    
-};
-  
-const ListMode = () => {
-  return (
-    <div id="scroll" style={{ display: 'flex', flexDirection: 'column', maxHeight: '100%', position: 'absolute', width: '100%', overflowY: scrollAttribute }}>
-      {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
-        <div style={{ height: '80px', display: 'flex', flexDirection: 'row', backgroundColor: teritaryColor }}>
-          <img src={getImageUrl(asset)} key={index} style={{ aspectRatio: 1, height: '60px', margin: '10px' }} alt="NFT" loading="lazy" />
-          <div style={{ width: '100%', height: '60px', margin: '10px', alignItems: 'center', display: 'flex' }}>#{asset.tokenId}</div>
-        </div>
-      )}
-    </div>
-  );
-  
-};
 
+  };
+
+  const ListMode = () => {
+    return (
+      <div id="scroll" style={{ display: 'flex', flexDirection: 'column', maxHeight: '100%', position: 'absolute', width: '100%', overflowY: scrollAttribute }}>
+        {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
+          <div style={{ height: '80px', display: 'flex', flexDirection: 'row', backgroundColor: teritaryColor }}>
+            <img src={getImageUrl(asset)} key={index} style={{ aspectRatio: 1, height: '60px', margin: '10px' }} alt="NFT" loading="lazy" />
+            <div style={{ width: '100%', height: '60px', margin: '10px', alignItems: 'center', display: 'flex' }}>#{asset.tokenId}</div>
+          </div>
+        )}
+      </div>
+    );
+
+  };
 
   const EmptyState = () => {
     return (
