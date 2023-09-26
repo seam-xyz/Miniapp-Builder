@@ -2,7 +2,7 @@
 // NOTE: The demo network works for most uses, but will rate limit larger wallets if fetching NFTs. 
 
 
-import { Alchemy, Network } from "alchemy-sdk";
+import { Alchemy, Network, NftFilters } from "alchemy-sdk";
 
 const ALCHEMY_API_KEY = process.env.REACT_APP_ALCHEMY_API_KEY; 
 const ALCHEMY_NETWORK = Network.ETH_MAINNET; 
@@ -18,6 +18,7 @@ export const getNftsForOwner = async (
         const options = {
             contractAddresses: contractAddress ? [contractAddress] : undefined,
             pageSize: 50,
+            excludeFilters: [NftFilters.SPAM, NftFilters.AIRDROPS],
             pageKey: pageCursor // Use the cursor for pagination
         };
         const response = await alchemy.nft.getNftsForOwner(ownerAddress, options);
