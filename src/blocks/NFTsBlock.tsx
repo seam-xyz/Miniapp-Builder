@@ -128,7 +128,7 @@ const getImageUrl = (asset: OwnedNft) => {
     return (
       <ImageList cols={3} style={{ maxHeight: '100%', position: 'absolute', overflow: scrollAttribute }} sx={{ '&::-webkit-scrollbar': { display: 'none' } }}>
         {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
-          <ImageListItem key={index}>
+          <ImageListItem key={index} onClick={() => { window.open(asset.contract.openSea?.externalUrl, '_blank') }}>
             <img src={getImageUrl(asset)} key={index} style={{ aspectRatio: 1 }} alt="NFT" loading="lazy" />
           </ImageListItem>
         )}
