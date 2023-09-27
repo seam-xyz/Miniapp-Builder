@@ -108,6 +108,12 @@ const getImageUrl = (asset: OwnedNft) => {
       imageUrl = asset.media[0].gateway; // Use 'gateway' property
     } else if (asset.rawMetadata && asset.rawMetadata.image) {
       imageUrl = asset.rawMetadata.image;
+    } else if (asset.contract.openSea && asset.contract.openSea.imageUrl) {
+      // when the original project site has shut down, sometimes opensea has a cached copy of the nft image
+      imageUrl = asset.contract.openSea.imageUrl
+    } else {
+      console.log("unable to find")
+      console.log(asset)
     }
     
     // Convert IPFS URL to a usable format
