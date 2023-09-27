@@ -126,15 +126,14 @@ function NFTGrid(props: NftGridProps) {
 
   const GridMode = () => {
     return (
-      <ImageList style={{ maxHeight: '100%', position: 'absolute', overflow: scrollAttribute }} sx={{ '&::-webkit-scrollbar': { display: 'none' } }}>
+      <ImageList cols={3} style={{ maxHeight: '100%', position: 'absolute', overflow: scrollAttribute }} sx={{ '&::-webkit-scrollbar': { display: 'none' } }}>
         {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
-          <ImageListItem key={index} onClick={() => { window.open(asset.contract.openSea?.externalUrl, '_blank') }}>
+          <ImageListItem key={index}>
             <img src={getImageUrl(asset)} key={index} style={{ aspectRatio: 1 }} alt="NFT" loading="lazy" />
           </ImageListItem>
         )}
       </ImageList>
     );
-
   };
 
   const ListMode = () => {
