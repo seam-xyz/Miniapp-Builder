@@ -9,8 +9,9 @@ export default function GifViewer({ id }) {
 
   useEffect(() => {
     async function fetchData() {
-      const { data } = await giphyFetch.gif(id);
-      setGifData(data);
+      giphyFetch.gif(id).then(({ data }) => {
+        setGifData(data);
+      });
     }
     fetchData()
   }, [id]);
