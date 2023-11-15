@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@giphy/js-fetch-api": "^4.6.0",
-    "@giphy/react-components": "^6.4.0",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.10.16",
     "@mui/styles": "^5.11.2",
