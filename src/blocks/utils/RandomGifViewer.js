@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Gif } from "@giphy/react-components";
 import { GiphyFetch } from "@giphy/js-fetch-api";
 
 export default function RandomGifViewer({ tag }) {
@@ -16,6 +17,8 @@ export default function RandomGifViewer({ tag }) {
   }, [tag]);
 
   return (
-    gifData && <img src={gifData.images.original.url} width={"100%"}/>
+    gifData && (
+      <Gif gif={gifData} width={"100%"} height={"100%"} noLink={true} />
+    )
   );
 }

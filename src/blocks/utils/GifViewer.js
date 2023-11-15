@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Gif } from "@giphy/react-components"
 import { GiphyFetch } from "@giphy/js-fetch-api";
 
 export default function GifViewer({ id }) {
@@ -10,14 +11,16 @@ export default function GifViewer({ id }) {
     async function fetchData() {
       giphyFetch.gif(id).then(({ data }) => {
         setGifData(data);
+        console.log(data)
       });
     }
     fetchData()
+    console.log("fetching for " + id)
   }, [id]);
 
   return (
     <div>
-      {gifData && <img src={gifData.images.original.url} width={"100%"}/>}
+    {gifData && <img src={gifData.images.original.url} width={"100%"}/>}
     </div>
   );
 }
