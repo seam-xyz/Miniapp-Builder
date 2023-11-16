@@ -29,6 +29,7 @@ export default function UploadFormComponent(
     <UploadDropzone uploader={uploader}
       options={options}        
       onUpdate={onUpdate}
-      height="200px"/>
+      height="200px"
+      width="100%"/>
   )
 }
