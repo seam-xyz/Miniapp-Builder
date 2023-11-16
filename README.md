@@ -53,7 +53,6 @@ shortName: {
         emptySubtitle: "Tap here to setup your name block!",
         icon: icon, // TODO: insert your block icon here
         deprecated: false,
-        feedConstrained: false,
         doesBlockPost: false
     }
 ```
@@ -69,7 +68,6 @@ For example, here's the Marquee block type:
     emptySubtitle: "Tap here to setup your Marquee block!",
     icon: marqueeIcon,
     deprecated: false,
-    feedConstrained: false,
     doesBlockPost: true
   }
 ```

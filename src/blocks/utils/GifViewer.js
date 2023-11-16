@@ -9,11 +9,18 @@ export default function GifViewer({ id }) {
 
   useEffect(() => {
     async function fetchData() {
-      const { data } = await giphyFetch.gif(id);
-      setGifData(data);
+      giphyFetch.gif(id).then(({ data }) => {
+        setGifData(data);
+        console.log(data)
+      });
     }
     fetchData()
+    console.log("fetching for " + id)
   }, [id]);
 
-  return gifData && <Gif gif={gifData} width={"100%"} height={"100%"} noLink={true} />;
+  return (
+    <div>
+    {gifData && <img src={gifData.images.original.url} width={"100%"}/>}
+    </div>
+  );
 }

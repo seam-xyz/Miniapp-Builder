@@ -1,11 +1,11 @@
 
 import { useEffect, useState } from 'react';
+import { getNftsForOwner } from './utils/AlchemyAPI';
 import {
-  fetchOpenseaAssets,
   resolveEnsDomain,
   isEnsDomain
 } from './utils/OpenSeaAPI';
-import { OpenseaAsset } from './types/OpenseaAsset';
+import { OwnedNft } from 'alchemy-sdk'
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -50,9 +50,9 @@ interface NftGridProps {
 
 function NFTGrid(props: NftGridProps) {
 
-  const [assets, setAssets] = useState([] as OpenseaAsset[]);
+  const [assets, setAssets] = useState<OwnedNft[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingError, setLoadingError] = useState(undefined as string | undefined)
+  const [loadingError, setLoadingError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const loadAssetsPage = async (
@@ -64,29 +64,25 @@ function NFTGrid(props: NftGridProps) {
         ? await resolveEnsDomain(ownerAddress)
         : ownerAddress;
 
-      const {
-        assets: rawAssets,
-        error,
-      } = await fetchOpenseaAssets(
-        owner,
-        undefined, // cursor
-        process.env.REACT_APP_OPENSEA_KEY,
-        undefined,
-        undefined,
-        props.contract,
-    );
-      if (!error) {
-        setAssets(rawAssets)
-        props.setExpandable(rawAssets.length > 0)
-      } else {
-        setLoadingError(error)
-      }
-      setIsLoading(false);
+      if (owner) {
+        const {
+          assets: rawAssets,
+          error,
+        } = await getNftsForOwner(owner, props.contract);
 
+        if (!error) {
+          // Cast rawAssets to AlchemyAsset[]
+          setAssets(rawAssets as OwnedNft[]);
+          props.setExpandable(rawAssets.length > 0);
+        } else {
+          setLoadingError(error);
+        }
+        setIsLoading(false);
+      }
     }
 
-    loadAssetsPage(props.ownerAddress)
-  }, [props])
+    loadAssetsPage(props.ownerAddress);
+  }, [props.ownerAddress, props.contract]);
 
   function inIframe() {
     try {
@@ -106,16 +102,38 @@ function NFTGrid(props: NftGridProps) {
   let isEmpty = assets.length === 0 && !isLoading
   let bg = isEmpty ? secondaryColor + 'e6' : teritaryColor
 
+  const getImageUrl = (asset: OwnedNft) => {
+    let imageUrl = '';
+    if (asset.media && asset.media[0] && asset.media[0].gateway) {
+      imageUrl = asset.media[0].gateway; // Use 'gateway' property
+    } else if (asset.rawMetadata && asset.rawMetadata.image) {
+      imageUrl = asset.rawMetadata.image;
+    } else if (asset.contract.openSea && asset.contract.openSea.imageUrl) {
+      // when the original project site has shut down, sometimes opensea has a cached copy of the nft image
+      imageUrl = asset.contract.openSea.imageUrl
+    } else {
+      console.log("unable to find")
+      console.log(asset)
+    }
+
+    // Convert IPFS URL to a usable format
+    if (imageUrl.startsWith('ipfs://')) {
+      imageUrl = `https://ipfs.io/ipfs/${imageUrl.slice(7)}`;
+    }
+
+    return imageUrl;
+  }
+
   const GridMode = () => {
     return (
       <ImageList cols={3} style={{ maxHeight: '100%', position: 'absolute', overflow: scrollAttribute }} sx={{ '&::-webkit-scrollbar': { display: 'none' } }}>
         {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
           <ImageListItem key={index}>
-            <img src={asset.image_thumbnail_url} key={index} style={{ aspectRatio: 1 }} alt="NFT" loading="lazy" />
+            <img src={getImageUrl(asset)} key={index} style={{ aspectRatio: 1 }} alt="NFT" loading="lazy" />
           </ImageListItem>
         )}
       </ImageList>
-    )
+    );
   };
 
   const ListMode = () => {
@@ -123,13 +141,14 @@ function NFTGrid(props: NftGridProps) {
       <div id="scroll" style={{ display: 'flex', flexDirection: 'column', maxHeight: '100%', position: 'absolute', width: '100%', overflowY: scrollAttribute }}>
         {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
           <div style={{ height: '80px', display: 'flex', flexDirection: 'row', backgroundColor: teritaryColor }}>
-            <img src={asset.image_thumbnail_url} key={index} style={{ aspectRatio: 1, height: '60px', margin: '10px' }} alt="NFT" loading="lazy" />
-            <div style={{ width: '100%', height: '60px', margin: '10px', alignItems: 'center', display: 'flex' }}>#{asset.token_id}</div>
+            <img src={getImageUrl(asset)} key={index} style={{ aspectRatio: 1, height: '60px', margin: '10px' }} alt="NFT" loading="lazy" />
+            <div style={{ width: '100%', height: '60px', margin: '10px', alignItems: 'center', display: 'flex' }}>#{asset.tokenId}</div>
           </div>
         )}
       </div>
-    )
-  }
+    );
+
+  };
 
   const EmptyState = () => {
     return (
