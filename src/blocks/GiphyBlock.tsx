@@ -27,7 +27,8 @@ export default class GiphyBlock extends Block {
           this.model.data["gif"] = item.id as string
           done(this.model)
         }}
-        masonryConfig={[{ columns: 3, imageWidth: 150, gutter: 10 },]}
+        gifListHeight='100%'
+        masonryConfig={[{ columns: 2, imageWidth: 170, gutter: 10 },]}
       />
     )
   }

@@ -263,9 +263,9 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
   canvasStyles[hundredPercentKey] = '100%';
 
   return (
-    <div>
+    <div >
       {isEditMode &&
-        <Stack direction='row' spacing={2} paddingBottom={1} justifyContent='center'>
+        <Stack direction='row' paddingBottom={1} justifyContent='center'>
           <div>
             <label>Set Pixel Color: </label>
             <input
