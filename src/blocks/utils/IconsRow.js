@@ -20,6 +20,8 @@ const { Option } = Select;
 const useStyles = makeStyles((theme) => ({
   iconImage: {
     height: "20px",
+    width: "20px",
+    maxHeight: "20px",
     color: "black"
   }
 }));
@@ -82,7 +84,7 @@ export default function IconsRow({ icons, color }) {
     <Stack spacing={4} direction={"row"}>
       {icons.map((icon) => (
         // react router keeps sending the link internally if it doesnt have the https
-        <a href={(icon.url.indexOf(':') === -1) ? 'http://' + icon.url : icon.url} rel="noopener" target="_blank" key={icon['icon']}>
+        <a style={{height: '24px'}} href={(icon.url.indexOf(':') === -1) ? 'http://' + icon.url : icon.url} rel="noopener" target="_blank" key={icon['icon']}>
           {getIconForName(icon['icon'])}
         </a>
       ))}
