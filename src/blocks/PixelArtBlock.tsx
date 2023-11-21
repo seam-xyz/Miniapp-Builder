@@ -338,7 +338,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
             type='submit'
             variant='contained'
             className='save-modal-button'
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ mt: -7, mb: 2 }}
             onClick={savePixelState}
           >
             Save
