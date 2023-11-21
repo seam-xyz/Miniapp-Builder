@@ -21,7 +21,7 @@ export default class BookmarkBlock extends Block {
     }
 
     return (
-      <div style={{ backgroundColor: this.theme.palette.secondary.main }}>
+      <div style={{ backgroundColor: this.theme.palette.secondary.main, width: "100%", height: "100%" }}>
         {title && TitleComponent(this.theme, title)}
         <Iframely
           url={url}
