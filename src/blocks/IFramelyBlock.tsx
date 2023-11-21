@@ -21,17 +21,16 @@ export default class BookmarkBlock extends Block {
     }
 
     return (
-      <div style={{backgroundColor: this.theme.palette.secondary.main}}>
-      {title && TitleComponent(this.theme, title)}
-      <Iframely
-        url={url}
-        style={{
-          position: "absolute",
-          display: "flex",
-          height: `100%`,
-          width: `100%`
-        }} />
-        </div>
+      <div style={{ backgroundColor: this.theme.palette.secondary.main }}>
+        {title && TitleComponent(this.theme, title)}
+        <Iframely
+          url={url}
+          style={{
+            display: "flex",
+            height: `100%`,
+            width: `100%`
+          }} />
+      </div>
     );
   }
 
