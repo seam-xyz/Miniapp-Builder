@@ -180,11 +180,7 @@ const useStyles = makeStyles((theme) => ({
 
 const postTypes = [
   { type: 'Pixel Art', icon: 'image', block: 'PixelArt' },
-  { type: 'Music', icon: 'music', block: 'Music' },
-  { type: 'GIF', icon: 'film', block: 'giphy' },
-  { type: 'Video', icon: 'video', block: 'video' },
   { type: 'Photo', icon: 'camera', block: 'image' },
-  { type: 'Link', icon: 'link', block: 'link' },
   { type: 'Scroll Text', icon: 'fast-forward', block: 'Marquee' },
   { type: 'Flash Text', icon: 'zap', block: 'FlashingText' },
 ];

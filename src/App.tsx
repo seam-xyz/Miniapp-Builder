@@ -3,7 +3,6 @@ import { makeStyles, ThemeProvider } from "@mui/styles";
 import Content from "./Content";
 import { BlockModel } from "./blocks/types";
 import "./styles.css";
-import Feed from "./Feed";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,7 +32,7 @@ export default function App() {
   return (
     <div className={classes.root}>
       <h1> Seam Block SDK </h1>
-      <Feed />
+      <Content loadedBlocks={[yourBlock]}/>
     </div>
   );
 }

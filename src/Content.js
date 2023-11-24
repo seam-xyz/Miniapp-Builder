@@ -9,9 +9,11 @@ import Widget from "./Widget";
 import Card from '@mui/material/Card';
 import Modal from '@mui/material/Modal';
 import { createTheme } from "@mui/material/styles";
+import Feed from "./Feed";
 
 // Blocks
 import BlockFactory from './blocks/BlockFactory';
+import { Grid } from "@mui/material";
 
 const defaultTheme = createTheme({
   palette: {
@@ -74,10 +76,10 @@ function Content({ size: { width }, loadedBlocks }) {
         footer={null}
         onClose={() => setIsEditingBlock(-1)}
         style={{
-          overflow:'scroll',
-          display:'block', 
-          fontSize: "16px", 
-          fontWeight: "500" 
+          overflow: 'scroll',
+          display: 'block',
+          fontSize: "16px",
+          fontWeight: "500"
         }}
       >
         <Card
@@ -107,34 +109,39 @@ function Content({ size: { width }, loadedBlocks }) {
   }
 
   return (
-    <>
-      <ResponsiveGridLayout
-        className="layout"
-        layouts={layouts}
-        breakpoints={{ lg: 1200, xxs: 0 }}
-        cols={{ lg: 12, xxs: 2 }}
-        rowHeight={5}
-        width={width}
-        onLayoutChange={onLayoutChange}
-        resizeHandles={['se']}
-      >
-        {blocks.map((model, index) => (
-          <div
-            key={model.uuid}
-            className="widget"
-            data-grid={{ w: 5, h: 15, x: 0, y: Infinity }}
-          >
-            <Widget id={model.uuid}
-              onRemoveItem={onRemoveItem}
-              onEditItem={onEditItem}
+    <Grid container spacing={2}>
+      <Grid item xs={6}>
+        <ResponsiveGridLayout
+          className="layout"
+          layouts={layouts}
+          breakpoints={{ lg: 1200, xxs: 0 }}
+          cols={{ lg: 12, xxs: 2 }}
+          rowHeight={5}
+          width={width}
+          onLayoutChange={onLayoutChange}
+          resizeHandles={['se']}
+        >
+          {blocks.map((model, index) => (
+            <div
+              key={model.uuid}
+              className="widget"
+              data-grid={{ w: 5, h: 15, x: 0, y: Infinity }}
             >
-              {renderBlock(model)}
-            </Widget>
-          </div>
-        ))}
-      </ResponsiveGridLayout>
+              <Widget id={model.uuid}
+                onRemoveItem={onRemoveItem}
+                onEditItem={onEditItem}
+              >
+                {renderBlock(model)}
+              </Widget>
+            </div>
+          ))}
+        </ResponsiveGridLayout>
+      </Grid>
+      <Grid item xs={6}>
+        <Feed />
+      </Grid>
       {renderBlockEditModal()}
-    </>
+    </Grid>
   );
 }
 
