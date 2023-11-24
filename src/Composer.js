@@ -223,12 +223,7 @@ const Composer = ({ addNewPost }) => {
   const classes = useStyles({ isMobile });
 
   const handleCreatePost = () => {
-    const model = {
-      type: selectedBlockType,
-      data: selectedBlockData,
-      uuid: nanoid()  // Generate a new unique ID
-    };
-    addNewPost(model)
+    addNewPost(selectedBlockData)
     setDescription('');
     setSelectedBlockType(null);
     setSelectedBlockData(null);  // Reset the block data
@@ -345,6 +340,7 @@ const Composer = ({ addNewPost }) => {
       <BlockSelectorModal
         selectedBlockType={selectedBlockType}
         setSelectedBlockData={(data) => {
+          console.log(data)
           setSelectedBlockData(data);
           setComposerStep('previewPost'); // Move to the next step after editing
         }}

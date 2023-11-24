@@ -64,13 +64,13 @@ export default function Feed() {
       className={classes.noScrollBar}
     >
       <div style={{ maxHeight: '500px' }}>
-        <Composer completion={addNewPost} />
+        <Composer addNewPost={addNewPost} />
       </div>
       {loadedPosts.map((post) => (
         <div key={post.id}>
           <Card className={classes.itemBackground} style={{ boxShadow: 0 }} elevation={0}>
-            {BlockFactory.getBlock(post.blockData, defaultTheme).render()}
-    </Card>
+            {BlockFactory.getBlock(post, defaultTheme).render()}
+          </Card>
         </div>
       ))}
     </InfiniteScroll>
