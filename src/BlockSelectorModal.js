@@ -1,7 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { ThemeTypes } from '../../themes/ThemeTypes';  
+import React, { useEffect, useState } from 'react';  
 import { nanoid } from 'nanoid';
 import BlockFactory from './blocks/BlockFactory';
+import { createTheme } from "@mui/material/styles";
+
+const defaultTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#020303"
+    },
+    secondary: {
+      main: "#1C1C1C"
+    },
+    info: {
+      main: "#CCFE07" // Button Background
+    }
+  },
+  typography: {
+    fontFamily: "monospace"
+  },
+});
 
 const BlockSelectorModal = ({ selectedBlockType, setSelectedBlockData }) => {
   const [selectedBlockInstance, setSelectedBlockInstance] = useState(null);
@@ -14,7 +31,7 @@ const BlockSelectorModal = ({ selectedBlockType, setSelectedBlockData }) => {
       uuid: nanoid()  // Generate a new unique ID
     };
     
-    const blockInstance = BlockFactory.getBlock(model, ThemeTypes[themeName].theme);
+    const blockInstance = BlockFactory.getBlock(model, defaultTheme);
     if (blockInstance) {
       setSelectedBlockInstance(blockInstance);
     } else {

@@ -5,7 +5,8 @@ import { makeStyles } from "@mui/styles";
 import BlockSelectorModal from './BlockSelectorModal.js';
 import feather from 'feather-icons';
 import BlockFactory from "./blocks/BlockFactory";
-import { ThemeTypes } from "../../themes/ThemeTypes";
+import { createTheme } from "@mui/material/styles";
+import { nanoid } from 'nanoid'
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -165,10 +166,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'black',
     color: 'white',
     borderRadius: '24px',
-    '&:hover': {
-      backgroundColor: Colors.SEAM_GREEN_600,
-      color: 'black',
-    },
     width: '100%',
     height: 'auto',
     marginTop: '20px',
@@ -192,6 +189,23 @@ const postTypes = [
   { type: 'Flash Text', icon: 'zap', block: 'FlashingText' },
 ];
 
+const defaultTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#020303"
+    },
+    secondary: {
+      main: "#1C1C1C"
+    },
+    info: {
+      main: "#CCFE07" // Button Background
+    }
+  },
+  typography: {
+    fontFamily: "monospace"
+  },
+});
+
 const Composer = ({ addNewPost }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -200,6 +214,7 @@ const Composer = ({ addNewPost }) => {
   const [selectedBlockData, setSelectedBlockData] = useState(null);
   const [composerStep, setComposerStep] = useState('selectBlock');
   const promptText = "Welcome to the Seam Block SDK!"
+  const isMobile = false
 
   const getFeatherIcon = (iconName) => {
     return feather.icons[iconName] ? feather.icons[iconName].toSvg() : '';
@@ -233,7 +248,7 @@ const Composer = ({ addNewPost }) => {
 
   const renderBlockPreview = (blockData) => {
     if (!blockData) return <div>No Block Data</div>;
-    const blockPreview = BlockFactory.getBlock(blockData, ThemeTypes["Blueprint"].theme)?.render?.();
+    const blockPreview = BlockFactory.getBlock(blockData, defaultTheme)?.render?.();
 
     if (!blockPreview) {
       return <div>Preview not available</div>;
