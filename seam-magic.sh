@@ -109,6 +109,14 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 echo "✅ Using your ${name} block as default in App.tsx"
 
+# User your new block in the composer
+newBlockPostType="{ type: \"${name}\", icon: 'image', block: \"${shortName}\" },"
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        sed -i "s/${placeholder}/${newBlockPostType}/g" "src/PostTypes.js"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' "s/${placeholder}/${newBlockPostType}/g" "src/PostTypes.js"
+fi
+
 echo "
 
 ██████╗░██╗░░░░░░█████╗░░█████╗░██╗░░██╗  ░█████╗░██████╗░███████╗░█████╗░████████╗███████╗██████╗░██╗

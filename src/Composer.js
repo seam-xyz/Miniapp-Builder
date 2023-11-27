@@ -6,7 +6,7 @@ import BlockSelectorModal from './BlockSelectorModal.js';
 import feather from 'feather-icons';
 import BlockFactory from "./blocks/BlockFactory";
 import { createTheme } from "@mui/material/styles";
-import { nanoid } from 'nanoid'
+import { PostTypes } from "./PostTypes.js";
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -178,13 +178,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const postTypes = [
-  { type: 'Pixel Art', icon: 'image', block: 'PixelArt' },
-  { type: 'Photo', icon: 'camera', block: 'image' },
-  { type: 'Scroll Text', icon: 'fast-forward', block: 'Marquee' },
-  { type: 'Flash Text', icon: 'zap', block: 'FlashingText' },
-];
-
 const defaultTheme = createTheme({
   palette: {
     primary: {
@@ -273,7 +266,7 @@ const Composer = ({ addNewPost }) => {
   const renderPostTypeButtons = () => {
     return (
       <>
-        {postTypes.map((postType) => (
+        {PostTypes.map((postType) => (
           <Grid item key={postType.type} className={classes.postTypeButton}>
             <div className={classes.iconCircle} onClick={() => handleBlockTypeClick(postType.block)}>
               <i style={{ color: "black", height: '24px', width: '24px' }} dangerouslySetInnerHTML={{ __html: getFeatherIcon(postType.icon) }} />
@@ -291,11 +284,10 @@ const Composer = ({ addNewPost }) => {
     );
   };
 
-
   const renderDesktopPostTypeButtons = () => {
     return (
       <Stack direction={"row"} className={classes.iconRow} spacing={1}>
-        {postTypes.map((postType) => (
+        {PostTypes.map((postType) => (
           <div key={postType.type} className={classes.iconContainer}>
             <IconButton
               className={classes.iconButton}
