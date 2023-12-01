@@ -252,4 +252,14 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true
   },
+  "NFT": { 
+        type: "NFT",
+        displayName: "NFT",
+        displayDescription: "Display a single NFT",
+        emptyTitle: "Empty NFT Block",
+        emptySubtitle: "Tap here to setup your NFT block!",
+        icon: "NFTIcon", // TODO: insert your block icon here
+        deprecated: false,
+        doesBlockPost: false
+    },
 };

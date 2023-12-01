@@ -1,3 +1,4 @@
+import NFTBlock from './NFTBlock'
 import PhotoAlbumBlock from './PhotoAlbumBlock'
 import MarqueeBlock from './MarqueeBlock'
 import PokemonBlock from './PokemonBlock'
@@ -40,6 +41,7 @@ export default class BlockFactory {
       case "Marquee": return new MarqueeBlock(model, theme)
       case "PhotoAlbum": return new PhotoAlbumBlock(model, theme)
       case "FlashingText": return new FlashingTextBlock(model, theme)
+      case "NFT": return new NFTBlock(model, theme)
       // new blocks go here
       default: return new IFrameBlock(model, theme)
     }

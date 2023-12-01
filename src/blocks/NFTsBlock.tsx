@@ -117,7 +117,7 @@ function NFTGrid(props: NftGridProps) {
     }
 
     // Convert IPFS URL to a usable format
-    if (imageUrl.startsWith('ipfs://')) {
+    if (imageUrl?.startsWith('ipfs://')) {
       imageUrl = `https://ipfs.io/ipfs/${imageUrl.slice(7)}`;
     }
 

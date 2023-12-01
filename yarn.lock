@@ -2358,6 +2358,11 @@
     prop-types "^15.8.1"
     react-is "^18.2.0"
 
+"@nfte/react@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@nfte/react/-/react-1.0.4.tgz#b584cc6640e3d650609bf1a49bf53c569c0996c4"
+  integrity sha512-qLgAdWGvAKi2miwb8CaYszOuLoWZnGcTt3xrnLgiOQwScvNS5zcwMs4pr32VLGN5gotPBNR7b2GHbaqYjL0S8g==
+
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
   resolved "https://registry.yarnpkg.com/@nicolo-ribaudo/eslint-scope-5-internals/-/eslint-scope-5-internals-5.1.1-v1.tgz#dbf733a965ca47b1973177dc0bb6c889edcfb129"
