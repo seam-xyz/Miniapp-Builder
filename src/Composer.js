@@ -317,14 +317,6 @@ const Composer = ({ addNewPost }) => {
 
   const editBlockStep = () => (
     <div style={{ maxHeight: '100%', display: 'flex', flexDirection: 'column', width: '100%' }}>
-      <div style={{ display: 'flex', alignItems: 'center', width: '100%', }}>
-        <Button onClick={handleGoBack} style={{ color: "black", marginBottom: '20px' }}>
-          Go Back
-        </Button>
-        <IconButton className={classes.closeButton} onClick={handleClose}>
-          <CloseIcon style={{ color: "black" }} />
-        </IconButton>
-      </div>
       <BlockSelectorModal
         selectedBlockType={selectedBlockType}
         setSelectedBlockData={(data) => {
