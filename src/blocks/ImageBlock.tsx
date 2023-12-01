@@ -49,7 +49,6 @@ export default class ImageBlock extends Block {
       if (files.length === 0) {
         console.log('No files selected.')
       } else {
-        console.log(files)
         this.model.data['url'] = files[0].fileUrl
       }
     }} />

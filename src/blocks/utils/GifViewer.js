@@ -11,11 +11,9 @@ export default function GifViewer({ id }) {
     async function fetchData() {
       giphyFetch.gif(id).then(({ data }) => {
         setGifData(data);
-        console.log(data)
       });
     }
     fetchData()
-    console.log("fetching for " + id)
   }, [id]);
 
   return (
