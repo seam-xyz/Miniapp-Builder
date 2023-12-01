@@ -117,7 +117,7 @@ function Content({ size: { width }, loadedBlocks }) {
           breakpoints={{ lg: 1200, xxs: 0 }}
           cols={{ lg: 12, xxs: 2 }}
           rowHeight={5}
-          width={width}
+          width={width / 2}
           onLayoutChange={onLayoutChange}
           resizeHandles={['se']}
         >
