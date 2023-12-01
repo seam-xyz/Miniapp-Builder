@@ -74,10 +74,10 @@ cp "src/blocks/BlockTemplate.txt" $newBlock
 
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        sed -i "s/%NAME%/${shortName}/g" $newBlock
+        sed -i "s/Marquee/${shortName}/g" $newBlock
         echo "✅ Created ${shortName}Block.tsx for your new block"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-        sed -i '' "s/%NAME%/${shortName}/g" $newBlock
+        sed -i '' "s/Marquee/${shortName}/g" $newBlock
         echo "✅ Created ${shortName}Block.tsx for your new block"
 fi
 
@@ -110,7 +110,7 @@ fi
 echo "✅ Using your ${name} block as default in App.tsx"
 
 # User your new block in the composer
-newBlockPostType="{ type: \"${name}\", icon: 'image', block: \"${shortName}\" },"
+newBlockPostType="{ type: \"${name}\", icon: 'alert-circle', block: \"${shortName}\" },"
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         sed -i "s/${placeholder}/${newBlockPostType}/g" "src/PostTypes.js"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
