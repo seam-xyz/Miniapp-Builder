@@ -232,7 +232,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true
   },
-  "PhotoAlbum": { 
+  "PhotoAlbum": {
     type: "PhotoAlbum",
     displayName: "Photo Album Block",
     displayDescription: "Fading photo viewer block that accepts up to 10 image URLs.",
@@ -242,7 +242,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false
   },
-  "FlashingText": { 
+  "FlashingText": {
     type: "FlashingText",
     displayName: "Flashing Text",
     displayDescription: "Text and background swap colors, creating a flashing effect.",
@@ -252,14 +252,14 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true
   },
-  "NFT": { 
-        type: "NFT",
-        displayName: "NFT",
-        displayDescription: "Display a single NFT",
-        emptyTitle: "Empty NFT Block",
-        emptySubtitle: "Tap here to setup your NFT block!",
-        icon: "NFTIcon", // TODO: insert your block icon here
-        deprecated: false,
-        doesBlockPost: false
-    },
+  "NFT": {
+    type: "NFT",
+    displayName: "NFT",
+    displayDescription: "Display a single NFT",
+    emptyTitle: "Empty NFT Block",
+    emptySubtitle: "Tap here to setup your NFT block!",
+    icon: nftIcon,
+    deprecated: false,
+    doesBlockPost: false
+  },
 };

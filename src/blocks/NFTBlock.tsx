@@ -157,7 +157,7 @@ export default class NFTBlock extends Block {
         <FormGroup>
           <FormControlLabel control={<Checkbox
             title='includeOwner'
-            defaultValue={this.model.data['includeOwner']}
+            defaultValue={this.model.data['includeOwner'] == 'on'}
             value={includeOwner}
             onChange={handleToggleChange}
           />} label="Include owner information" />
