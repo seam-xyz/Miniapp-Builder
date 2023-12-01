@@ -21,7 +21,7 @@ export default function App() {
   // vvvvvvvvvvvvvvvvv
 
   let yourBlock: BlockModel = {
-    type: "%NAME%",
+    type: "Marquee",
     data: {},
     uuid: "test"
   }
@@ -32,7 +32,7 @@ export default function App() {
   return (
     <div className={classes.root}>
       <h1> Seam Block SDK </h1>
-      <Content loadedBlocks={[yourBlock]} />
+      <Content loadedBlocks={[yourBlock]}/>
     </div>
   );
 }

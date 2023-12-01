@@ -103,11 +103,20 @@ echo "✅ Added ${name} to the BlockFactory.tsx"
 
 # Use your custom block as default in App.tsx
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        sed -i "s/%NAME%/${shortName}/g" "src/App.tsx"
+        sed -i "s/Marquee/${shortName}/g" "src/App.tsx"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-        sed -i '' "s/%NAME%/${shortName}/g" "src/App.tsx"
+        sed -i '' "s/Marquee/${shortName}/g" "src/App.tsx"
 fi
 echo "✅ Using your ${name} block as default in App.tsx"
+
+# User your new block in the composer
+newBlockPostType="{ type: \"${name}\", icon: 'alert-circle', block: \"${shortName}\" },\\n    $placeholder"
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        sed -i "s/${placeholder}/${newBlockPostType}/g" "src/PostTypes.js"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' "s/${placeholder}/${newBlockPostType}/g" "src/PostTypes.js"
+fi
+echo "✅ Using your ${name} block in the Composer"
 
 echo "
 
