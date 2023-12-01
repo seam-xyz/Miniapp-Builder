@@ -4,7 +4,7 @@
 
 import { Alchemy, Network, NftFilters } from "alchemy-sdk";
 
-const ALCHEMY_API_KEY = process.env.REACT_APP_ALCHEMY_API_KEY;
+const ALCHEMY_API_KEY = process.env.REACT_APP_ALCHEMY_API_KEY ?? "demo";
 const ALCHEMY_NETWORK = Network.ETH_MAINNET;
 
 const alchemy = new Alchemy({ apiKey: ALCHEMY_API_KEY, network: ALCHEMY_NETWORK });
@@ -53,4 +53,12 @@ export const getNftsForOwner = async (
   }
 }
 
-
+export async function getNFTMetadata(nftContractAddress: string, tokenId: string) {
+  // Making a call to the Alchemy API to get the metadata
+  const response = await alchemy.nft.getNftMetadata(
+    nftContractAddress,
+    tokenId,
+    {}
+  );
+  return response; // returning the metadata
+}
