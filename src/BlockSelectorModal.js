@@ -40,7 +40,6 @@ const BlockSelectorModal = ({ selectedBlockType, setSelectedBlockData }) => {
   }, [selectedBlockType]);
 
   const handleDone = (data) => {
-    console.log(data)
     setSelectedBlockData(data);  // Update the block data in parent component
   };
   

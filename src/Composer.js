@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 'auto',
     cursor: 'pointer',
     '&:hover': {
-      backgroundColor: '#D3D3D3', // Darker shade on hover
+      backgroundColor: '#D3D3D3',
     },
     boxShadow: '0px 3px 6px #00000029',
   },
