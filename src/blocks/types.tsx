@@ -252,6 +252,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true
   },
+  "tokenHoldings": { 
+        type: "tokenHoldings",
+        displayName: "tokenHoldings",
+        displayDescription: "a block for displaying your token holdings",
+        emptyTitle: "Empty tokenHoldings Block",
+        emptySubtitle: "Tap here to setup your tokenHoldings block!",
+        icon: "tokenHoldingsIcon", // TODO: insert your block icon here
+        deprecated: false,
+        feedConstrained: false,
+        doesBlockPost: false
+    },
   "NFT": {
     type: "NFT",
     displayName: "NFT",
