@@ -3,7 +3,7 @@ import { IconButton, Button, Typography, Grid, Stack, Avatar, Modal, Divider, Ca
 import CloseIcon from "@mui/icons-material/Close";
 import { makeStyles } from "@mui/styles";
 import BlockSelectorModal from './BlockSelectorModal.js';
-import feather from 'feather-icons';
+import { getFeatherIcon } from '../../utils/getFeatherIcon'
 import BlockFactory from "./blocks/BlockFactory";
 import { createTheme } from "@mui/material/styles";
 import { PostTypes } from "./PostTypes.js";
@@ -203,11 +203,7 @@ const Composer = ({ addNewPost }) => {
   const [selectedBlockData, setSelectedBlockData] = useState(null);
   const [composerStep, setComposerStep] = useState('selectBlock');
   const promptText = "Welcome to the Seam Block SDK!"
-  const isMobile = false
-
-  const getFeatherIcon = (iconName) => {
-    return feather.icons[iconName] ? feather.icons[iconName].toSvg() : '';
-  };
+  const isMobile = false;
 
   const classes = useStyles({ isMobile });
 
