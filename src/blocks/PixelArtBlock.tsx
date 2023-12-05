@@ -365,13 +365,12 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
             Start Over
           </Button>
           <Button
-            style={{ fontWeight: 'bold', width: '33%', fontFamily: 'Public Sans', paddingBlock: '12px', paddingInline: '4px', fontSize: '16px', }}
             type='submit'
             variant='contained'
             className='save-modal-button'
             onClick={savePixelState}
           >
-            Save
+            PREVIEW
           </Button>
         </div>
       }
