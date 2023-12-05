@@ -266,10 +266,10 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
     <div>
       {isEditMode &&
         <Grid container spacing={2} justifyContent='center'>
-          <Grid item xs={6}>
-            <div>
+          <Grid item xs={6} style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
               <input
-                style={{ border: "none", backgroundColor: "white", padding: 0, margin: 0 }}
+                style={{ border: "none", backgroundColor: "white", padding: 0, margin: 0, marginRight: '12px', }}
                 type='color'
                 id='colorInput'
                 value={color}
@@ -278,10 +278,10 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
               <label>Pixel color</label>
             </div>
           </Grid>
-          <Grid item xs={6}>
-            <div>
+          <Grid item xs={6} style={{ display: 'flex', alignItems: 'center', }}>
+            <div style={{ display: 'flex', alignItems: 'center', }}>
               <input
-                style={{ border: "none", backgroundColor: "white", padding: 0, margin: 0, }}
+                style={{ border: "none", backgroundColor: "white", padding: 0, margin: 0, marginRight: '12px' }}
                 type='checkbox'
                 id='toggleGrid'
                 checked={showGrid}
@@ -290,22 +290,23 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
               <label>Show guides</label>
             </div>
           </Grid>
-          <Grid item xs={6}>
-            <div>
-              <label>Background color</label>
+          <Grid item xs={6} style={{ display: 'flex', alignItems: 'center', paddingTop: 4, }}>
+            <div style={{ display: 'flex', alignItems: 'center', }}>
               <input
-                style={{ border: "none", outline: "none", backgroundColor: "white", padding: 0, margin: 0, }}
+                style={{ border: "none", outline: "none", backgroundColor: "white", padding: 0, margin: 0, marginRight: '12px', }}
                 type='color'
                 id='colorInput'
                 value={backgroundColor}
                 onChange={(e) => resetBackground(e.target.value)}
               />
+              <label>Background color</label>
             </div>
           </Grid>
-          <Grid item xs={6}>
-            <div>
+          <Grid item xs={6} style={{ display: 'flex', alignItems: 'center', paddingTop: 4, }}>
+            <div style={{ display: 'flex', alignItems: 'center', }}>
               {/* TODO: How can i make this a set of exclusive radio buttons? */}
               <input
+                style={{ width: '100%', maxWidth: '60px', padding: 0, margin: 0, marginRight: '12px', }}
                 type='range'
                 id='pixelsPerSideInput'
                 min={2}
@@ -315,6 +316,20 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
               />
               <label>Pixels per side</label>
             </div>
+          </Grid>
+          <Grid item xs={6} style={{ display: 'flex', alignItems: 'center', margin: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', }}>
+              <label>Show Guides on Post? </label>
+              <input
+                type='checkbox'
+                id='toggleShowGridInViewMode'
+                checked={showGridInViewMode}
+                onChange={() => { setShowGridInViewMode(!showGridInViewMode) }}
+              />
+            </div>
+          </Grid>
+          <Grid item xs={6} style={{ display: 'flex', alignItems: 'center', margin: 0 }}>
+            <p>Tip: Right-click to undo</p>
           </Grid>
         </Grid>
       }
@@ -328,28 +343,32 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
         onMouseUp={() => setIsMouseDownOnCanvas(false)}
         onContextMenu={(e) => e.preventDefault()}
       />
-      <div>
-        <button type='button' id='clearButton' onClick={clearCanvas}>
-          Clear
-        </button>
-      </div>
       {isEditMode &&
-        <div>
-          <div>
-            <label>Show Guide in View Mode: </label>
-            <input
-              type='checkbox'
-              id='toggleShowGridInViewMode'
-              checked={showGridInViewMode}
-              onChange={() => { setShowGridInViewMode(!showGridInViewMode) }}
-            />
-            <p>Tip: Right-click to undo</p>
-          </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '10px', }}>
+          <Button 
+            style={{ 
+              width: '50%', 
+              backgroundColor: '#E9E9E9', 
+              color: 'black', 
+              fontFamily: 'Public Sans',
+              borderRadius: 24,
+              fontSize: '16px', 
+              fontWeight: 'bold', 
+              border: 'none', 
+              paddingBlock: '12px', 
+              paddingInline: '4px', 
+            }}
+            type='button' 
+            id='clearButton' 
+            onClick={clearCanvas}
+          >
+            Start Over
+          </Button>
           <Button
+            style={{ fontWeight: 'bold', width: '33%', fontFamily: 'Public Sans', paddingBlock: '12px', paddingInline: '4px', fontSize: '16px', }}
             type='submit'
             variant='contained'
             className='save-modal-button'
-            sx={{ mt: -7, mb: 2 }}
             onClick={savePixelState}
           >
             Save
@@ -357,8 +376,8 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
         </div>
       }
     </div>
-  )
-}
+  );
+};
 
 const PixelCanvasWithSize = (props: BasePixelCanvasProps) => {
   return (
