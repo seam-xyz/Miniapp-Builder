@@ -4,9 +4,9 @@ import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 
 import CSS from 'csstype';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { SizeMe, SizeMeProps } from 'react-sizeme';
-import { Button, Stack } from '@mui/material';
+import { Button, Stack, Grid } from '@mui/material';
 
 interface BasePixelCanvasProps {
   initialNumPixelsPerSide: number;          // e.g. '5' represents a 5x5 pixel grid
@@ -40,7 +40,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
   const [numPixelsPerSide, setNumPixelsPerSide] = useState<number>(initialNumPixelsPerSide);
   const generateDefaultPixelsState = () => {
     return Array.from(
-      {length: numPixelsPerSide}, _ => Array(numPixelsPerSide).fill(backgroundColor));
+      { length: numPixelsPerSide }, _ => Array(numPixelsPerSide).fill(backgroundColor));
   }
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -53,7 +53,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
   const [showGrid, setShowGrid] = useState(showGridInViewMode || isEditMode);
   const [isMouseDownOnCanvas, setIsMouseDownOnCanvas] = useState(false);
   const [buttonClicked, setButtonClicked] = useState<number | null>(null);
-  
+
   const setPixelColor = (x: number, y: number, color: string) => {
     let updatedPixels = [...pixels];
     updatedPixels[x][y] = color;
@@ -119,7 +119,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
     canvasContext: CanvasRenderingContext2D,
     pixels: string[][]
   ) => {
-    for(let i = 0; i < pixels.length; i++) {
+    for (let i = 0; i < pixels.length; i++) {
       for (let j = 0; j < pixels[0].length; j++) {
         fillPixel(canvasContext, i, j, pixels[i][j]);
       }
@@ -263,54 +263,60 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
   canvasStyles[hundredPercentKey] = '100%';
 
   return (
-    <div >
+    <div>
       {isEditMode &&
-        <Stack direction='row' paddingBottom={1} justifyContent='center'>
-          <div>
-            <label>Set Pixel Color: </label>
-            <input
-              type='color'
-              id='colorInput'
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-            />
-          </div>
-          <div>
-            <label>Set Background Color: </label>
-            <input
-              type='color'
-              id='colorInput'
-              value={backgroundColor}
-              onChange={(e) => resetBackground(e.target.value)}
-            />
-          </div>
-          <div>
-            <label>Show Guide: </label>
-            <input
-              type='checkbox'
-              id='toggleGrid'
-              checked={showGrid}
-              onChange={() => {setShowGrid(!showGrid)}}
-            />
-          </div>
-          <div>
-            {/* TODO: How can i make this a set of exclusive radio buttons? */}
-            <label>Pixels Per Side: </label>
-            <input
-              type='range'
-              id='pixelsPerSideInput'
-              min={2}
-              max={30}
-              value={numPixelsPerSide}
-              onChange={(e) => setNumPixelsPerSide(parseInt(e.target.value))}
-            />
-          </div>
-          <div>
-            <button type='button' id='clearButton' onClick={clearCanvas}>
-              Clear
-            </button>
-          </div>
-        </Stack>
+        <Grid container spacing={2} justifyContent='center'>
+          <Grid item xs={6}>
+            <div>
+              <input
+                style={{ border: "none", backgroundColor: "white", padding: 0, margin: 0 }}
+                type='color'
+                id='colorInput'
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+              />
+              <label>Pixel color</label>
+            </div>
+          </Grid>
+          <Grid item xs={6}>
+            <div>
+              <input
+                style={{ border: "none", backgroundColor: "white", padding: 0, margin: 0, }}
+                type='checkbox'
+                id='toggleGrid'
+                checked={showGrid}
+                onChange={() => { setShowGrid(!showGrid) }}
+              />
+              <label>Show guides</label>
+            </div>
+          </Grid>
+          <Grid item xs={6}>
+            <div>
+              <label>Background color</label>
+              <input
+                style={{ border: "none", outline: "none", backgroundColor: "white", padding: 0, margin: 0, }}
+                type='color'
+                id='colorInput'
+                value={backgroundColor}
+                onChange={(e) => resetBackground(e.target.value)}
+              />
+            </div>
+          </Grid>
+          <Grid item xs={6}>
+            <div>
+              {/* TODO: How can i make this a set of exclusive radio buttons? */}
+              <input
+                type='range'
+                id='pixelsPerSideInput'
+                min={2}
+                max={30}
+                value={numPixelsPerSide}
+                onChange={(e) => setNumPixelsPerSide(parseInt(e.target.value))}
+              />
+              <label>Pixels per side</label>
+            </div>
+          </Grid>
+        </Grid>
       }
       <canvas
         ref={canvasRef}
@@ -322,6 +328,11 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
         onMouseUp={() => setIsMouseDownOnCanvas(false)}
         onContextMenu={(e) => e.preventDefault()}
       />
+      <div>
+        <button type='button' id='clearButton' onClick={clearCanvas}>
+          Clear
+        </button>
+      </div>
       {isEditMode &&
         <div>
           <div>
@@ -330,7 +341,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
               type='checkbox'
               id='toggleShowGridInViewMode'
               checked={showGridInViewMode}
-              onChange={() => {setShowGridInViewMode(!showGridInViewMode)}}
+              onChange={() => { setShowGridInViewMode(!showGridInViewMode) }}
             />
             <p>Tip: Right-click to undo</p>
           </div>
@@ -390,23 +401,23 @@ export default class PixelArtBlock extends Block {
       : false;
 
     return (
-        <div style={{
-          backgroundColor: backgroundColor,
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+      <div style={{
+        backgroundColor: backgroundColor,
+        height: '100%',
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
 
-        }}>
-          <PixelCanvasWithSize
-            initialNumPixelsPerSide={parseInt(numPixelsPerSide)}
-            isEditMode={false}
-            initialPixels={pixels}
-            shouldShowGridInViewMode={showGridInViewMode}
-            initialBackgroundColor={backgroundColor}
-          />
-        </div>
+      }}>
+        <PixelCanvasWithSize
+          initialNumPixelsPerSide={parseInt(numPixelsPerSide)}
+          isEditMode={false}
+          initialPixels={pixels}
+          shouldShowGridInViewMode={showGridInViewMode}
+          initialBackgroundColor={backgroundColor}
+        />
+      </div>
     );
   }
 
