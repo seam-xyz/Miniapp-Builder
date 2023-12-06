@@ -38,6 +38,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
   } = props;
   const [backgroundColor, setBackgroundColor] = useState(initialBackgroundColor || '#f2f2f2');
   const [numPixelsPerSide, setNumPixelsPerSide] = useState<number>(initialNumPixelsPerSide);
+  
   const generateDefaultPixelsState = () => {
     return Array.from(
       { length: numPixelsPerSide }, _ => Array(numPixelsPerSide).fill(backgroundColor));
@@ -265,8 +266,8 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
   return (
     <div>
       {isEditMode &&
-        <Grid container spacing={2} justifyContent='center'>
-          <Grid item xs={6} style={{ display: 'flex', alignItems: 'center' }}>
+        <Grid container spacing={0} sx={{pt: 0,}} justifyContent='center'>
+          <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', pt: 0, }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <input
                 style={{ border: "none", backgroundColor: "white", padding: 0, margin: 0, marginRight: '12px', }}
@@ -278,7 +279,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
               <label>Pixel color</label>
             </div>
           </Grid>
-          <Grid item xs={6} style={{ display: 'flex', alignItems: 'center', }}>
+          <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', pt: 0,}}>
             <div style={{ display: 'flex', alignItems: 'center', }}>
               <input
                 style={{ border: "none", backgroundColor: "white", padding: 0, margin: 0, marginRight: '12px' }}
@@ -290,7 +291,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
               <label>Show guides</label>
             </div>
           </Grid>
-          <Grid item xs={6} style={{ display: 'flex', alignItems: 'center', paddingTop: 4, }}>
+          <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', paddingTop: 0, }}>
             <div style={{ display: 'flex', alignItems: 'center', }}>
               <input
                 style={{ border: "none", outline: "none", backgroundColor: "white", padding: 0, margin: 0, marginRight: '12px', }}
@@ -302,7 +303,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
               <label>Background color</label>
             </div>
           </Grid>
-          <Grid item xs={6} style={{ display: 'flex', alignItems: 'center', paddingTop: 4, }}>
+          <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', paddingTop: 0, }}>
             <div style={{ display: 'flex', alignItems: 'center', }}>
               {/* TODO: How can i make this a set of exclusive radio buttons? */}
               <input
@@ -317,8 +318,8 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
               <label>Pixels per side</label>
             </div>
           </Grid>
-          <Grid item xs={6} style={{ display: 'flex', alignItems: 'center', margin: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', }}>
+          <Grid item xs={6} sx={{ margin: 0, pt: 0, }}>
+            <div style={{ paddingTop: 0 }}>
               <label>Show Guides on Post? </label>
               <input
                 type='checkbox'
@@ -328,8 +329,8 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
               />
             </div>
           </Grid>
-          <Grid item xs={6} style={{ display: 'flex', alignItems: 'center', margin: 0 }}>
-            <p>Tip: Right-click to undo</p>
+          <Grid item xs={6} sx={{ margin: 0, pt: 0, }}>
+            <p style={{ margin: 0}}>Tip: Right-click to undo</p>
           </Grid>
         </Grid>
       }
@@ -346,7 +347,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
       {isEditMode &&
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '10px', }}>
           <Button 
-            style={{ 
+            sx={{ 
               width: '50%', 
               backgroundColor: '#E9E9E9', 
               color: 'black', 
