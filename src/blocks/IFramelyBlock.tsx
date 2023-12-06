@@ -36,11 +36,15 @@ export default class BookmarkBlock extends Block {
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
-    let label = "URL"; // Default label
-    if (this.props.contentType === 'music') {
-      label = "Music URL";
-    } else if (this.props.contentType === 'video') {
-      label = "Video URL";
+    const blockType = this.model.data.blockType;
+
+    // **STYLE EACH IFRAMEBLOCK BASED ON THE BLOCK TYPE HERE:**
+    // ********************************************************
+    let urlLabel = "URL"; // Default label
+    if (blockType === 'Music') {
+      urlLabel = "Song URL (Spotify, Soundcloud, YouTube, etc.)";
+    } else if (blockType === 'video') {
+      urlLabel = "Video URL (YouTube, TikTok, Instagram, etc.)";
     }
     
     const onFinish = (event: any) => {
@@ -68,7 +72,7 @@ export default class BookmarkBlock extends Block {
           required
           fullWidth
           id="url"
-          label={label}
+          label={urlLabel}
           name="url"
           defaultValue={this.model.data['url']}
           autoFocus
@@ -77,7 +81,7 @@ export default class BookmarkBlock extends Block {
           margin="normal"
           fullWidth
           id="header"
-          label="Header Title"
+          label="Post Title"
           name="header"
           defaultValue={this.model.data['title']}
         />
