@@ -81,7 +81,7 @@ export default class ImageBlock extends Block {
           className="save-modal-button"
           sx={{ mt: 3, mb: 2 }}
         >
-          Save
+          Preview
         </Button>
       </Box>
     )
