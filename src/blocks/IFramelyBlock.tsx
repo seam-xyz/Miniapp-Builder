@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 import TitleComponent from './utils/TitleComponent';
 
 export default class BookmarkBlock extends Block {
+  props: any;
   render() {
     if (Object.keys(this.model.data).length === 0) {
       return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
@@ -35,6 +36,17 @@ export default class BookmarkBlock extends Block {
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
+    const blockType = this.model.data.blockType;
+
+    // **STYLE EACH IFRAMEBLOCK BASED ON THE BLOCK TYPE HERE:**
+    // ********************************************************
+    let urlLabel = "URL"; // Default label
+    if (blockType === 'Music') {
+      urlLabel = "Song URL (Spotify, Soundcloud, YouTube, etc.)";
+    } else if (blockType === 'video') {
+      urlLabel = "Video URL (YouTube, TikTok, Instagram, etc.)";
+    }
+    
     const onFinish = (event: any) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
@@ -60,7 +72,7 @@ export default class BookmarkBlock extends Block {
           required
           fullWidth
           id="url"
-          label="URL"
+          label={urlLabel}
           name="url"
           defaultValue={this.model.data['url']}
           autoFocus
@@ -69,7 +81,7 @@ export default class BookmarkBlock extends Block {
           margin="normal"
           fullWidth
           id="header"
-          label="Header Title"
+          label="Post Title"
           name="header"
           defaultValue={this.model.data['title']}
         />
@@ -79,7 +91,7 @@ export default class BookmarkBlock extends Block {
           className="save-modal-button"
           sx={{ mt: 3, mb: 2 }}
         >
-          Save
+          PREVIEW
         </Button>
       </Box>
     )

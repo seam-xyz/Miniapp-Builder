@@ -61,21 +61,21 @@ export default class LinkBlock extends Block {
         <TextField
           margin="normal"
           required
-          defaultValue={this.model.data['title']}
-          fullWidth
-          id="title"
-          label="Title"
-          name="title"
-          autoFocus
-        />
-        <TextField
-          margin="normal"
-          required
           defaultValue={this.model.data['url']}
           fullWidth
           id="url"
           label="URL"
           name="url"
+        />
+        <TextField
+          margin="normal"
+          required
+          defaultValue={this.model.data['title']}
+          fullWidth
+          id="title"
+          label="Link Button Title"
+          name="title"
+          autoFocus
         />
         <Button
           type="submit"
