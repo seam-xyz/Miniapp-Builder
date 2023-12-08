@@ -124,7 +124,7 @@ export default class ProfileBlock extends Block {
           )}
         </Form.List>
         <Form.Item>
-          <Button type="primary" htmlType="submit" className="save-modal-button">
+          <Button type="primary" htmlType="submit" className="save-modal-button" style={{ display: 'inline', padding: 0, }}>
             Save
           </Button>
         </Form.Item>
