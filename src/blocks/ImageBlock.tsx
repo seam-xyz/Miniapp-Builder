@@ -37,21 +37,27 @@ export default class ImageBlock extends Block {
   renderEditModal(done: (data: BlockModel) => void) {
     const onFinish = (event: any) => {
       event.preventDefault();
+      if (!this.model.data['url']) {
+        alert('Please upload a file before continuing.');
+        return;
+      }
+
       const data = new FormData(event.currentTarget);
-      let url = data.get('url') as string
-      const hasInternetURL = url != ""
-      url = hasInternetURL ? this.addHTTPS(url) : this.model.data['url']
-      this.model.data['url'] = url
-      done(this.model)
+      let url = data.get('url') as string;
+      url = url ? this.addHTTPS(url) : this.model.data['url'];
+      this.model.data['url'] = url;
+      done(this.model);
     };
 
     const uploaderComponent = <UploadFormComponent onUpdate={files => {
       if (files.length === 0) {
-        console.log('No files selected.')
+        console.log('No files selected.');
+        this.model.data['url'] = "";
       } else {
-        this.model.data['url'] = files[0].fileUrl
+        this.model.data['url'] = files[0].fileUrl;
       }
     }} />
+
 
     return (
       <Box
@@ -59,8 +65,8 @@ export default class ImageBlock extends Block {
         onSubmit={onFinish}
         style={{}}
       >
-          {uploaderComponent}
-          <TextField
+        {uploaderComponent}
+        <TextField
           margin="normal"
           defaultValue={this.model.data['url']}
           fullWidth
@@ -75,7 +81,7 @@ export default class ImageBlock extends Block {
           className="save-modal-button"
           sx={{ mt: 3, mb: 2 }}
         >
-          Save
+          Preview
         </Button>
       </Box>
     )

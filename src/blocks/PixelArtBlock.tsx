@@ -4,9 +4,9 @@ import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 
 import CSS from 'csstype';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { SizeMe, SizeMeProps } from 'react-sizeme';
-import { Button, Stack } from '@mui/material';
+import { Button, Stack, Grid } from '@mui/material';
 
 interface BasePixelCanvasProps {
   initialNumPixelsPerSide: number;          // e.g. '5' represents a 5x5 pixel grid
@@ -38,9 +38,10 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
   } = props;
   const [backgroundColor, setBackgroundColor] = useState(initialBackgroundColor || '#f2f2f2');
   const [numPixelsPerSide, setNumPixelsPerSide] = useState<number>(initialNumPixelsPerSide);
+  
   const generateDefaultPixelsState = () => {
     return Array.from(
-      {length: numPixelsPerSide}, _ => Array(numPixelsPerSide).fill(backgroundColor));
+      { length: numPixelsPerSide }, _ => Array(numPixelsPerSide).fill(backgroundColor));
   }
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -53,7 +54,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
   const [showGrid, setShowGrid] = useState(showGridInViewMode || isEditMode);
   const [isMouseDownOnCanvas, setIsMouseDownOnCanvas] = useState(false);
   const [buttonClicked, setButtonClicked] = useState<number | null>(null);
-  
+
   const setPixelColor = (x: number, y: number, color: string) => {
     let updatedPixels = [...pixels];
     updatedPixels[x][y] = color;
@@ -119,7 +120,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
     canvasContext: CanvasRenderingContext2D,
     pixels: string[][]
   ) => {
-    for(let i = 0; i < pixels.length; i++) {
+    for (let i = 0; i < pixels.length; i++) {
       for (let j = 0; j < pixels[0].length; j++) {
         fillPixel(canvasContext, i, j, pixels[i][j]);
       }
@@ -263,54 +264,75 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
   canvasStyles[hundredPercentKey] = '100%';
 
   return (
-    <div >
+    <div>
       {isEditMode &&
-        <Stack direction='row' paddingBottom={1} justifyContent='center'>
-          <div>
-            <label>Set Pixel Color: </label>
-            <input
-              type='color'
-              id='colorInput'
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-            />
-          </div>
-          <div>
-            <label>Set Background Color: </label>
-            <input
-              type='color'
-              id='colorInput'
-              value={backgroundColor}
-              onChange={(e) => resetBackground(e.target.value)}
-            />
-          </div>
-          <div>
-            <label>Show Guide: </label>
-            <input
-              type='checkbox'
-              id='toggleGrid'
-              checked={showGrid}
-              onChange={() => {setShowGrid(!showGrid)}}
-            />
-          </div>
-          <div>
-            {/* TODO: How can i make this a set of exclusive radio buttons? */}
-            <label>Pixels Per Side: </label>
-            <input
-              type='range'
-              id='pixelsPerSideInput'
-              min={2}
-              max={30}
-              value={numPixelsPerSide}
-              onChange={(e) => setNumPixelsPerSide(parseInt(e.target.value))}
-            />
-          </div>
-          <div>
-            <button type='button' id='clearButton' onClick={clearCanvas}>
-              Clear
-            </button>
-          </div>
-        </Stack>
+        <Grid container spacing={0} sx={{pt: 0,}} justifyContent='center'>
+          <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', pt: 0, }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <input
+                style={{ border: "none", backgroundColor: "white", padding: 0, margin: 0, marginRight: '12px', }}
+                type='color'
+                id='colorInput'
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+              />
+              <label>Pixel color</label>
+            </div>
+          </Grid>
+          <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', pt: 0,}}>
+            <div style={{ display: 'flex', alignItems: 'center', }}>
+              <input
+                style={{ border: "none", backgroundColor: "white", padding: 0, margin: 0, marginRight: '12px' }}
+                type='checkbox'
+                id='toggleGrid'
+                checked={showGrid}
+                onChange={() => { setShowGrid(!showGrid) }}
+              />
+              <label>Show guides</label>
+            </div>
+          </Grid>
+          <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', paddingTop: 0, }}>
+            <div style={{ display: 'flex', alignItems: 'center', }}>
+              <input
+                style={{ border: "none", outline: "none", backgroundColor: "white", padding: 0, margin: 0, marginRight: '12px', }}
+                type='color'
+                id='colorInput'
+                value={backgroundColor}
+                onChange={(e) => resetBackground(e.target.value)}
+              />
+              <label>Background color</label>
+            </div>
+          </Grid>
+          <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', paddingTop: 0, }}>
+            <div style={{ display: 'flex', alignItems: 'center', }}>
+              {/* TODO: How can i make this a set of exclusive radio buttons? */}
+              <input
+                style={{ width: '100%', maxWidth: '60px', padding: 0, margin: 0, marginRight: '12px', }}
+                type='range'
+                id='pixelsPerSideInput'
+                min={2}
+                max={30}
+                value={numPixelsPerSide}
+                onChange={(e) => setNumPixelsPerSide(parseInt(e.target.value))}
+              />
+              <label>Pixels per side</label>
+            </div>
+          </Grid>
+          <Grid item xs={6} sx={{ margin: 0, pt: 0, }}>
+            <div style={{ paddingTop: 0 }}>
+              <label>Show Guides on Post? </label>
+              <input
+                type='checkbox'
+                id='toggleShowGridInViewMode'
+                checked={showGridInViewMode}
+                onChange={() => { setShowGridInViewMode(!showGridInViewMode) }}
+              />
+            </div>
+          </Grid>
+          <Grid item xs={6} sx={{ margin: 0, pt: 0, }}>
+            <p style={{ margin: 0}}>Tip: Right-click to undo</p>
+          </Grid>
+        </Grid>
       }
       <canvas
         ref={canvasRef}
@@ -323,31 +345,39 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
         onContextMenu={(e) => e.preventDefault()}
       />
       {isEditMode &&
-        <div>
-          <div>
-            <label>Show Guide in View Mode: </label>
-            <input
-              type='checkbox'
-              id='toggleShowGridInViewMode'
-              checked={showGridInViewMode}
-              onChange={() => {setShowGridInViewMode(!showGridInViewMode)}}
-            />
-            <p>Tip: Right-click to undo</p>
-          </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '10px', }}>
+          <Button 
+            sx={{ 
+              width: '50%', 
+              backgroundColor: '#E9E9E9', 
+              color: 'black', 
+              fontFamily: 'Public Sans',
+              borderRadius: 24,
+              fontSize: '16px', 
+              fontWeight: 'bold', 
+              border: 'none', 
+              paddingBlock: '12px', 
+              paddingInline: '4px', 
+            }}
+            type='button' 
+            id='clearButton' 
+            onClick={clearCanvas}
+          >
+            Start Over
+          </Button>
           <Button
             type='submit'
             variant='contained'
             className='save-modal-button'
-            sx={{ mt: -7, mb: 2 }}
             onClick={savePixelState}
           >
-            Save
+            PREVIEW
           </Button>
         </div>
       }
     </div>
-  )
-}
+  );
+};
 
 const PixelCanvasWithSize = (props: BasePixelCanvasProps) => {
   return (
@@ -390,23 +420,23 @@ export default class PixelArtBlock extends Block {
       : false;
 
     return (
-        <div style={{
-          backgroundColor: backgroundColor,
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+      <div style={{
+        backgroundColor: backgroundColor,
+        height: '100%',
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
 
-        }}>
-          <PixelCanvasWithSize
-            initialNumPixelsPerSide={parseInt(numPixelsPerSide)}
-            isEditMode={false}
-            initialPixels={pixels}
-            shouldShowGridInViewMode={showGridInViewMode}
-            initialBackgroundColor={backgroundColor}
-          />
-        </div>
+      }}>
+        <PixelCanvasWithSize
+          initialNumPixelsPerSide={parseInt(numPixelsPerSide)}
+          isEditMode={false}
+          initialPixels={pixels}
+          shouldShowGridInViewMode={showGridInViewMode}
+          initialBackgroundColor={backgroundColor}
+        />
+      </div>
     );
   }
 

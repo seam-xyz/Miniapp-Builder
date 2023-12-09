@@ -28,7 +28,7 @@ export default class ProfileBlock extends Block {
         paddingLeft: "24px",
         paddingRight: "24px",
       }}>
-        {imageURL && <Avatar src={imageURL} style={{ width: "160px", height: "160px", marginTop: "10px" }}></Avatar>}
+        {imageURL && <img src={imageURL} style={{ maxWidth: "160px", maxHeight: "160px", width: "160px", height: "160px", marginTop: "10px", borderRadius: '50%'}}/>}
         <h2 style={{ textAlign: "center", marginTop: "16px" }}> {title} </h2>
         <h4 style={{ textAlign: "center", marginBottom: "16px" }}> {bio} </h4>
         <IconsRow icons={icons} color={"black"}/>
@@ -124,7 +124,7 @@ export default class ProfileBlock extends Block {
           )}
         </Form.List>
         <Form.Item>
-          <Button type="primary" htmlType="submit" className="save-modal-button">
+          <Button type="primary" htmlType="submit" className="save-modal-button" style={{ display: 'inline', padding: 0, }}>
             Save
           </Button>
         </Form.Item>
