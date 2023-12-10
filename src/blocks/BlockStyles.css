@@ -1,11 +1,20 @@
 .save-modal-button {
-    background-color: #B9D5FF;
-    color: #181818;
+    width: 33%;
+    font-size: 16px;
+    font-weight: bold;
+    padding-inline: 4px;
+    background-color: #000000;
+    color: #FFFFFF;
     float: right;
-    display: flex;
     font-family: "Public Sans";
-    border-radius: 8px;
-    border-color: #B9D5FF;
+    border-radius: 24px;
+    border: none;
+    text-align: "center";
+}
+
+.save-modal-button:hover {
+    background-color: #CCFE07;
+    color: black;
 }
 
 #scroll::-webkit-scrollbar {

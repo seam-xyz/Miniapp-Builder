@@ -92,6 +92,10 @@ function NFTCard(props: NftCardProps) {
 
 export default class NFTBlock extends Block {
   render() {
+    if (this.model.data['error'] != undefined) {
+      return this.renderErrorState()
+    }
+
     if (Object.keys(this.model.data).length === 0 || !this.model.data['tokenAddress']) {
       return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
     }
@@ -120,13 +124,13 @@ export default class NFTBlock extends Block {
     const onFinish = (event: any) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
-      console.log(data)
       let url = data.get('url') as string
       // parse the url for the contract address and token id
-      const { tokenAddress, tokenId } = parseOpenSeaURL(url)
+      const { tokenAddress, tokenId, error } = parseOpenSeaURL(url)
       this.model.data['url'] = url
       this.model.data['tokenId'] = tokenId ?? ""
       this.model.data['tokenAddress'] = tokenAddress ?? ""
+      if (error != undefined) { this.model.data['error'] = error };
 
       done(this.model)
     };
@@ -147,7 +151,6 @@ export default class NFTBlock extends Block {
     const OwnerToggle = () => {
       const [includeOwner, setIncludeOwner] = useState<string>(this.model.data['includeOwner']);
       const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(event.target.checked)
         const val = event.target.checked ? 'on' : 'off'
         this.model.data['includeOwner'] = val
         setIncludeOwner(val)
@@ -157,7 +160,6 @@ export default class NFTBlock extends Block {
         <FormGroup>
           <FormControlLabel control={<Checkbox
             title='includeOwner'
-            defaultValue={this.model.data['includeOwner'] == 'on'}
             value={includeOwner}
             onChange={handleToggleChange}
           />} label="Include owner information" />
@@ -198,7 +200,7 @@ export default class NFTBlock extends Block {
 
   renderErrorState() {
     return (
-      <h1>Error!</h1>
+      <h1>Invalid Opensea URL.</h1>
     )
   }
 }

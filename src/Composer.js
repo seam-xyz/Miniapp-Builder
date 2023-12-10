@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { IconButton, Button, Typography, Grid, Stack, Avatar, Modal, Divider, Card } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { makeStyles } from "@mui/styles";
 import BlockSelectorModal from './BlockSelectorModal.js';
-import feather from 'feather-icons';
 import BlockFactory from "./blocks/BlockFactory";
 import { createTheme } from "@mui/material/styles";
 import { PostTypes } from "./PostTypes.js";
+import feather from 'feather-icons';
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 'auto',
     cursor: 'pointer',
     '&:hover': {
-      backgroundColor: '#D3D3D3', // Darker shade on hover
+      backgroundColor: '#D3D3D3',
     },
     boxShadow: '0px 3px 6px #00000029',
   },
@@ -203,11 +203,7 @@ const Composer = ({ addNewPost }) => {
   const [selectedBlockData, setSelectedBlockData] = useState(null);
   const [composerStep, setComposerStep] = useState('selectBlock');
   const promptText = "Welcome to the Seam Block SDK!"
-  const isMobile = false
-
-  const getFeatherIcon = (iconName) => {
-    return feather.icons[iconName] ? feather.icons[iconName].toSvg() : '';
-  };
+  const isMobile = false;
 
   const classes = useStyles({ isMobile });
 
@@ -218,6 +214,10 @@ const Composer = ({ addNewPost }) => {
     setSelectedBlockData(null);  // Reset the block data
 
     handleClose();  // Close the modal after creating the post
+  };
+
+  const getFeatherIcon = (iconName) => {
+    return feather.icons[iconName] ? feather.icons[iconName].toSvg() : '';
   };
 
   const handleClick = (event) => {
