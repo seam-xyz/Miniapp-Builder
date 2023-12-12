@@ -53,86 +53,8 @@ export const getNftsForOwner = async (
     };
   }
 }
-export const getTokensForOwnerBackup = async (
-  ownerAddress: string,
-  contractAddress?: string,
-) => {
-  try {
-    const response = await alchemy.core.getTokenBalances(ownerAddress);
 
-    let rawTokenAssets = response.tokenBalances;
-    
-    let allAssets = [];
-    rawTokenAssets.forEach((token) => {
-        alchemy.core.getTokenMetadata(token.contractAddress).then(console.log)
-    }, this);
-    //let allTokenAssets = await getNftsForOwner(ownerAddress);  
-    // If there's a next cursor, fetch the next page
-    //if (response.pageKey) {
-      //const nextPageAssets = await getNftsForOwner(ownerAddress, contractAddress, response.pageKey);
-      //allAssets = allAssets.concat(nextPageAssets.assets);
-    //}
 
-    return {
-      assets: rawTokenAssets,
-      error: undefined,
-    };
-  } catch (error) {
-    console.error("getTokenstsForOwner failed:", error);
-    let errorMessage: string;
-    if (error instanceof Error) {
-      errorMessage = error.message;
-    } else {
-      errorMessage = "An unknown error occurred.";
-    }
-
-    return {
-      assets: [],
-      nextCursor: "",
-      error: errorMessage,
-    };
-  }
-}
-
-export const getTokensForOwner2 = async (
-  ownerAddress: string,
-  contractAddress?: string,
-) => {
-  try {
-    const response = await alchemy.core.getTokenBalances(ownerAddress);
-
-    let rawTokenAssets = response.tokenBalances;
-    
-    const tokenMetadataPromises = rawTokenAssets.map(async (token) => {
-      const tokenMetadata = await alchemy.core.getTokenMetadata(token.contractAddress);
-      let balance: string = token.tokenBalance ? BigInt(token.tokenBalance).toString() : '0';
-      let decimals = tokenMetadata.decimals || 0;
-      balance = (Number(balance) / Math.pow(10, decimals)).toFixed(2);
-      return { tokenMetadata, amount: balance};
-    });
-
-    const allAssets = await Promise.all(tokenMetadataPromises);
-
-    return {
-      assets: allAssets,
-      error: undefined,
-    };
-  } catch (error) {
-    console.error("getTokenstsForOwner failed:", error);
-    let errorMessage: string;
-    if (error instanceof Error) {
-      errorMessage = error.message;
-    } else {
-      errorMessage = "An unknown error occurred.";
-    }
-
-    return {
-      assets: [],
-      nextCursor: "",
-      error: errorMessage,
-    };
-  }
-}
 
 export const getTokensForOwner = async (
   ownerAddress: string,
@@ -145,10 +67,10 @@ export const getTokensForOwner = async (
     let rawTokenAssets = response.tokens;
     
     const allAssetsPromise = rawTokenAssets.map((token) => {
-      let balance: string = token.balance ? BigInt(Math.round(Number(token.balance))).toString() : '0';
-      let decimals = token.decimals || 0;
-      balance = (Number(balance) / Math.pow(10, decimals)).toFixed(2);
-      return { token: token, amount: balance};
+      let balance = token.balance ? BigInt(Math.round(Number(token.rawBalance))) : 0;
+      let decimals = token.decimals ? token.decimals : 0;
+      let balanceDec = (Number(balance) / Math.pow(10, decimals)).toFixed(2);
+      return { token: token, amount: balanceDec};
     });
 
     let allAssets = await Promise.all(allAssetsPromise);
