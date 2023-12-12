@@ -244,6 +244,14 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
   }
 
   const savePixelState = () => {
+    
+    const isAnyPixelColored = pixels.some(row => row.some(pixelColor => pixelColor !== backgroundColor));
+
+    if(!isAnyPixelColored) {
+      alert("Please add at least one pixel before saving.");
+      return;
+    }
+    
     if (onSave) {
       onSave(numPixelsPerSide, pixels, showGridInViewMode, backgroundColor);
     }
