@@ -14,7 +14,7 @@ export default class ImageBlock extends Block {
     }
 
     let url = this.model.data["url"]
-    if (url === undefined) {
+    if (!url || !this.isValidImageUrl(url)) {
       return this.renderErrorState()
     }
 
@@ -26,6 +26,7 @@ export default class ImageBlock extends Block {
           height: `100%`,
           width: `100%`
         }}
+        onError={(e) => e.currentTarget.src = 'https://www.shutterstock.com/image-illustration/no-picture-available-placeholder-thumbnail-600nw-2179364083.jpg'}
       />
     );
   }
@@ -34,17 +35,32 @@ export default class ImageBlock extends Block {
     return (url.indexOf('://') === -1) ? 'http://' + url : url
   }
 
+  isValidImageUrl(url: string) {
+    return /\.(jpg|jpeg|png|gif)$/.test(url);
+  }
+
   renderEditModal(done: (data: BlockModel) => void) {
     const onFinish = (event: any) => {
       event.preventDefault();
-      if (!this.model.data['url']) {
-        alert('Please upload a file before continuing.');
-        return;
-      }
 
       const data = new FormData(event.currentTarget);
       let url = data.get('url') as string;
-      url = url ? this.addHTTPS(url) : this.model.data['url'];
+
+      if (url) {
+        url = this.addHTTPS(url);
+        if (!this.isValidImageUrl(url)) {
+          alert('Please provide a valid image URL.');
+          return;
+        }
+      } else {
+        if (this.model.data['url'] && this.isValidImageUrl(this.model.data['url'])) {
+          url = this.model.data['url'];
+        } else {
+          alert('Please enter a valid URL or upload a file before continuing.');
+          return;
+        }
+      }
+
       this.model.data['url'] = url;
       done(this.model);
     };
@@ -89,7 +105,11 @@ export default class ImageBlock extends Block {
 
   renderErrorState() {
     return (
-      <h1>Error: Coudn't figure out the url</h1>
+      <img 
+        src="https://www.shutterstock.com/image-illustration/no-picture-available-placeholder-thumbnail-600nw-2179364083.jpg"
+        title="Image"
+        style={{ height: '100%', width: '100%', }}
+      />
     )
   }
 }
