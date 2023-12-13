@@ -5,4 +5,5 @@ export const PostTypes = [
     { type: 'Photo', icon: 'camera', block: 'image' },
     { type: 'Scroll Text', icon: 'fast-forward', block: 'Marquee' },
     { type: 'Flash Text', icon: 'zap', block: 'FlashingText' },
+    { type: 'Countdown', icon: 'clock', block: 'countdown' },
 ];
