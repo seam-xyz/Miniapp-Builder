@@ -44,30 +44,25 @@ function LookupTokens(props: TokenGridProps) {
     async function fetchTokenData() {
       try {
         const tokens = await getTokensForOwner(props.ownerAddress); //, props.contract);
-        const tokenAssets = tokens.assets
-        .filter(val => val.token.balance && parseFloat(val.token.balance) !== 0.0)
-        .map((val, index) => (
-          <li key={index}>
-            {val.token.name} Token Balance: {val.amount.toString()} {val.token.symbol}
-          </li> 
-        ));
-        console.log(tokens.assets)
-        setTokenList(tokenAssets);
+        if (tokens.assets.length === 0) {
+          setTokenList([<li key="0">Wallet has no tokens :(</li>]);
+        } else {
+          const tokenAssets = tokens.assets
+          .filter(val => val.token.balance && parseFloat(val.token.balance) !== 0.0)
+          .map((val, index) => (
+            <li key={index}>
+              {val.token.name} Token Balance: {val.amount.toString()} {val.token.symbol}
+            </li> 
+          ));
+          console.log(tokens.assets)
+          setTokenList(tokenAssets);
+        }
       } catch (error) {
         console.error("Error fetching token data:", error);
-        setTokenList([]);
+        setTokenList([])  ;
       }
     }
-
-
-
-
-
-    // Helper function to convert hexadecimal to decimal
-    function convertHexToDecimal(hexString: string): string {
-      return Number(hexString).toString();
-    }
-
+  
     fetchTokenData();
   }, [props.ownerAddress]); //, props.contract]);
 
