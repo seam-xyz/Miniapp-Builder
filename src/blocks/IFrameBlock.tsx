@@ -22,6 +22,7 @@ export default class IFrameBlock extends Block {
     if (iframeAllowed) {
       return (
         <iframe
+          sandbox="allow-scripts"
           key={url}
           title="Iframe"
           src={url}
