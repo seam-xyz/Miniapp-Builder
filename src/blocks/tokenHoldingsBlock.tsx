@@ -23,14 +23,6 @@ interface TokenGridProps {
    */
   ownerAddress: string;
 
-
-  /**
-  * Ethereum address (`0x...`) for an NFT contract to filter to.
-  * Optional.
-  */
-  // Unimplimented for now
-  // contract?: string;
-
   theme: Theme
 
 
@@ -43,7 +35,7 @@ function LookupTokens(props: TokenGridProps) {
   useEffect(() => {
     async function fetchTokenData() {
       try {
-        const tokens = await getTokensForOwner(props.ownerAddress); //, props.contract);
+        const tokens = await getTokensForOwner(props.ownerAddress); 
         if (tokens.assets.length === 0) {
           setTokenList([<li key="0">Wallet has no tokens :(</li>]);
         } else {
@@ -64,7 +56,7 @@ function LookupTokens(props: TokenGridProps) {
     }
   
     fetchTokenData();
-  }, [props.ownerAddress]); //, props.contract]);
+  }, [props.ownerAddress]);
 
   return (
     <div>
@@ -102,42 +94,12 @@ export default class tokenHoldingsBlock extends Block {
     const onFinish = (event: any) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
-      this.model.data['ownerAddress'] = (data.get('ownerAddress') as string).toLowerCase()
-      //this.model.data['contractAddress'] = data.get('contractAddress') as string
+      this.model.data['ownerAddress'] = (data.get('ownerAddress') as string).toLowerCase()  
       this.model.data['title'] = data.get('title') as string
       done(this.model)
     };
 
-    const ImageViewModeToggle = () => {
-      const [imageViewMode, setImageViewMode] = useState<string | null>(this.model.data['imageViewMode']);
-      const handleToggleChange = (
-        event: React.MouseEvent<HTMLElement>,
-        value: string,
-      ) => {
-        const val = value ?? this.model.data['imageViewMode']
-        this.model.data['imageViewMode'] = val
-        setImageViewMode(val)
-      };
 
-      return (
-        <div style={{ marginTop: '10px' }}>
-          <div style={{ marginBottom: '5px' }}>Image Layout:</div>
-          <ToggleButtonGroup
-            exclusive
-            value={imageViewMode}
-            onChange={handleToggleChange}
-            id="imageViewMode"
-          >
-            <ToggleButton value="grid" key="grid" aria-label="grid">
-              <ViewModuleIcon />
-            </ToggleButton>
-            <ToggleButton value="list" key="list" aria-label="list">
-              <ViewListIcon />
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </div>
-      );
-    }
 
     return (
       <Box

@@ -3,9 +3,8 @@
 
 
 import { Alchemy, Network, NftFilters } from "alchemy-sdk";
-import { all } from "axios";
 
-const ALCHEMY_API_KEY = process.env.REACT_APP_ALCHEMY_API_KEY;
+const ALCHEMY_API_KEY = process.env.REACT_APP_ALCHEMY_API_KEY ?? "demo";
 const ALCHEMY_NETWORK = Network.ETH_MAINNET;
 
 const alchemy = new Alchemy({ apiKey: ALCHEMY_API_KEY, network: ALCHEMY_NETWORK });
