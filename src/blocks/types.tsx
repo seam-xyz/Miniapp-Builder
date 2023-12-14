@@ -16,6 +16,7 @@ import pokemonIcon from "./blockIcons/pokeball.png"
 import marqueeIcon from "./blockIcons/marqueeIcon.png"
 import photoAlbumIcon from "./blockIcons/photoAlbumIcon.png"
 import flashingTextIcon from "./blockIcons/flashingTextIcon.png";
+import tokenIcon from "./blockIcons/tokenIcon.png";
 
 export type BlockModel = {
   type: string;
@@ -251,6 +252,16 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: flashingTextIcon,
     deprecated: false,
     doesBlockPost: true
+  },
+  "tokenHoldings": {
+    type: "tokenHoldings",
+    displayName: "Token Holdings",
+    displayDescription: "a block for displaying your ERC20 token holdings",
+    emptyTitle: "Empty tokenHoldings Block",
+    emptySubtitle: "Tap here to setup your tokenHoldings block!",
+    icon: tokenIcon,
+    deprecated: false,
+    doesBlockPost: false
   },
   "NFT": {
     type: "NFT",

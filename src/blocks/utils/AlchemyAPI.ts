@@ -53,6 +53,48 @@ export const getNftsForOwner = async (
   }
 }
 
+
+
+export const getTokensForOwner = async (
+  ownerAddress: string,
+  contractAddress?: string,
+  pageCursor?: string
+) => {
+  try {
+    const response = await alchemy.core.getTokensForOwner(ownerAddress, { pageKey: pageCursor });
+
+    let rawTokenAssets = response.tokens;
+    
+    const allAssetsPromise = rawTokenAssets.map((token) => {
+      let balance = token.balance ? BigInt(Math.round(Number(token.rawBalance))) : 0;
+      let decimals = token.decimals ? token.decimals : 0;
+      let balanceDec = (Number(balance) / Math.pow(10, decimals)).toFixed(2);
+      return { token: token, amount: balanceDec};
+    });
+
+    let allAssets = await Promise.all(allAssetsPromise);
+
+    return {
+      assets: allAssets,
+      error: undefined,
+    };
+  } catch (error) {
+    console.error("getTokenstsForOwner failed:", error);
+    let errorMessage: string;
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else {
+      errorMessage = "An unknown error occurred.";
+    }
+
+    return {
+      assets: [],
+      nextCursor: "",
+      error: errorMessage,
+    };
+  }
+}
+
 export async function getNFTMetadata(nftContractAddress: string, tokenId: string) {
   // Making a call to the Alchemy API to get the metadata
   const response = await alchemy.nft.getNftMetadata(
