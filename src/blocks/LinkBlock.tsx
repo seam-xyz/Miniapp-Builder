@@ -6,22 +6,31 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
 export default class LinkBlock extends Block {
+    navigateToUrl = (url: string) => {
+      // Validate URL before navigating
+      if (url.startsWith('http://') || url.startsWith('https://')) {
+        window.open(url, '_blank');
+      } else {
+        console.error('Invalid URL');
+      }
+    };
+
   render() {
     if (Object.keys(this.model.data).length === 0) {
       return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
     }
 
-    let url = this.model.data["url"]
-    let title = this.model.data["title"]
+    let url = this.model.data["url"];
+    let title = this.model.data["title"];
     if (url === undefined) {
-      return this.renderErrorState()
+      return this.renderErrorState();
     }
 
     return (
-      <a href={url} target="_blank" style={{ textDecoration: "none" }}>
-        <Button
-          variant="contained"
-          style={{
+      <Button
+        variant="contained"
+        onClick={() => this.navigateToUrl(url)}
+        style={{
             backgroundColor: this.theme.palette.info.main,
             color: this.theme.palette.secondary.main,
             whiteSpace: "normal",
@@ -32,7 +41,6 @@ export default class LinkBlock extends Block {
           }}>
           {title}
         </Button>
-      </a>
     );
   }
 
@@ -41,6 +49,9 @@ export default class LinkBlock extends Block {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
       let url = data.get('url') as string
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'http://' + url;
+      }
       let title = data.get('title') as string
       url = (url.indexOf('://') === -1) ? 'http://' + url : url;
       this.model.data['url'] = url

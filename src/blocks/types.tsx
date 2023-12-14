@@ -253,16 +253,16 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true
   },
-  "tokenHoldings": { 
-        type: "tokenHoldings",
-        displayName: "tokenHoldings",
-        displayDescription: "a block for displaying your ERC20 token holdings",
-        emptyTitle: "Empty tokenHoldings Block",
-        emptySubtitle: "Tap here to setup your tokenHoldings block!",
-        icon: tokenIcon, // TODO: insert your block icon here
-        deprecated: false, 
-        doesBlockPost: false
-    },
+  "tokenHoldings": {
+    type: "tokenHoldings",
+    displayName: "Token Holdings",
+    displayDescription: "a block for displaying your ERC20 token holdings",
+    emptyTitle: "Empty tokenHoldings Block",
+    emptySubtitle: "Tap here to setup your tokenHoldings block!",
+    icon: tokenIcon,
+    deprecated: false,
+    doesBlockPost: false
+  },
   "NFT": {
     type: "NFT",
     displayName: "NFT",
