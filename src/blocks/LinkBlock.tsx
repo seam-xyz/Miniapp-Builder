@@ -25,7 +25,7 @@ export default class LinkBlock extends Block {
             backgroundColor: this.theme.palette.info.main,
             color: this.theme.palette.secondary.main,
             whiteSpace: "normal",
-            height: 'fit-content',
+            height: '100%',
             width: '100%',
             fontFamily: this.theme.typography.fontFamily,
             textTransform: "none"
