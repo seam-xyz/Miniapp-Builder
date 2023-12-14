@@ -73,13 +73,6 @@ export const getTokensForOwner = async (
     });
 
     let allAssets = await Promise.all(allAssetsPromise);
-    console.log(response.pageKey)
-    console.log(response)
-    // If there's a next cursor, fetch the next page
-    if (response.pageKey) {
-      const nextPageAssets = await getTokensForOwner(ownerAddress, contractAddress, response.pageKey);
-      allAssets = allAssets.concat(nextPageAssets.assets);
-    }
 
     return {
       assets: allAssets,

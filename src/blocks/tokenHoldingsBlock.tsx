@@ -3,8 +3,6 @@ import { getTokensForOwner } from './utils/AlchemyAPI';
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import ViewListIcon from '@mui/icons-material/ViewList';
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
 
 import Block from './Block'
 import { BlockModel } from './types'
@@ -12,9 +10,7 @@ import TitleComponent from './utils/TitleComponent';
 
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
-import { ImageList, ImageListItem, Theme, ToggleButton, ToggleButtonGroup } from '@mui/material';
-
-
+import { Theme } from '@mui/material';
 
 interface TokenGridProps {
   /**
@@ -22,12 +18,8 @@ interface TokenGridProps {
    * Required.
    */
   ownerAddress: string;
-
   theme: Theme
-
-
 }
-
 
 function LookupTokens(props: TokenGridProps) {
   const [tokenList, setTokenList] = useState<JSX.Element[]>([]);
@@ -46,7 +38,6 @@ function LookupTokens(props: TokenGridProps) {
               {val.token.name} Token Balance: {val.amount.toString()} {val.token.symbol}
             </li> 
           ));
-          console.log(tokens.assets)
           setTokenList(tokenAssets);
         }
       } catch (error) {
@@ -60,14 +51,10 @@ function LookupTokens(props: TokenGridProps) {
 
   return (
     <div>
-      <h1>Token List</h1>
       <ul>{tokenList}</ul>
     </div>
   );
 }
-
-
-
 
 export default class tokenHoldingsBlock extends Block {
   render() {
@@ -75,19 +62,15 @@ export default class tokenHoldingsBlock extends Block {
       return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
     }
     const ownerAddress = this.model.data["ownerAddress"]
-    const contract = this.model.data["contractAddress"]
-    const imageViewMode = this.model.data['imageViewMode']
     const title = this.model.data['title']
     return (
       <>
         {title && TitleComponent(this.theme, title)}
         <LookupTokens ownerAddress={ownerAddress}
-          //contract={contract}
           theme={this.theme}
            />
       </>
     );
-
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
@@ -98,8 +81,6 @@ export default class tokenHoldingsBlock extends Block {
       this.model.data['title'] = data.get('title') as string
       done(this.model)
     };
-
-
 
     return (
       <Box
