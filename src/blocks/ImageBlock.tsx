@@ -36,7 +36,8 @@ export default class ImageBlock extends Block {
   }
 
   isValidImageUrl(url: string) {
-    return /\.(jpg|jpeg|png|gif)$/.test(url);
+    const isUploadedUrl = url.startsWith("https://upcdn.io/") || url.startsWith("http://upcdn.io/");
+    return isUploadedUrl || /\.(jpg|jpeg|png|gif)$/.test(url);
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
