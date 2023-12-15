@@ -47,21 +47,24 @@ export default class ImageBlock extends Block {
       const data = new FormData(event.currentTarget);
       let url = data.get('url') as string;
 
-      if (url) {
+      if (!url && this.model.data['url']) {
+        // Assuming that a valid URL is already present (possibly from an uploaded file)
+        url = this.model.data['url'];
+      } else if (url) {
+        // Add 'http://' if necessary
         url = this.addHTTPS(url);
+
+        // Check if the URL is valid
         if (!this.isValidImageUrl(url)) {
           alert('Please provide a valid image URL.');
           return;
         }
       } else {
-        if (this.model.data['url'] && this.isValidImageUrl(this.model.data['url'])) {
-          url = this.model.data['url'];
-        } else {
-          alert('Please enter a valid URL or upload a file before continuing.');
-          return;
-        }
+        alert('Please enter a valid URL or upload a file before continuing.');
+        return;
       }
 
+      // Update the model with the new URL
       this.model.data['url'] = url;
       done(this.model);
     };
@@ -71,10 +74,10 @@ export default class ImageBlock extends Block {
         console.log('No files selected.');
         this.model.data['url'] = "";
       } else {
+        // Directly use the URL from the uploaded file
         this.model.data['url'] = files[0].fileUrl;
       }
-    }} />
-
+    }} />;
 
     return (
       <Box
@@ -106,7 +109,7 @@ export default class ImageBlock extends Block {
 
   renderErrorState() {
     return (
-      <img 
+      <img
         src="https://www.shutterstock.com/image-illustration/no-picture-available-placeholder-thumbnail-600nw-2179364083.jpg"
         title="Image"
         style={{ height: '100%', width: '100%', }}
