@@ -17,6 +17,7 @@ import marqueeIcon from "./blockIcons/marqueeIcon.png"
 import photoAlbumIcon from "./blockIcons/photoAlbumIcon.png"
 import flashingTextIcon from "./blockIcons/flashingTextIcon.png";
 import tokenIcon from "./blockIcons/tokenIcon.png";
+import clockIcon from "./blockIcons/clockIcon.png"
 
 export type BlockModel = {
   type: string;
@@ -49,6 +50,16 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false
   },
+  shortName: { 
+    type: "countdown",
+    displayName: "Countdown Timer",
+    displayDescription: "A Countdown Timer",
+    emptyTitle: "Setup Countdown Timer",
+    emptySubtitle: "Tap here to setup your countdown Timer!",
+    icon: clockIcon,
+    deprecated: false,
+    doesBlockPost: true
+},
   text: {
     type: "text",
     displayName: "Text ",

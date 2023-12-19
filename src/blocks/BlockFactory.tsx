@@ -20,6 +20,7 @@ import EmptyBlock from './EmptyBlock'
 import ProfileBlock from './ProfileBlock'
 import GiphyBlock from './GiphyBlock'
 import FlashingTextBlock from './FlashingTextBlock';
+import CountdownBlock from './CountdownBlock'
 
 export default class BlockFactory {
   static getBlock(model: BlockModel, theme: Theme): Block {
@@ -44,6 +45,8 @@ export default class BlockFactory {
       case "FlashingText": return new FlashingTextBlock(model, theme)
       case "tokenHoldings": return new tokenHoldingsBlock(model, theme)
       case "NFT": return new NFTBlock(model, theme)
+      case "countdown": return new CountdownBlock(model, theme)
+
       // new blocks go here
       default: return new IFrameBlock(model, theme)
     }
