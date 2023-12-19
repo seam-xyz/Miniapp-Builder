@@ -50,16 +50,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false
   },
-  shortName: { 
-    type: "countdown",
-    displayName: "Countdown Timer",
-    displayDescription: "A Countdown Timer",
-    emptyTitle: "Setup Countdown Timer",
-    emptySubtitle: "Tap here to setup your countdown Timer!",
-    icon: clockIcon,
-    deprecated: false,
-    doesBlockPost: true
-},
   text: {
     type: "text",
     displayName: "Text ",
@@ -261,6 +251,16 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptyTitle: "Empty Flashing Text Block",
     emptySubtitle: "Tap here to setup your Flashing Text block!",
     icon: flashingTextIcon,
+    deprecated: false,
+    doesBlockPost: true
+  },
+  "countdown": {
+    type: "countdown",
+    displayName: "Countdown Timer",
+    displayDescription: "A Countdown Timer",
+    emptyTitle: "Setup Countdown Timer",
+    emptySubtitle: "Tap here to setup your countdown Timer!",
+    icon: clockIcon,
     deprecated: false,
     doesBlockPost: true
   },
