@@ -4,7 +4,8 @@ import './BlockStyles.css'
 import BlockFactory from './BlockFactory';
 import IconsRow, { IconsSelector } from './utils/IconsRow';
 import UploadFormComponent from './utils/UploadFormComponent';
-import { Avatar, Button, Form, Input, Space } from "antd";
+import { Button, Form, Input, Space } from "antd";
+import { Avatar } from '@mui/material';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 
@@ -28,7 +29,7 @@ export default class ProfileBlock extends Block {
         paddingLeft: "24px",
         paddingRight: "24px",
       }}>
-        {imageURL && <img src={imageURL} style={{ maxWidth: "160px", maxHeight: "160px", width: "160px", height: "160px", marginTop: "10px", borderRadius: '50%'}}/>}
+        {imageURL && <Avatar src={imageURL} style={{ maxWidth: "160px", maxHeight: "160px", width: "160px", height: "160px", marginTop: "10px", borderRadius: '50%'}}/>}
         <h2 style={{ textAlign: "center", marginTop: "16px" }}> {title} </h2>
         <h4 style={{ textAlign: "center", marginBottom: "16px" }}> {bio} </h4>
         <IconsRow icons={icons} color={"black"}/>
