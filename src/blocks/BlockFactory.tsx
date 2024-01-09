@@ -54,7 +54,8 @@ export default class BlockFactory {
 
   static getPrintableBlockName(model: BlockModel): string {
     let type = model.type
-    return BlockTypes[type].displayName
+    let blockType = BlockTypes[type]
+    return blockType != undefined ? BlockTypes[type].displayName : "Unknown"
   }
 
   static doesBlockPost(model: BlockModel): boolean {
