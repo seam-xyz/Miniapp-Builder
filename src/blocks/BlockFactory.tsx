@@ -21,6 +21,7 @@ import ProfileBlock from './ProfileBlock'
 import GiphyBlock from './GiphyBlock'
 import FlashingTextBlock from './FlashingTextBlock';
 import CountdownBlock from './CountdownBlock'
+import LinkBookmarkBlock from './LinkBookmarkBlock'
 
 export default class BlockFactory {
   static getBlock(model: BlockModel, theme: Theme): Block {
@@ -31,6 +32,7 @@ export default class BlockFactory {
       case "twitter": return new TwitterBlock(model, theme)
       case "text": return new TextEditBlock(model, theme)
       case "tweet": return new TweetBlock(model, theme)
+      case "Link Bookmark": return new LinkBookmarkBlock(model, theme)
       case "Map": return new IFramelyBlock(model, theme)
       case "Music": return new IFramelyBlock(model, theme)
       case "video": return new IFramelyBlock(model, theme)

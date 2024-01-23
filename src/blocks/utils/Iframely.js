@@ -1,3 +1,4 @@
+import { Skeleton } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 export default function Iframely(props) {
@@ -12,7 +13,7 @@ export default function Iframely(props) {
       fetch(
         `https://cdn.iframe.ly/api/iframely?url=${encodeURIComponent(
           props.url
-        )}&key=${process.env.REACT_APP_IFRAMELY_KEY}&iframe=0&omit_script=1`
+        )}&key=${process.env.REACT_APP_IFRAMELY_KEY}&iframe=1&omit_script=1`
       )
         .then((res) => res.json())
         .then(
@@ -45,7 +46,7 @@ export default function Iframely(props) {
       </div>
     );
   } else if (!isLoaded) {
-    return <div>Loading…</div>;
+    return <Skeleton variant="rectangular" width={"100%"} height={120} />;
   } else {
     return <div dangerouslySetInnerHTML={html} />;
   }

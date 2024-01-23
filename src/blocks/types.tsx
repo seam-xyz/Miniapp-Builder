@@ -92,9 +92,9 @@ export const BlockTypes: { [key: string]: BlockType } = {
   },
   link: {
     type: "link",
-    displayName: "Link ",
+    displayName: "Button ",
     displayDescription: "Create a button.",
-    emptyTitle: "This is an empty link block!",
+    emptyTitle: "This is an empty button block!",
     emptySubtitle: "Add a url for the button.",
     icon: linkIcon,
     minHeight: 5,
@@ -103,10 +103,10 @@ export const BlockTypes: { [key: string]: BlockType } = {
   },
   "Link Bookmark": {
     type: "Link Bookmark",
-    displayName: "Link Bookmark ",
-    displayDescription: "Add a link bookmark using a URL.",
-    emptyTitle: "This is an empty link bookmark block!",
-    emptySubtitle: "Add a url for a bookmark.",
+    displayName: "Link ",
+    displayDescription: "Add a link using a URL.",
+    emptyTitle: "This is an empty link block!",
+    emptySubtitle: "Add a url for a link.",
     icon: bookmarkIcon,
     deprecated: true,
     doesBlockPost: false
