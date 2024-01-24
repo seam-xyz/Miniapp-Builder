@@ -1,6 +1,6 @@
 import Block from './Block'
 import { BlockModel } from './types'
-import Iframely from './utils/Iframely';
+import IframelyCard from './utils/IframelyCard';
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 import Box from "@mui/material/Box";
@@ -21,7 +21,7 @@ export default class LinkBookmarkBlock extends Block {
 
     return (
       <div style={{ backgroundColor: this.theme.palette.secondary.main, width: "100%", height: "100%" }}>
-        <Iframely
+        <IframelyCard
           url={url}
           style={{
             display: "flex",

@@ -1,12 +1,10 @@
-import { Skeleton } from '@mui/material';
+import { Card, CardContent, CardMedia, Skeleton, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 export default function Iframely(props) {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [html, setHtml] = useState({
-    __html: '<div />',
-  });
+  const [data, setData] = useState({});
 
   useEffect(() => {
     if (props && props.url) {
@@ -19,11 +17,12 @@ export default function Iframely(props) {
         .then(
           (res) => {
             setIsLoaded(true);
-            if (res.html) {
-              setHtml({ __html: res.html });
-            } else if (res.error) {
-              setError({ code: res.error, message: res.message });
-            }
+            setData({
+              title: res.meta.title,
+              description: res.meta.description,
+              image: res.links.thumbnail[0].href,
+              url: res.url,
+            });
           },
           (error) => {
             setIsLoaded(true);
@@ -48,6 +47,20 @@ export default function Iframely(props) {
   } else if (!isLoaded) {
     return <Skeleton variant="rectangular" width={"100%"} height={120} />;
   } else {
-    return <div dangerouslySetInnerHTML={html} />;
+    return (
+      <a href={data.url} target="_blank" style={{ textDecoration: "none", color: "black" }}>
+        <Stack direction="column" style={{ width: "100%", height: "100%" }}>
+          <img src={data.image} style={{ width: "100%", height: "100%" }} />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+              {data.title}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {data.description}
+            </Typography>
+          </CardContent>
+        </Stack>
+      </a>
+    )
   }
 }
