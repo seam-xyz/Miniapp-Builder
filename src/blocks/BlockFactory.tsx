@@ -1,3 +1,4 @@
+import fcUserFeedBlock from './fcUserFeedBlock'
 import tokenHoldingsBlock from './tokenHoldingsBlock'
 import NFTBlock from './NFTBlock'
 import PhotoAlbumBlock from './PhotoAlbumBlock'
@@ -49,6 +50,7 @@ export default class BlockFactory {
       case "NFT": return new NFTBlock(model, theme)
       case "countdown": return new CountdownBlock(model, theme)
 
+      case "fcUserFeed": return new fcUserFeedBlock(model, theme)
       // new blocks go here
       default: return new IFrameBlock(model, theme)
     }

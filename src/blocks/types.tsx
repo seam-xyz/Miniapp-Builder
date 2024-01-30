@@ -284,4 +284,14 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false
   },
+  "fcUserFeed": { 
+        type: "fcUserFeed",
+        displayName: "Farcaster User Feed",
+        displayDescription: "Top 10 most popular Farcaster casts",
+        emptyTitle: "Empty Farcaster User Feed Block",
+        emptySubtitle: "Tap here to setup your Farcaster User Feed block!",
+        icon: "fcUserFeedIcon", // TODO: insert your block icon here
+        deprecated: false,
+        doesBlockPost: false
+    },
 };
