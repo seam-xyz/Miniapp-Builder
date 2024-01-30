@@ -45,7 +45,7 @@ function CastFeed({ fid }: { fid: any }) {
       {castData.casts.map((cast: any) => (
         <Card style={{ margin: 5, padding: 12 }}>
           <Stack direction="row" spacing={2}>
-            <Avatar src={cast.author.pfp_url} size={36} style={{ height: "36px", width: "36px" }} />
+            <img src={cast.author.pfp_url} style={{ height: "36px", width: "36px" }} />
             <Stack direction="column" spacing={2}>
               <h4>{cast.author.username}</h4>
               <p>{cast.text}</p>
@@ -63,12 +63,10 @@ function CastFeed({ fid }: { fid: any }) {
 }
 
 export default class fcUserFeedBlock extends Block {
-  render(height?: string, width?: string) {
+  render(width?: string, height?: string) {
     if (Object.keys(this.model.data).length === 0) {
       return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
     }
-
-    console.log(height)
 
     return (
       <div style={{ position: 'absolute', height: height, width: width, overflow: 'scroll' }}>
