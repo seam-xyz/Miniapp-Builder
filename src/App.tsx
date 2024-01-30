@@ -21,7 +21,7 @@ export default function App() {
   // vvvvvvvvvvvvvvvvv
 
   let yourBlock: BlockModel = {
-    type: "fcUserFeed",
+    type: "%NAME%",
     data: {},
     uuid: "test"
   }

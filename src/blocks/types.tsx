@@ -18,6 +18,7 @@ import photoAlbumIcon from "./blockIcons/photoAlbumIcon.png"
 import flashingTextIcon from "./blockIcons/flashingTextIcon.png";
 import tokenIcon from "./blockIcons/tokenIcon.png";
 import clockIcon from "./blockIcons/clockIcon.png"
+import farcasterIcon from "./blockIcons/farcasterIcon.png"
 
 export type BlockModel = {
   type: string;
@@ -284,14 +285,14 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false
   },
-  "fcUserFeed": { 
-        type: "fcUserFeed",
-        displayName: "Farcaster User Feed",
-        displayDescription: "Top 10 most popular Farcaster casts",
-        emptyTitle: "Empty Farcaster User Feed Block",
-        emptySubtitle: "Tap here to setup your Farcaster User Feed block!",
-        icon: "fcUserFeedIcon", // TODO: insert your block icon here
-        deprecated: false,
-        doesBlockPost: false
-    },
+  "fcUserFeed": {
+    type: "fcUserFeed",
+    displayName: "Farcaster User Feed",
+    displayDescription: "Top 10 most popular Farcaster casts",
+    emptyTitle: "Empty Farcaster User Feed Block",
+    emptySubtitle: "Tap here to setup your Farcaster User Feed block!",
+    icon: farcasterIcon,
+    deprecated: false,
+    doesBlockPost: false
+  },
 };
