@@ -4,6 +4,8 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import CreateIcon from '@mui/icons-material/Create';
 import Typography from "@mui/material/Typography";
+import BlockFactory from "./blocks/BlockFactory";
+import { createTheme } from "@mui/material";
 
 const useStyles = makeStyles({
   root: {
@@ -31,8 +33,33 @@ const useStyles = makeStyles({
   }
 });
 
-export default function Widget({ children, id, onRemoveItem, onEditItem }) {
+const defaultTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#020303"
+    },
+    secondary: {
+      main: "#1C1C1C"
+    },
+    info: {
+      main: "#CCFE07" // Button Background
+    }
+  },
+  typography: {
+    fontFamily: "monospace"
+  },
+});
+
+export default function Widget(props) {
+  const { width, height, id, onRemoveItem, onEditItem, blockModel } = props
   const classes = useStyles();
+
+  const renderBlock = (model) => {
+    let block = BlockFactory.getBlock(model, defaultTheme)
+    block.onEditCallback = onEditItem
+    return block.render(width, height)
+  }
+
   return (
     <Card className={classes.root} style={{ boxShadow: 0 }}>
       <div className={classes.header}>
@@ -48,7 +75,7 @@ export default function Widget({ children, id, onRemoveItem, onEditItem }) {
           <CloseIcon style={{ color: '#1A1B23' }} />
         </IconButton>
       </div>
-      <div className={classes.body}> {children}</div>
+      <div className={classes.body}> {renderBlock(blockModel)}</div>
     </Card>
   );
 }
