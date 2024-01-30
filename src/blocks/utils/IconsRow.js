@@ -13,6 +13,7 @@ import Tiktok from "../blockIcons/tiktokIcon.png";
 import LinkIcon from "@mui/icons-material/Link";
 import mediumIcon from "../blockIcons/mediumIcon.svg"
 import openseaIcon from "../blockIcons/openseaIcon.png"
+import farcasterIcon from "../blockIcons/farcasterIcon.svg"
 import Stack from '@mui/material/Stack';
 
 const { Option } = Select;
@@ -40,6 +41,7 @@ export function IconsSelector() {
       <MenuItem value="youtube"><YoutubeIcon /></MenuItem>
       <MenuItem value="facebook"><FacebookIcon /></MenuItem>
       <MenuItem value="opensea"><img src={openseaIcon} style={{ height: 20 }} /></MenuItem>
+      <MenuItem value="farcaster"><img src={farcasterIcon} style={{ height: 20 }} /></MenuItem>
     </Select>
   )
 }
@@ -54,9 +56,11 @@ export default function IconsRow({ icons, color }) {
       case "discord":
         return <img src={Discord} className={classes.iconImage} sx={{ color: color }} />
       case "opensea":
-        return <img src={openseaIcon} className={classes.iconImage} style={{marginTop: "-3px"}}/>
+        return <img src={openseaIcon} className={classes.iconImage} style={{ marginTop: "-3px" }} />
       case "tiktok":
         return <img src={Tiktok} className={classes.iconImage} sx={{ color: color }} />
+      case "farcaster":
+        return <img src={farcasterIcon} className={classes.iconImage} sx={{ color: color }} />
       case "medium":
         return <img src={mediumIcon} className={classes.iconImage} sx={{ color: color }} />
       case "facebook":
@@ -84,7 +88,7 @@ export default function IconsRow({ icons, color }) {
     <Stack spacing={4} direction={"row"}>
       {icons.map((icon) => (
         // react router keeps sending the link internally if it doesnt have the https
-        <a style={{height: '24px'}} href={(icon.url.indexOf(':') === -1) ? 'http://' + icon.url : icon.url} rel="noopener" target="_blank" key={icon['icon']}>
+        <a style={{ height: '24px' }} href={(icon.url.indexOf(':') === -1) ? 'http://' + icon.url : icon.url} rel="noopener" target="_blank" key={icon['icon']}>
           {getIconForName(icon['icon'])}
         </a>
       ))}
