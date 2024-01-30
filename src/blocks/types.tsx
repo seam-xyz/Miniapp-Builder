@@ -18,7 +18,7 @@ import photoAlbumIcon from "./blockIcons/photoAlbumIcon.png"
 import flashingTextIcon from "./blockIcons/flashingTextIcon.png";
 import tokenIcon from "./blockIcons/tokenIcon.png";
 import clockIcon from "./blockIcons/clockIcon.png"
-import farcasterIcon from "./blockIcons/farcasterIcon.png"
+import farcasterIcon from "./blockIcons/farcasterIcon.svg"
 
 export type BlockModel = {
   type: string;
