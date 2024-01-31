@@ -50,26 +50,24 @@ function LookupTokens(props: TokenGridProps) {
   }, [props.ownerAddress]);
 
   return (
-    <div>
-      <ul>{tokenList}</ul>
-    </div>
+    <ul>{tokenList}</ul>
   );
 }
 
 export default class tokenHoldingsBlock extends Block {
-  render() {
+  render(width?: string, height?: string) {
     if (Object.keys(this.model.data).length === 0 || !this.model.data['ownerAddress']) {
       return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
     }
     const ownerAddress = this.model.data["ownerAddress"]
     const title = this.model.data['title']
     return (
-      <>
+      <div style={{ position: 'absolute', height: height, overflow: 'scroll' }}>
         {title && TitleComponent(this.theme, title)}
         <LookupTokens ownerAddress={ownerAddress}
           theme={this.theme}
            />
-      </>
+      </div>
     );
   }
 
