@@ -14,7 +14,7 @@ export default class ImageBlock extends Block {
     }
 
     let url = this.model.data["url"]
-    if (!url || !this.isValidImageUrl(url)) {
+    if (!url) {
       return this.renderErrorState()
     }
 
@@ -35,11 +35,6 @@ export default class ImageBlock extends Block {
     return (url.indexOf('://') === -1) ? 'http://' + url : url
   }
 
-  isValidImageUrl(url: string) {
-    const isUploadedUrl = url.startsWith("https://upcdn.io/") || url.startsWith("http://upcdn.io/");
-    return isUploadedUrl || /\.(jpg|jpeg|png|gif)$/.test(url);
-  }
-
   renderEditModal(done: (data: BlockModel) => void) {
     const onFinish = (event: any) => {
       event.preventDefault();
@@ -53,12 +48,6 @@ export default class ImageBlock extends Block {
       } else if (url) {
         // Add 'http://' if necessary
         url = this.addHTTPS(url);
-
-        // Check if the URL is valid
-        if (!this.isValidImageUrl(url)) {
-          alert('Please provide a valid image URL.');
-          return;
-        }
       } else {
         alert('Please enter a valid URL or upload a file before continuing.');
         return;
