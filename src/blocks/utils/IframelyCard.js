@@ -17,10 +17,11 @@ export default function Iframely(props) {
         .then(
           (res) => {
             setIsLoaded(true);
+            const image = res.links?.thumbnail ? res.links.thumbnail[0].href : null;
             setData({
               title: res.meta.title,
               description: res.meta.description,
-              image: res.links.thumbnail[0].href,
+              image: image,
               url: res.url,
             });
           },
