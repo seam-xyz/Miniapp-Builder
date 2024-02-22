@@ -20,7 +20,7 @@ export default class LinkBookmarkBlock extends Block {
     }
 
     return (
-      <div style={{ backgroundColor: this.theme.palette.secondary.main, width: "100%", height: "100%" }}>
+      <div style={{ backgroundColor: "white", width: "100%", height: "100%" }}>
         <IframelyCard
           url={url}
           style={{
