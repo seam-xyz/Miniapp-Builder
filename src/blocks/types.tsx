@@ -109,7 +109,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptyTitle: "This is an empty link block!",
     emptySubtitle: "Add a url for a link.",
     icon: bookmarkIcon,
-    deprecated: true,
+    deprecated: false,
     doesBlockPost: false
   },
   twitter: {
