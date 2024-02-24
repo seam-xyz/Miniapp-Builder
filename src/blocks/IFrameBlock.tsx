@@ -52,7 +52,7 @@ export default class IFrameBlock extends Block {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
       let url = data.get('url') as string
-      url = (url.indexOf('://') === -1) ? 'http://' + url : url;
+      url = (url.indexOf('://') === -1) ? 'https://' + url : url;
       // Check to see if the iframe can embed properly. Many web2 walled gardens prevent direct embedding.
       let iframeAllowed;
       try {
