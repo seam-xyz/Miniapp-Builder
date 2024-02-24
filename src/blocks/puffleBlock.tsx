@@ -92,7 +92,6 @@ const sentence = generateSentence(timeInWords);
 const h1Style = {
   padding: '20px', 
   margin: '20px', 
-  background: 'blue'
 };
   
     return (
