@@ -28,3 +28,14 @@
     scrollbar-width: none;
     /* Firefox */
 }
+
+@keyframes blink {
+    0%,
+    6.67%,
+    100% {
+        height: 20px;
+    }
+    3.33% {
+        height: 5px;
+    }
+}
