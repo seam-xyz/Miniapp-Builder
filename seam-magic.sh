@@ -32,13 +32,13 @@ echo "                                ./(,
                                      .(%%#,                                     
 "
 echo "Welcome to the Seam Block Editor! Let's make some Seam Magic and create a new block together."
-echo "[1/3] What should your block be called? (Visible to users): "
+echo "[1/2] What should your block be called? (Visible to users): "
 read -r name
 
-echo "[2/3] What's the 1 word title of your block? (used only in code): "
-read -r shortName
+# Extract the first word from the input
+shortName=$(echo $name | awk '{print $1}')
 
-echo "[3/3] What's the short description of your block?"
+echo "[2/2] What's the short description of your block?"
 read -r description
 
 echo "Awesome! Sewing your $name block together..."
