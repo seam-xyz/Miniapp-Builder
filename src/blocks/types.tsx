@@ -19,6 +19,7 @@ import flashingTextIcon from "./blockIcons/flashingTextIcon.png";
 import tokenIcon from "./blockIcons/tokenIcon.png";
 import clockIcon from "./blockIcons/clockIcon.png"
 import farcasterIcon from "./blockIcons/farcasterIcon.svg"
+import eyesIcon from "./blockIcons/eyeIcon.png"
 
 export type BlockModel = {
   type: string;
@@ -301,7 +302,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
         displayDescription: "cute eyes, watching ur every move",
         emptyTitle: "Empty eyes Block",
         emptySubtitle: "Tap here to setup your eyes block!",
-        icon: "eyesIcon", // TODO: insert your block icon here
+        icon: eyesIcon, // TODO: insert your block icon here
         deprecated: false,
         doesBlockPost: false
     },
