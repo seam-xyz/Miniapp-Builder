@@ -295,4 +295,14 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false
   },
+  "eyes": { 
+        type: "eyes",
+        displayName: "eyes",
+        displayDescription: "cute eyes, watching ur every move",
+        emptyTitle: "Empty eyes Block",
+        emptySubtitle: "Tap here to setup your eyes block!",
+        icon: "eyesIcon", // TODO: insert your block icon here
+        deprecated: false,
+        doesBlockPost: false
+    },
 };
