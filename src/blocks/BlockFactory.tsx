@@ -2,6 +2,7 @@ import MoodApp from './MoodApp'
 import BookshelfApp from './BookshelfApp'
 import UnknownApp from './UnknownApp'
 import eyesBlock from './eyesBlock'
+import WhiteboardBlock from './WhiteboardBlock'
 import fcUserFeedBlock from './fcUserFeedBlock'
 import tokenHoldingsBlock from './tokenHoldingsBlock'
 import NFTBlock from './NFTBlock'
@@ -62,6 +63,7 @@ export default class BlockFactory {
       case "Bookshelf": return new BookshelfApp(model, theme)
       case "Wordle": return new WordleBlock(model, theme)
       case "Mood": return new MoodApp(model, theme)
+      case "Whiteboard": return new WhiteboardBlock(model, theme)
       // new blocks go here
       default: return new UnknownApp(model, theme)
     }
