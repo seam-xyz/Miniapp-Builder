@@ -28,7 +28,6 @@ export default class VideoBlock extends Block {
                 {title && TitleComponent(this.theme, title)}
                 <div style={{ position: 'relative', paddingTop: '56.25%' }}>
                 <ReactPlayer
-                    light={true}
                     controls={true}
                     style={{ position: 'absolute', top: 0, left: 0 }}
                     url={url}

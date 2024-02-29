@@ -4,7 +4,6 @@ import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-//import UploadFormComponent from './utils/UploadFormComponent';
 import FileUploadComponent from './utils/FileUploadComponent';
 import Button from "@mui/material/Button";
 
@@ -60,13 +59,6 @@ export default class ImageBlock extends Block {
     };
 
     const uploaderComponent = <FileUploadComponent fileTypes={"image/*"} onUpdate={fileURL => {
-      // if (files.length === 0) {
-      //   console.log('No files selected.');
-      //   this.model.data['url'] = "";
-      // } else {
-      //   // Directly use the URL from the uploaded file
-      //   this.model.data['url'] = files[0].fileUrl;
-      // }
       console.log('File URL:', fileURL)
       this.model.data['url'] = fileURL;
       done(this.model);
