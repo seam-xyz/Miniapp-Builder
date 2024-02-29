@@ -6,6 +6,7 @@ import './BlockStyles.css'
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import TitleComponent from './utils/TitleComponent';
 import FileUploadComponent from './utils/FileUploadComponent';
 import ReactPlayer from 'react-player/lazy'
@@ -50,14 +51,16 @@ export default class VideoBlock extends Block {
             done(this.model)
         };
 
-        const uploaderComponent = <FileUploadComponent fileTypes={"video/*"} onUpdate={fileURL => {
+        const uploaderComponent = <FileUploadComponent fileTypes={"video/*"} label="Upload a Video" onUpdate={fileURL => {
             console.log('File URL:', fileURL)
             this.model.data['url'] = fileURL;
             done(this.model);
         }} />;
 
         return (
-            <>{uploaderComponent}
+            <>
+            {uploaderComponent}
+            <Typography style={{textAlign: "center", width: "100%", paddingBottom: "10px", paddingTop: "18px"}}>Or</Typography>
                 <Box
                     component="form"
                     onSubmit={onFinish}
@@ -72,14 +75,6 @@ export default class VideoBlock extends Block {
                         name="url"
                         defaultValue={this.model.data['url']}
                         autoFocus
-                    />
-                    <TextField
-                        margin="normal"
-                        fullWidth
-                        id="header"
-                        label="Post Title"
-                        name="header"
-                        defaultValue={this.model.data['title']}
                     />
                     <Button
                         type="submit"

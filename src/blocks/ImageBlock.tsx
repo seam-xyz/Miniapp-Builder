@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import FileUploadComponent from './utils/FileUploadComponent';
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 
 export default class ImageBlock extends Block {
   render() {
@@ -58,7 +59,7 @@ export default class ImageBlock extends Block {
       done(this.model);
     };
 
-    const uploaderComponent = <FileUploadComponent fileTypes={"image/*"} onUpdate={fileURL => {
+    const uploaderComponent = <FileUploadComponent fileTypes="image/*" label="Upload an Image" onUpdate={fileURL => {
       console.log('File URL:', fileURL)
       this.model.data['url'] = fileURL;
       done(this.model);
@@ -67,6 +68,7 @@ export default class ImageBlock extends Block {
     return (
       <>
         {uploaderComponent}
+        <Typography style={{textAlign: "center", width: "100%", paddingBottom: "10px", paddingTop: "18px"}}>Or</Typography>
         <Box
           component="form"
           onSubmit={onFinish}

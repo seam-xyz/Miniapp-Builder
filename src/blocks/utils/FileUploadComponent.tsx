@@ -5,11 +5,12 @@ import { useState } from "react";
 
 interface FileUploadComponentProps {
   fileTypes: string, // e.g. 'image/*, video/*'
+  label: string,
   onUpdate: (url: string) => void
 }
 
 export default function FileUploadComponent(
-  { fileTypes, onUpdate }: FileUploadComponentProps
+  { fileTypes, label, onUpdate }: FileUploadComponentProps
 ) {
   const [imgUrl, setImgUrl] = useState<string | null>(null);
   const [progresspercent, setProgresspercent] = useState(0);
@@ -44,24 +45,39 @@ export default function FileUploadComponent(
   return (
     <div>
       <Box component="form">
-        <input
-          type='file'
-          accept={types}
-          onChange={(e) => {
-            e.preventDefault();
-            console.log("file chosen")
-            onFinish(e.target.files);
-          }} />
+        <Button
+          component="label"
+          role={undefined}
+          variant="contained"
+          tabIndex={-1}
+          style={{ width: '100%', padding: '10px', textTransform: 'none', fontFamily: "Public Sans", fontSize: "16px" }}
+        >
+          {label}
+          <input
+            type='file'
+            accept={types}
+            onChange={(e) => {
+              e.preventDefault();
+              onFinish(e.target.files);
+            }}
+            style={{
+              position: 'absolute',
+              width: '1px',
+              height: '1px',
+              padding: '0',
+              margin: '-1px',
+              overflow: 'hidden',
+              clip: 'rect(0, 0, 0, 0)',
+              border: '0'
+            }}
+          />
+        </Button>
       </Box>
       {
-        !imgUrl &&
+        imgUrl &&
         <div className='outerbar'>
           <div className='innerbar' style={{ width: `${progresspercent}%` }}>{progresspercent}%</div>
         </div>
-      }
-      {
-        imgUrl &&
-        <img src={imgUrl} alt='uploaded file' height={200} />
       }
     </div>
   );
