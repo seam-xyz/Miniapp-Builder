@@ -24,6 +24,7 @@ import GiphyBlock from './GiphyBlock'
 import FlashingTextBlock from './FlashingTextBlock';
 import CountdownBlock from './CountdownBlock'
 import LinkBookmarkBlock from './LinkBookmarkBlock'
+import VideoBlock from './VideoBlock'
 
 export default class BlockFactory {
   static getBlock(model: BlockModel, theme: Theme): Block {
@@ -37,7 +38,7 @@ export default class BlockFactory {
       case "Link Bookmark": return new LinkBookmarkBlock(model, theme)
       case "Map": return new IFramelyBlock(model, theme)
       case "Music": return new IFramelyBlock(model, theme)
-      case "video": return new IFramelyBlock(model, theme)
+      case "video": return new VideoBlock(model, theme)
       case "profile": return new ProfileBlock(model, theme)
       case "giphy": return new GiphyBlock(model, theme)
       case "RefreshingGIF": return new RefreshingGIFBlock(model, theme)
@@ -50,7 +51,6 @@ export default class BlockFactory {
       case "tokenHoldings": return new tokenHoldingsBlock(model, theme)
       case "NFT": return new NFTBlock(model, theme)
       case "countdown": return new CountdownBlock(model, theme)
-
       case "fcUserFeed": return new fcUserFeedBlock(model, theme)
       case "eyes": return new eyesBlock(model, theme)
       // new blocks go here
