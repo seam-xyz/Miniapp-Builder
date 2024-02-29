@@ -15,9 +15,8 @@ export default function FileUploadComponent(
   const [progresspercent, setProgresspercent] = useState(0);
   let types = fileTypes == "" ? 'image/*' : fileTypes;
 
-  const onFinish = (event: any) => {
-    event.preventDefault();
-    const file = event.target[0]?.files[0]
+  const onFinish = (files: any) => {
+    const file = files[0]
     if (!file) return;
     const storage = getStorage();
     const name = nanoid()
@@ -44,19 +43,15 @@ export default function FileUploadComponent(
 
   return (
     <div>
-      <Box
-        component="form"
-        onSubmit={onFinish}
-        style={{}}
-      >
-        <input type='file' accept={types}/>
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          Upload
-        </Button>
+      <Box component="form">
+        <input
+          type='file'
+          accept={types}
+          onChange={(e) => {
+            e.preventDefault();
+            console.log("file chosen")
+            onFinish(e.target.files);
+          }} />
       </Box>
       {
         !imgUrl &&
