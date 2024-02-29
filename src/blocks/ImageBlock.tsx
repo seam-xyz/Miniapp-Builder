@@ -59,7 +59,7 @@ export default class ImageBlock extends Block {
       done(this.model);
     };
 
-    const uploaderComponent = <FileUploadComponent onUpdate={fileURL => {
+    const uploaderComponent = <FileUploadComponent fileTypes={"image/*"} onUpdate={fileURL => {
       // if (files.length === 0) {
       //   console.log('No files selected.');
       //   this.model.data['url'] = "";

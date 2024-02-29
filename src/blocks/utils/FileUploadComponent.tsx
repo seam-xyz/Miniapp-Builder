@@ -4,14 +4,16 @@ import { nanoid } from "nanoid";
 import { useState } from "react";
 
 interface FileUploadComponentProps {
+  fileTypes: string, // e.g. 'image/*, video/*'
   onUpdate: (url: string) => void
 }
 
 export default function FileUploadComponent(
-  { onUpdate }: FileUploadComponentProps
+  { fileTypes, onUpdate }: FileUploadComponentProps
 ) {
   const [imgUrl, setImgUrl] = useState<string | null>(null);
   const [progresspercent, setProgresspercent] = useState(0);
+  let types = fileTypes == "" ? 'image/*' : fileTypes;
 
   const onFinish = (event: any) => {
     event.preventDefault();
@@ -47,7 +49,7 @@ export default function FileUploadComponent(
         onSubmit={onFinish}
         style={{}}
       >
-        <input type='file' />
+        <input type='file' accept={types}/>
         <Button
           type="submit"
           variant="contained"
