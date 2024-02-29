@@ -4,7 +4,8 @@ import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import UploadFormComponent from './utils/UploadFormComponent';
+//import UploadFormComponent from './utils/UploadFormComponent';
+import FileUploadComponent from './utils/FileUploadComponent';
 import Button from "@mui/material/Button";
 
 export default class ImageBlock extends Block {
@@ -58,41 +59,46 @@ export default class ImageBlock extends Block {
       done(this.model);
     };
 
-    const uploaderComponent = <UploadFormComponent onUpdate={files => {
-      if (files.length === 0) {
-        console.log('No files selected.');
-        this.model.data['url'] = "";
-      } else {
-        // Directly use the URL from the uploaded file
-        this.model.data['url'] = files[0].fileUrl;
-      }
+    const uploaderComponent = <FileUploadComponent onUpdate={fileURL => {
+      // if (files.length === 0) {
+      //   console.log('No files selected.');
+      //   this.model.data['url'] = "";
+      // } else {
+      //   // Directly use the URL from the uploaded file
+      //   this.model.data['url'] = files[0].fileUrl;
+      // }
+      console.log('File URL:', fileURL)
+      this.model.data['url'] = fileURL;
+      done(this.model);
     }} />;
 
     return (
-      <Box
-        component="form"
-        onSubmit={onFinish}
-        style={{}}
-      >
+      <>
         {uploaderComponent}
-        <TextField
-          margin="normal"
-          defaultValue={this.model.data['url']}
-          fullWidth
-          id="url"
-          label="URL"
-          name="url"
-          autoFocus
-        />
-        <Button
-          type="submit"
-          variant="contained"
-          className="save-modal-button"
-          sx={{ mt: 3, mb: 2 }}
+        <Box
+          component="form"
+          onSubmit={onFinish}
+          style={{}}
         >
-          Preview
-        </Button>
-      </Box>
+          <TextField
+            margin="normal"
+            defaultValue={this.model.data['url']}
+            fullWidth
+            id="url"
+            label="URL"
+            name="url"
+            autoFocus
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            className="save-modal-button"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Preview
+          </Button>
+        </Box>
+      </>
     )
   }
 
