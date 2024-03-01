@@ -25,16 +25,15 @@ export default class VideoBlock extends Block {
         }
 
         return (
-            <div style={{ backgroundColor: this.theme.palette.secondary.main, width: "100%", height: "100%"}}>
+            <div style={{ backgroundColor: this.theme.palette.secondary.main, width: "100%", height: "100%" }}>
                 {title && TitleComponent(this.theme, title)}
-                <div style={{ position: 'relative', paddingTop: '56.25%' }}>
-                <ReactPlayer
-                    controls={true}
-                    style={{ position: 'absolute', top: 0, left: 0 }}
-                    url={url}
-                    width='100%'
-                    height='100%'
-                />
+                <div style={{ position: 'relative', width: "100%", height: "100%" }}>
+                    <ReactPlayer
+                        controls={true}
+                        url={url}
+                        width='100%'
+                        height='100%'
+                    />
                 </div>
             </div>
         );
@@ -59,8 +58,8 @@ export default class VideoBlock extends Block {
 
         return (
             <>
-            {uploaderComponent}
-            <Typography style={{textAlign: "center", width: "100%", paddingBottom: "10px", paddingTop: "18px"}}>Or</Typography>
+                {uploaderComponent}
+                <Typography style={{ textAlign: "center", width: "100%", paddingBottom: "10px", paddingTop: "18px" }}>Or</Typography>
                 <Box
                     component="form"
                     onSubmit={onFinish}
