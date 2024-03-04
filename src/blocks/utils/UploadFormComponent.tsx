@@ -9,7 +9,7 @@ export default function UploadFormComponent(
   { onUpdate }: UploaderProps
 ) {
   const uploader = Uploader({
-    apiKey: process.env.REACT_APP_UPLOAD_KEY || "free"
+    apiKey: import.meta.env.VITE_UPLOAD_KEY || "free"
   });
   
   const options = { 

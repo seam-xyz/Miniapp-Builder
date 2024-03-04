@@ -25,7 +25,7 @@ export default class RefreshingGIFBlock extends Block {
     var searchString = "";
     return (
       <ReactGiphySearchbox
-        apiKey={process.env.REACT_APP_GIPHY_KEY}
+        apiKey={import.meta.env.VITE_GIPHY_KEY}
         onSelect={(item: any) => {
           this.model.data["randomGif"] = item.id as string;
           if (searchString) this.model.data["randomGifTag"] = searchString;

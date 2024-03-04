@@ -5,7 +5,7 @@ import {
   resolveEnsDomain,
   isEnsDomain
 } from './utils/OpenSeaAPI';
-import { OwnedNft } from 'alchemy-sdk'
+// import { OwnedNft } from 'alchemy-sdk'
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -50,7 +50,7 @@ interface NftGridProps {
 
 function NFTGrid(props: NftGridProps) {
 
-  const [assets, setAssets] = useState<OwnedNft[]>([]);
+  // const [assets, setAssets] = useState<OwnedNft[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingError, setLoadingError] = useState<string | undefined>(undefined);
 
@@ -72,7 +72,7 @@ function NFTGrid(props: NftGridProps) {
 
         if (!error) {
           // Cast rawAssets to AlchemyAsset[]
-          setAssets(rawAssets as OwnedNft[]);
+          // setAssets(rawAssets as OwnedNft[]);
           props.setExpandable(rawAssets.length > 0);
         } else {
           setLoadingError(error);
@@ -102,27 +102,27 @@ function NFTGrid(props: NftGridProps) {
   let isEmpty = assets.length === 0 && !isLoading
   let bg = isEmpty ? secondaryColor + 'e6' : teritaryColor
 
-  const getImageUrl = (asset: OwnedNft) => {
-    let imageUrl = '';
-    if (asset.media && asset.media[0] && asset.media[0].gateway) {
-      imageUrl = asset.media[0].gateway; // Use 'gateway' property
-    } else if (asset.rawMetadata && asset.rawMetadata.image) {
-      imageUrl = asset.rawMetadata.image;
-    } else if (asset.contract.openSea && asset.contract.openSea.imageUrl) {
-      // when the original project site has shut down, sometimes opensea has a cached copy of the nft image
-      imageUrl = asset.contract.openSea.imageUrl
-    } else {
-      console.log("unable to find")
-      console.log(asset)
-    }
+  // const getImageUrl = (asset: OwnedNft) => {
+  //   let imageUrl = '';
+  //   if (asset.media && asset.media[0] && asset.media[0].gateway) {
+  //     imageUrl = asset.media[0].gateway; // Use 'gateway' property
+  //   } else if (asset.rawMetadata && asset.rawMetadata.image) {
+  //     imageUrl = asset.rawMetadata.image;
+  //   } else if (asset.contract.openSea && asset.contract.openSea.imageUrl) {
+  //     // when the original project site has shut down, sometimes opensea has a cached copy of the nft image
+  //     imageUrl = asset.contract.openSea.imageUrl
+  //   } else {
+  //     console.log("unable to find")
+  //     console.log(asset)
+  //   }
 
-    // Convert IPFS URL to a usable format
-    if (imageUrl?.startsWith('ipfs://')) {
-      imageUrl = `https://ipfs.io/ipfs/${imageUrl.slice(7)}`;
-    }
+  //   // Convert IPFS URL to a usable format
+  //   if (imageUrl?.startsWith('ipfs://')) {
+  //     imageUrl = `https://ipfs.io/ipfs/${imageUrl.slice(7)}`;
+  //   }
 
-    return imageUrl;
-  }
+  //   return imageUrl;
+  // }
 
   const GridMode = () => {
     return (

@@ -22,7 +22,7 @@ export default class GiphyBlock extends Block {
   renderEditModal(done: (data: BlockModel) => void) {
     return (
       <ReactGiphySearchbox
-        apiKey={process.env.REACT_APP_GIPHY_KEY}
+        apiKey={import.meta.env.VITE_GIPHY_KEY}
         onSelect={(item: any) => {
           this.model.data["gif"] = item.id as string
           done(this.model)

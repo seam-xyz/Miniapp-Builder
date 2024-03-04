@@ -3,7 +3,7 @@ import { Gif } from "@giphy/react-components"
 import { GiphyFetch } from "@giphy/js-fetch-api";
 
 export default function GifViewer({ id }) {
-  const giphyFetch = new GiphyFetch(process.env.REACT_APP_GIPHY_KEY);
+  const giphyFetch = new GiphyFetch(import.meta.env.VITE_GIPHY_KEY);
 
   const [gifData, setGifData] = useState(null);
 

@@ -13,7 +13,7 @@ export default function Iframely(props) {
       fetch(
         `https://cdn.iframe.ly/api/iframely?url=${encodeURIComponent(
           props.url
-        )}&key=${process.env.REACT_APP_IFRAMELY_KEY}&iframe=0&omit_script=1`
+        )}&key=${import.meta.env.VITE_IFRAMELY_KEY}&iframe=0&omit_script=1`
       )
         .then((res) => res.json())
         .then(
