@@ -60,7 +60,6 @@ export default class ImageBlock extends Block {
     };
 
     const uploaderComponent = <FileUploadComponent fileTypes="image/*" label="Upload an Image" onUpdate={fileURL => {
-      console.log('File URL:', fileURL)
       this.model.data['url'] = fileURL;
       done(this.model);
     }} />;

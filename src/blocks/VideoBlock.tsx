@@ -51,7 +51,6 @@ export default class VideoBlock extends Block {
         };
 
         const uploaderComponent = <FileUploadComponent fileTypes={"video/*"} label="Upload a Video" onUpdate={fileURL => {
-            console.log('File URL:', fileURL)
             this.model.data['url'] = fileURL;
             done(this.model);
         }} />;
