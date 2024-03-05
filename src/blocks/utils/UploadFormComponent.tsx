@@ -2,11 +2,12 @@ import { Uploader, UploaderResult } from "uploader";
 import { UploadDropzone } from "react-uploader";
 
 interface UploaderProps {
+  fileTypes?: string[],
   onUpdate: (files: UploaderResult[]) => void
 }
 
 export default function UploadFormComponent(
-  { onUpdate }: UploaderProps
+  { fileTypes = ["image/*"], onUpdate }: UploaderProps
 ) {
   const uploader = Uploader({
     apiKey: process.env.REACT_APP_UPLOAD_KEY || "free"
@@ -14,7 +15,7 @@ export default function UploadFormComponent(
   
   const options = { 
     multi: false,
-    mimeTypes: ["image/jpeg", "image/png", "image/jpg", "image/gif"],
+    mimeTypes: fileTypes,
     style: {
       fontSize: 16
     },

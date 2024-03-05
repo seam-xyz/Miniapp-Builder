@@ -1,7 +1,8 @@
 import { Box, Button, CircularProgress } from "@mui/material";
-import { getStorage, ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { FirebaseStorage } from '@capacitor-firebase/storage';
 import { nanoid } from "nanoid";
 import { useState } from "react";
+import { FilePicker } from '@capawesome/capacitor-file-picker';
 
 interface FileUploadComponentProps {
   fileTypes: string, // e.g. 'image/*, video/*'
@@ -9,37 +10,43 @@ interface FileUploadComponentProps {
   onUpdate: (url: string) => void
 }
 
-export default function FileUploadComponent(
+export default function VideoUploadComponent(
   { fileTypes, label, onUpdate }: FileUploadComponentProps
 ) {
   const [imgUrl, setImgUrl] = useState<string | null>(null);
   const [progresspercent, setProgresspercent] = useState(0);
   let types = fileTypes == "" ? 'image/*' : fileTypes;
 
-  const onFinish = (files: any) => {
+  const onFinish = async (files: any) => {
     const file = files[0]
-    if (!file) return;
-    const storage = getStorage();
+    if (!file) {
+      console.log("no file selected")
+      return;
+    }
     const name = nanoid()
-    const storageRef = ref(storage, `files/${name}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
+    const path = `files/${name}`;
+    setProgresspercent(1)
+    await FirebaseStorage.uploadFile(
+      {
+        path: path,
+        blob: file.blob,
+        uri: file.path,
+      },
+      async (event, error) => {
+        if (error) {
+          return;
+        }
+        if (event) {
+          setProgresspercent(event.progress * 100);
+        }
 
-    uploadTask.on("state_changed",
-      (snapshot) => {
-        const progress =
-          Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-        setProgresspercent(progress);
-      },
-      (error) => {
-        alert(error);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setImgUrl(downloadURL)
-          onUpdate(downloadURL);
-        });
-      }
-    );
+        if (event && event.completed) {
+          const { downloadUrl } = await FirebaseStorage.getDownloadUrl({
+            path: path,
+          });
+          onUpdate(downloadUrl);
+        }
+      });
   }
 
   return (
@@ -59,26 +66,20 @@ export default function FileUploadComponent(
             background: progresspercent != 0 ? `linear-gradient(to right, #2196F3 ${progresspercent}%, #E0E0E0 ${progresspercent}%)` : undefined
           }}
           disabled={progresspercent != 0}
+          onClick={async (e) => {
+            e.preventDefault();
+            try {
+              const result = await FilePicker.pickVideos({
+                multiple: false,
+                readData: true
+              })
+              if (result) {
+                onFinish(result.files);
+              }
+            } catch (error) { }
+          }}
         >
           {progresspercent == 0 ? label : <CircularProgress size={24} />}
-          <input
-            type='file'
-            accept={types}
-            onChange={(e) => {
-              e.preventDefault();
-              onFinish(e.target.files);
-            }}
-            style={{
-              position: 'absolute',
-              width: '1px',
-              height: '1px',
-              padding: '0',
-              margin: '-1px',
-              overflow: 'hidden',
-              clip: 'rect(0, 0, 0, 0)',
-              border: '0'
-            }}
-          />
         </Button>
       </Box>
       {
