@@ -25,7 +25,6 @@ export default function VideoUploadComponent(
     }
     const name = nanoid()
     const path = `files/${name}`;
-    setProgresspercent(1)
     await FirebaseStorage.uploadFile(
       {
         path: path,
@@ -67,6 +66,7 @@ export default function VideoUploadComponent(
           }}
           disabled={progresspercent != 0}
           onClick={async (e) => {
+            setProgresspercent(1)
             e.preventDefault();
             try {
               const result = await FilePicker.pickVideos({
@@ -77,6 +77,7 @@ export default function VideoUploadComponent(
                 onFinish(result.files);
               }
             } catch (error) { }
+            setProgresspercent(0)
           }}
         >
           {progresspercent == 0 ? label : <CircularProgress size={24} />}
