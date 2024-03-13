@@ -52,6 +52,27 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false
   },
+  "PixelArt": {
+    type: "PixelArt",
+    displayName: "Pixel Art",
+    displayDescription: "A block to make then display pixel art",
+    emptyTitle: "Empty Pixel Art Block",
+    emptySubtitle: "Tap here to setup your Pixel Art block!",
+    icon: pixelArtIcon,
+    minWidth: 2,
+    deprecated: false,
+    doesBlockPost: true
+  },
+  giphy: {
+    type: "giphy",
+    displayName: "GIPHY ",
+    displayDescription: "Choose a gif.",
+    emptyTitle: "This is an empty gif!",
+    emptySubtitle: "Choose your gif.",
+    icon: giphyIcon,
+    deprecated: false,
+    doesBlockPost: true
+  },
   text: {
     type: "text",
     displayName: "Text ",
@@ -121,7 +142,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptyTitle: "This is an empty Twitter feed block.",
     emptySubtitle: "Add a twitter screen name.",
     icon: twitterIcon,
-    deprecated: false,
+    deprecated: true,
     doesBlockPost: false
   },
   tweet: {
@@ -131,7 +152,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptyTitle: "This is an empty tweet block!",
     emptySubtitle: "Add a tweet ID here.",
     icon: twitterIcon,
-    deprecated: false,
+    deprecated: true,
     doesBlockPost: false
   },
   Music: {
@@ -164,16 +185,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: true,
     doesBlockPost: false
   },
-  giphy: {
-    type: "giphy",
-    displayName: "GIPHY ",
-    displayDescription: "Choose a gif.",
-    emptyTitle: "This is an empty gif!",
-    emptySubtitle: "Choose your gif.",
-    icon: giphyIcon,
-    deprecated: false,
-    doesBlockPost: true
-  },
   instagram: {
     type: "instagram",
     displayName: "Instagram ",
@@ -194,17 +205,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: randomGiphyIcon,
     deprecated: false,
     doesBlockPost: false
-  },
-  "PixelArt": {
-    type: "PixelArt",
-    displayName: "Pixel Art",
-    displayDescription: "A block to make then display pixel art",
-    emptyTitle: "Empty Pixel Art Block",
-    emptySubtitle: "Tap here to setup your Pixel Art block!",
-    icon: pixelArtIcon,
-    minWidth: 2,
-    deprecated: false,
-    doesBlockPost: true
   },
   "NFTs": {
     type: "NFTs",
