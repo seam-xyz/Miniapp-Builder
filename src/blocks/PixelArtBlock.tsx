@@ -354,25 +354,6 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
       />
       {isEditMode &&
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '10px', }}>
-          <Button 
-            sx={{ 
-              width: '50%', 
-              backgroundColor: '#E9E9E9', 
-              color: 'black', 
-              fontFamily: 'Public Sans',
-              borderRadius: 24,
-              fontSize: '16px', 
-              fontWeight: 'bold', 
-              border: 'none', 
-              paddingBlock: '12px', 
-              paddingInline: '4px', 
-            }}
-            type='button' 
-            id='clearButton' 
-            onClick={clearCanvas}
-          >
-            Start Over
-          </Button>
           <Button
             type='submit'
             variant='contained'
