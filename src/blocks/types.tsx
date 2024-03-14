@@ -38,6 +38,7 @@ export type BlockType = {
   minWidth?: number, // in column units
   deprecated: boolean; // if users can continue to add the block
   doesBlockPost: boolean; // do updates of this block show up in the feed?
+  createdBy: string; // the user who created the block
 };
 
 // In order of how they should show up in the drop-down
@@ -50,7 +51,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Configure your profile header.",
     icon: profileIcon,
     deprecated: false,
-    doesBlockPost: false
+    doesBlockPost: false,
+    createdBy: "seam"
   },
   "PixelArt": {
     type: "PixelArt",
@@ -61,7 +63,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: pixelArtIcon,
     minWidth: 2,
     deprecated: false,
-    doesBlockPost: true
+    doesBlockPost: true,
+    createdBy: "emilee"
   },
   giphy: {
     type: "giphy",
@@ -71,7 +74,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Choose your gif.",
     icon: giphyIcon,
     deprecated: false,
-    doesBlockPost: true
+    doesBlockPost: true,
+    createdBy: "seam"
   },
   text: {
     type: "text",
@@ -81,7 +85,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add some text here.",
     icon: textIcon,
     deprecated: false,
-    doesBlockPost: true
+    doesBlockPost: true,
+    createdBy: "seam"
   },
   iframe: {
     type: "iframe",
@@ -91,7 +96,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add a website here.",
     icon: websiteIcon,
     deprecated: false,
-    doesBlockPost: false
+    doesBlockPost: false,
+    createdBy: "seam"
   },
   video: {
     type: "video",
@@ -101,7 +107,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add a video link here.",
     icon: videoIcon,
     deprecated: false,
-    doesBlockPost: true
+    doesBlockPost: true,
+    createdBy: "seam"
   },
   image: {
     type: "image",
@@ -111,7 +118,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add an image here.",
     icon: imageIcon,
     deprecated: false,
-    doesBlockPost: true
+    doesBlockPost: true,
+    createdBy: "seam"
   },
   link: {
     type: "link",
@@ -122,7 +130,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: linkIcon,
     minHeight: 5,
     deprecated: false,
-    doesBlockPost: true
+    doesBlockPost: true,
+    createdBy: "seam"
   },
   "Link Bookmark": {
     type: "Link Bookmark",
@@ -132,7 +141,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add a url for a link.",
     icon: bookmarkIcon,
     deprecated: false,
-    doesBlockPost: false
+    doesBlockPost: false,
+    createdBy: "seam"
   },
   twitter: {
     type: "twitter",
@@ -143,7 +153,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add a twitter screen name.",
     icon: twitterIcon,
     deprecated: true,
-    doesBlockPost: false
+    doesBlockPost: false,
+    createdBy: "seam"
   },
   tweet: {
     type: "tweet",
@@ -153,7 +164,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add a tweet ID here.",
     icon: twitterIcon,
     deprecated: true,
-    doesBlockPost: false
+    doesBlockPost: false,
+    createdBy: "seam"
   },
   Music: {
     type: "Music",
@@ -163,7 +175,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add a music link.",
     icon: musicIcon,
     deprecated: false,
-    doesBlockPost: true
+    doesBlockPost: true,
+    createdBy: "seam"
   },
   Map: {
     type: "Map",
@@ -173,7 +186,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add a Google maps link.",
     icon: mapIcon,
     deprecated: false,
-    doesBlockPost: true
+    doesBlockPost: true,
+    createdBy: "seam"
   },
   "Image Button": {
     type: "Image Button",
@@ -183,7 +197,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add an image and url to link to.",
     icon: twitterIcon,
     deprecated: true,
-    doesBlockPost: false
+    doesBlockPost: false,
+    createdBy: "seam"
   },
   instagram: {
     type: "instagram",
@@ -193,7 +208,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Choose your Instagram.",
     icon: giphyIcon,
     deprecated: true,
-    doesBlockPost: false
+    doesBlockPost: false,
+    createdBy: "seam"
   },
   RefreshingGIF: {
     type: "RefreshingGIF",
@@ -204,7 +220,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Tap here to setup your RefreshingGIF block!",
     icon: randomGiphyIcon,
     deprecated: false,
-    doesBlockPost: false
+    doesBlockPost: false,
+    createdBy: "andrew"
   },
   "NFTs": {
     type: "NFTs",
@@ -214,7 +231,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Tap here to setup your NFTs block!",
     icon: nftIcon,
     deprecated: false,
-    doesBlockPost: false
+    doesBlockPost: false,
+    createdBy: "andrew"
   },
   "Pokemon": {
     type: "Pokemon",
@@ -224,7 +242,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Tap here to setup your PokemonBlock block!",
     icon: pokemonIcon,
     deprecated: false,
-    doesBlockPost: false
+    doesBlockPost: false,
+    createdBy: "luisenriqueg"
   },
   "Marquee": {
     type: "Marquee",
@@ -234,7 +253,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Tap here to setup your Marquee block!",
     icon: marqueeIcon,
     deprecated: false,
-    doesBlockPost: true
+    doesBlockPost: true,
+    createdBy: "nick"
   },
   "PhotoAlbum": {
     type: "PhotoAlbum",
@@ -244,7 +264,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Tap here to setup your Photo Album block!",
     icon: photoAlbumIcon,
     deprecated: false,
-    doesBlockPost: false
+    doesBlockPost: false,
+    createdBy: "jamesburet"
   },
   "FlashingText": {
     type: "FlashingText",
@@ -254,7 +275,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Tap here to setup your Flashing Text block!",
     icon: flashingTextIcon,
     deprecated: false,
-    doesBlockPost: true
+    doesBlockPost: true,
+    createdBy: "ttran010"
   },
   "countdown": {
     type: "countdown",
@@ -264,7 +286,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Tap here to setup your countdown Timer!",
     icon: clockIcon,
     deprecated: false,
-    doesBlockPost: true
+    doesBlockPost: true,
+    createdBy: "coldreactor"
   },
   "tokenHoldings": {
     type: "tokenHoldings",
@@ -274,7 +297,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Tap here to setup your tokenHoldings block!",
     icon: tokenIcon,
     deprecated: false,
-    doesBlockPost: false
+    doesBlockPost: false,
+    createdBy: "proofofjake"
   },
   "NFT": {
     type: "NFT",
@@ -284,7 +308,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Tap here to setup your NFT block!",
     icon: nftIcon,
     deprecated: false,
-    doesBlockPost: false
+    doesBlockPost: false,
+    createdBy: "nick"
   },
   "fcUserFeed": {
     type: "fcUserFeed",
@@ -294,16 +319,18 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Tap here to setup your Farcaster User Feed block!",
     icon: farcasterIcon,
     deprecated: false,
-    doesBlockPost: false
+    doesBlockPost: false,
+    createdBy: "nick"
   },
-  "eyes": { 
-        type: "eyes",
-        displayName: "eyes",
-        displayDescription: "cute eyes, watching ur every move",
-        emptyTitle: "Empty eyes Block",
-        emptySubtitle: "Tap here to setup your eyes block!",
-        icon: eyesIcon, // TODO: insert your block icon here
-        deprecated: false,
-        doesBlockPost: false
-    },
+  "eyes": {
+    type: "eyes",
+    displayName: "eyes",
+    displayDescription: "cute eyes, watching ur every move",
+    emptyTitle: "Empty eyes Block",
+    emptySubtitle: "Tap here to setup your eyes block!",
+    icon: eyesIcon, // TODO: insert your block icon here
+    deprecated: false,
+    doesBlockPost: false,
+    createdBy: "razberry"
+  },
 };

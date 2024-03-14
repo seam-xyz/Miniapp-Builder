@@ -64,6 +64,7 @@ echo "  \"$shortName\": {
         icon: \"${shortName}Icon\", // TODO: insert your block icon here
         deprecated: false,
         doesBlockPost: false
+        createdBy: \"Seam\" // TODO: put your name here
     },
 };" >> $output
 echo "✅ Added $name to types.tsx"

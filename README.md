@@ -154,6 +154,7 @@ For example, here's the Marquee block type:
     icon: marqueeIcon,
     deprecated: false,
     doesBlockPost: true
+    createdBy: "Your name here"
   }
 ```
 
