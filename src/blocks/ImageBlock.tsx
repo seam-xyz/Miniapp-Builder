@@ -83,7 +83,7 @@ export default class ImageBlock extends Block {
             defaultValue={this.model.data['url']}
             fullWidth
             id="url"
-            label="URL"
+            label={"Image URL (internet image)"}
             name="url"
           />
           <Button
