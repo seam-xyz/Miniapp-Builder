@@ -66,7 +66,6 @@ export default class MarqueeBlock extends Block {
           id="text"
           label="Text"
           name="text"
-          autoFocus
         />
         <Button
           type="submit"

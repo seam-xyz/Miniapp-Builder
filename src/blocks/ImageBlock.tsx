@@ -85,7 +85,6 @@ export default class ImageBlock extends Block {
             id="url"
             label="URL"
             name="url"
-            autoFocus
           />
           <Button
             type="submit"

@@ -71,7 +71,6 @@ export default class VideoBlock extends Block {
             label={"Video URL (YouTube, TikTok, Instagram, etc.)"}
             name="url"
             defaultValue={this.model.data['url']}
-            autoFocus
           />
           <Button
             type="submit"

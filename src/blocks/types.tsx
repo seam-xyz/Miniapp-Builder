@@ -130,7 +130,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: linkIcon,
     minHeight: 5,
     deprecated: false,
-    doesBlockPost: true,
+    doesBlockPost: false,
     createdBy: "seam"
   },
   "Link Bookmark": {

@@ -55,7 +55,6 @@ export default class LinkBookmarkBlock extends Block {
           label={"Link URL"}
           name="url"
           defaultValue={this.model.data['url']}
-          autoFocus
         />
         <Button
           type="submit"

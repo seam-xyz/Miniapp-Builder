@@ -87,7 +87,6 @@ export default class IFrameBlock extends Block {
           id="url"
           label="URL"
           name="url"
-          autoFocus
         />
         <Button
           type="submit"

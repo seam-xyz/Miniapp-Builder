@@ -194,7 +194,6 @@ export default class FlashingTextBlock extends Block {
           id="text"
           label="Text"
           name="text"
-          autoFocus
         />
         <InputLabel>Transition Duration (seconds): </InputLabel>
         <Slider

@@ -98,7 +98,6 @@ export default class fcUserFeedBlock extends Block {
           label={"Farcaster User ID"}
           name="fid"
           defaultValue={this.model.data['fid']}
-          autoFocus
         />
         <Button
           type="submit"
