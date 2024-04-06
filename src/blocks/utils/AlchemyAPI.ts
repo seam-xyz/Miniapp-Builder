@@ -18,7 +18,7 @@ export const getNftsForOwner = async (
     const options = {
       contractAddresses: contractAddress ? [contractAddress] : undefined,
       pageSize: 50,
-      excludeFilters: [NftFilters.SPAM, NftFilters.AIRDROPS],
+      excludeFilters: [NftFilters.AIRDROPS],
       pageKey: pageCursor // Use the cursor for pagination
     };
     const response = await alchemy.nft.getNftsForOwner(ownerAddress, options);
