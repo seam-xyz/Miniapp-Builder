@@ -8,7 +8,6 @@ import { withSize } from "react-sizeme";
 import Widget from "./Widget";
 import Card from '@mui/material/Card';
 import Modal from '@mui/material/Modal';
-import { createTheme } from "@mui/material/styles";
 import Feed from "./Feed";
 
 // Blocks
