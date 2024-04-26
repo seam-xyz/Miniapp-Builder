@@ -13,16 +13,16 @@ export default function Iframely(props) {
           props.url
         )}&key=${process.env.REACT_APP_IFRAMELY_KEY}&iframe=0&omit_script=1`
       )
-        .then((res) => res.json())
+        .then(res => res.json())
         .then(
           (res) => {
             setIsLoaded(true);
-            const image = res.links?.thumbnail ? res.links.thumbnail[0].href : null;
+            const image = res.links?.thumbnail?.[0]?.href ?? '';
             setData({
-              title: res.meta.title,
-              description: res.meta.description,
+              title: res.meta?.title ?? 'No title available',
+              description: res.meta?.description ?? 'No description available',
               image: image,
-              url: res.url,
+              url: res.url ?? 'No URL available',
             });
           },
           (error) => {
@@ -35,9 +35,9 @@ export default function Iframely(props) {
     }
   }, [props.url]);
 
-  useEffect((props) => {
+  useEffect(() => {
     window.iframely && window.iframely.load();
-  });
+  }, []); // Removed props from the dependency array as it might be unnecessary
 
   if (error) {
     return (
@@ -49,9 +49,9 @@ export default function Iframely(props) {
     return <Skeleton variant="rectangular" width={"100%"} height={120} />;
   } else {
     return (
-      <a href={data.url} target="_blank" style={{ textDecoration: "none", color: "black" }}>
+      <a href={data.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", color: "black" }}>
         <Stack direction="column" style={{ width: "100%", height: "100%" }}>
-          <img src={data.image} style={{ width: "100%", height: "100%" }} />
+          <img src={data.image} alt={data.title} style={{ width: "100%", height: "100%" }} />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               {data.title}
@@ -62,6 +62,6 @@ export default function Iframely(props) {
           </CardContent>
         </Stack>
       </a>
-    )
+    );
   }
 }
