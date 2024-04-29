@@ -16,6 +16,8 @@
 
 We've made it easy in [this repository](https://github.com/seam-xyz/Miniapp-Builder) to make a new miniapp, and then publish it live so that anyone else in the world can use your new creation, too. We're all building this together!
 
+Read the full documentation at [https://docs.getseam.xyz/](https://docs.getseam.xyz/).
+
 🚧 Note: The Seam platform is under constant development, and occasionally the miniapp builder might lag behind the functionality on the Seam platform. If there currently isn't a way to build what you're dreaming up, feel free to file a github issue as a feature request. 🚧
 
 #### What are miniapps?
