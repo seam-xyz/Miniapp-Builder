@@ -1,8 +1,3 @@
----
-cover: .gitbook/assets/Nick LinkedIn banner.png
-coverY: 0
----
-
 # Seam Miniapp Maker
 
 <div align="center">
