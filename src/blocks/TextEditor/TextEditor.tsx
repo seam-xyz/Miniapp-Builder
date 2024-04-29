@@ -11,6 +11,10 @@ interface TextEditorProps {
   done: (data: string) => void;
 }
 
+interface ColorPickerProps {
+  onColorSelected: (color: string) => void;
+}
+
 interface EditorButtonProps {
   onMouseDown: (e: React.MouseEvent<HTMLButtonElement>) => void;
   active: boolean;
@@ -47,6 +51,7 @@ const ButtonContainer: React.FC<ButtonContainerProps> = ({ children }) => {
 const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
   const initialState: EditorState = data ? EditorState.createWithContent(convertFromRaw(JSON.parse(data))) : EditorState.createEmpty();
   const [editorState, setEditorState] = React.useState<EditorState>(initialState);
+  const [currentColor, setCurrentColor] = React.useState<string>('black');
 
   const isActiveStyle = (style: string): boolean => editorState.getCurrentInlineStyle().has(style);
   const getBlockType = (): string => editorState.getCurrentContent().getBlockForKey(editorState.getSelection().getStartKey()).getType();
@@ -59,6 +64,11 @@ const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
       return 'handled';
     }
     return 'not-handled';
+  };
+
+  const handleColorChange = (color: string) => {
+    setCurrentColor(color);
+    toggleColor(color); // Apply the selected color to the text
   };
 
   const toggleInlineStyle = (style: string) => () => setEditorState(RichUtils.toggleInlineStyle(editorState, style));
@@ -86,15 +96,29 @@ const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
 
   const saveContent = () => done(JSON.stringify(convertToRaw(editorState.getCurrentContent())));
 
+  const toggleColor = (color: string) => {
+    const selection = editorState.getSelection();
+    const contentState = editorState.getCurrentContent();
+    const nextContentState = Modifier.applyInlineStyle(contentState, selection, color);
+    const nextEditorState = EditorState.push(editorState, nextContentState, 'change-inline-style');
+    setEditorState(nextEditorState);
+  };
+
   return (
     <div className="w-full h-full flex flex-col">
-        <Editor
-          customStyleMap={styleMap}
-          editorState={editorState}
-          onChange={setEditorState}
-          handleKeyCommand={handleKeyCommand}
-          blockStyleFn={blockStyleFn}
-        />
+      <input
+        type="color"
+        value={currentColor}
+        onChange={(e) => handleColorChange(e.target.value)}
+        style={{ margin: '8px', cursor: 'pointer' }}
+      />
+      <Editor
+        customStyleMap={styleMap}
+        editorState={editorState}
+        onChange={setEditorState}
+        handleKeyCommand={handleKeyCommand}
+        blockStyleFn={blockStyleFn}
+      />
       <div className="flex flex-row overflow-x-scroll space-x-2 mt-2">
         <ButtonContainer>
           <EditorButton onMouseDown={toggleBlockType('header-one')} active={getBlockType() === 'header-one'} label="H1" styleType="header" />
