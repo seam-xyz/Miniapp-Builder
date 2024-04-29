@@ -3,7 +3,7 @@ import { Editor, EditorState, RichUtils, convertFromRaw, convertToRaw, DraftHand
 import 'draft-js/dist/Draft.css';
 import { Button as AntdButton } from "antd";
 import { Map } from 'immutable';
-import { List, AlignLeft, AlignCenter, AlignRight } from 'react-feather'
+import { List, AlignLeft, AlignCenter, AlignRight, Code } from 'react-feather'
 import { ReactComponent as NumberedList } from "./images/NumberedList.svg"
 
 interface TextEditorProps {
@@ -110,6 +110,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
         <ButtonContainer>
           <EditorButton onMouseDown={toggleBlockType('unordered-list-item')} active={getBlockType() === 'unordered-list-item'} label={<List size={24} color="black" />} styleType="list" />
           <EditorButton onMouseDown={toggleBlockType('ordered-list-item')} active={getBlockType() === 'ordered-list-item'} label={<NumberedList className="h-[16px] w-[19px]" />} styleType="list" />
+          <EditorButton onMouseDown={toggleBlockType('code-block')} active={getBlockType() === 'code-block'} label={<Code size={24} color="black" />} styleType="list" />
         </ButtonContainer>
         <ButtonContainer>
           <EditorButton onMouseDown={applyAlignment('left')} active={getBlockData('textAlign') === 'left'} label={<AlignLeft size={24} color="black" />} styleType="alignment" />
