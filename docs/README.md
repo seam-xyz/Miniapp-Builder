@@ -14,7 +14,7 @@
 
 [Seam](https://www.seam.so) is a social network that allows users to build and sell open-source miniapps. It provides a platform for online creatives to showcase their work, curate inspiration, and collaborate with peers.
 
-We've made it easy in [this repository](https://www.docs.getseam.xyz) to make a new miniapp, and then publish it live so that anyone else in the world can use your new creation, too. We're all building this together!
+We've made it easy in [this repository](https://github.com/seam-xyz/Miniapp-Builder) to make a new miniapp, and then publish it live so that anyone else in the world can use your new creation, too. We're all building this together!
 
 🚧 Note: The Seam platform is under constant development, and occasionally the miniapp builder might lag behind the functionality on the Seam platform. If there currently isn't a way to build what you're dreaming up, feel free to file a github issue as a feature request. 🚧
 
