@@ -1,6 +1,6 @@
 # Quickstart
 
-https://user-images.githubusercontent.com/7350670/213023742-116abf08-51d8-4b9e-a289-7b601b5d458a.mp4
+The miniapp builder repo is at [https://github.com/seam-xyz/Miniapp-Builder](https://github.com/seam-xyz/Miniapp-Builder).
 
 1. git clone the repo, `cd Miniapp-Builder`
 2. `yarn install`
