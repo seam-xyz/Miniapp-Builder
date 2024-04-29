@@ -75,7 +75,6 @@ export default class IFramelyBlock extends Block {
           label={urlLabel}
           name="url"
           defaultValue={this.model.data['url']}
-          autoFocus
         />
         <TextField
           margin="normal"

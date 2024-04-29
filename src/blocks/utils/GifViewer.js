@@ -17,7 +17,7 @@ export default function GifViewer({ id }) {
   }, [id]);
 
   return (
-    <div>
+    <div className="w-full">
     {gifData && <img src={gifData.images.original.url} width={"100%"}/>}
     </div>
   );

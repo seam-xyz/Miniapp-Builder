@@ -86,7 +86,6 @@ export default class LinkBlock extends Block {
           id="title"
           label="Link Button Title"
           name="title"
-          autoFocus
         />
         <Button
           type="submit"

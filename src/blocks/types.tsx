@@ -1,14 +1,14 @@
-import textIcon from "./blockIcons/textBlockIcon.png";
+import textIcon from "./blockIcons/Text.png";
 import websiteIcon from "./blockIcons/websiteIcon.png";
-import videoIcon from "./blockIcons/videoIcon.png";
-import imageIcon from "./blockIcons/imageIcon.png";
-import linkIcon from "./blockIcons/linkIcon.png";
+import videoIcon from "./blockIcons/Video.png";
+import imageIcon from "./blockIcons/Image.png";
+import linkIcon from "./blockIcons/Button.png";
 import twitterIcon from "./blockIcons/twitterIcon.png";
-import bookmarkIcon from "./blockIcons/bookmarkIcon.png";
-import mapIcon from "./blockIcons/mapIcon.png";
-import giphyIcon from "./blockIcons/giphyLogo.png";
+import bookmarkIcon from "./blockIcons/Link.png";
+import mapIcon from "./blockIcons/Map.png";
+import giphyIcon from "./blockIcons/GIPHY.png";
 import profileIcon from "./blockIcons/profileHeaderIcon.png";
-import musicIcon from "./blockIcons/musicIcon.png";
+import musicIcon from "./blockIcons/Music.png";
 import randomGiphyIcon from "./blockIcons/randomGiphyIcon.png";
 import pixelArtIcon from "./blockIcons/pixelArtIcon.png";
 import nftIcon from "./blockIcons/nftIcon.png"
@@ -38,6 +38,7 @@ export type BlockType = {
   minWidth?: number, // in column units
   deprecated: boolean; // if users can continue to add the block
   doesBlockPost: boolean; // do updates of this block show up in the feed?
+  doesBlockEdit: boolean; // does the user need to edit this block?
   createdBy: string; // the user who created the block
 };
 
@@ -52,6 +53,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: profileIcon,
     deprecated: false,
     doesBlockPost: false,
+    doesBlockEdit: true,
     createdBy: "seam"
   },
   "PixelArt": {
@@ -64,6 +66,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     minWidth: 2,
     deprecated: false,
     doesBlockPost: true,
+    doesBlockEdit: true,
     createdBy: "emilee"
   },
   giphy: {
@@ -75,6 +78,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: giphyIcon,
     deprecated: false,
     doesBlockPost: true,
+    doesBlockEdit: true,
     createdBy: "seam"
   },
   text: {
@@ -86,6 +90,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: textIcon,
     deprecated: false,
     doesBlockPost: true,
+    doesBlockEdit: true,
     createdBy: "seam"
   },
   iframe: {
@@ -97,6 +102,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: websiteIcon,
     deprecated: false,
     doesBlockPost: false,
+    doesBlockEdit: true,
     createdBy: "seam"
   },
   video: {
@@ -108,6 +114,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: videoIcon,
     deprecated: false,
     doesBlockPost: true,
+    doesBlockEdit: true,
     createdBy: "seam"
   },
   image: {
@@ -119,6 +126,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: imageIcon,
     deprecated: false,
     doesBlockPost: true,
+    doesBlockEdit: true,
     createdBy: "seam"
   },
   link: {
@@ -130,7 +138,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: linkIcon,
     minHeight: 5,
     deprecated: false,
-    doesBlockPost: true,
+    doesBlockPost: false,
+    doesBlockEdit: true,
     createdBy: "seam"
   },
   "Link Bookmark": {
@@ -142,6 +151,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: bookmarkIcon,
     deprecated: false,
     doesBlockPost: false,
+    doesBlockEdit: true,
     createdBy: "seam"
   },
   twitter: {
@@ -154,6 +164,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: twitterIcon,
     deprecated: true,
     doesBlockPost: false,
+    doesBlockEdit: true,
     createdBy: "seam"
   },
   tweet: {
@@ -165,6 +176,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: twitterIcon,
     deprecated: true,
     doesBlockPost: false,
+    doesBlockEdit: true,
     createdBy: "seam"
   },
   Music: {
@@ -176,6 +188,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: musicIcon,
     deprecated: false,
     doesBlockPost: true,
+    doesBlockEdit: true,
     createdBy: "seam"
   },
   Map: {
@@ -187,6 +200,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: mapIcon,
     deprecated: false,
     doesBlockPost: true,
+    doesBlockEdit: true,
     createdBy: "seam"
   },
   "Image Button": {
@@ -198,6 +212,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: twitterIcon,
     deprecated: true,
     doesBlockPost: false,
+    doesBlockEdit: true,
     createdBy: "seam"
   },
   instagram: {
@@ -209,6 +224,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: giphyIcon,
     deprecated: true,
     doesBlockPost: false,
+    doesBlockEdit: true,
     createdBy: "seam"
   },
   RefreshingGIF: {
@@ -221,6 +237,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: randomGiphyIcon,
     deprecated: false,
     doesBlockPost: false,
+    doesBlockEdit: true,
     createdBy: "andrew"
   },
   "NFTs": {
@@ -232,6 +249,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: nftIcon,
     deprecated: false,
     doesBlockPost: false,
+    doesBlockEdit: true,
     createdBy: "andrew"
   },
   "Pokemon": {
@@ -243,6 +261,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: pokemonIcon,
     deprecated: false,
     doesBlockPost: false,
+    doesBlockEdit: false,
     createdBy: "luisenriqueg"
   },
   "Marquee": {
@@ -254,6 +273,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: marqueeIcon,
     deprecated: false,
     doesBlockPost: true,
+    doesBlockEdit: true,
     createdBy: "nick"
   },
   "PhotoAlbum": {
@@ -265,6 +285,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: photoAlbumIcon,
     deprecated: false,
     doesBlockPost: false,
+    doesBlockEdit: true,
     createdBy: "jamesburet"
   },
   "FlashingText": {
@@ -276,6 +297,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: flashingTextIcon,
     deprecated: false,
     doesBlockPost: true,
+    doesBlockEdit: true,
     createdBy: "ttran010"
   },
   "countdown": {
@@ -287,6 +309,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: clockIcon,
     deprecated: false,
     doesBlockPost: true,
+    doesBlockEdit: true,
     createdBy: "coldreactor"
   },
   "tokenHoldings": {
@@ -298,6 +321,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: tokenIcon,
     deprecated: false,
     doesBlockPost: false,
+    doesBlockEdit: true,
     createdBy: "proofofjake"
   },
   "NFT": {
@@ -309,6 +333,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: nftIcon,
     deprecated: false,
     doesBlockPost: false,
+    doesBlockEdit: true,
     createdBy: "nick"
   },
   "fcUserFeed": {
@@ -320,6 +345,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: farcasterIcon,
     deprecated: false,
     doesBlockPost: false,
+    doesBlockEdit: true,
     createdBy: "nick"
   },
   "eyes": {
@@ -331,6 +357,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     icon: eyesIcon, // TODO: insert your block icon here
     deprecated: false,
     doesBlockPost: false,
+    doesBlockEdit: false,
     createdBy: "razberry"
   },
 };
