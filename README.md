@@ -10,7 +10,7 @@
 
 </div>
 
-<figure><img src=".gitbook/assets/Frame 3893 (1).png" alt=""><figcaption><p>Miniapps are the future of sharing on social networks.</p></figcaption></figure>
+<figure><img width="2005" alt="Beat Miniapp" src="https://github.com/seam-xyz/Miniapp-Builder/assets/7350670/1929270a-3b8e-46b2-ab60-824b248b9bcb"><figcaption><p>Miniapps are the future of sharing on social networks.</p></figcaption></figure>
 
 [Seam](https://www.seam.so) is a social network that allows users to build and sell open-source miniapps. It provides a platform for online creatives to showcase their work, curate inspiration, and collaborate with peers.
 
@@ -22,7 +22,7 @@ We've made it easy in this repository to make a new miniapp, and then publish it
 
 The core piece of sharing on Seam is the **miniapp**. Miniapps are tiny playgrounds, allowing you to create content. When you’re done, you make a post. For example, the Pixel Art miniapp allows you to become a pixel artist, and then share the final masterpiece as a post.
 
-<figure><img src=".gitbook/assets/BookShelf.png" alt=""><figcaption><p>Miniapps have a creation experience, and a consumption experience in the feed.</p></figcaption></figure>
+<figure><img width="1080" alt="BookShelf" src="https://github.com/seam-xyz/Miniapp-Builder/assets/7350670/9ca67061-35ac-4a0b-a6a2-bebd5c66930f"><figcaption><p>Miniapps have a creation experience, and a consumption experience in the feed.</p></figcaption></figure>
 
 **What happens when you make a miniapp on Seam?**
 
