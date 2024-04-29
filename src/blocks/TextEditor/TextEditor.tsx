@@ -1,190 +1,125 @@
-// Thanks to https://codesandbox.io/s/44ln1
-
-import React from "react";
-import {
-  Editor,
-  EditorState,
-  RichUtils,
-  AtomicBlockUtils,
-  DraftEditorCommand,
-  convertToRaw,
-  convertFromRaw,
-  Modifier
-} from "draft-js";
-import "draft-js/dist/Draft.css";
-import "./TextEditorStyles.css";
-import '../BlockStyles.css'
-import { linkDecorator } from "./Link";
-import { Button, Card } from "antd";
-import bold from "./images/bold.svg"
-import italic from "./images/italic.svg"
-import underline from "./images/underline.svg"
-import strikethrough from "./images/strikethrough.svg"
-import ordered from "./images/ordered.svg"
-import unordered from "./images/unordered.svg"
-import link from "./images/link.svg"
-import { AlignCenterOutlined, AlignRightOutlined, AlignLeftOutlined } from '@ant-design/icons';
+import React from 'react';
+import { Editor, EditorState, RichUtils, convertFromRaw, convertToRaw, DraftHandleValue, Modifier } from 'draft-js';
+import 'draft-js/dist/Draft.css';
+import { Button as AntdButton } from "antd";
+import { Map } from 'immutable';
+import { List, AlignLeft, AlignCenter, AlignRight } from 'react-feather'
+import { ReactComponent as NumberedList } from "./images/NumberedList.svg"
 
 interface TextEditorProps {
-  data: string | null,
-  done: (data: string) => void
+  data: string | null;
+  done: (data: string) => void;
 }
 
-const TextEditor: React.FC<TextEditorProps> = (props) => {
-  const propsd = props as TextEditorProps
-  const initialState = propsd.data
-    ? EditorState.createWithContent(convertFromRaw(JSON.parse(propsd.data)), linkDecorator)
-    : EditorState.createEmpty(linkDecorator);
+interface EditorButtonProps {
+  onMouseDown: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  active: boolean;
+  label: any;
+  styleType: 'header' | 'style' | 'list' | 'alignment';
+}
+
+const EditorButton: React.FC<EditorButtonProps> = ({ onMouseDown, active, label, styleType }) => {
+  const isActiveListOrAlignment = styleType === 'list' || styleType === 'alignment';
+  
+  return (
+    <button
+      onMouseDown={onMouseDown}
+      className={`p-1 rounded-full bg-[#EFEFEF] font-bold border ${active ? "bg-seam-pink text-white" : "text-seam-black"}`}
+      style={{ width: '24px', height: '24px', padding: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+    >
+      {isActiveListOrAlignment ? React.cloneElement(label, { color: active ? "white" : "black" }) : label}
+    </button>
+  );
+};
+
+interface ButtonContainerProps {
+  children: React.ReactNode;
+}
+
+const ButtonContainer: React.FC<ButtonContainerProps> = ({ children }) => {
+  return (
+    <div className="rounded-full bg-[#FCFCFC] p-4 border-2 border-[#EFEFEF] space-x-2 flex">
+      {children}
+    </div>
+  );
+};
+
+const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
+  const initialState: EditorState = data ? EditorState.createWithContent(convertFromRaw(JSON.parse(data))) : EditorState.createEmpty();
   const [editorState, setEditorState] = React.useState<EditorState>(initialState);
 
-  const handleSave = () => {
-    const data = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
-    propsd.done(data)
-  };
+  const isActiveStyle = (style: string): boolean => editorState.getCurrentInlineStyle().has(style);
+  const getBlockType = (): string => editorState.getCurrentContent().getBlockForKey(editorState.getSelection().getStartKey()).getType();
+  const getBlockData = (key: string): any => editorState.getCurrentContent().getBlockForKey(editorState.getSelection().getStartKey()).getData().get(key);
 
-  const handleInsertImage = () => {
-    const src = prompt("Please enter the URL of your picture");
-    if (!src) {
-      return;
+  const handleKeyCommand = (command: string, state: EditorState): DraftHandleValue => {
+    const newState = RichUtils.handleKeyCommand(state, command);
+    if (newState) {
+      setEditorState(newState);
+      return 'handled';
     }
-    const contentState = editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity("image", "IMMUTABLE", { src });
-    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-    const newEditorState = EditorState.set(editorState, {
-      currentContent: contentStateWithEntity
-    });
-    return setEditorState(AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, " "));
+    return 'not-handled';
   };
 
-  const handleAddLink = () => {
-    // Thanks to https://github.com/facebook/draft-js/blob/main/examples/draft-0-10-0/link/link.html
+  const toggleInlineStyle = (style: string) => () => setEditorState(RichUtils.toggleInlineStyle(editorState, style));
+  const toggleBlockType = (type: string) => () => setEditorState(RichUtils.toggleBlockType(editorState, type));
+
+  const applyAlignment = (alignment: string) => () => {
     const selection = editorState.getSelection();
     const contentState = editorState.getCurrentContent();
-    const startKey = selection.getStartKey();
-    const startOffset = selection.getStartOffset();
-    const blockWithLinkAtBeginning = contentState.getBlockForKey(startKey);
-    const linkKey = blockWithLinkAtBeginning.getEntityAt(startOffset);
-
-    let url = '';
-    if (linkKey) {
-      const linkInstance = contentState.getEntity(linkKey);
-      url = linkInstance.getData().url;
-    }
-    let link = prompt("Please enter the URL of your link", url);
-    if (!link) {
-      setEditorState(RichUtils.toggleLink(editorState, selection, null));
-      return;
-    }
-    link = (link.indexOf(':') === -1) ? 'http://' + link : link;
-    const content = editorState.getCurrentContent();
-    const contentWithEntity = content.createEntity("LINK", "MUTABLE", {
-      url: link
-    });
-    const newEditorState = EditorState.push(editorState, contentWithEntity, "apply-entity");
-    const entityKey = contentWithEntity.getLastCreatedEntityKey();
-    setEditorState(RichUtils.toggleLink(newEditorState, selection, entityKey));
-  };
-
-  // thanks to https://medium.com/@ibraheems.ali95/text-alignment-in-draftjs-and-using-with-statetohtml-caecd0138251
-  const alignmentStyles = ['left', 'right', 'center'];
-  const applyAlignment = (newStyle: string) => {
-    let styleForRemove = alignmentStyles.filter(style => style !== newStyle);
-    let currentContent = editorState.getCurrentContent();
-    let selection = editorState.getSelection();
-    let focusBlock = currentContent.getBlockForKey(selection.getFocusKey());
-    let anchorBlock = currentContent.getBlockForKey(selection.getAnchorKey());
-    let isBackward = selection.getIsBackward();
-
-    let selectionMerge = {
-      anchorOffset: 0,
-      focusOffset: focusBlock.getLength(),
-    };
-
-    if (isBackward) {
-      selectionMerge.anchorOffset = anchorBlock.getLength();
-    }
-    let finalSelection = selection.merge(selectionMerge);
-    let finalContent = styleForRemove.reduce((content, style) => Modifier.removeInlineStyle(content, finalSelection, style), currentContent);
-    let modifiedContent = Modifier.applyInlineStyle(finalContent, finalSelection, newStyle);
-    const nextEditorState = EditorState.push(editorState, modifiedContent, 'change-inline-style');
-    setEditorState(nextEditorState);
+    const blockData = contentState.getBlockForKey(selection.getStartKey()).getData();
+    const newBlockData = blockData.set('textAlign', alignment);
+    const newContentState = Modifier.mergeBlockData(contentState, selection, newBlockData);
+    setEditorState(EditorState.push(editorState, newContentState, 'change-block-data'));
   };
 
   const blockStyleFn = (block: any) => {
-    let alignment = 'left';
-    block.findStyleRanges((e: any) => {
-      if (e.hasStyle('center')) {
-        alignment = 'center';
-      }
-      if (e.hasStyle('right')) {
-        alignment = 'right';
-      }
-    });
-    return `editor-alignment-${alignment}`;
+    const textAlign = block.getData().get('textAlign');
+    return textAlign ? `editor-alignment-${textAlign}` : '';
   };
 
-  const handleKeyCommand = (command: DraftEditorCommand) => {
-    const newState = RichUtils.handleKeyCommand(editorState, command);
-    if (newState) {
-      setEditorState(newState);
-      return "handled";
-    }
-    return "not-handled";
+  const styleMap = {
+    STRIKETHROUGH: {
+      textDecoration: 'line-through',
+    },
   };
 
-  const handleTogggleClick = (e: React.MouseEvent, inlineStyle: string) => {
-    e.preventDefault();
-    setEditorState(RichUtils.toggleInlineStyle(editorState, inlineStyle));
-  };
-
-  const handleBlockClick = (e: React.MouseEvent, blockType: string) => {
-    e.preventDefault();
-    setEditorState(RichUtils.toggleBlockType(editorState, blockType));
-  };
-
-  const onEditorStateChange = (editorState: EditorState) => {
-    setEditorState(editorState);
-  };
+  const saveContent = () => done(JSON.stringify(convertToRaw(editorState.getCurrentContent())));
 
   return (
-    <div className="texteditor">
-      <Editor
-        editorState={editorState}
-        onChange={onEditorStateChange}
-        handleKeyCommand={handleKeyCommand}
-        blockStyleFn={blockStyleFn}
-        spellCheck={true}
-      />
-      <Card className="editorBar">
-        <button onMouseDown={(e) => handleBlockClick(e, "header-one")}>H1</button>
-        <button onMouseDown={(e) => handleBlockClick(e, "header-two")}>H2</button>
-        <button onMouseDown={(e) => handleBlockClick(e, "header-three")}>H3</button>
-        <button onMouseDown={(e) => handleBlockClick(e, "header-four")}>P</button>
-        <button onMouseDown={(e) => handleTogggleClick(e, "BOLD")}><img src={bold} /></button>
-        <button onMouseDown={(e) => handleTogggleClick(e, "UNDERLINE")}><img src={underline} /></button>
-        <button onMouseDown={(e) => handleTogggleClick(e, "ITALIC")}><img src={italic} /></button>
-        <button onMouseDown={(e) => handleTogggleClick(e, "STRIKETHROUGH")}><img src={strikethrough} /></button>
-        <button onMouseDown={(e) => handleBlockClick(e, "ordered-list-item")}><img src={ordered} /></button>
-        <button onMouseDown={(e) => handleBlockClick(e, "unordered-list-item")}><img src={unordered} /></button>
-        <button onMouseDown={(e) => applyAlignment('left')}><AlignLeftOutlined /></button>
-        <button onMouseDown={(e) => applyAlignment('center')}> <AlignCenterOutlined /></button>
-        <button onMouseDown={(e) => applyAlignment('right')}><AlignRightOutlined /></button>
-        <button
-          disabled={editorState.getSelection().isCollapsed()}
-          onMouseDown={(e) => {
-            e.preventDefault();
-            handleAddLink();
-          }}>
-          <img src={link} />
-        </button>
-      </Card>
-      <Button className="save-modal-button" type="primary"
-        onClick={(e) => {
-          e.preventDefault();
-          handleSave();
-        }}>
+    <div className="w-full h-full flex flex-col">
+        <Editor
+          customStyleMap={styleMap}
+          editorState={editorState}
+          onChange={setEditorState}
+          handleKeyCommand={handleKeyCommand}
+          blockStyleFn={blockStyleFn}
+        />
+      <div className="flex flex-row overflow-x-scroll space-x-2 mt-2">
+        <ButtonContainer>
+          <EditorButton onMouseDown={toggleBlockType('header-one')} active={getBlockType() === 'header-one'} label="H1" styleType="header" />
+          <EditorButton onMouseDown={toggleBlockType('header-two')} active={getBlockType() === 'header-two'} label="H2" styleType="header" />
+          <EditorButton onMouseDown={toggleBlockType('header-three')} active={getBlockType() === 'header-three'} label="H3" styleType="header" />
+        </ButtonContainer>
+        <ButtonContainer>
+          <EditorButton onMouseDown={toggleInlineStyle('BOLD')} active={isActiveStyle('BOLD')} label="B" styleType="style" />
+          <EditorButton onMouseDown={toggleInlineStyle('ITALIC')} active={isActiveStyle('ITALIC')} label={<div className="italic">I</div>} styleType="style" />
+          <EditorButton onMouseDown={toggleInlineStyle('UNDERLINE')} active={isActiveStyle('UNDERLINE')} label={<div className="underline">U</div>} styleType="style" />
+          <EditorButton onMouseDown={toggleInlineStyle('STRIKETHROUGH')} active={isActiveStyle('STRIKETHROUGH')} label={<div className="line-through">S</div>} styleType="style" />
+        </ButtonContainer>
+        <ButtonContainer>
+          <EditorButton onMouseDown={toggleBlockType('unordered-list-item')} active={getBlockType() === 'unordered-list-item'} label={<List size={24} color="black" />} styleType="list" />
+          <EditorButton onMouseDown={toggleBlockType('ordered-list-item')} active={getBlockType() === 'ordered-list-item'} label={<NumberedList className="h-[16px] w-[19px]" />} styleType="list" />
+        </ButtonContainer>
+        <ButtonContainer>
+          <EditorButton onMouseDown={applyAlignment('left')} active={getBlockData('textAlign') === 'left'} label={<AlignLeft size={24} color="black" />} styleType="alignment" />
+          <EditorButton onMouseDown={applyAlignment('center')} active={getBlockData('textAlign') === 'center'} label={<AlignCenter size={24} color="black" />} styleType="alignment" />
+          <EditorButton onMouseDown={applyAlignment('right')} active={getBlockData('textAlign') === 'right'} label={<AlignRight size={24} color="black" />} styleType="alignment" />
+        </ButtonContainer>
+      </div>
+      <AntdButton className="mt-4" type="primary" onClick={saveContent}>
         Save
-      </Button>
+      </AntdButton>
     </div>
   );
 };
