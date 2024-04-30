@@ -1,21 +1,11 @@
-import { makeStyles, ThemeProvider } from "@mui/styles";
-
+import { useState } from "react";
+import Composer from "./Composer";
+import Feed from "./Feed";
 import { BlockModel } from "./blocks/types";
 import "./styles.css";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    flexDirection: "column"
-  },
-  content: {
-    flexGrow: 1,
-  },
-}));
-
 export default function App() {
-  const classes = useStyles();
-
+  const [loadedPosts, setLoadedPosts] = useState<BlockModel[]>([]);
   // Add your custom block here!
   // vvvvvvvvvvvvvvvvv
 
@@ -28,9 +18,19 @@ export default function App() {
   // End customization
   // ^^^^^^^^^^^^^^^^^
 
+  function addNewPost(newPost: BlockModel) {
+    setLoadedPosts((prevPosts: BlockModel[]) => [newPost, ...prevPosts]);
+  }
+
   return (
-    <div className={classes.root}>
-      <h1> Seam Miniapp Builder </h1>
+    <div className="flex flex-row justify-between w-full h-full">
+      <div className="left-0 w-[158px] h-[100%] bg-white flex flex-col items-center border-r-2 border-black/[5%]">
+        <Composer addNewPost={addNewPost}/>
+      </div>
+      <div className="flex justify-center items-center w-full h-full">
+        <Feed blocks={loadedPosts} />
+      </div>
+      <div className="w-[158px] bg-white flex-none border-l-2 border-seam-black/[5%]"></div>
     </div>
   );
 }

@@ -40,32 +40,16 @@ const defaultTheme = createTheme({
   },
 });
 
-export default function Feed() {
-  const POSTS_PER_PAGE = 10;
+export default function Feed(loadedPosts) {
   const classes = useStyles();
-
-  const [loadedPosts, setLoadedPosts] = useState([]);
-  const [hasMore, setHasMore] = useState(true);
-
-  async function loadMore() {
-    
-  }
-
-  function addNewPost(newPost) {
-    setLoadedPosts(prevPosts => [newPost, ...prevPosts]);
-  }
 
   return (
     <InfiniteScroll
       dataLength={loadedPosts.length}
-      next={loadMore}
-      hasMore={hasMore}
+      hasMore={false}
       height={window.innerHeight - 96}
       className={classes.noScrollBar}
     >
-      <div style={{ maxHeight: '500px' }}>
-        <Composer addNewPost={addNewPost} />
-      </div>
       {loadedPosts.map((post) => (
         <div key={post.id}>
           <Card className={classes.itemBackground} style={{ boxShadow: 0 }} elevation={0}>
