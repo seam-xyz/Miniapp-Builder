@@ -30,7 +30,7 @@ export default function App() {
 
   return (
     <div className={classes.root}>
-      <h1> Seam Block SDK </h1>
+      <h1> Seam Miniapp Builder </h1>
     </div>
   );
 }
