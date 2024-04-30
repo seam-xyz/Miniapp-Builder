@@ -26,7 +26,10 @@ const EditorButton: React.FC<EditorButtonProps & { disabled?: boolean }> = ({ on
 
   return (
     <button
-      onMouseDown={onMouseDown}
+      onMouseDown={(e) => {
+        e.preventDefault();
+        onMouseDown(e);
+      }}
       className={buttonClass}
       style={{ width: '24px', height: '24px', padding: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       disabled={disabled}
