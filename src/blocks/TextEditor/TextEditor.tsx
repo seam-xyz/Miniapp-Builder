@@ -57,7 +57,14 @@ const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
   : EditorState.createEmpty(linkDecorator);
   const [editorState, setEditorState] = React.useState<EditorState>(initialState);
   const [activeAlignment, setActiveAlignment] = React.useState<string>('left');
+  const editorRef = React.useRef<any>(null);
 
+  const focusEditor = () => {
+    if (editorRef.current) {
+      editorRef.current.focus();
+    }
+  };
+  
   const isActiveStyle = (style: string): boolean => editorState.getCurrentInlineStyle().has(style);
   const getBlockType = (): string => editorState.getCurrentContent().getBlockForKey(editorState.getSelection().getStartKey()).getType();
 
@@ -152,15 +159,18 @@ const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
   const saveContent = () => done(JSON.stringify(convertToRaw(editorState.getCurrentContent())));
 
   return (
-    <div className="w-full min-h-[300px] flex grow flex-col">
-      <Editor
-        customStyleMap={styleMap}
-        editorState={editorState}
-        onChange={setEditorState}
-        handleKeyCommand={handleKeyCommand}
-        blockStyleFn={blockStyleFn}
-        autoCapitalize="sentences"
-      />
+    <div className="w-full flex grow flex-col">
+      <div className="min-h-[300px]" onClick={focusEditor}>
+        <Editor
+          ref={editorRef}
+          customStyleMap={styleMap}
+          editorState={editorState}
+          onChange={setEditorState}
+          handleKeyCommand={handleKeyCommand}
+          blockStyleFn={blockStyleFn}
+          autoCapitalize="sentences"
+        />
+      </div>
       <div className="sticky bottom-0">
         <div className="flex flex-row overflow-x-scroll hide-scrollbar space-x-2 mt-2">
           <ButtonContainer>
