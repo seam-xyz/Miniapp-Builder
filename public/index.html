@@ -9,6 +9,39 @@
       name="Seam Block SDK"
       content="Seam block editor to create new blocks for the Seam social network."
     />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        content: ["./src/**/*.{html,js,jsx,ts,tsx}"],
+        theme: {
+            extend: {
+              fontFamily: {
+                sans: ['Public Sans', 'ui-sans-serif', 'system-ui'],
+              },
+              colors: {
+                'seam-green': '#CCFE07',
+                'seam-black': '#101010',
+                'seam-blue': '#0051E8',
+                'seam-pink': '#EE39FB',
+                'seam-white': '#FEFEFE',
+                'seam-gray-subtitle': "#808080",
+                'seam-red': '#E12451',
+                'seam-gray': '#EFEFEF'
+              },
+              animation: {
+                rotate: 'rotate 10s linear infinite',
+              },
+              keyframes: {
+                rotate: {
+                  '0%': { transform: 'rotate(0deg)' },
+                  '100%': { transform: 'rotate(360deg)' },
+                }
+              }
+            },
+          },
+        plugins: [],
+      }
+    </script>
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans&family=Unbounded&display=swap" rel="stylesheet">
     <!--
