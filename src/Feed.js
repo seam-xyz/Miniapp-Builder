@@ -1,10 +1,7 @@
 import { makeStyles } from "@mui/styles";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Card } from "@mui/material";
-import { useState, useEffect } from 'react';
 import BlockFactory from "./blocks/BlockFactory";
 import { createTheme } from "@mui/material/styles";
-import Composer from "./Composer";
 
 const useStyles = makeStyles({
   itemBackground: {
@@ -51,10 +48,13 @@ export default function Feed({ loadedPosts }) {
       className={classes.noScrollBar}
     >
       {loadedPosts.map((post) => (
-        <div key={post.id}>
-          <Card className={classes.itemBackground} style={{ boxShadow: 0 }} elevation={0}>
+        <div
+          key={post?.id}
+          className="flex flex-col items-start p-2 rounded-[20px] border border-gray-200 bg-[#FCFCFC] shadow-none"
+        >
+          <div className="w-full h-full max-w-full overflow-clip">
             {BlockFactory.getBlock(post, defaultTheme).render()}
-          </Card>
+          </div>
         </div>
       ))}
     </InfiniteScroll>

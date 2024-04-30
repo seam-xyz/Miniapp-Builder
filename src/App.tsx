@@ -2,7 +2,6 @@ import { useState } from "react";
 import Composer from "./Composer";
 import Feed from "./Feed";
 import { BlockModel } from "./blocks/types";
-import "./styles.css";
 
 export default function App() {
   const [loadedPosts, setLoadedPosts] = useState<BlockModel[]>([]);

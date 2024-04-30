@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { IconButton, Button, Typography, Grid, Stack, Avatar, Modal, Divider, Card } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Button, Modal, Divider, Card } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import BlockSelectorModal from './BlockSelectorModal.js';
 import BlockFactory from "./blocks/BlockFactory";
@@ -250,7 +249,7 @@ const Composer = ({ addNewPost }) => {
   const renderDesktopPostTypeButtons = () => {
     return (
       <div>
-        <h3 className="mb-4">All miniapps</h3>
+        <h2 className="mb-4">All miniapps</h2>
         {supportedBlocks.map((block) => (
           <div id={block[1].type}>
             <ComposerMiniAppItem
@@ -296,7 +295,6 @@ const Composer = ({ addNewPost }) => {
     </div>
   );
 
-  // Function to determine which step to render
   const renderContent = () => {
     switch (composerStep) {
       case 'editBlock':
@@ -335,9 +333,6 @@ const Composer = ({ addNewPost }) => {
             maxHeight: "90%"
           }}
         >
-          <IconButton className={classes.closeButton} onClick={handleClose}>
-            <CloseIcon style={{ color: "black" }} />
-          </IconButton>
           {renderContent()}
         </Card>
       </Modal>
