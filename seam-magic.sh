@@ -64,7 +64,7 @@ echo "  \"$shortName\": {
         icon: \"${shortName}Icon\", // TODO: insert your block icon here
         deprecated: false,
         doesBlockPost: false,
-        doesBlockEdit: true
+        doesBlockEdit: true,
         createdBy: \"Seam\" // TODO: put your name here
     },
 };" >> $output
