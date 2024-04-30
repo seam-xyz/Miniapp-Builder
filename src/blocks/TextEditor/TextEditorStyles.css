@@ -65,10 +65,6 @@ button {
     padding: 1.0rem;
 }
 
-.public-DraftEditor-content {
-    min-height: 20rem;
-}
-
 .editor-alignment-center div{
     text-align: center;
 }
