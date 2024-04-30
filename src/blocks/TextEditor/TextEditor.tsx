@@ -1,3 +1,4 @@
+// Thanks to https://codesandbox.io/s/44ln1
 import React from 'react';
 import { Editor, EditorState, RichUtils, convertFromRaw, convertToRaw, DraftHandleValue, Modifier } from 'draft-js';
 import 'draft-js/dist/Draft.css';
@@ -75,6 +76,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
   const toggleInlineStyle = (style: string) => () => setEditorState(RichUtils.toggleInlineStyle(editorState, style));
   const toggleBlockType = (type: string) => () => setEditorState(RichUtils.toggleBlockType(editorState, type));
 
+  // thanks to https://medium.com/@ibraheems.ali95/text-alignment-in-draftjs-and-using-with-statetohtml-caecd0138251
   const alignmentStyles = ['left', 'right', 'center'];
   const applyAlignment = (newStyle: string) => {
     let styleForRemove = alignmentStyles.filter(style => style !== newStyle);
