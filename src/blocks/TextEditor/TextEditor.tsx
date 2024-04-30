@@ -4,7 +4,6 @@ import { Editor, EditorState, RichUtils, convertFromRaw, convertToRaw, DraftHand
 import 'draft-js/dist/Draft.css';
 import { Button } from '@mui/material';
 import '../BlockStyles.css'
-import { Map } from 'immutable';
 import { List, AlignLeft, AlignCenter, AlignRight, Code, Link } from 'react-feather'
 import { ReactComponent as NumberedList } from "./images/NumberedList.svg"
 import { linkDecorator } from "./Link";
@@ -12,10 +11,6 @@ import { linkDecorator } from "./Link";
 interface TextEditorProps {
   data: string | null;
   done: (data: string) => void;
-}
-
-interface ColorPickerProps {
-  onColorSelected: (color: string) => void;
 }
 
 interface EditorButtonProps {
@@ -62,7 +57,6 @@ const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
 
   const isActiveStyle = (style: string): boolean => editorState.getCurrentInlineStyle().has(style);
   const getBlockType = (): string => editorState.getCurrentContent().getBlockForKey(editorState.getSelection().getStartKey()).getType();
-  const getBlockData = (key: string): any => editorState.getCurrentContent().getBlockForKey(editorState.getSelection().getStartKey()).getData().get(key);
 
   const handleKeyCommand = (command: string, state: EditorState): DraftHandleValue => {
     const newState = RichUtils.handleKeyCommand(state, command);
@@ -144,6 +138,8 @@ const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
     return `editor-alignment-${alignment}`;
   };
 
+
+  // can add more text formatting options here in the future
   const styleMap = {
     STRIKETHROUGH: {
       textDecoration: 'line-through',
@@ -176,8 +172,8 @@ const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
               active={false} 
               label={<Link size={24} color={editorState.getSelection().isCollapsed() ? "gray" : "black"} className={editorState.getSelection().isCollapsed() ? "opacity-10" : ""} />} 
               styleType="style" 
-              disabled={editorState.getSelection().isCollapsed()}
-          />
+              disabled={editorState.getSelection().isCollapsed()} // disable link button when no text selected
+            />
           </ButtonContainer>
           <ButtonContainer>
             <EditorButton onMouseDown={toggleInlineStyle('BOLD')} active={isActiveStyle('BOLD')} label="B" styleType="style" />
