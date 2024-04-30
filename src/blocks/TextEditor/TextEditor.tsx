@@ -152,7 +152,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
   const saveContent = () => done(JSON.stringify(convertToRaw(editorState.getCurrentContent())));
 
   return (
-    <div className="w-full h-full flex grow flex-col">
+    <div className="w-full min-h-[300px] flex grow flex-col">
       <Editor
         customStyleMap={styleMap}
         editorState={editorState}
