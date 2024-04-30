@@ -40,7 +40,7 @@ const defaultTheme = createTheme({
   },
 });
 
-export default function Feed(loadedPosts) {
+export default function Feed({ loadedPosts }) {
   const classes = useStyles();
 
   return (
