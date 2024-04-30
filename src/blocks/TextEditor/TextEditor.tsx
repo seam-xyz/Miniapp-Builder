@@ -159,6 +159,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
         onChange={setEditorState}
         handleKeyCommand={handleKeyCommand}
         blockStyleFn={blockStyleFn}
+        autoCapitalize="sentences"
       />
       <div className="sticky bottom-0">
         <div className="flex flex-row overflow-x-scroll hide-scrollbar space-x-2 mt-2">
