@@ -276,10 +276,4 @@ export default class NFTsBlock extends Block {
       </Box>
     )
   }
-
-  renderErrorState() {
-    return (
-      <h1>Error loading NFT Block</h1>
-    )
-  }
 }

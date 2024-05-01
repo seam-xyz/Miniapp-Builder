@@ -148,10 +148,4 @@ export default class PhotoAlbumBlock extends Block {
       </Form>
     )
   }
-
-  renderErrorState() {
-    return (
-      <h1>Error!</h1>
-    )
-  }
 }

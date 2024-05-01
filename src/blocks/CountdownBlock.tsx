@@ -189,10 +189,4 @@ export default class CountdownBlock extends Block {
 
     return <CountdownEditModal onFinish={handleUpdateAndFinish} />;
   }
-
-  renderErrorState() {
-    return (
-      <h1>Error!</h1>
-    );
-  }
 }

@@ -132,10 +132,4 @@ export default class ProfileBlock extends Block {
       </Form>
     )
   }
-
-  renderErrorState() {
-    return (
-      <h1>Error: Couldn't render the profile header.</h1>
-    )
-  }
 }

@@ -9,7 +9,6 @@ interface IBlock {
 
     render(width?: string, height?: string): React.ReactNode // units in px
     renderEditModal(done: () => void): React.ReactNode
-    renderErrorState(): React.ReactNode
 }
 
 export default class Block implements IBlock {
@@ -28,9 +27,6 @@ export default class Block implements IBlock {
         throw new Error("Method not implemented.");
     }
     renderEditModal(done: (data: BlockModel) => void): React.ReactNode {
-        throw new Error("Method not implemented.");
-    }
-    renderErrorState(): React.ReactNode {
         throw new Error("Method not implemented.");
     }
 }

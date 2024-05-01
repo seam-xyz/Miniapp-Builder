@@ -462,10 +462,4 @@ export default class PixelArtBlock extends Block {
       />
     )
   }
-
-  renderErrorState() {
-    return (
-      <h1>An unexpected error has occurred</h1>
-    )
-  }
 }

@@ -108,8 +108,4 @@ export default class eyesBlock extends Block {
   renderEditModal(done: (data: BlockModel) => void) {
     return <h1>no edit, only eyes 👀</h1>;
   }
-
-  renderErrorState() {
-    return <h1>oh noo 👀😭</h1>;
-  }
 }

@@ -114,10 +114,4 @@ export default class tokenHoldingsBlock extends Block {
       </Box>
     )
   }
-
-  renderErrorState() {
-    return (
-      <h1>Error loading Token Block</h1>
-    )
-  }
 }
