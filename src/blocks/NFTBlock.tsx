@@ -2,13 +2,13 @@ import Block from './Block'
 import { BlockModel } from './types'
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
-import { Box, Button, Checkbox, DialogContent, FormControlLabel, FormGroup, TextField } from '@mui/material';
+import { Box, Button, Checkbox, FormControlLabel, FormGroup, TextField } from '@mui/material';
 import { NFTE } from '@nfte/react';
 import { getNFTMetadata } from './utils/AlchemyAPI';
 import { useEffect, useState } from 'react';
 import { Nft } from 'alchemy-sdk'
 import './BlockStyles.css'
-import { Theme, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Theme } from '@mui/material';
 
 interface NftCardProps {
   tokenAddress: string;
@@ -35,10 +35,6 @@ function NFTCard(props: NftCardProps) {
 
     loadNFT(props.tokenAddress);
   }, [props.tokenAddress, props.tokenId]);
-
-  let primaryColor = props.theme.palette.primary.main
-  let secondaryColor = props.theme.palette.secondary.main
-  let teritaryColor = props.theme.palette.info.main
 
   const getImageUrl = (asset: Nft) => {
     let imageUrl = '';

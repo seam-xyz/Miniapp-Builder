@@ -4,13 +4,6 @@ import BlockFactory from "./blocks/BlockFactory";
 import { createTheme } from "@mui/material/styles";
 
 const useStyles = makeStyles({
-  itemBackground: {
-    padding: 12,
-    backgroundColor: "white",
-    flexShrink: 1,
-    marginTop: 12,
-    overflow: 'hidden',
-  },
   noScrollBar: {
     "&::-webkit-scrollbar": {
       display: "none"
