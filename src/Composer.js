@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { IconButton, Button, Typography, Grid, Stack, Avatar, Modal, Divider, Card } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Button, Modal, Divider, Card } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import BlockSelectorModal from './BlockSelectorModal.js';
 import BlockFactory from "./blocks/BlockFactory";
 import { createTheme } from "@mui/material/styles";
-import { PostTypes } from "./PostTypes.js";
 import feather from 'feather-icons';
+import { BlockTypes } from "./blocks/types";
+import ComposerMiniAppItem from "./ComposerMiniAppItem";
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -196,14 +196,13 @@ const defaultTheme = createTheme({
 });
 
 const Composer = ({ addNewPost }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const [isOpen, setIsOpen] = useState(null);
   const [selectedBlockType, setSelectedBlockType] = useState(null);
   const [description, setDescription] = useState("");
   const [selectedBlockData, setSelectedBlockData] = useState(null);
   const [composerStep, setComposerStep] = useState('selectBlock');
-  const promptText = "Welcome to the Seam Block SDK!"
   const isMobile = false;
+  let supportedBlocks = (Object.entries(BlockTypes).filter((blockType) => !blockType[1].deprecated && blockType[1].doesBlockPost)).reverse();
 
   const classes = useStyles({ isMobile });
 
@@ -218,16 +217,6 @@ const Composer = ({ addNewPost }) => {
 
   const getFeatherIcon = (iconName) => {
     return feather.icons[iconName] ? feather.icons[iconName].toSvg() : '';
-  };
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleIconClick = (event, blockType) => {
-    handleClick(event);
-    setSelectedBlockType(blockType);
-    setComposerStep('editBlock'); // Directly go to the edit block step
   };
 
   const renderBlockPreview = (blockData) => {
@@ -246,74 +235,38 @@ const Composer = ({ addNewPost }) => {
   };
 
   const handleClose = () => {
-    setAnchorEl(null);
+    setIsOpen(false);
   };
 
   const handleGoBack = () => {
     if (composerStep === 'editBlock') {
-      setComposerStep('selectBlock');
+      handleClose();
     } else if (composerStep === 'previewPost') {
       setComposerStep('editBlock');
     }
-    // No action for 'selectBlock' as it's the first step
-  };
-
-  const handleBlockTypeClick = (blockType) => {
-    setSelectedBlockType(blockType);
-    setComposerStep('editBlock'); // Move to the block editing step
-  };
-
-  const renderPostTypeButtons = () => {
-    return (
-      <>
-        {PostTypes.map((postType) => (
-          <Grid item key={postType.type} className={classes.postTypeButton}>
-            <div className={classes.iconCircle} onClick={() => handleBlockTypeClick(postType.block)}>
-              <i style={{ color: "black", height: '24px', width: '24px' }} dangerouslySetInnerHTML={{ __html: getFeatherIcon(postType.icon) }} />
-            </div>
-            <Typography style={{ color: "black" }} className={classes.iconLabel} variant="caption">{postType.type}</Typography>
-          </Grid>
-        ))}
-        <Grid item className={classes.postTypeButton}>
-          <div className={classes.iconCircle}>
-            <i style={{ color: "black", height: '24px', width: '24px' }} dangerouslySetInnerHTML={{ __html: getFeatherIcon('edit') }} />
-          </div>
-          <Typography style={{ color: "black" }} className={classes.iconLabel} variant="caption">Text Post</Typography>
-        </Grid>
-      </>
-    );
   };
 
   const renderDesktopPostTypeButtons = () => {
     return (
-      <Stack direction={"row"} className={classes.iconRow} spacing={1}>
-        {PostTypes.map((postType) => (
-          <div key={postType.type} className={classes.iconContainer}>
-            <IconButton
-              className={classes.iconButton}
-              aria-label={postType.type.toLowerCase()}
-              onClick={(event) => handleIconClick(event, postType.block)}
-            >
-              <span className={classes.iconInner} dangerouslySetInnerHTML={{ __html: getFeatherIcon(postType.icon, "black") }} />
-            </IconButton>
-            <Typography className={classes.iconLabel} variant="caption">
-              {postType.type}
-            </Typography>
+      <div>
+        <h2 className="mb-4">All miniapps</h2>
+        {supportedBlocks.map((block) => (
+          <div id={block[1].type}>
+            <ComposerMiniAppItem
+              block={block[1]}
+              tapAction={() => {
+                setIsOpen(true)
+                setSelectedBlockType(block[1].type);
+                setComposerStep('editBlock');
+              }}
+            />
+            <Divider />
           </div>
         ))}
-      </Stack>
+        <div style={{ height: "100px" }} />
+      </div>
     );
   };
-
-  // Step rendering functions
-  const chooseBlockStep = () => (
-    <div className={classes.centeredContent}>
-      <Typography variant="h5" className={classes.title}>Choose a Block</Typography>
-      <Grid container>
-        {renderPostTypeButtons()}
-      </Grid>
-    </div>
-  );
 
   const editBlockStep = () => (
     <div style={{ maxHeight: '100%', display: 'flex', flexDirection: 'column', width: '100%' }}>
@@ -342,11 +295,8 @@ const Composer = ({ addNewPost }) => {
     </div>
   );
 
-  // Function to determine which step to render
   const renderContent = () => {
     switch (composerStep) {
-      case 'selectBlock':
-        return chooseBlockStep();
       case 'editBlock':
         return editBlockStep();
       case 'previewPost':
@@ -358,46 +308,34 @@ const Composer = ({ addNewPost }) => {
 
   return (
     <>
-      <div className={classes.desktopComposer}>
-        <div className={classes.composerHeader}>
-          <Avatar className={classes.avatar} />
-          <div className={classes.composerPrompt}>
-            <Typography variant="subtitle1" className={classes.promptText}>{promptText}</Typography>
-          </div>
-        </div>
-        <Divider className={classes.dividerStyle} />
-        {renderDesktopPostTypeButtons()}
-        <Modal
-          open={open}
-          footer={null}
-          onClose={handleClose}
+      {renderDesktopPostTypeButtons()}
+      <Modal
+        open={isOpen}
+        footer={null}
+        onClose={handleClose}
+        style={{
+          display: 'block',
+          fontSize: "16px",
+          overflowY: 'visible'
+        }}
+      >
+        <Card
           style={{
-            display: 'block',
-            fontSize: "16px",
-            overflowY: 'visible'
+            marginTop: "10px",
+            borderRadius: "1rem",
+            padding: "15px",
+            width: isMobile ? "100%" : "500px",
+            position: 'absolute',
+            top: isMobile ? 0 : '0%',
+            left: '50%',
+            transform: 'translate(-50%, 0)',
+            height: isMobile ? "100%" : undefined,
+            maxHeight: "90%"
           }}
         >
-          <Card
-            style={{
-              marginTop: "10px",
-              borderRadius: "1rem",
-              padding: "15px",
-              width: isMobile ? "100%" : "500px",
-              position: 'absolute',
-              top: isMobile ? 0 : '0%',
-              left: '50%',
-              transform: 'translate(-50%, 0)',
-              height: isMobile ? "100%" : undefined,
-              maxHeight: "90%"
-            }}
-          >
-            <IconButton className={classes.closeButton} onClick={handleClose}>
-              <CloseIcon style={{ color: "black" }} />
-            </IconButton>
-            {renderContent()}
-          </Card>
-        </Modal>
-      </div>
+          {renderContent()}
+        </Card>
+      </Modal>
     </>
   );
 };

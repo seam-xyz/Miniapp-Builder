@@ -22,7 +22,6 @@ const defaultTheme = createTheme({
 
 const BlockSelectorModal = ({ selectedBlockType, setSelectedBlockData }) => {
   const [selectedBlockInstance, setSelectedBlockInstance] = useState(null);
-  const themeName = "Blueprint"; 
 
   useEffect(() => {
     const model = {

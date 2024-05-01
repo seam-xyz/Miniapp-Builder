@@ -15,7 +15,6 @@ export default function VideoUploadComponent(
 ) {
   const [imgUrl, setImgUrl] = useState<string | null>(null);
   const [progresspercent, setProgresspercent] = useState(0);
-  let types = fileTypes == "" ? 'image/*' : fileTypes;
 
   const onFinish = async (files: any) => {
     const file = files[0]
@@ -62,9 +61,9 @@ export default function VideoUploadComponent(
             textTransform: 'none',
             fontFamily: "Public Sans",
             fontSize: "16px",
-            background: progresspercent != 0 ? `linear-gradient(to right, #2196F3 ${progresspercent}%, #E0E0E0 ${progresspercent}%)` : undefined
+            background: progresspercent !== 0 ? `linear-gradient(to right, #2196F3 ${progresspercent}%, #E0E0E0 ${progresspercent}%)` : undefined
           }}
-          disabled={progresspercent != 0}
+          disabled={progresspercent !== 0}
           onClick={async (e) => {
             setProgresspercent(1)
             e.preventDefault();
@@ -80,7 +79,7 @@ export default function VideoUploadComponent(
             setProgresspercent(0)
           }}
         >
-          {progresspercent == 0 ? label : <CircularProgress size={24} />}
+          {progresspercent === 0 ? label : <CircularProgress size={24} />}
         </Button>
       </Box>
       {

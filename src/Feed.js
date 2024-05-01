@@ -1,19 +1,9 @@
 import { makeStyles } from "@mui/styles";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Card } from "@mui/material";
-import { useState, useEffect } from 'react';
 import BlockFactory from "./blocks/BlockFactory";
 import { createTheme } from "@mui/material/styles";
-import Composer from "./Composer";
 
 const useStyles = makeStyles({
-  itemBackground: {
-    padding: 12,
-    backgroundColor: "white",
-    flexShrink: 1,
-    marginTop: 12,
-    overflow: 'hidden',
-  },
   noScrollBar: {
     "&::-webkit-scrollbar": {
       display: "none"
@@ -40,37 +30,24 @@ const defaultTheme = createTheme({
   },
 });
 
-export default function Feed() {
-  const POSTS_PER_PAGE = 10;
+export default function Feed({ loadedPosts }) {
   const classes = useStyles();
-
-  const [loadedPosts, setLoadedPosts] = useState([]);
-  const [hasMore, setHasMore] = useState(true);
-
-  async function loadMore() {
-    
-  }
-
-  function addNewPost(newPost) {
-    setLoadedPosts(prevPosts => [newPost, ...prevPosts]);
-  }
 
   return (
     <InfiniteScroll
       dataLength={loadedPosts.length}
-      next={loadMore}
-      hasMore={hasMore}
+      hasMore={false}
       height={window.innerHeight - 96}
       className={classes.noScrollBar}
     >
-      <div style={{ maxHeight: '500px' }}>
-        <Composer addNewPost={addNewPost} />
-      </div>
       {loadedPosts.map((post) => (
-        <div key={post.id}>
-          <Card className={classes.itemBackground} style={{ boxShadow: 0 }} elevation={0}>
+        <div
+          key={post?.id}
+          className="flex flex-col items-start p-2 rounded-[20px] border border-gray-200 bg-[#FCFCFC] shadow-none"
+        >
+          <div className="w-full h-full max-w-full overflow-clip">
             {BlockFactory.getBlock(post, defaultTheme).render()}
-          </Card>
+          </div>
         </div>
       ))}
     </InfiniteScroll>

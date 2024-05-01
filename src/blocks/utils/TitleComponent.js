@@ -1,6 +1,5 @@
 export default function TitleComponent(theme, title) {
 
-  let primaryColor = theme.palette.primary.main
   let secondaryColor = theme.palette.secondary.main
   let teritaryColor = theme.palette.info.main
 
