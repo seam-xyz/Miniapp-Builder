@@ -28,6 +28,7 @@
     "date-fns": "^2.30.0",
     "draft-js": "^0.11.7",
     "feather-icons": "^4.29.1",
+    "firebase": "^10.11.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-feather": "^2.0.10",
