@@ -202,7 +202,7 @@ const Composer = ({ addNewPost }) => {
   const [selectedBlockData, setSelectedBlockData] = useState(null);
   const [composerStep, setComposerStep] = useState('selectBlock');
   const isMobile = false;
-  let supportedBlocks = Object.entries(BlockTypes).filter((blockType) => !blockType[1].deprecated && blockType[1].doesBlockPost);
+  let supportedBlocks = (Object.entries(BlockTypes).filter((blockType) => !blockType[1].deprecated && blockType[1].doesBlockPost)).reverse();
 
   const classes = useStyles({ isMobile });
 
