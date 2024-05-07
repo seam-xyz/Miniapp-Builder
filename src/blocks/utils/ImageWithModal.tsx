@@ -20,17 +20,25 @@ const ImageWithModal: React.FC<ImageWithModalProps> = ({ urls }) => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = (event: any) => {
-    event.preventDefault(); 
-    event.stopPropagation(); 
+    event.preventDefault();
+    event.stopPropagation();
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
 
   return (
     <>
+      <style>
+        {`
+          .hide-navigation-buttons .swiper-button-next,
+          .hide-navigation-buttons .swiper-button-prev {
+            display: none;
+          }
+        `}
+      </style>
       <div style={{ display: 'flex', cursor: 'pointer', gap: '10px' }} onClick={(e) => handleOpen(e)}>
         {urls.map((src, index) => ( // conditional styling for 1 image vs many
-          <img key={index} src={src} style={{ width: urls.length === 1 ? "100%" : "auto", height: urls.length === 1 ? "auto" : "176px", objectFit: 'contain' }} alt="Thumbnail" />
+          <img key={index} src={src} style={{ width: urls.length === 1 ? "100%" : "auto", height: urls.length === 1 ? "auto" : "300px", objectFit: 'cover' }} alt="Thumbnail" />
         ))}
       </div>
       {/* full screen image modal */}
@@ -46,12 +54,12 @@ const ImageWithModal: React.FC<ImageWithModalProps> = ({ urls }) => {
         >
           <CloseIcon />
         </IconButton>
-        <DialogContent>
+        <DialogContent style={{ padding: 0 }}>
           <Swiper
             style={{ height: '100%', width: '100%' }}
             zoom={true}
             navigation={true}
-            className=""
+            className="hide-navigation-buttons"
             keyboard={{ enabled: false }}
           >
             {urls.map((url, index) => (
