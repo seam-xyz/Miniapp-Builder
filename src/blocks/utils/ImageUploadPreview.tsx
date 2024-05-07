@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import FileUploadComponent from './FileUploadComponent';
 import { Button, IconButton } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';  // Make sure to install MUI icons if not already installed
+import CloseIcon from '@mui/icons-material/Close';
 
 interface ImageUploadPreviewProps {
   initialUrls: string[];
@@ -14,9 +14,11 @@ interface ImageUploadPreviewProps {
 const ImageUploadPreview: React.FC<ImageUploadPreviewProps> = ({ initialUrls, onUpdate, onFinalize }) => {
   const [previewUrls, setPreviewUrls] = useState<string[]>(initialUrls);
 
-  const handleUpdate = (urls: string[]) => {
-    setPreviewUrls(urls);
-    onUpdate(urls);  // Update the state in the ImageBlock component
+  const handleUpdate = (newUrls: string[]) => {
+    // Merge new URLs with existing preview URLs
+    const updatedUrls = [...previewUrls, ...newUrls];
+    setPreviewUrls(updatedUrls);
+    onUpdate(updatedUrls);  // Update the state in the ImageBlock component
   };
 
   const handleRemove = (index: number) => {
