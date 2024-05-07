@@ -12,23 +12,26 @@ export default class ImageBlock extends Block {
   render(): React.ReactNode {
     let urls = this.model.data['urls'] ? JSON.parse(this.model.data['urls']) : [];
     if (!urls.length && this.model.data['url']) {
-      const url = this.model.data['url'];
-      urls = [url]; // Normalize to array format
+      urls = [this.model.data['url']]; // Normalize to array format
     }
 
     if (urls.length === 0) {
       return this.renderErrorState();
     }
 
-    return (
-      <Swiper spaceBetween={10} slidesPerView={'auto'}>
-        {urls.map((url: string, index: number) => (
-          <SwiperSlide key={index}>
-            <ImageWithModal src={url} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    );
+    if (urls.length === 1) { // for only one image have it full block width
+      return (
+        <div style={{ display: 'block', width: '100%' }}>
+          <ImageWithModal urls={urls} />
+        </div>
+      );
+    } else {
+      return ( // for multiple images set max height
+        <div style={{ display: 'flex', overflowX: 'scroll', padding: '10px', gap: '10px', alignItems: 'center' }}>
+          <ImageWithModal urls={urls} />
+        </div>
+      );
+    }
   }
 
   renderEditModal(done: (data: BlockModel) => void): React.ReactNode {
@@ -39,15 +42,17 @@ export default class ImageBlock extends Block {
     };
 
     const handleFinalize = () => {
-      done(this.model);  // This will now be triggered by the "Next" button
+      done(this.model);  // go to preview step
     };
 
     return (
-      <ImageUploadPreview 
-        initialUrls={initialUrls} 
-        onUpdate={handleUpdate} 
-        onFinalize={handleFinalize} 
-      />
+      <div className="relative w-full h-full">
+        <ImageUploadPreview 
+          initialUrls={initialUrls} 
+          onUpdate={handleUpdate} 
+          onFinalize={handleFinalize} 
+        />
+      </div>
     );
   }
 
