@@ -6,6 +6,7 @@ import './BlockStyles.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import ImageUploadPreview from './utils/ImageUploadPreview';
+import ImageWithModal from './utils/ImageWithModal';
 
 export default class ImageBlock extends Block {
   render(): React.ReactNode {
@@ -14,21 +15,21 @@ export default class ImageBlock extends Block {
       const url = this.model.data['url'];
       urls = [url]; // Normalize to array format
     }
-    
+
     if (urls.length === 0) {
       return this.renderErrorState();
     }
-  
+
     return (
       <Swiper spaceBetween={10} slidesPerView={'auto'}>
         {urls.map((url: string, index: number) => (
           <SwiperSlide key={index}>
-            <img src={url} style={{ width: "100%", height: "auto" }} />
+            <ImageWithModal src={url} />
           </SwiperSlide>
         ))}
       </Swiper>
     );
-  }  
+  }
 
   renderEditModal(done: (data: BlockModel) => void): React.ReactNode {
     const initialUrls = this.model.data['urls'] ? JSON.parse(this.model.data['urls']) : (this.model.data['url'] ? [this.model.data['url']] : []);
