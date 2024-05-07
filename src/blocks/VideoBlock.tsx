@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TitleComponent from './utils/TitleComponent';
-import FileUploadComponent from './utils/FileUploadComponent'; // Ensure this import points to the new FileUploadComponent
+import FileUploadComponent from './utils/FileUploadComponent';
 import ReactPlayer from 'react-player/lazy'
 
 export default class VideoBlock extends Block {
@@ -53,7 +53,7 @@ export default class VideoBlock extends Block {
       fileTypes="video/*"
       label="Upload a Video"
       onUpdate={(urls) => {
-        // Since only one video is allowed, we take the first URL from the array
+        // since only one video is allowed, we take the first URL from the file uploader
         if (urls.length > 0) {
           this.model.data['url'] = urls[0];
           done(this.model);
