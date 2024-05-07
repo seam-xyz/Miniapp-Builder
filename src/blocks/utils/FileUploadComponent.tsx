@@ -57,17 +57,23 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({ fileTypes, la
   const handleFilePicker = async () => {
     let result;
     try {
+      const pickerOptions = {
+        multiple,
+        ordered: true, // Enable numbered order for the picker
+        readData: true
+      };
+  
       if (fileTypes.includes('image')) {
-        result = await FilePicker.pickImages({ multiple });
+        result = await FilePicker.pickImages(pickerOptions);
       } else if (fileTypes.includes('video')) {
-        result = await FilePicker.pickVideos({ multiple });
+        result = await FilePicker.pickVideos(pickerOptions);
       } else {
         result = await FilePicker.pickFiles({
+          ...pickerOptions,
           types: fileTypes.split(',').map(type => type.trim()), // Use generic picker if specific type is not found
-          multiple,
-          readData: true
         });
       }
+  
       if (result.files.length > 0) {
         handleFilesUpload(result.files);
       }
