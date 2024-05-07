@@ -27,7 +27,7 @@ export default class ImageBlock extends Block {
       );
     } else {
       return ( // for multiple images set max height
-        <div style={{ display: 'flex', overflowX: 'scroll', padding: '10px', gap: '10px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', overflowX: 'scroll', gap: '10px', alignItems: 'center', backgroundColor: 'white' }}>
           <ImageWithModal urls={urls} />
         </div>
       );
