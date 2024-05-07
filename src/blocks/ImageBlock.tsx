@@ -9,10 +9,8 @@ import ImageUploadPreview from './utils/ImageUploadPreview';
 
 export default class ImageBlock extends Block {
   render(): React.ReactNode {
-    // Check for old data format and normalize to new format if necessary
     let urls = this.model.data['urls'] ? JSON.parse(this.model.data['urls']) : [];
     if (!urls.length && this.model.data['url']) {
-      // Support for old single URL format
       const url = this.model.data['url'];
       urls = [url]; // Normalize to array format
     }
@@ -33,16 +31,22 @@ export default class ImageBlock extends Block {
   }  
 
   renderEditModal(done: (data: BlockModel) => void): React.ReactNode {
-    // Check if 'urls' is defined, if not, try to fetch the old 'url' and convert to array
     const initialUrls = this.model.data['urls'] ? JSON.parse(this.model.data['urls']) : (this.model.data['url'] ? [this.model.data['url']] : []);
 
     const handleUpdate = (urls: string[]) => {
       this.model.data['urls'] = JSON.stringify(urls);  // Always save in new array format
-      done(this.model);
+    };
+
+    const handleFinalize = () => {
+      done(this.model);  // This will now be triggered by the "Next" button
     };
 
     return (
-      <ImageUploadPreview initialUrls={initialUrls} onUpdate={handleUpdate} />
+      <ImageUploadPreview 
+        initialUrls={initialUrls} 
+        onUpdate={handleUpdate} 
+        onFinalize={handleFinalize} 
+      />
     );
   }
 
