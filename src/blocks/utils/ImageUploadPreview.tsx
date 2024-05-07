@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import FileUploadComponent from './FileUploadComponent';
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, Box } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 
 interface ImageUploadPreviewProps {
@@ -18,7 +18,7 @@ const ImageUploadPreview: React.FC<ImageUploadPreviewProps> = ({ initialUrls, on
     // Merge new URLs with existing preview URLs
     const updatedUrls = [...previewUrls, ...newUrls];
     setPreviewUrls(updatedUrls);
-    onUpdate(updatedUrls);  // Update the state in the ImageBlock component
+    onUpdate(updatedUrls); 
   };
 
   const handleRemove = (index: number) => {
@@ -29,36 +29,40 @@ const ImageUploadPreview: React.FC<ImageUploadPreviewProps> = ({ initialUrls, on
 
   return (
     <>
-      <FileUploadComponent
-        fileTypes="image/*"
-        label="Upload Images"
-        onUpdate={handleUpdate}
-        multiple={true}
-        maxFiles={10}
-      />
-      <Swiper spaceBetween={10} slidesPerView={'auto'}>
+      <div style={{ display: 'flex', overflowX: 'auto', padding: '10px', gap: '10px', alignItems: 'start' }}>
         {previewUrls.map((url, index) => (
-          <SwiperSlide key={index}>
-            <div style={{ position: 'relative' }}>
-              <img src={url} style={{ width: "100%", height: "auto" }} />
-              <IconButton
-                onClick={() => handleRemove(index)}
-                style={{ position: 'absolute', right: 0, top: 0, color: 'white', backgroundColor: 'rgba(0,0,0,0.5)', margin: 4 }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </div>
-          </SwiperSlide>
+          <div key={index} style={{ position: 'relative', flex: '0 0 auto' }}>
+            <img src={url} style={{ height: "176px", width: 'auto', objectFit: 'contain' }} />
+            <IconButton
+              onClick={() => handleRemove(index)}
+              style={{ position: 'absolute', right: 0, top: 0, color: 'white', backgroundColor: 'rgba(0,0,0,0.5)', margin: 4 }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </div>
         ))}
-      </Swiper>
-      <Button 
-        variant="contained" 
-        color="primary" 
-        onClick={onFinalize}
-        style={{ marginTop: '20px' }}
-      >
-        Next
-      </Button>
+      </div>
+      <Box style={{paddingBottom: 'env(safe-area-inset-bottom)'}} sx={{ paddingBottom: '16px', position: 'fixed', bottom: 0, left: 0, right: 0, p: 3, bgcolor: 'background.paper', boxShadow: 3, zIndex: 1301 }}>
+        <FileUploadComponent
+          fileTypes="image/*"
+          label="Upload Images"
+          onUpdate={handleUpdate}
+          multiple={true}
+          maxFiles={10}
+        />
+        {previewUrls.length > 0 && (
+          <Button 
+            component="label"
+            variant="contained" 
+            color="primary"
+            fullWidth
+            onClick={onFinalize}
+            sx={{ p: '10px', textTransform: 'none', mt: '8px', height: '60px', fontFamily: "Public Sans", fontSize: "16px", backgroundColor: "#101010"  }}
+          >
+            Preview
+          </Button>
+        )}
+      </Box>
     </>
   );
 };
