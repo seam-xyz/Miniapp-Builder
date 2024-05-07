@@ -9,15 +9,21 @@ import ImageUploadPreview from './utils/ImageUploadPreview';
 
 export default class ImageBlock extends Block {
   render(): React.ReactNode {
-    const urls = this.model.data['urls'] ? JSON.parse(this.model.data['urls']) : [];
-  
+    // Check for old data format and normalize to new format if necessary
+    let urls = this.model.data['urls'] ? JSON.parse(this.model.data['urls']) : [];
+    if (!urls.length && this.model.data['url']) {
+      // Support for old single URL format
+      const url = this.model.data['url'];
+      urls = [url]; // Normalize to array format
+    }
+    
     if (urls.length === 0) {
       return this.renderErrorState();
     }
   
     return (
       <Swiper spaceBetween={10} slidesPerView={'auto'}>
-        {urls.map((url: any, index: any) => (
+        {urls.map((url: string, index: number) => (
           <SwiperSlide key={index}>
             <img src={url} style={{ width: "100%", height: "auto" }} />
           </SwiperSlide>
@@ -27,10 +33,11 @@ export default class ImageBlock extends Block {
   }  
 
   renderEditModal(done: (data: BlockModel) => void): React.ReactNode {
-    const initialUrls = this.model.data['urls'] ? JSON.parse(this.model.data['urls']) : [];
+    // Check if 'urls' is defined, if not, try to fetch the old 'url' and convert to array
+    const initialUrls = this.model.data['urls'] ? JSON.parse(this.model.data['urls']) : (this.model.data['url'] ? [this.model.data['url']] : []);
 
     const handleUpdate = (urls: string[]) => {
-      this.model.data['urls'] = JSON.stringify(urls);
+      this.model.data['urls'] = JSON.stringify(urls);  // Always save in new array format
       done(this.model);
     };
 
