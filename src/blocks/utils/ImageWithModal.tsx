@@ -1,45 +1,67 @@
 import React, { useState } from 'react';
 import { Dialog, IconButton, DialogContent } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore from 'swiper';
+import { Navigation, Zoom } from 'swiper/modules';
+
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/zoom';
+
+// Initialize Swiper modules
+SwiperCore.use([Navigation, Zoom]);
 
 interface ImageWithModalProps {
-  src: string; // Image source URL
+  urls: string[]; // Array of image source URLs
 }
 
-const ImageWithModal: React.FC<ImageWithModalProps> = ({ src }) => {
+const ImageWithModal: React.FC<ImageWithModalProps> = ({ urls }) => {
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = (event: any) => {
+    event.preventDefault(); 
+    event.stopPropagation(); 
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
 
   return (
     <>
-      <img src={src} style={{ width: "100%", height: "auto", cursor: 'pointer' }} onClick={handleOpen} alt="Zoomable" />
+      <div style={{ display: 'flex', cursor: 'pointer', gap: '10px' }} onClick={(e) => handleOpen(e)}>
+        {urls.map((src, index) => ( // conditional styling for 1 image vs many
+          <img key={index} src={src} style={{ width: urls.length === 1 ? "100%" : "auto", height: urls.length === 1 ? "auto" : "176px", objectFit: 'contain' }} alt="Thumbnail" />
+        ))}
+      </div>
+      {/* full screen image modal */}
       <Dialog
         open={open}
         onClose={handleClose}
-        fullScreen // This prop makes the dialog full-screen
-        PaperProps={{
-          style: {
-            backgroundColor: 'rgba(0, 0, 0, 0.9)', // Dark background for better focus on the image
-            boxShadow: 'none'
-          }
-        }}
+        fullScreen
+        PaperProps={{ style: { backgroundColor: 'rgba(0, 0, 0, 0.9)', boxShadow: 'none', paddingTop: 'env(safe-area-inset-top)' } }}
       >
         <IconButton
           onClick={handleClose}
-          style={{
-            position: 'absolute',
-            right: '10px',
-            top: '10px',
-            color: 'white',
-            zIndex: 1302 // Ensure the button is above the dialog content
-          }}
+          style={{ position: 'absolute', right: '10px', top: '60px', color: 'white', zIndex: 1302 }}
         >
           <CloseIcon />
         </IconButton>
         <DialogContent>
-          <img src={src} style={{ width: '100%', height: '100%', objectFit: 'contain' }} alt="Full screen" />
+          <Swiper
+            style={{ height: '100%', width: '100%' }}
+            zoom={true}
+            navigation={true}
+            className=""
+            keyboard={{ enabled: false }}
+          >
+            {urls.map((url, index) => (
+              <SwiperSlide key={index}>
+                <div className="swiper-zoom-container"> {/* class needed for pinch-zoom */}
+                  <img src={url} style={{ width: '100%', height: '100%', objectFit: 'contain' }} alt="Full screen" />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </DialogContent>
       </Dialog>
     </>
