@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import FileUploadComponent from './FileUploadComponent';
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';  // Make sure to install MUI icons if not already installed
 
 interface ImageUploadPreviewProps {
   initialUrls: string[];
   onUpdate: (urls: string[]) => void;
-  onFinalize: () => void;  // Callback to handle finalizing the edit process
+  onFinalize: () => void;
 }
 
 const ImageUploadPreview: React.FC<ImageUploadPreviewProps> = ({ initialUrls, onUpdate, onFinalize }) => {
@@ -15,7 +16,13 @@ const ImageUploadPreview: React.FC<ImageUploadPreviewProps> = ({ initialUrls, on
 
   const handleUpdate = (urls: string[]) => {
     setPreviewUrls(urls);
-    onUpdate(urls);  // This updates the state in the ImageBlock component
+    onUpdate(urls);  // Update the state in the ImageBlock component
+  };
+
+  const handleRemove = (index: number) => {
+    const updatedUrls = previewUrls.filter((_, idx) => idx !== index);
+    setPreviewUrls(updatedUrls);
+    onUpdate(updatedUrls);  // Update the state in the ImageBlock component after removal
   };
 
   return (
@@ -30,7 +37,15 @@ const ImageUploadPreview: React.FC<ImageUploadPreviewProps> = ({ initialUrls, on
       <Swiper spaceBetween={10} slidesPerView={'auto'}>
         {previewUrls.map((url, index) => (
           <SwiperSlide key={index}>
-            <img src={url} style={{ width: "100%", height: "auto" }} />
+            <div style={{ position: 'relative' }}>
+              <img src={url} style={{ width: "100%", height: "auto" }} />
+              <IconButton
+                onClick={() => handleRemove(index)}
+                style={{ position: 'absolute', right: 0, top: 0, color: 'white', backgroundColor: 'rgba(0,0,0,0.5)', margin: 4 }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>
