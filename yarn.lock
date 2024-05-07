@@ -1211,13 +1211,6 @@
   resolved "https://registry.yarnpkg.com/@capacitor-firebase/storage/-/storage-5.4.1.tgz#d2340bfec0528effa696f8b0dc97a07fb2a1cb0c"
   integrity sha512-9BnFKTmsTnf0BeCCDgLfcmJ82d+1ib2evGWkDyGoAGe4DQc+RrXGhTOTK1xC6mEFoqLpU1Q+VzQ49EYdb6ju/A==
 
-"@capacitor/core@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@capacitor/core/-/core-6.0.0.tgz#abfaf1013cec686cf9743cf4fdc445d10e2f13ea"
-  integrity sha512-NvxIQsJcMiIV+Le1DilR2GGyQQbDInfXK1UywGROQ5mycdFlW5XoAPZ+MKnFGB123RoEgE3uhDGgwTXUmSlX9A==
-  dependencies:
-    tslib "^2.1.0"
-
 "@capawesome/capacitor-file-picker@^5.3.0":
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/@capawesome/capacitor-file-picker/-/capacitor-file-picker-5.3.0.tgz#39c981e76afc2b24050099d278720486d4a02aa6"
@@ -11358,6 +11351,11 @@ svgo@^2.7.0:
     csso "^4.2.0"
     picocolors "^1.0.0"
     stable "^0.1.8"
+
+swiper@^11.1.1:
+  version "11.1.1"
+  resolved "https://registry.yarnpkg.com/swiper/-/swiper-11.1.1.tgz#5efaa222d4a47a3ac75090cfc2fda6e53e564982"
+  integrity sha512-jGmEA/fNz1lACIcY4/40ggm1Gcyv+EUivmgV/Jd2WFPsEJhbWXnRAwzZR8OPjkBLtDxmzcoYG/iiAMWfRs0YKQ==
 
 symbol-tree@^3.2.4:
   version "3.2.4"
