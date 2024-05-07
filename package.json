@@ -38,6 +38,7 @@
     "react-twitter-embed": "^4.0.4",
     "react-uploader": "^2.1.0",
     "source-map-explorer": "^2.5.3",
+    "swiper": "^11.1.1",
     "typescript": "^4.4.2",
     "web-vitals": "^2.1.0"
   },
