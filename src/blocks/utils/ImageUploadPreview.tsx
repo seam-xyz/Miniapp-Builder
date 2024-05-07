@@ -39,7 +39,7 @@ const ImageUploadPreview: React.FC<ImageUploadPreviewProps> = ({ initialUrls, on
         <div style={{ display: 'flex', overflowX: 'auto', padding: '10px', gap: '10px', alignItems: 'center', height: 'calc(100vh - 300px)' }}>
           {previewUrls.map((url, index) => (
             <div key={index} style={{ position: 'relative', flex: '0 0 auto' }}>
-              <img src={url} style={{ height: "300px", width: 'auto', objectFit: 'contain' }} />
+              <img src={url} style={{ height: "300px", width: 'auto', maxWidth: '300px', objectFit: 'cover' }} />
               <IconButton
                 onClick={() => handleRemove(index)}
                 style={{ position: 'absolute', right: 0, top: 0, color: 'white', backgroundColor: 'rgba(0,0,0,0.5)', margin: 4 }}

@@ -38,7 +38,7 @@ const ImageWithModal: React.FC<ImageWithModalProps> = ({ urls }) => {
       </style>
       <div style={{ display: 'flex', cursor: 'pointer', gap: '10px' }} onClick={(e) => handleOpen(e)}>
         {urls.map((src, index) => ( // conditional styling for 1 image vs many
-          <img key={index} src={src} style={{ width: urls.length === 1 ? "100%" : "auto", height: urls.length === 1 ? "auto" : "300px", objectFit: 'cover' }} alt="Thumbnail" />
+          <img key={index} src={src} style={{ width: urls.length === 1 ? "100%" : "auto", maxWidth: '300px', height: urls.length === 1 ? "auto" : "300px", objectFit: 'cover' }} alt="Thumbnail" />
         ))}
       </div>
       {/* full screen image modal */}
