@@ -33,15 +33,15 @@ export function IconsSelector() {
       <MenuItem value="twitter"><TwitterIcon /></MenuItem>
       <MenuItem value="instagram"><InstagramIcon /></MenuItem>
       <MenuItem value="linkedin"><LinkedIn /></MenuItem>
-      <MenuItem value="discord"><img src={Discord} style={{ height: 20 }} /></MenuItem>
-      <MenuItem value="tiktok"><img src={Tiktok} style={{ height: 20 }} /></MenuItem>
-      <MenuItem value="medium"><img src={mediumIcon} style={{ height: 20 }} /></MenuItem>
+      <MenuItem value="discord"><img src={Discord} alt={""} style={{ height: 20 }} /></MenuItem>
+      <MenuItem value="tiktok"><img src={Tiktok} alt={""} style={{ height: 20 }} /></MenuItem>
+      <MenuItem value="medium"><img src={mediumIcon} alt={""} style={{ height: 20 }} /></MenuItem>
       <MenuItem value="link"><LinkIcon /></MenuItem>
       <MenuItem value="email"><EmailIcon /></MenuItem>
       <MenuItem value="youtube"><YoutubeIcon /></MenuItem>
       <MenuItem value="facebook"><FacebookIcon /></MenuItem>
-      <MenuItem value="opensea"><img src={openseaIcon} style={{ height: 20 }} /></MenuItem>
-      <MenuItem value="farcaster"><img src={farcasterIcon} style={{ height: 20 }} /></MenuItem>
+      <MenuItem value="opensea"><img src={openseaIcon} alt={""} style={{ height: 20 }} /></MenuItem>
+      <MenuItem value="farcaster"><img src={farcasterIcon} alt={""} style={{ height: 20 }} /></MenuItem>
     </Select>
   )
 }
@@ -54,15 +54,15 @@ export default function IconsRow({ icons, color }) {
       case "twitter":
         return <TwitterIcon key={name} sx={{ color: color }} />
       case "discord":
-        return <img src={Discord} className={classes.iconImage} sx={{ color: color }} />
+        return <img src={Discord} alt={""} className={classes.iconImage} sx={{ color: color }} />
       case "opensea":
-        return <img src={openseaIcon} className={classes.iconImage} style={{ marginTop: "-3px" }} />
+        return <img src={openseaIcon} alt={""} className={classes.iconImage} style={{ marginTop: "-3px" }} />
       case "tiktok":
-        return <img src={Tiktok} className={classes.iconImage} sx={{ color: color }} />
+        return <img src={Tiktok} alt={""} className={classes.iconImage} sx={{ color: color }} />
       case "farcaster":
-        return <img src={farcasterIcon} className={classes.iconImage} sx={{ color: color }} />
+        return <img src={farcasterIcon} alt={""} className={classes.iconImage} sx={{ color: color }} />
       case "medium":
-        return <img src={mediumIcon} className={classes.iconImage} sx={{ color: color }} />
+        return <img src={mediumIcon} alt={""} className={classes.iconImage} sx={{ color: color }} />
       case "facebook":
         return <FacebookIcon key={name} sx={{ color: color }} />
       case "linkedin":
@@ -80,7 +80,7 @@ export default function IconsRow({ icons, color }) {
     }
   }
 
-  if (icons == undefined || icons.length === 0) {
+  if (icons === undefined || icons.length === 0) {
     return null
   }
 
@@ -88,7 +88,7 @@ export default function IconsRow({ icons, color }) {
     <Stack spacing={4} direction={"row"}>
       {icons.map((icon) => (
         // react router keeps sending the link internally if it doesnt have the https
-        <a style={{ height: '24px' }} href={(icon.url.indexOf(':') === -1) ? 'http://' + icon.url : icon.url} rel="noopener" target="_blank" key={icon['icon']}>
+        <a style={{ height: '24px' }} href={(icon.url.indexOf(':') === -1) ? 'http://' + icon.url : icon.url} rel="noreferrer" target="_blank" key={icon['icon']}>
           {getIconForName(icon['icon'])}
         </a>
       ))}
