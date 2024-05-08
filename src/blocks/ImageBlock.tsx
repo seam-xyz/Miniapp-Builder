@@ -23,7 +23,7 @@ export default class ImageBlock extends Block {
       // For only one image, set it to 100% width with max height of 300px
       return (
         <div style={{ display: 'block', width: '100%' }}>
-          <ImageWithModal urls={urls} style={{ width: '100%', maxHeight: '300px', height: 'auto' }} />
+          <ImageWithModal urls={urls} style={{ width: '100%', height: 'auto' }} />
         </div>
       );
     } else {
