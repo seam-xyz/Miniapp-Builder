@@ -22,10 +22,12 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({ fileTypes, la
       return;
     }
 
-    const urls: string[] = [];
     setUploading(true);
 
-    for (const file of files.slice(0, maxFiles)) {
+    let urls: (string | undefined)[] = new Array(files.length).fill(undefined);
+
+    for (let i = 0; i < files.slice(0, maxFiles).length; i++) {
+      const file = files[i];
       const name = nanoid();
       const path = `files/${name}`;
 
@@ -44,9 +46,9 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({ fileTypes, la
 
         if (event && event.completed) {
           const { downloadUrl } = await FirebaseStorage.getDownloadUrl({ path });
-          urls.push(downloadUrl);
-          if (urls.length === files.length || urls.length === maxFiles) {
-            onUpdate(urls);
+          urls[i] = downloadUrl;
+          if (!urls.includes(undefined)) {
+            onUpdate(urls as string[]);
             setUploading(false);
           }
         }
