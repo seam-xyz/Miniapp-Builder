@@ -1,13 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
-import { Dialog, IconButton, DialogContent } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { useEffect, useRef, useState, FC } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
-import { Navigation, Zoom } from 'swiper/modules';
-
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/zoom';
+import { Navigation, Zoom } from 'swiper/modules';
+import { createPortal } from 'react-dom';
+import CloseIcon from '@mui/icons-material/Close';
 
 // Initialize Swiper modules
 SwiperCore.use([Navigation, Zoom]);
@@ -17,78 +16,78 @@ interface ImageWithModalProps {
   style?: React.CSSProperties;
 }
 
-const ImageWithModal: React.FC<ImageWithModalProps> = ({ urls, style }) => {
+interface CustomModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+}
+
+const CustomModal: FC<CustomModalProps> = ({ isOpen, onClose, children }) => {
+  if (!isOpen) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 bg-black bg-opacity-90 z-[1000] overflow-hidden">
+      <div
+        className="absolute right-10 top-10 text-white text-3xl cursor-pointer"
+        onClick={onClose}
+        style={{ zIndex: 1040 }} // Ensure the button is always on top
+      >
+        <CloseIcon />
+      </div>
+      <div className="h-full w-full flex justify-center items-center">
+        {children}
+      </div>
+    </div>,
+    document.body // Renders the modal at the end of the body element
+  );
+};
+
+const ImageWithModal: FC<ImageWithModalProps> = ({ urls, style }) => {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const [disableModal, setDisableModal] = useState(false);
 
-  useEffect(() => {
-    // Assume that each modal instance in the composer has a specific class or ID
-    const isInsideComposer = ref.current?.closest('.composer-modal');
-    setDisableModal(!!isInsideComposer);
-  }, [ref.current]);
-
-  const handleOpen = (event: any) => {
+  const handleOpen = (event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    if (!disableModal) {
-      setOpen(true);
-    }
+    setOpen(true);
   };
-  const handleClose = () => setOpen(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <>
-      <style>
-        {`
-          .hide-navigation-buttons .swiper-button-next,
-          .hide-navigation-buttons .swiper-button-prev {
-            display: none;
-          }
-        `}
-      </style>
-      <div ref={ref} style={{ display: 'flex', cursor: 'pointer', gap: '10px' }} onClick={handleOpen}>
+      <div className="flex cursor-pointer gap-2.5" onClick={handleOpen}>
         {urls.map((src, index) => (
-          <img key={index} src={src} style={{ ...style, objectFit: 'cover' }} alt="Thumbnail" />
+          <img key={index} src={src} className="object-cover" style={style} alt="Thumbnail" />
         ))}
       </div>
-      {/* full screen image modal */}
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        fullScreen
-        PaperProps={{
-          style: {
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
-            boxShadow: 'none',
-            paddingTop: 'env(safe-area-inset-top)'
-          }
-        }}
-      >
-        <IconButton
-          onClick={handleClose}
-          style={{ position: 'absolute', right: '10px', top: '60px', color: 'white', zIndex: 1302 }}
+
+      <CustomModal isOpen={open} onClose={handleClose}>
+        <style>
+          {`
+            .hide-navigation-buttons .swiper-button-next,
+            .hide-navigation-buttons .swiper-button-prev {
+              display: none;
+            }
+          `}
+        </style>
+        <Swiper
+          className="h-full w-full hide-navigation-buttons"
+          zoom={true}
+          navigation={true}
+          modules={[Navigation, Zoom]}
+          keyboard={{ enabled: true }}
         >
-          <CloseIcon />
-        </IconButton>
-        <DialogContent style={{ padding: 0 }}>
-          <Swiper
-            style={{ height: '100%', width: '100%' }}
-            zoom={true}
-            navigation={true}
-            className="hide-navigation-buttons"
-            keyboard={{ enabled: false }}
-          >
-            {urls.map((url, index) => (
-              <SwiperSlide key={index}>
-                <div className="swiper-zoom-container"> {/* class needed for pinch-zoom */}
-                  <img src={url} style={{ width: '100%', height: '100%', objectFit: 'contain' }} alt="Full screen" />
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </DialogContent>
-      </Dialog>
+          {urls.map((url, index) => (
+            <SwiperSlide key={index}>
+              <div className="swiper-zoom-container">
+                <img src={url} className="w-full h-full object-contain" alt="Full screen" />
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </CustomModal>
     </>
   );
 };
