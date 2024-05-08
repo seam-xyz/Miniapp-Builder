@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Dialog, IconButton, DialogContent } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -14,16 +14,26 @@ SwiperCore.use([Navigation, Zoom]);
 
 interface ImageWithModalProps {
   urls: string[];
-  style?: React.CSSProperties; // Accept a style prop to customize the image style
+  style?: React.CSSProperties;
 }
 
 const ImageWithModal: React.FC<ImageWithModalProps> = ({ urls, style }) => {
   const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null); 
+  const [disableModal, setDisableModal] = useState(false);
+
+  useEffect(() => {
+    // Assume that each modal instance in the composer has a specific class or ID
+    const isInsideComposer = ref.current?.closest('.composer-modal');
+    setDisableModal(!!isInsideComposer);
+  }, [ref.current]);
 
   const handleOpen = (event: any) => {
     event.preventDefault();
     event.stopPropagation();
-    setOpen(true);
+    if (!disableModal) {
+      setOpen(true);
+    }
   };
   const handleClose = () => setOpen(false);
 
@@ -37,7 +47,7 @@ const ImageWithModal: React.FC<ImageWithModalProps> = ({ urls, style }) => {
           }
         `}
       </style>
-      <div style={{ display: 'flex', cursor: 'pointer', gap: '10px' }} onClick={handleOpen}>
+      <div ref={ref} style={{ display: 'flex', cursor: 'pointer', gap: '10px' }} onClick={handleOpen}>
       {urls.map((src, index) => (
         <img key={index} src={src} style={{ ...style, objectFit: 'cover' }} alt="Thumbnail" />
       ))}
@@ -47,7 +57,13 @@ const ImageWithModal: React.FC<ImageWithModalProps> = ({ urls, style }) => {
         open={open}
         onClose={handleClose}
         fullScreen
-        PaperProps={{ style: { backgroundColor: 'rgba(0, 0, 0, 0.9)', boxShadow: 'none', paddingTop: 'env(safe-area-inset-top)' } }}
+        PaperProps={{
+          style: {
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            boxShadow: 'none',
+            paddingTop: 'env(safe-area-inset-top)'
+          }
+        }}
       >
         <IconButton
           onClick={handleClose}

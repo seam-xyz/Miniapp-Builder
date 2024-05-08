@@ -30,9 +30,7 @@ export default class ImageBlock extends Block {
       // For multiple images, apply a horizontal scroll with image styling similar to ImageUploadPreview
       return (
         <div style={{ display: 'flex', overflowX: 'scroll', gap: '10px', alignItems: 'center', backgroundColor: 'white' }}>
-          {urls.map((url: any, index: any) => (
-            <ImageWithModal key={index} urls={[url]} style={{ height: "300px", width: 'auto', maxWidth: '300px' }} />
-          ))}
+          <ImageWithModal urls={urls} style={{ height: "300px", width: 'auto', maxWidth: '300px' }} />  
         </div>
       );
     }
