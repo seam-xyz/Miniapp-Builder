@@ -13,10 +13,11 @@ import 'swiper/css/zoom';
 SwiperCore.use([Navigation, Zoom]);
 
 interface ImageWithModalProps {
-  urls: string[]; // Array of image source URLs
+  urls: string[];
+  style?: React.CSSProperties; // Accept a style prop to customize the image style
 }
 
-const ImageWithModal: React.FC<ImageWithModalProps> = ({ urls }) => {
+const ImageWithModal: React.FC<ImageWithModalProps> = ({ urls, style }) => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = (event: any) => {
@@ -36,11 +37,11 @@ const ImageWithModal: React.FC<ImageWithModalProps> = ({ urls }) => {
           }
         `}
       </style>
-      <div style={{ display: 'flex', cursor: 'pointer', gap: '10px' }} onClick={(e) => handleOpen(e)}>
-        {urls.map((src, index) => ( // conditional styling for 1 image vs many
-          <img key={index} src={src} style={{ width: urls.length === 1 ? "100%" : "auto", maxWidth: '300px', height: urls.length === 1 ? "auto" : "300px", objectFit: 'cover' }} alt="Thumbnail" />
-        ))}
-      </div>
+      <div style={{ display: 'flex', cursor: 'pointer', gap: '10px' }} onClick={handleOpen}>
+      {urls.map((src, index) => (
+        <img key={index} src={src} style={{ ...style, objectFit: 'cover' }} alt="Thumbnail" />
+      ))}
+    </div>
       {/* full screen image modal */}
       <Dialog
         open={open}
