@@ -19,7 +19,7 @@ interface ImageWithModalProps {
 
 const ImageWithModal: React.FC<ImageWithModalProps> = ({ urls, style }) => {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null); 
+  const ref = useRef<HTMLDivElement>(null);
   const [disableModal, setDisableModal] = useState(false);
 
   useEffect(() => {
@@ -48,10 +48,10 @@ const ImageWithModal: React.FC<ImageWithModalProps> = ({ urls, style }) => {
         `}
       </style>
       <div ref={ref} style={{ display: 'flex', cursor: 'pointer', gap: '10px' }} onClick={handleOpen}>
-      {urls.map((src, index) => (
-        <img key={index} src={src} style={{ ...style, objectFit: 'cover' }} alt="Thumbnail" />
-      ))}
-    </div>
+        {urls.map((src, index) => (
+          <img key={index} src={src} style={{ ...style, objectFit: 'cover' }} alt="Thumbnail" />
+        ))}
+      </div>
       {/* full screen image modal */}
       <Dialog
         open={open}
