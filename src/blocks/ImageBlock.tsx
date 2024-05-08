@@ -14,25 +14,27 @@ export default class ImageBlock extends Block {
     if (!urls.length && this.model.data['url']) {
       urls = [this.model.data['url']]; // Normalize to array format
     }
-
+  
     if (urls.length === 0) {
       return this.renderErrorState();
     }
-
-    if (urls.length === 1) { // for only one image have it full block width
+  
+    if (urls.length === 1) {
+      // For only one image, set it to 100% width with max height of 300px
       return (
         <div style={{ display: 'block', width: '100%' }}>
-          <ImageWithModal urls={urls} />
+          <ImageWithModal urls={urls} style={{ width: '100%', height: 'auto' }} />
         </div>
       );
     } else {
-      return ( // for multiple images set max height
+      // For multiple images, apply a horizontal scroll with image styling similar to ImageUploadPreview
+      return (
         <div style={{ display: 'flex', overflowX: 'scroll', gap: '10px', alignItems: 'center', backgroundColor: 'white' }}>
-          <ImageWithModal urls={urls} />
+          <ImageWithModal urls={urls} style={{ height: "300px", width: 'auto', maxWidth: '300px' }} />  
         </div>
       );
     }
-  }
+  }  
 
   renderEditModal(done: (data: BlockModel) => void): React.ReactNode {
     const initialUrls = this.model.data['urls'] ? JSON.parse(this.model.data['urls']) : (this.model.data['url'] ? [this.model.data['url']] : []);

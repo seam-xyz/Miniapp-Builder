@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Dialog, IconButton, DialogContent } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -13,16 +13,27 @@ import 'swiper/css/zoom';
 SwiperCore.use([Navigation, Zoom]);
 
 interface ImageWithModalProps {
-  urls: string[]; // Array of image source URLs
+  urls: string[];
+  style?: React.CSSProperties;
 }
 
-const ImageWithModal: React.FC<ImageWithModalProps> = ({ urls }) => {
+const ImageWithModal: React.FC<ImageWithModalProps> = ({ urls, style }) => {
   const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const [disableModal, setDisableModal] = useState(false);
+
+  useEffect(() => {
+    // Assume that each modal instance in the composer has a specific class or ID
+    const isInsideComposer = ref.current?.closest('.composer-modal');
+    setDisableModal(!!isInsideComposer);
+  }, [ref.current]);
 
   const handleOpen = (event: any) => {
     event.preventDefault();
     event.stopPropagation();
-    setOpen(true);
+    if (!disableModal) {
+      setOpen(true);
+    }
   };
   const handleClose = () => setOpen(false);
 
@@ -36,9 +47,9 @@ const ImageWithModal: React.FC<ImageWithModalProps> = ({ urls }) => {
           }
         `}
       </style>
-      <div style={{ display: 'flex', cursor: 'pointer', gap: '10px' }} onClick={(e) => handleOpen(e)}>
-        {urls.map((src, index) => ( // conditional styling for 1 image vs many
-          <img key={index} src={src} style={{ width: urls.length === 1 ? "100%" : "auto", maxWidth: '300px', height: urls.length === 1 ? "auto" : "300px", objectFit: 'cover' }} alt="Thumbnail" />
+      <div ref={ref} style={{ display: 'flex', cursor: 'pointer', gap: '10px' }} onClick={handleOpen}>
+        {urls.map((src, index) => (
+          <img key={index} src={src} style={{ ...style, objectFit: 'cover' }} alt="Thumbnail" />
         ))}
       </div>
       {/* full screen image modal */}
@@ -46,7 +57,13 @@ const ImageWithModal: React.FC<ImageWithModalProps> = ({ urls }) => {
         open={open}
         onClose={handleClose}
         fullScreen
-        PaperProps={{ style: { backgroundColor: 'rgba(0, 0, 0, 0.9)', boxShadow: 'none', paddingTop: 'env(safe-area-inset-top)' } }}
+        PaperProps={{
+          style: {
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            boxShadow: 'none',
+            paddingTop: 'env(safe-area-inset-top)'
+          }
+        }}
       >
         <IconButton
           onClick={handleClose}

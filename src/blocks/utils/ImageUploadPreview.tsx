@@ -19,7 +19,7 @@ const ImageUploadPreview: React.FC<ImageUploadPreviewProps> = ({ initialUrls, on
     // Merge new URLs with existing preview URLs
     const updatedUrls = [...previewUrls, ...newUrls];
     setPreviewUrls(updatedUrls);
-    onUpdate(updatedUrls); 
+    onUpdate(updatedUrls);
   };
 
   const handleRemove = (index: number) => {
@@ -50,7 +50,7 @@ const ImageUploadPreview: React.FC<ImageUploadPreviewProps> = ({ initialUrls, on
           ))}
         </div>
       )}
-      <Box style={{paddingBottom: `calc(env(safe-area-inset-bottom, 24px) + 24px)`}} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, p: 3, bgcolor: 'background.paper', boxShadow: 3, zIndex: 1301 }}>
+      <Box style={{ paddingBottom: `calc(env(safe-area-inset-bottom, 24px) + 24px)` }} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, p: 3, bgcolor: 'background.paper', boxShadow: 3, zIndex: 1301 }}>
         <FileUploadComponent
           fileTypes="image/*"
           label={previewUrls.length > 0 ? "Upload More Images" : "Upload Images"}
@@ -59,13 +59,13 @@ const ImageUploadPreview: React.FC<ImageUploadPreviewProps> = ({ initialUrls, on
           maxFiles={10}
         />
         {previewUrls.length > 0 && (
-          <Button 
+          <Button
             component="label"
-            variant="contained" 
+            variant="contained"
             color="primary"
             fullWidth
             onClick={onFinalize}
-            sx={{ p: '10px', textTransform: 'none', mt: '8px', height: '60px', fontFamily: "Public Sans", fontSize: "16px", backgroundColor: "#101010"  }}
+            sx={{ p: '10px', textTransform: 'none', mt: '8px', height: '60px', fontFamily: "Public Sans", fontSize: "16px", backgroundColor: "#101010" }}
           >
             Preview
           </Button>
