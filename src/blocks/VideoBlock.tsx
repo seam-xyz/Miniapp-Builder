@@ -7,20 +7,19 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TitleComponent from './utils/TitleComponent';
-import FileUploadComponent from './utils/VideoUploadComponent';
+import FileUploadComponent from './utils/FileUploadComponent';
 import ReactPlayer from 'react-player/lazy'
 
 export default class VideoBlock extends Block {
-  props: any;
   render() {
     if (Object.keys(this.model.data).length === 0) {
       return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
     }
 
-    let url = this.model.data["url"]
-    let title = this.model.data["title"]
-    if (url === undefined) {
-      return this.renderErrorState()
+    const url = this.model.data["url"];
+    const title = this.model.data["title"];
+    if (!url) {
+      return this.renderErrorState();
     }
 
     return (
@@ -42,17 +41,27 @@ export default class VideoBlock extends Block {
     const onFinish = (event: any) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
-      let url = data.get('url') as string
-      let title = data.get('header') as string
-      this.model.data['url'] = url
-      this.model.data['title'] = title
-      done(this.model)
+      const url = data.get('url') as string;
+      const title = data.get('header') as string;
+
+      this.model.data['url'] = url;
+      this.model.data['title'] = title;
+      done(this.model);
     };
 
-    const uploaderComponent = <FileUploadComponent fileTypes={"video/*"} label="Upload a Video" onUpdate={fileURL => {
-      this.model.data['url'] = fileURL;
-      done(this.model);
-    }} />;
+    const uploaderComponent = <FileUploadComponent
+      fileTypes="video/*"
+      label="Upload a Video"
+      onUpdate={(urls) => {
+        // since only one video is allowed, we take the first URL from the file uploader
+        if (urls.length > 0) {
+          this.model.data['url'] = urls[0];
+          done(this.model);
+        }
+      }}
+      multiple={false}
+      maxFiles={1}
+    />;
 
     return (
       <>
@@ -68,7 +77,7 @@ export default class VideoBlock extends Block {
             required
             fullWidth
             id="url"
-            label={"Video URL (YouTube, TikTok, Instagram, etc.)"}
+            label="Video URL (YouTube, TikTok, Instagram, etc.)"
             name="url"
             defaultValue={this.model.data['url']}
           />
@@ -82,12 +91,12 @@ export default class VideoBlock extends Block {
           </Button>
         </Box>
       </>
-    )
+    );
   }
 
   renderErrorState() {
     return (
-      <h1>Error: Couldn't figure out the url</h1>
-    )
+      <h1>Error: Couldn't figure out the URL</h1>
+    );
   }
 }
