@@ -23,14 +23,13 @@ export default class VideoBlock extends Block {
     }
 
     return (
-      <div style={{ backgroundColor: this.theme.palette.secondary.main, width: "100%", height: "100%" }}>
+      <div style={{ backgroundColor: this.theme.palette.secondary.main, width: "100%" }}>
         {title && TitleComponent(this.theme, title)}
-        <div style={{ position: 'relative', width: "100%", height: "100%" }}>
+        <div className="flex grow relative w-full h-full min-h-[300px]" style={{ position: 'relative', width: "100%", height: "100%" }}>
           <ReactPlayer
             controls={true}
             url={url}
-            width='100%'
-            height='100%'
+            style={{minHeight: '300px', width: '100%', height: 'auto', flexGrow: 1, }}
           />
         </div>
       </div>
