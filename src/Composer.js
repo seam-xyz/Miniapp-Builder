@@ -4,7 +4,6 @@ import { makeStyles } from "@mui/styles";
 import BlockSelectorModal from './BlockSelectorModal.js';
 import BlockFactory from "./blocks/BlockFactory";
 import { createTheme } from "@mui/material/styles";
-import feather from 'feather-icons';
 import { BlockTypes } from "./blocks/types";
 import ComposerMiniAppItem from "./ComposerMiniAppItem";
 
@@ -196,7 +195,7 @@ const defaultTheme = createTheme({
 });
 
 const Composer = ({ addNewPost }) => {
-  const [isOpen, setIsOpen] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedBlockType, setSelectedBlockType] = useState(null);
   const [description, setDescription] = useState("");
   const [selectedBlockData, setSelectedBlockData] = useState(null);
@@ -213,10 +212,6 @@ const Composer = ({ addNewPost }) => {
     setSelectedBlockData(null);  // Reset the block data
 
     handleClose();  // Close the modal after creating the post
-  };
-
-  const getFeatherIcon = (iconName) => {
-    return feather.icons[iconName] ? feather.icons[iconName].toSvg() : '';
   };
 
   const renderBlockPreview = (blockData) => {

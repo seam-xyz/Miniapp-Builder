@@ -9,7 +9,7 @@ interface IBlock {
     canBlockExpand: boolean; // when Seam pages are embedded into games, blocks do not scroll. Blocks can have a 'see all' label if they are expandable.
 
     render(width?: string, height?: string): React.ReactNode // units in px
-    renderEditModal(done: () => void): React.ReactNode
+    renderEditModal(done: () => void, width?: string): React.ReactNode
     renderErrorState(): React.ReactNode
 }
 
@@ -30,7 +30,7 @@ export default class Block implements IBlock {
     render(): React.ReactNode {
         throw new Error("Method not implemented.");
     }
-    renderEditModal(done: (data: BlockModel) => void): React.ReactNode {
+    renderEditModal(done: (data: BlockModel) => void, width?: string): React.ReactNode {
         throw new Error("Method not implemented.");
     }
     renderErrorState(): React.ReactNode {
