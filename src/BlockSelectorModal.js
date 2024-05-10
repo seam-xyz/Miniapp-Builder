@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';  
+import React, { useEffect, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
 import BlockFactory from './blocks/BlockFactory';
 import { createTheme } from "@mui/material/styles";
@@ -22,6 +22,14 @@ const defaultTheme = createTheme({
 
 const BlockSelectorModal = ({ selectedBlockType, setSelectedBlockData }) => {
   const [selectedBlockInstance, setSelectedBlockInstance] = useState(null);
+  const [width, setWidth] = useState(0);
+  const divRef = useRef(null);
+
+  useEffect(() => {
+    if (divRef.current) {
+      setWidth(divRef.current.offsetWidth);
+    }
+  }, []);
 
   useEffect(() => {
     const model = {
@@ -29,7 +37,7 @@ const BlockSelectorModal = ({ selectedBlockType, setSelectedBlockData }) => {
       data: {},
       uuid: nanoid()  // Generate a new unique ID
     };
-    
+
     const blockInstance = BlockFactory.getBlock(model, defaultTheme);
     if (blockInstance) {
       setSelectedBlockInstance(blockInstance);
@@ -41,10 +49,10 @@ const BlockSelectorModal = ({ selectedBlockType, setSelectedBlockData }) => {
   const handleDone = (data) => {
     setSelectedBlockData(data);  // Update the block data in parent component
   };
-  
+
   return (
-    <div style={{ maxWidth: '100vw', overflow: 'visible',}}>
-      {selectedBlockInstance && selectedBlockInstance.renderEditModal(handleDone)}
+    <div ref={divRef} style={{ maxWidth: '100vw', overflow: 'visible', }}>
+      {selectedBlockInstance && selectedBlockInstance.renderEditModal(handleDone, width)}
     </div>
   );
 };
