@@ -161,6 +161,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
 }
 
 interface WhiteboardEditProps {
+  width: number,
   initialForegroundColor: string,
   initialBackgroundColor: string,
   onSave: () => void,    // Callback for saving state when editing
@@ -173,7 +174,8 @@ interface WhiteboardEditProps {
 }
 
 const WhiteboardEdit = (props: WhiteboardEditProps) => {
-  const {onSave} = props
+  const {width, onSave} = props
+  const height =  Math.floor(292/450 * width);
   const initialUserState = {
     initialForegroundColor: props.initialForegroundColor,
     initialBackgroundColor: props.initialBackgroundColor,
@@ -185,8 +187,8 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
         <img src={WhiteboardImage} className='object-cover'></img>
         <div className='absolute top-2 left-2'>
           <DrawableCanvas
-            width={450}
-            height={292}
+            width={width}
+            height={height}
             userInitialState={initialUserState}
             updateState={props.updateState}
           />
@@ -243,9 +245,9 @@ export default class WhiteboardBlock extends Block {
     );
   }
 
-  renderEditModal(done: (data: BlockModel) => void) {
-    const height = 400;
-    const width = 400;
+  renderEditModal(done: (data: BlockModel) => void, width?: string) {
+    console.log('got the width in render', width);
+    const widthInt = width !== undefined ? parseInt(width) - 20 : 450;
     const defaultBackgroundColor = '#ffffff';
     const defaultForegroundColor = '#000000';
 
@@ -268,7 +270,8 @@ export default class WhiteboardBlock extends Block {
     }
 
     return (
-      <WhiteboardEdit 
+      <WhiteboardEdit
+        width={widthInt}
         initialBackgroundColor={defaultBackgroundColor}
         initialForegroundColor={defaultForegroundColor}
         onSave={onSave}
