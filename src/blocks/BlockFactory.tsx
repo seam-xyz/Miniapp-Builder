@@ -25,6 +25,7 @@ import FlashingTextBlock from './FlashingTextBlock';
 import CountdownBlock from './CountdownBlock'
 import LinkBookmarkBlock from './LinkBookmarkBlock'
 import VideoBlock from './VideoBlock'
+import MondrianBlock from './MondrianBlock'
 
 export default class BlockFactory {
   static getBlock(model: BlockModel, theme: Theme): Block {
@@ -53,6 +54,7 @@ export default class BlockFactory {
       case "countdown": return new CountdownBlock(model, theme)
       case "fcUserFeed": return new fcUserFeedBlock(model, theme)
       case "eyes": return new eyesBlock(model, theme)
+      case "Mondrian": return new MondrianBlock(model, theme)
       // new blocks go here
       default: return new IFrameBlock(model, theme)
     }
