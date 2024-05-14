@@ -16,7 +16,11 @@
 
 We've made it easy in this repository to make a new miniapp, and then publish it live so that anyone else in the world can use your new creation, too. We're all building this together!
 
-🚧 Note: The Seam platform is under constant development, and occasionally the miniapp builder might lag behind the functionality on the Seam platform. If there currently isn't a way to build what you're dreaming up, feel free to file a github issue as a feature request.
+The fastest way to make a miniapp is to [open our sandbox](https://codesandbox.io/p/github/seam-xyz/Miniapp-Builder/main) and run our creation script:
+```bash
+./seam-magic.sh
+```
+The full documentation lives at [docs.getseam.xyz](https://docs.getseam.xyz/miniapp-creation/rendering-a-miniapp).
 
 #### What are miniapps?
 
