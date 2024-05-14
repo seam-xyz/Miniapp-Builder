@@ -363,10 +363,10 @@ export const BlockTypes: { [key: string]: BlockType } = {
   "Mondrian": { 
     type: "Mondrian",
     displayName: "Mondrian",
-    displayDescription: "create piet mondrian style works of art",
+    displayDescription: "Create works of art in the style of Piet Mondrian",
     emptyTitle: "Empty Mondrian App",
-    emptySubtitle: "Tap here to setup your Mondrian app!",
-    icon: "MondrianIcon", // TODO: insert your app icon here
+    emptySubtitle: "Tap here to setup your Mondrian inspired artwork!",
+    icon: "MondrianIcon",
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
