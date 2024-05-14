@@ -20,7 +20,7 @@ import tokenIcon from "./blockIcons/tokenIcon.png";
 import clockIcon from "./blockIcons/clockIcon.png"
 import farcasterIcon from "./blockIcons/farcasterIcon.svg"
 import eyesIcon from "./blockIcons/eyeIcon.png"
-import MondrianIcon from './blockIcons/MondrianIcon.svg'
+import MondrianIcon from './blockIcons/MondrianIcon.png'
 
 export type BlockModel = {
   type: string;
