@@ -34,9 +34,9 @@
       "command": "yarn analyze",
       "runAtStart": false
     },
-    "seam_magic": {
-      "name": "seam_magic",
-      "command": "./seam_magic.sh",
+    "seam-magic": {
+      "name": "seam-magic",
+      "command": "./seam-magic.sh",
       "runAtStart": false
     }
   }
