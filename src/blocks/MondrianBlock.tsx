@@ -140,7 +140,16 @@ const MondrianEditor = ({
         onSquareClick={handleSquareClick}
       />
       <Box className="space-between" sx={{ width: '100%', height: 'auto' }}>
-        <Tabs className="mb-4" value={mode} onChange={(e, newValue) => setMode(newValue)} centered>
+      <Tabs
+          className="mb-4"
+          value={mode}
+          onChange={(e, newValue) => setMode(newValue)}
+          centered
+          sx={{
+            '& .MuiTabs-indicator': { backgroundColor: '#EE39FB' },
+            '& .Mui-selected': { color: '#EE39FB' }
+          }}
+        >
           <Tab label="Cut" className="grow" value="cut" />
           <Tab label="Color" className="grow" value="color" />
         </Tabs>
