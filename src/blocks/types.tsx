@@ -360,4 +360,16 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockEdit: false,
     createdBy: "razberry"
   },
+  "Bookshelf": { 
+    type: "Bookshelf",
+    displayName: "Bookshelf",
+    displayDescription: "Post a book you've read",
+    emptyTitle: "Empty Bookshelf App",
+    emptySubtitle: "Tap here to setup your Bookshelf app!",
+    icon: "BookshelfIcon", // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "nick"
+},
 };

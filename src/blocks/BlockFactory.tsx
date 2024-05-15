@@ -1,3 +1,4 @@
+import BookshelfApp from './BookshelfApp'
 import eyesBlock from './eyesBlock'
 import fcUserFeedBlock from './fcUserFeedBlock'
 import tokenHoldingsBlock from './tokenHoldingsBlock'
@@ -53,6 +54,7 @@ export default class BlockFactory {
       case "countdown": return new CountdownBlock(model, theme)
       case "fcUserFeed": return new fcUserFeedBlock(model, theme)
       case "eyes": return new eyesBlock(model, theme)
+      case "Bookshelf": return new BookshelfApp(model, theme)
       // new blocks go here
       default: return new IFrameBlock(model, theme)
     }
