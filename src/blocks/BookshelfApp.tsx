@@ -65,19 +65,27 @@ const Bookshelf: React.FC<BookshelfProps> = ({ done, model }) => {
       <p className="text-center text-[#5a2b1e] mb-6">Add a book to your shelf</p>
       <div className="relative mb-4 flex items-center">
         <Search />
-        <input
-          type="text"
-          className="w-full p-2 pl-10 border-b border-[#5a2b1e] bg-transparent placeholder-[#5a2b1e] text-[#5a2b1e] focus:outline-none"
-          placeholder="Add a book to your shelf"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <button
-          onClick={searchBooks}
-          className="text-white bg-[#5a2b1e] px-4 py-2 rounded ml-2"
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            searchBooks();
+          }}
+          className="flex"
         >
-          Search
-        </button>
+          <input
+            type="text"
+            className="w-full p-2 pl-10 border-b border-[#5a2b1e] bg-transparent placeholder-[#5a2b1e] text-[#5a2b1e] focus:outline-none"
+            placeholder="Add a book to your shelf"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <button
+            type="submit"
+            className="text-white bg-[#5a2b1e] px-4 py-2 rounded ml-2"
+          >
+            Search
+          </button>
+        </form>
       </div>
       <div>
         {books.length > 0 && (

@@ -41,6 +41,7 @@ export type BlockType = {
   doesBlockPost: boolean; // do updates of this block show up in the feed?
   doesBlockEdit: boolean; // does the user need to edit this block?
   createdBy: string; // the user who created the block
+  fullscreenEdit: boolean; // does the block have a fullscreen edit modal?
 };
 
 // In order of how they should show up in the drop-down
@@ -55,7 +56,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "seam"
+    createdBy: "seam",
+    fullscreenEdit: false,
   },
   "PixelArt": {
     type: "PixelArt",
@@ -68,7 +70,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "emilee"
+    createdBy: "emilee",
+    fullscreenEdit: false,
   },
   giphy: {
     type: "giphy",
@@ -80,7 +83,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "seam"
+    createdBy: "seam",
+    fullscreenEdit: false,
   },
   text: {
     type: "text",
@@ -92,7 +96,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "seam"
+    createdBy: "seam",
+    fullscreenEdit: false,
   },
   iframe: {
     type: "iframe",
@@ -104,7 +109,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "seam"
+    createdBy: "seam",
+    fullscreenEdit: false,
   },
   video: {
     type: "video",
@@ -116,7 +122,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "seam"
+    createdBy: "seam",
+    fullscreenEdit: false,
   },
   image: {
     type: "image",
@@ -128,7 +135,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "seam"
+    createdBy: "seam",
+    fullscreenEdit: false,
   },
   link: {
     type: "link",
@@ -141,7 +149,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "seam"
+    createdBy: "seam",
+    fullscreenEdit: false,
   },
   "Link Bookmark": {
     type: "Link Bookmark",
@@ -153,7 +162,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "seam"
+    createdBy: "seam",
+    fullscreenEdit: false,
   },
   twitter: {
     type: "twitter",
@@ -166,7 +176,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: true,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "seam"
+    createdBy: "seam",
+    fullscreenEdit: false,
   },
   tweet: {
     type: "tweet",
@@ -178,7 +189,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: true,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "seam"
+    createdBy: "seam",
+    fullscreenEdit: false,
   },
   Music: {
     type: "Music",
@@ -190,7 +202,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "seam"
+    createdBy: "seam",
+    fullscreenEdit: false,
   },
   Map: {
     type: "Map",
@@ -202,7 +215,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "seam"
+    createdBy: "seam",
+    fullscreenEdit: false,
   },
   "Image Button": {
     type: "Image Button",
@@ -214,7 +228,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: true,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "seam"
+    createdBy: "seam",
+    fullscreenEdit: false,
   },
   instagram: {
     type: "instagram",
@@ -226,7 +241,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: true,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "seam"
+    createdBy: "seam",
+    fullscreenEdit: false,
   },
   RefreshingGIF: {
     type: "RefreshingGIF",
@@ -239,7 +255,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "andrew"
+    createdBy: "andrew",
+    fullscreenEdit: false,
   },
   "NFTs": {
     type: "NFTs",
@@ -251,7 +268,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "andrew"
+    createdBy: "andrew",
+    fullscreenEdit: false,
   },
   "Pokemon": {
     type: "Pokemon",
@@ -263,7 +281,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: false,
-    createdBy: "luisenriqueg"
+    createdBy: "luisenriqueg",
+    fullscreenEdit: false,
   },
   "Marquee": {
     type: "Marquee",
@@ -275,7 +294,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "nick"
+    createdBy: "nick",
+    fullscreenEdit: false,
   },
   "PhotoAlbum": {
     type: "PhotoAlbum",
@@ -287,7 +307,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "jamesburet"
+    createdBy: "jamesburet",
+    fullscreenEdit: false,
   },
   "FlashingText": {
     type: "FlashingText",
@@ -299,7 +320,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "ttran010"
+    createdBy: "ttran010",
+    fullscreenEdit: false,
   },
   "countdown": {
     type: "countdown",
@@ -311,7 +333,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "coldreactor"
+    createdBy: "coldreactor",
+    fullscreenEdit: false,
   },
   "tokenHoldings": {
     type: "tokenHoldings",
@@ -323,7 +346,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "proofofjake"
+    createdBy: "proofofjake",
+    fullscreenEdit: false,
   },
   "NFT": {
     type: "NFT",
@@ -335,7 +359,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "nick"
+    createdBy: "nick",
+    fullscreenEdit: false,
   },
   "fcUserFeed": {
     type: "fcUserFeed",
@@ -347,7 +372,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "nick"
+    createdBy: "nick",
+    fullscreenEdit: false,
   },
   "eyes": {
     type: "eyes",
@@ -359,7 +385,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: false,
-    createdBy: "razberry"
+    createdBy: "razberry",
+    fullscreenEdit: false,
   },
   "Mondrian": { 
     type: "Mondrian",
@@ -371,7 +398,8 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "jamesburet"
+    createdBy: "jamesburet",
+    fullscreenEdit: false,
   },
   "Bookshelf": { 
     type: "Bookshelf",
@@ -383,6 +411,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "nick"
+    createdBy: "nick",
+    fullscreenEdit: true,
 },
 };

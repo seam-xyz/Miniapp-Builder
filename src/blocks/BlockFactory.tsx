@@ -73,6 +73,10 @@ export default class BlockFactory {
     return BlockTypes[type].doesBlockPost
   }
 
+  static doesBlockEditFullscreen(type: string): boolean {
+    return BlockTypes[type].fullscreenEdit
+  }
+
   static renderEmptyState(model: BlockModel, onClick: (id: string) => void): React.ReactNode {
     return (
       <EmptyBlock title={BlockFactory.getPrintableBlockName(model)} onClick={() => {

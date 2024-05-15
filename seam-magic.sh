@@ -73,7 +73,8 @@ echo "  \"$shortName\": {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: \"$username\"
+    createdBy: \"$username\",
+    fullscreenEdit: false,
 },
 };" >> $output
 echo "✅ Added $name to types.tsx"
