@@ -5,7 +5,7 @@ import './BlockStyles.css'
 import WhiteboardImage from './assets/WhiteboardBlock/background.png'
 
 import CSS from 'csstype';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Grid }  from '@mui/material';
 
 interface DrawableCanvasInitialUserState {
@@ -106,7 +106,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
   }
 
   // FUTURE: Expose as a customizable callback in props, takes a canvas context as an arg, can be used to access canvas
-  const draw = () => {
+  const draw = useCallback(() => {
     const canvasContext = canvasRef?.current?.getContext('2d');
     if (!canvasContext) {
       return;
@@ -132,15 +132,13 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     if (imageData) {
       updateState(310, 480, initialBackgroundColor, imageData);
     }
-  }
+  }, [isDrawing, lastPos, currPos, initialForegroundColor, initialBackgroundColor, updateState])
 
   // === Handle Renders and Re-renders ===
   // Update sate variables based on changes to position
   useEffect(() => {
-    // TODO: Why?
-    // Line 141:6:   React Hook useEffect has a missing dependency: 'draw'. Either include it or remove the dependency array
     draw();
-  }, [lastPos, currPos])
+  }, [lastPos, currPos, draw])
 
   // === Finally, Return ===
   return (
@@ -216,6 +214,12 @@ function stringSizeToNumber(size: string | undefined): number {
     // handle edge case, size should never be undefined from Seam render
     return 400
   }
+
+  const num = parseInt(size)
+  if (!isNaN(num)) {
+    return num
+  }
+
   const regexMatch = size.match(/\d+/)
   if (!regexMatch) {
     return 0
@@ -247,7 +251,7 @@ export default class WhiteboardBlock extends Block {
 
   renderEditModal(done: (data: BlockModel) => void, width?: string) {
     console.log('got the width in render', width);
-    const widthInt = width !== undefined ? parseInt(width) - 20 : 450;
+    const widthInt = width !== undefined ? stringSizeToNumber(width) - 20 : 450;
     const defaultBackgroundColor = '#ffffff';
     const defaultForegroundColor = '#000000';
 
