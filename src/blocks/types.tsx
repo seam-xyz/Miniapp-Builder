@@ -20,6 +20,7 @@ import tokenIcon from "./blockIcons/tokenIcon.png";
 import clockIcon from "./blockIcons/clockIcon.png"
 import farcasterIcon from "./blockIcons/farcasterIcon.svg"
 import eyesIcon from "./blockIcons/eyeIcon.png"
+import MondrianIcon from './blockIcons/MondrianIcon.png'
 
 export type BlockModel = {
   type: string;
@@ -359,6 +360,18 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: false,
     doesBlockEdit: false,
     createdBy: "razberry"
+  },
+  "Mondrian": { 
+    type: "Mondrian",
+    displayName: "Mondrian",
+    displayDescription: "Create works of art in the style of Piet Mondrian",
+    emptyTitle: "Empty Mondrian App",
+    emptySubtitle: "Tap here to setup your Mondrian inspired artwork!",
+    icon: MondrianIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "jamesburet"
   },
   "Bookshelf": { 
     type: "Bookshelf",
