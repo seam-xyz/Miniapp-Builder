@@ -6,6 +6,14 @@ import { BlockModel } from "./blocks/types";
 import { makeStyles } from "@mui/styles";
 import { QuestionMarkOutlined } from "@mui/icons-material";
 
+/* Core CSS required for Ionic components to work properly */
+import '@ionic/react/css/core.css';
+
+/* Basic CSS for apps built with Ionic */
+import '@ionic/react/css/normalize.css';
+import '@ionic/react/css/structure.css';
+import '@ionic/react/css/typography.css';
+
 const useStyles = makeStyles((theme) => ({
   headerBorder: {
     position: 'relative',
@@ -55,17 +63,19 @@ export default function App() {
           </div>
         </IonHeader>
       </div>
-      <div className="flex flex-row justify-between w-full h-full">
-      <div className="w-[158px] bg-white flex-none border-r-2 border-seam-black/[5%]"></div>
-        <div className="flex justify-center items-center w-full h-full">
-          <div className="flex flex-row justify-center w-full h-full">
-            <div className="w-full max-w-[1124px] justify-center items-center">
-              <Feed loadedPosts={loadedPosts} />
+      <IonContent>
+        <div className="flex flex-row justify-between w-full h-full">
+          <div className="w-[158px] bg-white flex-none border-r-2 border-seam-black/[5%]"></div>
+          <div className="flex justify-center items-center w-full h-full">
+            <div className="flex flex-row justify-center w-full h-full">
+              <div className="w-full max-w-[1124px] justify-center items-center">
+                <Feed loadedPosts={loadedPosts} />
+              </div>
             </div>
           </div>
+          <div className="w-[158px] bg-white flex-none border-l-2 border-seam-black/[5%]"></div>
         </div>
-        <div className="w-[158px] bg-white flex-none border-l-2 border-seam-black/[5%]"></div>
-      </div>
+      </IonContent>
     </IonPage>
   );
 }

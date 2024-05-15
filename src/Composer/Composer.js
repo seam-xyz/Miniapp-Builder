@@ -76,7 +76,7 @@ function Composer({ addNewPost }) {
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  let supportedBlocks = Object.entries(BlockTypes).filter((blockType) => !blockType[1].deprecated)
+  let supportedBlocks = Object.entries(BlockTypes).filter((blockType) => !blockType[1].deprecated && blockType[1].doesBlockPost);
 
   const handleCreatePost = async () => {
     addNewPost(state.selectedBlockData, state.description);
@@ -116,7 +116,7 @@ function Composer({ addNewPost }) {
             <ComposerMiniAppItem
               block={block[1]}
               tapAction={() => {
-                  chooseBlock(block[1]);
+                chooseBlock(block[1]);
               }}
             />
             <Divider />
@@ -278,10 +278,10 @@ function Composer({ addNewPost }) {
           dispatch({ type: "dismiss" });
         }}
       >
-        <IonContent className={`${classes.noScrollBar}`}>
-          <div className={`mx-4 my-0 flex flex-col justify-between h-full ${classes.noScrollBar}`}>
-            {renderContent()}
-          </div>
+        <IonContent>
+        <div className={`mx-4 my-0 flex flex-col justify-between h-full ${classes.noScrollBar}`}>
+          {renderContent()}
+        </div>
         </IonContent>
       </IonModal>
     </div>

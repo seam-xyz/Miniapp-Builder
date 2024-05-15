@@ -2,31 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { ThemeProvider } from "@mui/material";
-import { createTheme } from "@mui/material/styles";
+import { IonApp, setupIonicReact } from '@ionic/react';
 
-const defaultTheme = createTheme({
-  palette: {
-    primary: {
-      main: "#020303"
-    },
-    secondary: {
-      main: "#1C1C1C"
-    },
-    info: {
-      main: "#CCFE07" // Button Background
-    }
-  },
-  typography: {
-    fontFamily: "monospace"
-  },
-});
+setupIonicReact();
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={defaultTheme}>
-      <App />
-    </ThemeProvider>
+      <IonApp className="seam">
+        <App />
+      </IonApp>
   </React.StrictMode>,
   document.getElementById("root")
 );
