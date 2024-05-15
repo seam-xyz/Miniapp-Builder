@@ -419,7 +419,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
   "Wordle": { 
     type: "Wordle",
     displayName: "Wordle",
-    displayDescription: "play daily game wordle",
+    displayDescription: "Seam's take on the hot NYT daily game, Wordle!",
     emptyTitle: "Empty Wordle App",
     emptySubtitle: "Tap here to setup your Wordle app!",
     icon: WordleIcon,
