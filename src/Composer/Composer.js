@@ -94,7 +94,7 @@ function Composer({ addNewPost }) {
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  let supportedBlocks = Object.entries(BlockTypes).filter((blockType) => !blockType[1].deprecated && blockType[1].doesBlockPost);
+  let supportedBlocks = Object.entries(BlockTypes).filter((blockType) => !blockType[1].deprecated && blockType[1].doesBlockPost).reverse();
 
   const handleCreatePost = async () => {
     addNewPost(state.selectedBlockData, state.description);
