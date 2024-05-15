@@ -172,7 +172,7 @@ const WordleEditor = ({
   };
 
   const handleCopyResults = () => {
-    const resultText = `Wordle Day ${wordleDay} Attempt ${results.length}/6\n` + results
+    const resultText = `Seamdle Day ${wordleDay} Attempt ${results.length}/6\n` + results
       .map((row: any[]) =>
         row
           .map((item: any) => {
