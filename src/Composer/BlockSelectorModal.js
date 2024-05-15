@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
-import BlockFactory from './blocks/BlockFactory';
+import BlockFactory from '../blocks/BlockFactory';
 import { createTheme } from "@mui/material/styles";
 
 const defaultTheme = createTheme({

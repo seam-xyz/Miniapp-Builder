@@ -2371,6 +2371,24 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
+"@ionic/core@8.1.2":
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/@ionic/core/-/core-8.1.2.tgz#e2d93390f7c2eac32789e3f87340ce6be3b6f922"
+  integrity sha512-8XgkxYeW4xzULpL1MQbGPriCmcBjcfOMXoGdlpVb9i04AEoRO6MRAnBrL45zma+yLeFjCw3ld4NqqwktvmRVGw==
+  dependencies:
+    "@stencil/core" "^4.17.2"
+    ionicons "^7.2.2"
+    tslib "^2.1.0"
+
+"@ionic/react@^8.1.2":
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/@ionic/react/-/react-8.1.2.tgz#1386fba12c45812c04cab37fe79f4a7872a8f1d6"
+  integrity sha512-+sjd/0o1ScZ/jxNiEY8Kz1qp/OU7o/GAgBXbCpMKOjYwWhwfw2QMJz7QNfndUKLmaFv40/3DscATlB1QU/x4ag==
+  dependencies:
+    "@ionic/core" "8.1.2"
+    ionicons "^7.0.0"
+    tslib "*"
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -3064,6 +3082,11 @@
   integrity sha512-OAPJUAtgeINhh/TAlUID4QTs53Njm7xzddaVlEs/SXwgtiD1tW22zAB/W1wdqfrpmikgaWQ9Fw6Ws+hsiRm5Vg==
   dependencies:
     "@sinonjs/commons" "^1.7.0"
+
+"@stencil/core@^4.0.3", "@stencil/core@^4.17.2":
+  version "4.18.1"
+  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-4.18.1.tgz#7c8b22c530398043f42f24287ba6fea963f6798b"
+  integrity sha512-WoRctLuXqoiLquS4EEvMoyLsbQ5+xuk8wp0+n4mYjoAoXy8NppXmMqKrMlFyYXL/zUI5ODS7U7IcLCpZ3IcKZQ==
 
 "@surma/rollup-plugin-off-main-thread@^2.2.3":
   version "2.2.3"
@@ -7127,6 +7150,13 @@ invariant@^2.2.4:
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
   dependencies:
     loose-envify "^1.0.0"
+
+ionicons@^7.0.0, ionicons@^7.2.2:
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/ionicons/-/ionicons-7.4.0.tgz#9c285aaa8089befbd6c5a89ae13292d364cd9ace"
+  integrity sha512-ZK94MMqgzMCPPMhmk8Ouu6goyVHFIlw/ACP6oe3FrikcI0N7CX0xcwVaEbUc0G/v3W0shI93vo+9ve/KpvcNhQ==
+  dependencies:
+    "@stencil/core" "^4.0.3"
 
 ipaddr.js@1.9.1:
   version "1.9.1"
@@ -11598,15 +11628,15 @@ tsconfig-paths@^3.14.2:
     minimist "^1.2.6"
     strip-bom "^3.0.0"
 
+tslib@*, tslib@^2.0.3, tslib@^2.1.0:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.2.tgz#703ac29425e7b37cd6fd456e92404d46d1f3e4ae"
+  integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
+
 tslib@^1.8.1:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
-
-tslib@^2.0.3, tslib@^2.1.0:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.2.tgz#703ac29425e7b37cd6fd456e92404d46d1f3e4ae"
-  integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
 
 tsutils@^3.21.0:
   version "3.21.0"
