@@ -49,10 +49,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
   // === Methods to Update Canvas ===
   // FUTURE: Expose as a customizable callback in props, this is default behavior
   const [isDrawing, setIsDrawing] = useState(false);
-  // {lastX: -1, lastY: -1, x: 1, y: 1}
-  // Negative vals for lastX, lastY mean this is the first point
-  const [lastPos, setLastPos] = useState({x: -1, y: -1});
-  const [currPos, setCurrPos] = useState({x: 0, y: 0});
+  const [points, setPoints] = useState<{ x: number, y: number }[]>([]); // Updated state to store points
 
   const clearCanvas = () => {
     const canvasContext = canvasRef?.current?.getContext('2d');
@@ -87,44 +84,48 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     const relativeX = Math.floor(pageObj.pageX - canvasBoundingRect.left);
     const relativeY = Math.floor(pageObj.pageY - canvasBoundingRect.top);
 
-    // Cache pixel color and useEffect will re-draw
     if (isDrawing) {
-      setLastPos({x: currPos.x, y: currPos.y});
+      setPoints(prevPoints => [...prevPoints, { x: relativeX, y: relativeY }]); // Updated to add points to the state
     }
-    setCurrPos({x: relativeX, y: relativeY});
   }
 
   const handleStartDrawing = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent> | React.TouchEvent<HTMLCanvasElement>) => {
     setIsDrawing(true);
+    setPoints([]); // Clear points at the start of drawing
     handleDrawDrag(e);
     // TODO: Draw single dot
   }
 
   const handleStopDrawing = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent> | React.TouchEvent<HTMLCanvasElement>) => {
     setIsDrawing(false);
-    setLastPos({x: -1, y: -1});
+    setPoints([]); // Clear points at the end of drawing
   }
 
   // FUTURE: Expose as a customizable callback in props, takes a canvas context as an arg, can be used to access canvas
   const draw = useCallback(() => {
     const canvasContext = canvasRef?.current?.getContext('2d');
-    if (!canvasContext) {
+    if (!canvasContext || points.length < 2) {
       return;
     }
 
-    if (!isDrawing) {
-      return;
-    }
-
-    // Don't draw anything if we haven't moved from one spot to another
-    if(!(lastPos.x >= 0 && lastPos.y >= 0)) {
-      return;
-    }
-
-    canvasContext.moveTo(lastPos.x, lastPos.y);
+    canvasContext.lineCap = 'round';
+    canvasContext.lineJoin = 'round';
     canvasContext.lineWidth = 4;
     canvasContext.strokeStyle = initialForegroundColor;
-    canvasContext.lineTo(currPos.x, currPos.y);
+
+    canvasContext.beginPath();
+    canvasContext.moveTo(points[0].x, points[0].y);
+
+    for (let i = 1; i < points.length - 2; i++) {
+      const cp = {
+        x: (points[i].x + points[i + 1].x) / 2,
+        y: (points[i].y + points[i + 1].y) / 2
+      };
+      canvasContext.quadraticCurveTo(points[i].x, points[i].y, cp.x, cp.y);
+    }
+
+    const lastIndex = points.length - 1;
+    canvasContext.quadraticCurveTo(points[lastIndex - 1].x, points[lastIndex - 1].y, points[lastIndex].x, points[lastIndex].y);
     canvasContext.stroke();
 
     // Update model state on every redraw... pretty inefficient; need to be able to listen to the external button event though
@@ -132,13 +133,15 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     if (imageData) {
       updateState(310, 480, initialBackgroundColor, imageData);
     }
-  }, [isDrawing, lastPos, currPos, initialForegroundColor, initialBackgroundColor, updateState])
+  }, [points, initialForegroundColor, initialBackgroundColor, updateState])
 
   // === Handle Renders and Re-renders ===
   // Update sate variables based on changes to position
   useEffect(() => {
-    draw();
-  }, [lastPos, currPos, draw])
+    if (isDrawing) {
+      draw();
+    }
+  }, [points, draw])
 
   // === Finally, Return ===
   return (
@@ -157,6 +160,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
       />
   )
 }
+
 
 interface WhiteboardEditProps {
   width: number,
@@ -181,17 +185,12 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
 
   return (
     <>
-      <div className='relative'>
-        <img src={WhiteboardImage} className='object-cover'></img>
-        <div className='absolute top-2 left-2'>
-          <DrawableCanvas
-            width={width}
-            height={height}
-            userInitialState={initialUserState}
-            updateState={props.updateState}
-          />
-        </div>
-      </div>
+      <DrawableCanvas
+        width={width}
+        height={height}
+        userInitialState={initialUserState}
+        updateState={props.updateState}
+      />
       <Grid container>
         <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', pt: 0, }}>
           <Button
@@ -238,14 +237,8 @@ export default class WhiteboardBlock extends Block {
       imageData,
     } = this.model.data;
 
-    const styles: CSS.Properties = {};
-    const hundredPercentKey = width && height && width > height ? 'height' : 'width';
-    styles[hundredPercentKey] = '100%';
-
     return (
-      <>
-        <img src={imageData} style={styles}></img>
-      </>
+      <img src={imageData} className='w-full object-contain'></img>
     );
   }
 
