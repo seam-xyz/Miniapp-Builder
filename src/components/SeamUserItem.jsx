@@ -4,7 +4,7 @@ const SeamUserItem = ({ subtitle }) => {
   return (
     <div className="flex items-center justify-between w-full">
       <div className="flex items-between justify-center flex-grow w-full">
-        <Avatar src={""} className="w-10 h-10" />
+        <Avatar src={"https://upcdn.io/W142hWW/raw/uploads/2024/02/23/start-4skb.png"} className="w-10 h-10" />
         <div className="flex flex-col ml-4 flex-grow min-w-0">
           <div
             className="text-sm font-semibold hover:underline"

@@ -12,6 +12,7 @@ import BlockFactory from "../blocks/BlockFactory";
 import { BlockTypes } from "../blocks/types";
 import { makeStyles } from "@mui/styles";
 import BlockSelectorModal from "./BlockSelectorModal";
+import { createTheme } from "@mui/material/styles";
 
 const initialState = {
   isOpen: false,
@@ -30,6 +31,23 @@ const useStyles = makeStyles({
     "scrollbar-width": "none" /* Firefox */,
   },
 });
+
+const defaultTheme = createTheme({
+  palette: {
+    primary: {        // Page Background
+      main: "#FEFEFE"
+    },
+    secondary: {
+      main: "#FEFEFE"  // Block Background (Profile, ect. Buttons take on the info)
+    },
+    info: {
+      main: "#0288D1"
+    }
+  },
+  typography: {
+    fontFamily: "Public Sans"
+  },
+})
 
 // Define the reducer function
 function reducer(state, action) {
@@ -162,7 +180,7 @@ function Composer({ addNewPost }) {
     if (!blockData) return <div>No Block Data</div>;
     const blockPreview = BlockFactory.getBlock(
       blockData,
-      undefined
+      defaultTheme
     )?.render?.();
 
     if (!blockPreview) {
@@ -213,7 +231,7 @@ function Composer({ addNewPost }) {
           <div className="mr-4">
             <img
               className="rounded-full h-8 w-8"
-              src={"https://i0.wp.com/c3.thejournal.ie/media/2015/01/wallpaper-for-facebook-profile-photo-630x396.jpg?resize=630%2C396"}
+              src={"https://upcdn.io/W142hWW/raw/uploads/2024/02/23/start-4skb.png"}
               alt="Profile"
             />
           </div>
@@ -279,9 +297,9 @@ function Composer({ addNewPost }) {
         }}
       >
         <IonContent>
-        <div className={`mx-4 my-0 flex flex-col justify-between h-full ${classes.noScrollBar}`}>
-          {renderContent()}
-        </div>
+          <div className={`mx-4 my-0 flex flex-col justify-between h-full ${classes.noScrollBar}`}>
+            {renderContent()}
+          </div>
         </IonContent>
       </IonModal>
     </div>

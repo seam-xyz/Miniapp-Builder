@@ -1,10 +1,10 @@
 import { makeStyles } from "@mui/styles";
 import InfiniteScroll from "react-infinite-scroll-component";
 import BlockFactory from "./blocks/BlockFactory";
-import { createTheme } from "@mui/material/styles";
 import SeamPillButton from "./components/SeamPillButton";
 import { Heart, MessageSquare } from "react-feather";
 import SeamUserItem from "./components/SeamUserItem";
+import { createTheme } from "@mui/material/styles";
 
 const useStyles = makeStyles({
   noScrollBar: {
@@ -18,20 +18,20 @@ const useStyles = makeStyles({
 
 const defaultTheme = createTheme({
   palette: {
-    primary: {
-      main: "#020303"
+    primary: {        // Page Background
+      main: "#FEFEFE"
     },
     secondary: {
-      main: "#1C1C1C"
+      main: "#FEFEFE"  // Block Background (Profile, ect. Buttons take on the info)
     },
     info: {
-      main: "#CCFE07" // Button Background
+      main: "#0288D1"
     }
   },
   typography: {
-    fontFamily: "monospace"
+    fontFamily: "Public Sans"
   },
-});
+})
 
 function FeedItem({ post }) {
   return (
