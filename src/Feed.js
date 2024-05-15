@@ -41,13 +41,8 @@ export default function Feed({ loadedPosts }) {
       className={classes.noScrollBar}
     >
       {loadedPosts.map((post) => (
-        <div
-          key={post?.id}
-          className="flex flex-col items-start p-2 rounded-[20px] border border-gray-200 bg-[#FCFCFC] shadow-none"
-        >
-          <div className="w-full h-full max-w-full overflow-clip">
-            {BlockFactory.getBlock(post, defaultTheme).render()}
-          </div>
+        <div key={post.id} className="w-full max-w-[720px] h-auto m-auto pt-4 px-4">
+          {BlockFactory.getBlock(post, defaultTheme).render()}
         </div>
       ))}
     </InfiniteScroll>

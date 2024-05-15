@@ -1,300 +1,253 @@
-import React, { useState } from "react";
-import { Button, Modal, Divider, Card } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import BlockSelectorModal from './BlockSelectorModal.js';
-import BlockFactory from "./blocks/BlockFactory";
-import { createTheme } from "@mui/material/styles";
-import { BlockTypes } from "./blocks/types";
+import {
+  IonContent,
+  IonList,
+  IonModal,
+} from "@ionic/react";
+import { useRef, useReducer } from "react";
+import { ChevronLeft, Plus, X } from "react-feather";
 import ComposerMiniAppItem from "./ComposerMiniAppItem";
+import SeamHeaderBar from "../components/SeamHeaderBar";
+import { Button, Divider, Input } from "@mui/material";
+import BlockFactory from "../blocks/BlockFactory";
+import { BlockTypes } from "../blocks/types";
+import { makeStyles } from "@mui/styles";
+import BlockSelectorModal from "./BlockSelectorModal";
 
-const useStyles = makeStyles((theme) => ({
-  closeButton: {
-    position: 'absolute',
-    top: theme.spacing(1),
-    right: theme.spacing(2),
-    color: 'white',
-  },
-  title: {
-    color: 'black',
-    marginBottom: theme.spacing(4),
-    fontFamily: 'Public Sans',
-  },
-  postTypeButton: {
-    margin: theme.spacing(1),
-    width: 'calc(33.33% - 16px)',
-    textAlign: 'center',
-  },
-  iconCircle: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: '50%',
-    width: '60px',
-    height: '60px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: theme.spacing(1),
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    cursor: 'pointer',
-    '&:hover': {
-      backgroundColor: '#D3D3D3',
-    },
-    boxShadow: '0px 3px 6px #00000029',
-  },
-  centeredContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    paddingTop: theme.spacing(6),
-    height: '100%',
-  },
-  iconButton: {
-    borderRadius: '50%',
-    width: '48px',
-    height: '48px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: '0px',
-    backgroundColor: 'white',
-    boxShadow: '0px 3px 6px #00000029',
-  },
-  iconInner: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '50%',
-  },
-  iconContainer: {
-    width: '100px',
-    textAlign: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    maxWidth: '100px',
-    minWidth: '60px',
-  },
-  iconLabel: {
-    paddingTop: theme.spacing(1),
-    fontSize: '0.75rem',
-    lineHeight: '1.5',
-    fontFamily: 'Public Sans',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
-  desktopComposer: {
-    backgroundColor: "#EFEFEF",
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 'auto',
-    padding: theme.spacing(2),
-    borderRadius: 24,
-  },
-  narrowComposer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 'auto',
-    paddingBlock: theme.spacing(2),
-    borderRadius: 24,
-  },
-  composerPrompt: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 24,
-    padding: theme.spacing(1),
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    width: 'fill-available',
-    margin: theme.spacing(1),
-    boxShadow: '0px 3px 6px #00000029',
-  },
-  promptText: {
-    marginLeft: theme.spacing(2),
-    color: '#909090',
-    fontFamily: 'Public Sans',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
-  composerHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'start',
-    width: '100%',
-    paddingInline: theme.spacing(2),
-  },
-  avatar: {
-    marginRight: theme.spacing(2),
-    boxShadow: '0px 3px 6px #00000029',
-  },
-  iconRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    overflowX: 'auto',
-    width: '100%',
-    paddingInline: theme.spacing(2),
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(2),
-  },
-  compactComposerButton: {
-    backgroundColor: '#0078FF',
-    color: 'white',
-    borderRadius: 24,
-    width: '100%',
-    textAlign: 'center',
-    cursor: 'pointer',
-    boxShadow: '0px 3px 6px #0000029',
-    '&:hover': {
-      backgroundColor: '#0056b3',
-    },
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 'auto',
-    padding: theme.spacing(2),
-    fontFamily: 'Public Sans',
-  },
-  createPostButton: {
-    backgroundColor: 'black',
-    color: 'white',
-    borderRadius: '24px',
-    width: '100%',
-    height: 'auto',
-    marginTop: '20px',
-    fontFamily: 'Public Sans',
-  },
-  dividerStyle: {
-    height: '2px',
-    width: '96.2%',
-    marginBlock: '10px',
-  }
-}));
+const initialState = {
+  isOpen: false,
+  selectedBlockType: null,
+  description: "",
+  selectedBlockData: {},
+  composerStep: "selectBlock",
+};
 
-const defaultTheme = createTheme({
-  palette: {
-    primary: {
-      main: "#020303"
+const useStyles = makeStyles({
+  noScrollBar: {
+    "&::-webkit-scrollbar": {
+      display: "none",
     },
-    secondary: {
-      main: "#1C1C1C"
-    },
-    info: {
-      main: "#CCFE07" // Button Background
-    }
-  },
-  typography: {
-    fontFamily: "monospace"
+    "-ms-overflow-style": "none" /* IE and Edge */,
+    "scrollbar-width": "none" /* Firefox */,
   },
 });
 
-const Composer = ({ addNewPost }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedBlockType, setSelectedBlockType] = useState(null);
-  const [description, setDescription] = useState("");
-  const [selectedBlockData, setSelectedBlockData] = useState(null);
-  const [composerStep, setComposerStep] = useState('selectBlock');
-  const isMobile = false;
-  let supportedBlocks = (Object.entries(BlockTypes).filter((blockType) => !blockType[1].deprecated && blockType[1].doesBlockPost)).reverse();
+// Define the reducer function
+function reducer(state, action) {
+  switch (action.type) {
+    case "dismiss":
+      return { ...initialState };
+    case "tapReblog":
+      return {
+        ...state,
+        isOpen: true,
+        reblogPost: action.payload,
+        composerStep: "reblog",
+      };
+    case "handleGoBack":
+      if (state.composerStep === "editBlock") {
+        return { ...state, composerStep: "selectBlock" };
+      } else if (state.composerStep === "previewPost") {
+        return { ...state, composerStep: "editBlock" };
+      }
+    case "chooseBlock":
+      return {
+        ...state,
+        selectedBlockType: action.payload,
+        composerStep: "editBlock",
+      };
+    case "finishBlockEditing":
+      return {
+        ...state,
+        selectedBlockData: action.payload,
+        composerStep: "previewPost",
+      };
+    case "setIsOpen":
+      return { ...state, isOpen: action.payload };
+    case "setDescription":
+      return { ...state, description: action.payload };
+    default:
+      throw new Error();
+  }
+}
 
-  const classes = useStyles({ isMobile });
+function Composer({ addNewPost }) {
+  const modal = useRef(null);
+  const blockPreviewRef = useRef(null);
+  const classes = useStyles();
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const handleCreatePost = () => {
-    addNewPost(selectedBlockData)
-    setDescription('');
-    setSelectedBlockType(null);
-    setSelectedBlockData(null);  // Reset the block data
+  let supportedBlocks = Object.entries(BlockTypes).filter((blockType) => !blockType[1].deprecated)
 
-    handleClose();  // Close the modal after creating the post
+  const handleCreatePost = async () => {
+    addNewPost(state.selectedBlockData, state.description);
+
+    dismiss();
   };
 
-  const renderBlockPreview = (blockData) => {
-    if (!blockData) return <div>No Block Data</div>;
-    const blockPreview = BlockFactory.getBlock(blockData, defaultTheme)?.render?.();
+  function dismiss() {
+    dispatch({ type: "dismiss" });
+    modal.current?.dismiss();
+  }
 
-    if (!blockPreview) {
-      return <div>Preview not available</div>;
-    }
+  const chooseBlock = (blockType) => {
+    dispatch({ type: "chooseBlock", payload: blockType });
+  };
 
-    return (
-      <div style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
-        {blockPreview}
+  const chooseBlockStep = () => (
+    <div className={`${classes.noScrollBar}`}>
+      <div className={`${classes.noScrollBar} flex items-center justify-between bg-white`}>
+        <div className="flex items-start flex-col mt-4">
+          <h2>Create Something</h2>
+        </div>
+        <div
+          onClick={() => {
+            dismiss();
+          }}
+          className="flex justify-center items-center gap-2 py-2 px-2 text-white rounded-full bg-[#efefef]"
+        >
+          <X color="black" />
+        </div>
       </div>
-    );
-  };
-
-  const handleClose = () => {
-    setIsOpen(false);
-  };
-
-  const handleGoBack = () => {
-    if (composerStep === 'editBlock') {
-      handleClose();
-    } else if (composerStep === 'previewPost') {
-      setComposerStep('editBlock');
-    }
-  };
-
-  const renderDesktopPostTypeButtons = () => {
-    return (
-      <div>
-        <h2 className="mb-4">All miniapps</h2>
+      <Divider className="mt-4 mb-4" />
+      <h3 className="mb-4">All miniapps</h3>
+      <IonList>
         {supportedBlocks.map((block) => (
           <div id={block[1].type}>
             <ComposerMiniAppItem
               block={block[1]}
               tapAction={() => {
-                setIsOpen(true)
-                setSelectedBlockType(block[1].type);
-                setComposerStep('editBlock');
+                  chooseBlock(block[1]);
               }}
             />
             <Divider />
           </div>
         ))}
         <div style={{ height: "100px" }} />
-      </div>
-    );
-  };
+      </IonList>
+    </div>
+  );
 
   const editBlockStep = () => (
-    <div style={{ maxHeight: '100%', display: 'flex', flexDirection: 'column', width: '100%' }}>
+    <div
+      style={{
+        maxHeight: "100%",
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        height: '100%',
+      }}
+    >
+      <div style={{ position: "relative", paddingBottom: 16, }}>
+        <SeamHeaderBar
+          leftComponent={<ChevronLeft color="black" />}
+          rightComponent={<X color="black" />}
+          centerComponent={<h3>{state.selectedBlockType?.displayName}</h3>}
+          leftAction={() => {
+            dispatch({ type: "handleGoBack" });
+          }}
+          rightAction={dismiss}
+        />
+      </div>
       <BlockSelectorModal
-        selectedBlockType={selectedBlockType}
+        selectedBlockType={state.selectedBlockType.type}
         setSelectedBlockData={(data) => {
-          console.log(data)
-          setSelectedBlockData(data);
-          setComposerStep('previewPost'); // Move to the next step after editing
+          dispatch({ type: "finishBlockEditing", payload: data });
         }}
-        style={{ width: '100%' }} // Ensure BlockSelectorModal takes full width
+        style={{ width: "100%" }}
       />
     </div>
   );
 
+  const renderBlockPreview = (blockData) => {
+    if (!blockData) return <div>No Block Data</div>;
+    const blockPreview = BlockFactory.getBlock(
+      blockData,
+      undefined
+    )?.render?.();
+
+    if (!blockPreview) {
+      return <div>Preview not available</div>;
+    }
+
+    return (
+      <div
+        className="flex flex-row justify-center min-w-full min-h-full"
+        ref={blockPreviewRef}
+      >
+        {blockPreview}
+        <div className="flex grow"></div>
+      </div>
+    );
+  };
+
   const previewBlockStep = () => (
-    <div style={{ maxHeight: '100%', display: 'flex', flexDirection: 'column', width: '100%' }}>
-      <div style={{ display: 'flex', alignItems: 'center', width: '100%', }}>
-        <Button onClick={handleGoBack} style={{ color: "black", marginBottom: '20px' }}>
-          Go Back
+    <div className="flex flex-col h-full">
+      <div className="pb-4 sticky top-0 bg-white z-10">
+        <SeamHeaderBar
+          leftComponent={<ChevronLeft color="black" />}
+          rightComponent={<X color="black" />}
+          centerComponent={<h3>{state.selectedBlockType?.displayName}</h3>}
+          leftAction={() => {
+            dispatch({ type: "handleGoBack" });
+          }}
+          rightAction={dismiss}
+        />
+      </div>
+      {/* This div is for the content area above the Post button section */}
+      <div className="flex-grow overflow-auto">
+        {/* Render the block preview only if there is block data */}
+        {state.selectedBlockData != {} &&
+          renderBlockPreview(state.selectedBlockData)}
+      </div>
+      {/* This div is for the Post button section to stick to the bottom */}
+      <div
+        className="p-4 bg-[#FCFCFC] rounded-[20px] border-2 border-b-0 border-seam-gray mb-4"
+        style={{
+          marginLeft: "-1rem",
+          marginRight: "-1rem",
+          paddingBottom: "env(safe-area-inset-bottom)",
+        }}
+      >
+        <div className="flex flex-row">
+          {/* Profile Pic and Text Input */}
+          <div className="mr-4">
+            <img
+              className="rounded-full h-8 w-8"
+              src={"https://i0.wp.com/c3.thejournal.ie/media/2015/01/wallpaper-for-facebook-profile-photo-630x396.jpg?resize=630%2C396"}
+              alt="Profile"
+            />
+          </div>
+          <div className="w-full">
+            <Input
+              textValue={state.description}
+              onChange={(_, newValue) =>
+                dispatch({ type: "setDescription", payload: newValue })
+              }
+              placeholder="Add a description"
+            />
+          </div>
+        </div>
+        <Divider className="my-2" />
+        <Button
+          onClick={handleCreatePost}
+          fullWidth
+          variant="contained"
+          color="primary"
+          className="mt-4 h-[60px] justify-center items-center flex rounded-[8px] bg-seam-blue"
+        >
+          <h3 className="text-seam-white">Post</h3>
         </Button>
       </div>
-      {/* Render the block preview only if there is block data */}
-      {selectedBlockData && renderBlockPreview(selectedBlockData)}
-      <Button onClick={handleCreatePost} className={classes.createPostButton}>Create Post</Button>
     </div>
   );
 
   const renderContent = () => {
-    switch (composerStep) {
-      case 'editBlock':
+    switch (state.composerStep) {
+      case "selectBlock":
+        return chooseBlockStep();
+      case "editBlock":
         return editBlockStep();
-      case 'previewPost':
+      case "previewPost":
         return previewBlockStep();
       default:
         return null;
@@ -302,37 +255,37 @@ const Composer = ({ addNewPost }) => {
   };
 
   return (
-    <>
-      {renderDesktopPostTypeButtons()}
-      <Modal
-        open={isOpen}
-        footer={null}
-        onClose={handleClose}
-        style={{
-          display: 'block',
-          fontSize: "16px",
-          overflowY: 'visible'
+    <div>
+      <div
+        className="py-2 px-6 cursor-pointer"
+        onClick={() => {
+          dispatch({ type: "setIsOpen", payload: true });
+        }}
+        id="open-modal"
+        expand="block"
+      >
+        <Plus color="white" />
+      </div>
+      <IonModal
+        className={`${classes.noScrollBar} composer-modal`}
+        ref={modal}
+        isOpen={state.isOpen}
+        canDismiss={true}
+        initialBreakpoint={1.0}
+        breakpoints={[0, 1]}
+        showBackdrop={true}
+        onDidDismiss={() => {
+          dispatch({ type: "dismiss" });
         }}
       >
-        <Card
-          style={{
-            marginTop: "10px",
-            borderRadius: "1rem",
-            padding: "15px",
-            width: isMobile ? "100%" : "500px",
-            position: 'absolute',
-            top: isMobile ? 0 : '0%',
-            left: '50%',
-            transform: 'translate(-50%, 0)',
-            height: isMobile ? "100%" : undefined,
-            maxHeight: "90%"
-          }}
-        >
-          {renderContent()}
-        </Card>
-      </Modal>
-    </>
+        <IonContent className={`${classes.noScrollBar}`}>
+          <div className={`mx-4 my-0 flex flex-col justify-between h-full ${classes.noScrollBar}`}>
+            {renderContent()}
+          </div>
+        </IonContent>
+      </IonModal>
+    </div>
   );
-};
+}
 
 export default Composer;
