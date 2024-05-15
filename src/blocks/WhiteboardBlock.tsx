@@ -136,7 +136,29 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
   }, [points, initialForegroundColor, initialBackgroundColor, updateState])
 
   // === Handle Renders and Re-renders ===
-  // Update sate variables based on changes to position
+  // Render the outline on first render
+  useEffect(() => {
+    const canvasContext = canvasRef?.current?.getContext('2d');
+    if (!canvasContext) {
+      return;
+    }
+
+    // Draw border
+    canvasContext.strokeStyle = '#000000';
+    const lineWidth = 6;
+    canvasContext.lineWidth = lineWidth;
+    canvasContext.roundRect(lineWidth / 2, lineWidth / 2, width - lineWidth, height - lineWidth, 4);
+    canvasContext.stroke();
+
+    // Add bottom "tray"
+    const bottomRectHeight = (32 / 358 * width);
+    canvasContext.beginPath();
+    canvasContext.roundRect(lineWidth / 2, height - bottomRectHeight, width - lineWidth, bottomRectHeight - lineWidth, 4);
+    canvasContext.fill();
+
+  }, [height, width])
+
+  // Update state variables based on changes to position
   useEffect(() => {
     if (isDrawing) {
       draw();
@@ -177,7 +199,7 @@ interface WhiteboardEditProps {
 
 const WhiteboardEdit = (props: WhiteboardEditProps) => {
   const {width, onSave} = props
-  const height =  Math.floor(292/450 * width);
+  const height =  Math.floor(384/358 * width);
   const initialUserState = {
     initialForegroundColor: props.initialForegroundColor,
     initialBackgroundColor: props.initialBackgroundColor,
@@ -244,7 +266,7 @@ export default class WhiteboardBlock extends Block {
 
   renderEditModal(done: (data: BlockModel) => void, width?: string) {
     console.log('got the width in render', width);
-    const widthInt = width !== undefined ? stringSizeToNumber(width) - 20 : 450;
+    const widthInt = width !== undefined ? stringSizeToNumber(width) : 450;
     const defaultBackgroundColor = '#ffffff';
     const defaultForegroundColor = '#000000';
 
