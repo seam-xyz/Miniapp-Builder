@@ -1,3 +1,4 @@
+import UnknownApp from './UnknownApp'
 import eyesBlock from './eyesBlock'
 import fcUserFeedBlock from './fcUserFeedBlock'
 import tokenHoldingsBlock from './tokenHoldingsBlock'
@@ -56,7 +57,7 @@ export default class BlockFactory {
       case "eyes": return new eyesBlock(model, theme)
       case "Mondrian": return new MondrianBlock(model, theme)
       // new blocks go here
-      default: return new IFrameBlock(model, theme)
+      default: return new UnknownApp(model, theme)
     }
   }
 
