@@ -20,7 +20,7 @@ const defaultTheme = createTheme({
   },
 });
 
-const BlockSelectorModal = ({ selectedBlockType, setSelectedBlockData }) => {
+const BlockSelectorModal = ({ selectedBlockType, initialBlockData, setSelectedBlockData }) => {
   const [selectedBlockInstance, setSelectedBlockInstance] = useState(null);
   const [width, setWidth] = useState(0);
   const divRef = useRef(null);
@@ -34,7 +34,7 @@ const BlockSelectorModal = ({ selectedBlockType, setSelectedBlockData }) => {
   useEffect(() => {
     const model = {
       type: selectedBlockType,
-      data: {},
+      data: initialBlockData || {},
       uuid: nanoid()  // Generate a new unique ID
     };
 
