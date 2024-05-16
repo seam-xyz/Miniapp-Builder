@@ -5,7 +5,11 @@ import './BlockStyles.css'
 
 import CSS from 'csstype';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Grid }  from '@mui/material';
+import BlueMarkerSvg from './assets/WhiteboardBlock/blue_marker.svg';
+import BlackMarkerSvg from './assets/WhiteboardBlock/black_marker.svg';
+import YellowMarkerSvg from './assets/WhiteboardBlock/yellow_marker.svg';
+import RedMarkerSvg from './assets/WhiteboardBlock/red_marker.svg';
+import GreenMarkerSvg from './assets/WhiteboardBlock/green_marker.svg';
 
 interface DrawableCanvasInitialUserState {
   initialBackgroundColor: string,  // Hex string e.g. '#123abc'
@@ -182,6 +186,58 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
   )
 }
 
+interface MarkerColorSelectorProps {
+  initialColor: string,
+  onChange: ((newColor: string) => void),
+}
+
+const MarkerColorSelector: React.FC<MarkerColorSelectorProps> = (props: MarkerColorSelectorProps) => {
+  const {
+    initialColor,
+    onChange,
+  } = props;
+
+  const [selectedColor, updateSelectedColor] = useState<string>(initialColor);
+
+  const handleColorChange = (color: string) => {
+    updateSelectedColor(color);
+    onChange(color);
+  }
+
+  const selectedColorStyle = (color: string) => (
+    color === selectedColor ? 'border-4 border-black' : ''
+  )
+
+  return (
+    <div className='grid grid-cols-5'>
+      <img 
+        className={`w-full ${selectedColorStyle('#373737')}`}
+        src={BlackMarkerSvg}
+        onClick={() => handleColorChange('#373737')}
+      />
+      <img
+        className={`w-full ${selectedColorStyle('#FEDA77')}`}
+        src={YellowMarkerSvg}
+        onClick={() => handleColorChange('#FEDA77')}
+      />
+      <img
+        className={`w-full ${selectedColorStyle('#FF1F00')}`}
+        src={RedMarkerSvg}
+        onClick={() => handleColorChange('#FF1F00')}
+      />
+      <img
+        className={`w-full ${selectedColorStyle('#679D34')}`}
+        src={GreenMarkerSvg}
+        onClick={() => handleColorChange('#679D34')}
+      />
+      <img
+        className={`w-full ${selectedColorStyle('#008CB4')}`}
+        src={BlueMarkerSvg}
+        onClick={() => handleColorChange('#008CB4')}
+      />
+    </div>
+  )
+}
 
 interface WhiteboardEditProps {
   width: number,
@@ -205,6 +261,7 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
   }
 
   return (
+    // <form onSubmit={onSave} className='p-2 flex flex-col h-full'>
     <>
       <DrawableCanvas
         width={width}
@@ -212,19 +269,12 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
         userInitialState={initialUserState}
         updateState={props.updateState}
       />
-      <Grid container>
-        <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', pt: 0, }}>
-          <Button
-              type='submit'
-              variant='contained'
-              className='save-modal-button'
-              onClick={onSave}
-            >
-              PREVIEW
-          </Button>
-        </Grid>
-      </Grid>
+      <MarkerColorSelector
+        initialColor={props.initialForegroundColor}
+        onChange={() => console.log('Change color')}
+      />
     </>
+    // </form>
   )
 }
 
@@ -267,7 +317,7 @@ export default class WhiteboardBlock extends Block {
     console.log('got the width in render', width);
     const widthInt = width !== undefined ? stringSizeToNumber(width) : 450;
     const defaultBackgroundColor = '#ffffff';
-    const defaultForegroundColor = '#000000';
+    const defaultForegroundColor = '#373737';
 
     // TODO: load from saved state
 
