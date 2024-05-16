@@ -385,4 +385,16 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockEdit: true,
     createdBy: "seam"
 },
+  "voiceNote": { 
+    type: "voiceNote",
+    displayName: "voiceNote",
+    displayDescription: "upload a voice memo!",
+    emptyTitle: "Empty voiceNote App",
+    emptySubtitle: "Tap here to setup your voiceNote app!",
+    icon: "voiceNoteIcon", // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "rocco/jamesburet"
+},
 };

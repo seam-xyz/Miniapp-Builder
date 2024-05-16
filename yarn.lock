@@ -3762,6 +3762,11 @@
   resolved "https://registry.yarnpkg.com/@upload-io/upload-api-client-upload-js/-/upload-api-client-upload-js-2.18.0.tgz#948cf288ace5ef22a152b37096335fda2ef7cc5c"
   integrity sha512-yPwsRCecXSilYn4q5ZDD4fyI2PVyUcLimv2LQcfpV3hRyzc8t82NuWHYEYpRZa5K68zxw2RljDf30geT1vJN9g==
 
+"@wavesurfer/react@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@wavesurfer/react/-/react-1.0.6.tgz#57cdecac1d0f23b8cf6b9b2166aeed9a841a57b7"
+  integrity sha512-ooDSebxs2Z00S6h7nGrA8SSXmins6MnJF944MiUVrnVeaoNDDIgursBIXo3MtZ9QLN3Vlt3cNLU3u16vsZZCJg==
+
 "@webassemblyjs/ast@1.11.6", "@webassemblyjs/ast@^1.11.5":
   version "1.11.6"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.11.6.tgz#db046555d3c413f8966ca50a95176a0e2c642e24"
@@ -11947,6 +11952,11 @@ watchpack@^2.4.0:
   dependencies:
     glob-to-regexp "^0.4.1"
     graceful-fs "^4.1.2"
+
+wavesurfer.js@^7.7.14:
+  version "7.7.14"
+  resolved "https://registry.yarnpkg.com/wavesurfer.js/-/wavesurfer.js-7.7.14.tgz#7cbb6f8644e27f3845a0c8a954f123e1a0a44afe"
+  integrity sha512-sbd48yHnOVDEbZwsnD3dWzBj4SF2q2rsPysmPE8spoR2XwKVkU/POtZg/L0wPi6ypqXb7brQLftSeOovJNToPQ==
 
 wbuf@^1.1.0, wbuf@^1.7.3:
   version "1.7.3"
