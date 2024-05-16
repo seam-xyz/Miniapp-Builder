@@ -201,6 +201,14 @@ interface MarkerColorSelectorProps {
   onChange: (newColor: string) => void;
 }
 
+const markers = [
+  { color: '#373737', svg: BlackMarkerSvg },
+  { color: '#FEDA77', svg: YellowMarkerSvg },
+  { color: '#FF1F00', svg: RedMarkerSvg },
+  { color: '#679D34', svg: GreenMarkerSvg },
+  { color: '#008CB4', svg: BlueMarkerSvg },
+];
+
 const MarkerColorSelector: React.FC<MarkerColorSelectorProps> = ({ color, onChange }) => {
   const [selectedColor, updateSelectedColor] = useState<string>(color);
 
@@ -209,37 +217,16 @@ const MarkerColorSelector: React.FC<MarkerColorSelectorProps> = ({ color, onChan
     onChange(color);
   }
 
-  const markerPositionStyle = (markerColor: string) => (
-    markerColor === selectedColor ? 'translate-y-0' : 'translate-y-2'
-  );
-
   return (
     <div className='grid grid-cols-5 gap-2'>
-      <img 
-        className={`w-full transform transition-transform duration-300 ${markerPositionStyle('#373737')}`}
-        src={BlackMarkerSvg}
-        onClick={() => handleColorChange('#373737')}
-      />
-      <img
-        className={`w-full transform transition-transform duration-300 ${markerPositionStyle('#FEDA77')}`}
-        src={YellowMarkerSvg}
-        onClick={() => handleColorChange('#FEDA77')}
-      />
-      <img
-        className={`w-full transform transition-transform duration-300 ${markerPositionStyle('#FF1F00')}`}
-        src={RedMarkerSvg}
-        onClick={() => handleColorChange('#FF1F00')}
-      />
-      <img
-        className={`w-full transform transition-transform duration-300 ${markerPositionStyle('#679D34')}`}
-        src={GreenMarkerSvg}
-        onClick={() => handleColorChange('#679D34')}
-      />
-      <img
-        className={`w-full transform transition-transform duration-300 ${markerPositionStyle('#008CB4')}`}
-        src={BlueMarkerSvg}
-        onClick={() => handleColorChange('#008CB4')}
-      />
+      {markers.map((marker) => (
+        <img 
+          key={marker.color}
+          className={`w-full transform transition-transform duration-300 ${marker.color === selectedColor ? 'translate-y-0' : 'translate-y-2'}`}
+          src={marker.svg}
+          onClick={() => handleColorChange(marker.color)}
+        />
+      ))}
     </div>
   );
 }
@@ -276,6 +263,7 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
         userInitialState={initialUserState}
         updateState={props.updateState}
       />
+      <div className='p-4'></div>
       <MarkerColorSelector
         color={selectedColor}
         onChange={(newColor: string) => setSelectedColor(newColor)}
