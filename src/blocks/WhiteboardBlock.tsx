@@ -20,6 +20,7 @@ interface DrawableCanvasProps {
   height: number,
   width: number
   userInitialState: DrawableCanvasInitialUserState,
+  foregroundColor: string,
   updateState: ((
     height: number,
     width: number,
@@ -40,6 +41,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     initialBackgroundColor,
     initialForegroundColor,
   } = props.userInitialState;
+  const foregroundColor = props.foregroundColor;
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const canvasStyles: CSS.Properties = {
@@ -114,7 +116,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     canvasContext.lineCap = 'round';
     canvasContext.lineJoin = 'round';
     canvasContext.lineWidth = 4;
-    canvasContext.strokeStyle = initialForegroundColor;
+    canvasContext.strokeStyle = foregroundColor;
 
     canvasContext.beginPath();
     canvasContext.moveTo(points[0].x, points[0].y);
@@ -136,7 +138,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     if (imageData) {
       updateState(310, 480, initialBackgroundColor, imageData);
     }
-  }, [points, initialForegroundColor, initialBackgroundColor, updateState])
+  }, [points, foregroundColor, initialBackgroundColor, updateState])
 
   // === Handle Renders and Re-renders ===
   // Render the outline on first render
@@ -187,17 +189,17 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
 }
 
 interface MarkerColorSelectorProps {
-  initialColor: string,
+  color: string,
   onChange: ((newColor: string) => void),
 }
 
 const MarkerColorSelector: React.FC<MarkerColorSelectorProps> = (props: MarkerColorSelectorProps) => {
   const {
-    initialColor,
+    color,
     onChange,
   } = props;
 
-  const [selectedColor, updateSelectedColor] = useState<string>(initialColor);
+  const [selectedColor, updateSelectedColor] = useState<string>(color);
 
   const handleColorChange = (color: string) => {
     updateSelectedColor(color);
@@ -259,6 +261,7 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
     initialForegroundColor: props.initialForegroundColor,
     initialBackgroundColor: props.initialBackgroundColor,
   }
+  const [selectedColor, setSelectedColor] = useState<string>(initialUserState.initialForegroundColor);
 
   return (
     // <form onSubmit={onSave} className='p-2 flex flex-col h-full'>
@@ -266,12 +269,13 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
       <DrawableCanvas
         width={width}
         height={height}
+        foregroundColor={selectedColor}
         userInitialState={initialUserState}
         updateState={props.updateState}
       />
       <MarkerColorSelector
-        initialColor={props.initialForegroundColor}
-        onChange={() => console.log('Change color')}
+        color={selectedColor}
+        onChange={(newColor: string) => setSelectedColor(newColor)}
       />
     </>
     // </form>
