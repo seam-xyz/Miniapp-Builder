@@ -25,7 +25,6 @@ const BlockSelectorModal = ({ selectedBlockType, setSelectedBlockData }) => {
   const [width, setWidth] = useState(0);
   const divRef = useRef(null);
   const isFullscreenEdit = BlockFactory.doesBlockEditFullscreen(selectedBlockType);
-  console.log(setSelectedBlockData)
 
   useEffect(() => {
     if (divRef.current) {
