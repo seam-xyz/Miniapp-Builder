@@ -112,7 +112,7 @@ function Composer({ addNewPost }) {
   };
 
   const chooseBlockStep = () => (
-    <div className={`${classes.noScrollBar}`}>
+    <div className={`${classes.noScrollBar} mx-4 my-0`}>
       <div className={`${classes.noScrollBar} flex items-center justify-between bg-white`}>
         <div className="flex items-start flex-col mt-4">
           <h2>Create Something</h2>
@@ -155,11 +155,11 @@ function Composer({ addNewPost }) {
         height: '100%',
       }}
     >
-      <div style={{ position: "relative", paddingBottom: 16, }}>
+      <div className="px-4" style={{ position: BlockFactory.doesBlockEditFullscreen(state.selectedBlockType?.type) ? "absolute" : "relative", paddingBottom: 16, width: "100%" }}>
         <SeamHeaderBar
           leftComponent={<ChevronLeft color="black" />}
           rightComponent={<X color="black" />}
-          centerComponent={<h3>{state.selectedBlockType?.displayName}</h3>}
+          centerComponent={ BlockFactory.doesBlockEditFullscreen(state.selectedBlockType?.type) ? null : <h3>{state.selectedBlockType?.displayName}</h3>}
           leftAction={() => {
             dispatch({ type: "handleGoBack" });
           }}
@@ -200,7 +200,7 @@ function Composer({ addNewPost }) {
   };
 
   const previewBlockStep = () => (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full mx-4 my-0">
       <div className="pb-4 sticky top-0 bg-white z-10">
         <SeamHeaderBar
           leftComponent={<ChevronLeft color="black" />}
@@ -298,7 +298,7 @@ function Composer({ addNewPost }) {
         }}
       >
         <IonContent>
-          <div className={`mx-4 my-0 flex flex-col justify-between h-full ${classes.noScrollBar}`}>
+          <div className={`flex flex-col justify-between h-full ${classes.noScrollBar}`}>
             {renderContent()}
           </div>
         </IonContent>

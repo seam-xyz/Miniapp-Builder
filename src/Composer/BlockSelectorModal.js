@@ -24,6 +24,7 @@ const BlockSelectorModal = ({ selectedBlockType, initialBlockData, setSelectedBl
   const [selectedBlockInstance, setSelectedBlockInstance] = useState(null);
   const [width, setWidth] = useState(0);
   const divRef = useRef(null);
+  const isFullscreenEdit = BlockFactory.doesBlockEditFullscreen(selectedBlockType);
 
   useEffect(() => {
     if (divRef.current) {
@@ -51,7 +52,7 @@ const BlockSelectorModal = ({ selectedBlockType, initialBlockData, setSelectedBl
   };
 
   return (
-    <div ref={divRef} style={{ maxWidth: '100vw', overflow: 'visible', }}>
+    <div ref={divRef} className={isFullscreenEdit ? "" : "mx-4"} style={{ maxWidth: '100vw', overflow: 'visible', }}>
       {selectedBlockInstance && selectedBlockInstance.renderEditModal(handleDone, width)}
     </div>
   );
