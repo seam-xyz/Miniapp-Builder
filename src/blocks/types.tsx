@@ -21,6 +21,7 @@ import clockIcon from "./blockIcons/clockIcon.png"
 import farcasterIcon from "./blockIcons/farcasterIcon.svg"
 import eyesIcon from "./blockIcons/eyeIcon.png"
 import MondrianIcon from './blockIcons/MondrianIcon.png'
+import bookIcon from './blockIcons/bookIcon.png'
 
 export type BlockModel = {
   type: string;
@@ -407,7 +408,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     displayDescription: "Post a book you've read",
     emptyTitle: "Empty Bookshelf App",
     emptySubtitle: "Tap here to setup your Bookshelf app!",
-    icon: "BookshelfIcon", // TODO: insert your app icon here
+    icon: bookIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
