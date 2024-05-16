@@ -222,7 +222,7 @@ const MarkerColorSelector: React.FC<MarkerColorSelectorProps> = ({ color, onChan
       {markers.map((marker) => (
         <img 
           key={marker.color}
-          className={`w-full transform transition-transform duration-300 ${marker.color === selectedColor ? 'translate-y-0' : 'translate-y-2'}`}
+          className={`w-full transform transition-transform duration-300 ${marker.color === selectedColor ? 'translate-y-0 hover:-rotate-1' : 'hover:translate-y-8 translate-y-12'}`}
           src={marker.svg}
           onClick={() => handleColorChange(marker.color)}
         />
