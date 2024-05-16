@@ -13,7 +13,7 @@ export default function SeamHeaderBar({
 
   return (
     <IonHeader className="ion-no-border">
-      <div className="flex items-center justify-between bg-white mt-4">
+      <div className="flex items-center justify-between bg-transparent mt-4">
         <div
           onClick={() => {
             leftAction();

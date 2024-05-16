@@ -1,3 +1,4 @@
+import BookshelfApp from './BookshelfApp'
 import UnknownApp from './UnknownApp'
 import eyesBlock from './eyesBlock'
 import fcUserFeedBlock from './fcUserFeedBlock'
@@ -56,6 +57,7 @@ export default class BlockFactory {
       case "fcUserFeed": return new fcUserFeedBlock(model, theme)
       case "eyes": return new eyesBlock(model, theme)
       case "Mondrian": return new MondrianBlock(model, theme)
+      case "Bookshelf": return new BookshelfApp(model, theme)
       // new blocks go here
       default: return new UnknownApp(model, theme)
     }
@@ -70,6 +72,10 @@ export default class BlockFactory {
   static doesBlockPost(model: BlockModel): boolean {
     let type = model.type
     return BlockTypes[type].doesBlockPost
+  }
+
+  static doesBlockEditFullscreen(type: string): boolean {
+    return BlockTypes[type].fullscreenEdit
   }
 
   static renderEmptyState(model: BlockModel, onClick: (id: string) => void): React.ReactNode {
