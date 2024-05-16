@@ -98,7 +98,6 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     setIsDrawing(true);
     setPoints([]); // Clear points at the start of drawing
     handleDrawDrag(e);
-    // TODO: Draw single dot
   }
 
   const handleStopDrawing = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent> | React.TouchEvent<HTMLCanvasElement>) => {
@@ -109,7 +108,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
   // FUTURE: Expose as a customizable callback in props, takes a canvas context as an arg, can be used to access canvas
   const draw = useCallback(() => {
     const canvasContext = canvasRef?.current?.getContext('2d');
-    if (!canvasContext || points.length < 2) {
+    if (!canvasContext || points.length < 1) {
       return;
     }
 
@@ -117,6 +116,15 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     canvasContext.lineJoin = 'round';
     canvasContext.lineWidth = 4;
     canvasContext.strokeStyle = foregroundColor;
+
+    if (points.length == 1) {
+      // Draw single dot
+      // NOTE: this isn't working correctly, need to investigate if the first point is getting set correctly each time
+      canvasContext.beginPath();
+      canvasContext.roundRect(points[0].x, points[0].y, 4, 4, 2);
+      canvasContext.fill();
+      return;
+    }
 
     canvasContext.beginPath();
     canvasContext.moveTo(points[0].x, points[0].y);
