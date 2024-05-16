@@ -2,7 +2,6 @@ import Block from './Block'
 import { BlockModel } from './types'
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
-import WhiteboardImage from './assets/WhiteboardBlock/background.png'
 
 import CSS from 'csstype';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -163,7 +162,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     if (isDrawing) {
       draw();
     }
-  }, [points, draw])
+  }, [points, isDrawing, draw])
 
   // === Finally, Return ===
   return (
@@ -260,7 +259,7 @@ export default class WhiteboardBlock extends Block {
     } = this.model.data;
 
     return (
-      <img src={imageData} className='w-full object-contain'></img>
+      <img src={imageData} alt='a drawing' className='w-full object-contain'></img>
     );
   }
 
