@@ -197,16 +197,11 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
 }
 
 interface MarkerColorSelectorProps {
-  color: string,
-  onChange: ((newColor: string) => void),
+  color: string;
+  onChange: (newColor: string) => void;
 }
 
-const MarkerColorSelector: React.FC<MarkerColorSelectorProps> = (props: MarkerColorSelectorProps) => {
-  const {
-    color,
-    onChange,
-  } = props;
-
+const MarkerColorSelector: React.FC<MarkerColorSelectorProps> = ({ color, onChange }) => {
   const [selectedColor, updateSelectedColor] = useState<string>(color);
 
   const handleColorChange = (color: string) => {
@@ -214,39 +209,39 @@ const MarkerColorSelector: React.FC<MarkerColorSelectorProps> = (props: MarkerCo
     onChange(color);
   }
 
-  const selectedColorStyle = (color: string) => (
-    color === selectedColor ? 'border-4 border-black' : ''
-  )
+  const markerPositionStyle = (markerColor: string) => (
+    markerColor === selectedColor ? 'translate-y-0' : 'translate-y-2'
+  );
 
   return (
-    <div className='grid grid-cols-5'>
+    <div className='grid grid-cols-5 gap-2'>
       <img 
-        className={`w-full ${selectedColorStyle('#373737')}`}
+        className={`w-full transform transition-transform duration-300 ${markerPositionStyle('#373737')}`}
         src={BlackMarkerSvg}
         onClick={() => handleColorChange('#373737')}
       />
       <img
-        className={`w-full ${selectedColorStyle('#FEDA77')}`}
+        className={`w-full transform transition-transform duration-300 ${markerPositionStyle('#FEDA77')}`}
         src={YellowMarkerSvg}
         onClick={() => handleColorChange('#FEDA77')}
       />
       <img
-        className={`w-full ${selectedColorStyle('#FF1F00')}`}
+        className={`w-full transform transition-transform duration-300 ${markerPositionStyle('#FF1F00')}`}
         src={RedMarkerSvg}
         onClick={() => handleColorChange('#FF1F00')}
       />
       <img
-        className={`w-full ${selectedColorStyle('#679D34')}`}
+        className={`w-full transform transition-transform duration-300 ${markerPositionStyle('#679D34')}`}
         src={GreenMarkerSvg}
         onClick={() => handleColorChange('#679D34')}
       />
       <img
-        className={`w-full ${selectedColorStyle('#008CB4')}`}
+        className={`w-full transform transition-transform duration-300 ${markerPositionStyle('#008CB4')}`}
         src={BlueMarkerSvg}
         onClick={() => handleColorChange('#008CB4')}
       />
     </div>
-  )
+  );
 }
 
 interface WhiteboardEditProps {
