@@ -389,7 +389,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "razberry",
     fullscreenEdit: false,
   },
-  "Mondrian": { 
+  "Mondrian": {
     type: "Mondrian",
     displayName: "Mondrian",
     displayDescription: "Create works of art in the style of Piet Mondrian",
@@ -402,7 +402,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "jamesburet",
     fullscreenEdit: false,
   },
-  "Bookshelf": { 
+  "Bookshelf": {
     type: "Bookshelf",
     displayName: "Bookshelf",
     displayDescription: "Post a book you've read",
@@ -414,5 +414,18 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockEdit: true,
     createdBy: "nick",
     fullscreenEdit: true,
-},
+  },
+  "Unknown": {
+    type: "Unknown",
+    displayName: "Unknown",
+    displayDescription: "Unknown",
+    emptyTitle: "Empty Unknown App",
+    emptySubtitle: "Tap here to setup your Unknown app!",
+    icon: "UnknownIcon",
+    deprecated: true,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "seam",
+    fullscreenEdit: false,
+  },
 };

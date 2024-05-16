@@ -1,4 +1,5 @@
 import BookshelfApp from './BookshelfApp'
+import UnknownApp from './UnknownApp'
 import eyesBlock from './eyesBlock'
 import fcUserFeedBlock from './fcUserFeedBlock'
 import tokenHoldingsBlock from './tokenHoldingsBlock'
@@ -58,7 +59,7 @@ export default class BlockFactory {
       case "Mondrian": return new MondrianBlock(model, theme)
       case "Bookshelf": return new BookshelfApp(model, theme)
       // new blocks go here
-      default: return new IFrameBlock(model, theme)
+      default: return new UnknownApp(model, theme)
     }
   }
 
