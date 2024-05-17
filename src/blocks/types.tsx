@@ -442,4 +442,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "seam",
     fullscreenEdit: false,
   },
+  "3D": { 
+    type: "3D",
+    displayName: "3D Objects",
+    displayDescription: "View and spin 3d object files like stl, obj, and USDZ.",
+    emptyTitle: "Empty 3D Objects App",
+    emptySubtitle: "Tap here to setup your 3D Objects app!",
+    icon: "3DIcon", // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "nick",
+    fullscreenEdit: false,
+},
 };

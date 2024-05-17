@@ -3,6 +3,7 @@ import { Box, Button, CircularProgress } from "@mui/material";
 import { FirebaseStorage } from '@capacitor-firebase/storage';
 import { nanoid } from "nanoid";
 import { FilePicker } from '@capawesome/capacitor-file-picker';
+import { handleFilePicker } from './handleFilePicker';
 
 interface FileUploadComponentProps {
   fileTypes: string; // e.g. 'image/*, video/*'
@@ -56,34 +57,6 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({ fileTypes, la
     }
   };
 
-  const handleFilePicker = async () => {
-    let result;
-    try {
-      const pickerOptions = {
-        multiple,
-        ordered: true, // Enable numbered order for the picker
-        readData: true
-      };
-  
-      if (fileTypes.includes('image')) {
-        result = await FilePicker.pickImages(pickerOptions);
-      } else if (fileTypes.includes('video')) {
-        result = await FilePicker.pickVideos(pickerOptions);
-      } else {
-        result = await FilePicker.pickFiles({
-          ...pickerOptions,
-          types: fileTypes.split(',').map(type => type.trim()), // Use generic picker if specific type is not found
-        });
-      }
-  
-      if (result.files.length > 0) {
-        handleFilesUpload(result.files);
-      }
-    } catch (error) {
-      console.error("File selection cancelled by user or failed", error);
-    }
-  };
-
   return (
     <div>
       <Box component="form">
@@ -105,7 +78,7 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({ fileTypes, la
           disabled={uploading}
           onClick={(e) => {
             e.preventDefault();
-            handleFilePicker();
+            handleFilePicker(fileTypes, multiple, handleFilesUpload);
           }}
         >
           {uploading ? <CircularProgress size={24} /> : label}
