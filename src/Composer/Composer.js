@@ -220,14 +220,14 @@ function Composer({ addNewPost }) {
       </div>
       {/* This div is for the Post button section to stick to the bottom */}
       <div
-        className="p-4 bg-[#FCFCFC] rounded-[20px] border-2 border-b-0 border-seam-gray mb-4"
+        className="p-4 bg-[#FCFCFC] rounded-[20px] border-2 border-b-0 border-seam-gray mb-4 w-full"
         style={{
           marginLeft: "-1rem",
           marginRight: "-1rem",
           paddingBottom: "env(safe-area-inset-bottom)",
         }}
       >
-        <div className="flex flex-row">
+        <div className="flex flex-row w-full">
           {/* Profile Pic and Text Input */}
           <div className="mr-4">
             <img
@@ -243,6 +243,7 @@ function Composer({ addNewPost }) {
                 dispatch({ type: "setDescription", payload: newValue })
               }
               placeholder="Add a description"
+              className="w-full"
             />
           </div>
         </div>
