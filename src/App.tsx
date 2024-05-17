@@ -64,7 +64,7 @@ export default function App() {
           </div>
         </IonHeader>
       </div>
-      <IonContent>
+      <IonContent fullscreen={true} scrollY={false}>
         <DesktopSidebarWrapper>
           <Feed loadedPosts={loadedPosts} />
         </DesktopSidebarWrapper>
