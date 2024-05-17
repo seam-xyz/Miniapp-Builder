@@ -22,6 +22,7 @@ import farcasterIcon from "./blockIcons/farcasterIcon.svg"
 import eyesIcon from "./blockIcons/eyeIcon.png"
 import MondrianIcon from './blockIcons/MondrianIcon.png'
 import bookIcon from './blockIcons/bookIcon.png'
+import WordleIcon from './blockIcons/WordleIcon.png'
 
 export type BlockModel = {
   type: string;
@@ -414,6 +415,19 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockEdit: true,
     createdBy: "nick",
     fullscreenEdit: true,
+  },
+  "Wordle": { 
+    type: "Wordle",
+    displayName: "Wordle",
+    displayDescription: "Seam's take on the hot NYT daily game, Wordle!",
+    emptyTitle: "Empty Wordle App",
+    emptySubtitle: "Tap here to setup your Wordle app!",
+    icon: WordleIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "jamesburet",
+    fullscreenEdit: false,
   },
   "Unknown": {
     type: "Unknown",

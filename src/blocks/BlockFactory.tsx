@@ -28,6 +28,7 @@ import CountdownBlock from './CountdownBlock'
 import LinkBookmarkBlock from './LinkBookmarkBlock'
 import VideoBlock from './VideoBlock'
 import MondrianBlock from './MondrianBlock'
+import WordleBlock from './WordleBlock'
 
 export default class BlockFactory {
   static getBlock(model: BlockModel, theme: Theme): Block {
@@ -58,6 +59,7 @@ export default class BlockFactory {
       case "eyes": return new eyesBlock(model, theme)
       case "Mondrian": return new MondrianBlock(model, theme)
       case "Bookshelf": return new BookshelfApp(model, theme)
+      case "Wordle": return new WordleBlock(model, theme)
       // new blocks go here
       default: return new UnknownApp(model, theme)
     }
