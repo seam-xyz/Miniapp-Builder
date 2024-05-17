@@ -442,4 +442,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "seam",
     fullscreenEdit: false,
   },
+  "Mood": { 
+    type: "Mood",
+    displayName: "Mood Visualizer",
+    displayDescription: "Express your emotions, open up and tell the world how you're feeling!",
+    emptyTitle: "Empty Mood Visualizer App",
+    emptySubtitle: "Tap here to setup your Mood Visualizer app!",
+    icon: "MoodIcon", // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "jamesburet",
+    fullscreenEdit: false,
+},
 };
