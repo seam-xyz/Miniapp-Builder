@@ -45,11 +45,14 @@ export const ThreeDViewer = ({ blob, fileUrl, fileType }) => {
   }, [blob]);
 
   return (
-    <Canvas>
-      <ambientLight />
-      <pointLight position={[10, 10, 10]} />
-      <mesh ref={meshRef}>
-        <meshStandardMaterial color='gray' />
+    <Canvas style={{ background: 'white' }}>
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[2.5, 8, 5]} intensity={1.5} />
+      <directionalLight position={[-2.5, -8, -5]} intensity={0.5} />
+      <pointLight position={[10, 10, 10]} intensity={1} />
+      <pointLight position={[-10, -10, 10]} intensity={1} />
+      <mesh ref={meshRef} castShadow receiveShadow>
+        <meshStandardMaterial color='white' metalness={0.3} roughness={0.7} />
       </mesh>
       <OrbitControls />
     </Canvas>
