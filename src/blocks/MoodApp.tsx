@@ -86,12 +86,12 @@ const MoodVisualizer: React.FC<MoodVisualizerProps> = ({ model, done }) => {
 
   return (
     <div
-      className="w-full h-full overflow-hidden flex flex-col items-center justify-between"
+      className="w-full h-full min-h-screen overflow-hidden flex flex-col items-center justify-between"
       style={{
         background: `linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, ${currentColor}40 100%)`, // 40 is 25% opacity
       }}
     >
-      <div className="mt-4 flex items-center justify-center flex-col">
+      <div className="mt-16 flex items-center justify-center flex-col">
         <h1 className="text-seam-black font-thin leading-[48px] text-center">How do you feel right now?</h1>
         <div className={`text-[24px] mb-6 mt-10`} style={{ color: textColor }}>{emojis[index].mood}</div>
       </div>
