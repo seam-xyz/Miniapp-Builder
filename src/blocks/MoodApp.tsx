@@ -4,8 +4,6 @@ import { BlockModel } from './types';
 import './BlockStyles.css';
 import './utils/Dial.css';
 import { Button } from '@mui/material';
-import SeamHeaderBar from "../components/SeamHeaderBar";
-import { ChevronLeft, X } from 'react-feather';
 
 const emojis = [
   { mood: 'Feeling Happy', emoji: '😄', color: '#FFD700' },
