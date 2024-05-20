@@ -52,7 +52,7 @@ const BlockSelectorModal = ({ selectedBlockType, initialBlockData, setSelectedBl
   };
 
   return (
-    <div ref={divRef} className={isFullscreenEdit ? "" : "mx-4]"} style={{ maxWidth: '100vw', overflow: 'visible', }}>
+    <div ref={divRef} className={isFullscreenEdit ? "" : "mx-4"} style={{ maxWidth: '100vw', overflow: 'visible', }}>
       {selectedBlockInstance && selectedBlockInstance.renderEditModal(handleDone, width)}
     </div>
   );
