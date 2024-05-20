@@ -19,7 +19,9 @@ export default class GiphyBlock extends Block {
     )
   }
 
-  renderEditModal(done: (data: BlockModel) => void) {
+  renderEditModal(done: (data: BlockModel) => void, width?: string) {
+    const w3 = (parseInt(width ?? "450") - 30) / 3
+    const w2 = (parseInt(width ?? "450") - 20) / 2
     return (
       <ReactGiphySearchbox
         apiKey={process.env.REACT_APP_GIPHY_KEY}
@@ -27,10 +29,10 @@ export default class GiphyBlock extends Block {
           this.model.data["gif"] = item.id as string
           done(this.model)
         }}
-        gifListHeight='75vh'
+        gifListHeight='80vh'
         masonryConfig={[
-          { columns: 2, imageWidth: 170, gutter: 10 },
-          { mq: "700px", columns: 3, imageWidth: 150, gutter: 10 }
+          { columns: 2, imageWidth: w2, gutter: 10 },
+          { mq: "700px", columns: 3, imageWidth: w3, gutter: 10 }
         ]}
       />
     )

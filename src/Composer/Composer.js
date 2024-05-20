@@ -161,6 +161,7 @@ function Composer({ addNewPost }) {
       </div>
       <BlockSelectorModal
         selectedBlockType={state.selectedBlockType.type}
+        initialBlockData={state.selectedBlockData?.data ?? {}}
         setSelectedBlockData={(data) => {
           dispatch({ type: 'finishBlockEditing', payload: data });
         }}
