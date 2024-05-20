@@ -453,6 +453,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: "jamesburet",
-    fullscreenEdit: false,
-},
+    fullscreenEdit: true,
+  },
 };

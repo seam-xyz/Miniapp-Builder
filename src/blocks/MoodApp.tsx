@@ -4,6 +4,8 @@ import { BlockModel } from './types';
 import './BlockStyles.css';
 import './utils/Dial.css';
 import { Button } from '@mui/material';
+import SeamHeaderBar from "../components/SeamHeaderBar";
+import { ChevronLeft, X } from 'react-feather';
 
 const emojis = [
   { mood: 'Feeling Happy', emoji: '😄', color: '#FFD700' },
@@ -26,6 +28,20 @@ const emojis = [
   { mood: 'Feeling Cool', emoji: '😎', color: '#0000CD' },
   { mood: 'Feeling Surprised', emoji: '😲', color: '#DAA520' },
 ];
+
+const darkenColor = (color: string, percent: number): string => {
+  const num = parseInt(color.replace("#", ""), 16);
+  const amt = Math.round(2.55 * percent);
+  const R = (num >> 16) + amt;
+  const G = (num >> 8 & 0x00FF) + amt;
+  const B = (num & 0x0000FF) + amt;
+  return `#${(
+    0x1000000 +
+    (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+    (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+    (B < 255 ? (B < 1 ? 0 : B) : 255)
+  ).toString(16).slice(1)}`;
+};
 
 export default class MoodBlock extends Block {
   render() {
@@ -68,6 +84,7 @@ const MoodVisualizer: React.FC<MoodVisualizerProps> = ({ model, done }) => {
   };
 
   const currentColor = emojis[index].color;
+  const textColor = darkenColor(currentColor, -20); // Darken the color by 20%
 
   return (
     <div
@@ -78,7 +95,7 @@ const MoodVisualizer: React.FC<MoodVisualizerProps> = ({ model, done }) => {
     >
       <div className="mt-4 flex items-center justify-center flex-col">
         <h1 className="text-seam-black font-thin leading-[48px] text-center">How do you feel right now?</h1>
-        <div className={`text-[24px] text-[${currentColor}] mb-6 mt-10`}>{emojis[index].mood}</div>
+        <div className={`text-[24px] mb-6 mt-10`} style={{ color: textColor }}>{emojis[index].mood}</div>
       </div>
       <Dial index={index} onDialChange={handleDialChange} color={currentColor} />
       <Button
@@ -196,7 +213,7 @@ const MoodDisplay: React.FC<MoodDisplayProps> = ({ mood, emoji }) => {
         background: `linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, ${moodObj.color}40 100%)`, // 40 is 25% opacity
       }}
     >
-      <div className={`text-[24px] text-[${moodObj.color}] mb-6`}>{mood}</div>
+      <div className={`text-[24px] mb-6`} style={{ color: darkenColor(moodObj.color, -20) }}>{mood}</div>
       <div
         className="text-6xl flex items-center justify-center p-16 rounded-full"
         style={{ backgroundColor: moodObj.color }}
