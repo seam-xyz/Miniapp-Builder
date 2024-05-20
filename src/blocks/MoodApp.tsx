@@ -49,7 +49,7 @@ interface MoodVisualizerProps {
 }
 
 const MoodVisualizer: React.FC<MoodVisualizerProps> = ({ model, done }) => {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState<number>(0);
 
   const handleSave = () => {
     done({
@@ -82,13 +82,13 @@ const MoodVisualizer: React.FC<MoodVisualizerProps> = ({ model, done }) => {
       </div>
       <Dial index={index} onDialChange={handleDialChange} color={currentColor} />
       <Button
-          onClick={handleSave}
-          fullWidth
-          variant="contained"
-          color="primary"
-          className="m-4 h-[60px] justify-center items-center flex rounded-[8px] bg-seam-blue"
-        >
-          <h3 className="text-seam-white">PREVIEW</h3>
+        onClick={handleSave}
+        fullWidth
+        variant="contained"
+        color="primary"
+        className="m-4 h-[60px] justify-center items-center flex rounded-[8px] bg-seam-blue"
+      >
+        <h3 className="text-seam-white">PREVIEW</h3>
       </Button>
     </div>
   );
@@ -102,19 +102,18 @@ interface DialProps {
 
 const Dial: React.FC<DialProps> = ({ index, onDialChange, color }) => {
   const dialRef = useRef<HTMLDivElement>(null);
-  const [angle, setAngle] = useState(0);
-  const snapPoints = emojis.length;
+  const [angle, setAngle] = useState<number>(0);
+  const snapPoints = emojis.length; 
   const snapAngle = 360 / snapPoints;
 
-  const handleMouseMove = (e: MouseEvent) => {
+  const handleMove = (clientX: number, clientY: number) => {
     if (dialRef.current) {
       const rect = dialRef.current.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
+      const x = clientX - rect.left - rect.width / 2;
+      const y = clientY - rect.top - rect.height / 2;
       let newAngle = Math.atan2(y, x) * (180 / Math.PI) + 90;
       if (newAngle < 0) newAngle += 360;
 
-      // Snap to nearest snap point
       const nearestSnapPoint = Math.round(newAngle / snapAngle) * snapAngle;
       setAngle(nearestSnapPoint);
 
@@ -123,20 +122,32 @@ const Dial: React.FC<DialProps> = ({ index, onDialChange, color }) => {
     }
   };
 
-  const handleMouseDown = () => {
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
+  const handleMouseMove = (e: MouseEvent) => {
+    handleMove(e.clientX, e.clientY);
   };
 
-  const handleMouseUp = () => {
+  const handleTouchMove = (e: TouchEvent) => {
+    handleMove(e.touches[0].clientX, e.touches[0].clientY);
+  };
+
+  const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleEnd);
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchend', handleEnd);
+  };
+
+  const handleEnd = () => {
     window.removeEventListener('mousemove', handleMouseMove);
-    window.removeEventListener('mouseup', handleMouseUp);
+    window.removeEventListener('mouseup', handleEnd);
+    window.removeEventListener('touchmove', handleTouchMove);
+    window.removeEventListener('touchend', handleEnd);
   };
 
   useEffect(() => {
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
+      handleEnd();
     };
   }, []);
 
@@ -144,7 +155,8 @@ const Dial: React.FC<DialProps> = ({ index, onDialChange, color }) => {
     <div
       ref={dialRef}
       className="dial relative w-64 h-64 rounded-full flex items-center justify-center"
-      onMouseDown={handleMouseDown}
+      onMouseDown={handleStart}
+      onTouchStart={handleStart}
     >
       <div className="absolute w-full h-full flex items-center justify-center">
         {Array.from({ length: snapPoints }).map((_, idx) => (
