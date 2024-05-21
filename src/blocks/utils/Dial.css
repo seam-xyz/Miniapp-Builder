@@ -1,0 +1,33 @@
+.dial {
+  position: relative;
+}
+
+.dial::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 18px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.dial-button {
+  width: 36px;
+  height: 36px;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform-origin: center center;
+  filter: drop-shadow(0px 4.257px 8.514px rgba(0, 0, 0, 0.05));
+}
+
+.snap-point {
+  width: 6px;
+  height: 6px;
+  background: gray;
+  border-radius: 50%;
+  position: absolute;
+}
