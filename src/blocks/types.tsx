@@ -23,6 +23,7 @@ import eyesIcon from "./blockIcons/eyeIcon.png"
 import MondrianIcon from './blockIcons/MondrianIcon.png'
 import bookIcon from './blockIcons/bookIcon.png'
 import WordleIcon from './blockIcons/WordleIcon.png'
+import MoodIcon from './blockIcons/MoodIcon.png'
 
 export type BlockModel = {
   type: string;
@@ -441,5 +442,18 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockEdit: true,
     createdBy: "seam",
     fullscreenEdit: false,
+  },
+  "Mood": { 
+    type: "Mood",
+    displayName: "Mood Visualizer",
+    displayDescription: "Express your emotions, open up and tell the world how you're feeling!",
+    emptyTitle: "Empty Mood Visualizer App",
+    emptySubtitle: "Tap here to setup your Mood Visualizer app!",
+    icon: MoodIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "jamesburet",
+    fullscreenEdit: true,
   },
 };

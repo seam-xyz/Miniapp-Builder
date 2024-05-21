@@ -1,3 +1,4 @@
+import MoodApp from './MoodApp'
 import BookshelfApp from './BookshelfApp'
 import UnknownApp from './UnknownApp'
 import eyesBlock from './eyesBlock'
@@ -60,6 +61,7 @@ export default class BlockFactory {
       case "Mondrian": return new MondrianBlock(model, theme)
       case "Bookshelf": return new BookshelfApp(model, theme)
       case "Wordle": return new WordleBlock(model, theme)
+      case "Mood": return new MoodApp(model, theme)
       // new blocks go here
       default: return new UnknownApp(model, theme)
     }
