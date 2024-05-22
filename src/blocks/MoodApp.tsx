@@ -86,7 +86,7 @@ const MoodVisualizer: React.FC<MoodVisualizerProps> = ({ model, done }) => {
 
   return (
     <div
-      className="w-full h-full min-h-screen overflow-hidden flex flex-col items-center justify-between"
+      className="w-full h-full overflow-hidden flex flex-col items-center justify-between"
       style={{
         background: `linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, ${currentColor}40 100%)`, // 40 is 25% opacity
       }}
@@ -95,15 +95,19 @@ const MoodVisualizer: React.FC<MoodVisualizerProps> = ({ model, done }) => {
         <h1 className="text-seam-black font-thin leading-[48px] text-center">How do you feel right now?</h1>
         <div className={`text-[24px] mb-6 mt-10`} style={{ color: textColor }}>{emojis[index].mood}</div>
       </div>
-      <Dial index={index} onDialChange={handleDialChange} color={currentColor} />
+      <div style={{marginTop: '100px',}}>
+        <Dial index={index} onDialChange={handleDialChange} color={currentColor} />
+      </div>
+      <div className="flex h-full my-0"></div>
       <Button
         onClick={handleSave}
         fullWidth
         variant="contained"
         color="primary"
-        className="m-4 h-[60px] justify-center items-center flex rounded-[8px] bg-seam-blue"
+        className="h-[120px] w-[300px] justify-center items-center flex rounded-[8px] bg-seam-blue m-4"
+        style={{marginBottom: '100px'}}
       >
-        <h3 className="text-seam-white">PREVIEW</h3>
+        <h3 className="p-2 text-seam-white">PREVIEW</h3>
       </Button>
     </div>
   );
