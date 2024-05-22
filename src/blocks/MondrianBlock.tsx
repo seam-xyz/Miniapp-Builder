@@ -41,23 +41,25 @@ export default class MondrianBlock extends Block {
 
 const MondrianCanvas = ({ squares, onSquareClick }: { squares: any, onSquareClick: (id: string) => void }) => {
   return (
-    <div style={{ position: 'relative', width: '100%', height: '350px', border: '2px solid black', boxSizing: 'border-box',  }}>
-      {squares.map((square: any) => (
-        <div
-          key={square.id}
-          onClick={() => onSquareClick(square.id)}
-          style={{
-            position: 'absolute',
-            left: `${square.x}%`,
-            top: `${square.y}%`,
-            width: `${square.width}%`,
-            height: `${square.height}%`,
-            border: '2px solid black',
-            backgroundColor: square.color || 'white',
-            cursor: 'pointer'
-          }}
-        ></div>
-      ))}
+    <div style={{ position: 'relative', width: '100%', paddingTop: '100%', boxSizing: 'border-box' }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, border: '2px solid black' }}>
+        {squares.map((square: any) => (
+          <div
+            key={square.id}
+            onClick={() => onSquareClick(square.id)}
+            style={{
+              position: 'absolute',
+              left: `${square.x}%`,
+              top: `${square.y}%`,
+              width: `${square.width}%`,
+              height: `${square.height}%`,
+              border: '2px solid black',
+              backgroundColor: square.color || 'white',
+              cursor: 'pointer'
+            }}
+          ></div>
+        ))}
+      </div>
     </div>
   );
 };
@@ -140,7 +142,7 @@ const MondrianEditor = ({
         onSquareClick={handleSquareClick}
       />
       <Box className="space-between" sx={{ width: '100%', height: 'auto' }}>
-      <Tabs
+        <Tabs
           className="mb-4"
           value={mode}
           onChange={(e, newValue) => setMode(newValue)}
@@ -204,15 +206,15 @@ const MondrianEditor = ({
           </Grid>
         )}
         <Button
-            component="label"
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={handleSave}
-            sx={{ p: '10px', textTransform: 'none', mt: '8px', height: '60px', fontFamily: "Public Sans", fontSize: "16px", backgroundColor: "#101010" }}
-          >
-            Preview
-          </Button>
+          component="label"
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={handleSave}
+          sx={{ p: '10px', textTransform: 'none', mt: '8px', height: '60px', fontFamily: "Public Sans", fontSize: "16px", backgroundColor: "#101010" }}
+        >
+          Preview
+        </Button>
       </Box>
     </Box>
   );
