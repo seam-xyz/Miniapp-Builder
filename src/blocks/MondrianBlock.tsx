@@ -1,10 +1,13 @@
 import Block from './Block';
 import { BlockModel } from './types';
 import React, { useState } from 'react';
-import { Button, Tabs, Tab, Box, Grid, IconButton } from '@mui/material';
+import { Button, Tabs, Tab, Box, Grid, IconButton, Divider } from '@mui/material';
 import BlockFactory from './BlockFactory';
-import { ArrowUp, ArrowRight, RotateCw, XCircle } from 'react-feather';
+import { ArrowUp, ArrowRight, RotateCw, XCircle, X } from 'react-feather';
 import SeamSaveButton from '../components/SeamSaveButton';
+import { ReactComponent as BorderHoriz } from './blockIcons/border_horizontal.svg';
+import { ReactComponent as BorderVert } from './blockIcons/border_vertical.svg';
+import { ReactComponent as Undo } from './blockIcons/undo.svg';
 
 const colors = [
   'white', '#D6D6D6', '#999999', '#5C5C5C', '#474747', 'black',
@@ -160,30 +163,29 @@ const MondrianEditor = ({
           <div className="flex flex-row space-x-4 items-center justify-center w-full h-full">
             <div className="p-4 gap-2 flex items-center justify-center rounded-full border border-seam-black/5">
               <div
-                className={`p-1 cursor-pointer ${cutDirection === 'horizontal' ? 'bg-seam-pink text-white' : 'bg-[#EFEFEF] text-seam-black'}`}
+                className={`p-1 cursor-pointer rounded-full ${cutDirection === 'horizontal' ? 'bg-seam-pink fill-white stroke-white text-white' : 'bg-[#EFEFEF] fill-seam-black stroke-black text-seam-black'}`}
                 onClick={() => setCutDirection('horizontal')}
               >
-                <ArrowRight size={24} />
+                <BorderHoriz className={`${cutDirection === 'horizontal' ? 'fill-white text-white' : 'fill-black text-black'}`}/>
               </div>
               <div
-                className={`p-1 cursor-pointer ${cutDirection === 'vertical' ? 'bg-seam-pink text-white' : 'bg-[#EFEFEF] text-seam-black'}`}
+                className={`p-1 cursor-pointer rounded-full ${cutDirection === 'vertical' ? 'bg-seam-pink fill-white text-white' : 'bg-[#EFEFEF] fill-seam-black text-seam-black'}`}
                 onClick={() => setCutDirection('vertical')}
               >
-                <ArrowUp size={24} />
+                <BorderVert className={`${cutDirection === 'vertical' ? 'fill-white text-white' : 'fill-black text-blakc'}`} />
               </div>
-            </div>
-            <div className="p-4 gap-2 flex items-center justify-center rounded-full border border-seam-black/5">
+              <Divider orientation="vertical" flexItem={true} />
               <div
-                className="p-1 cursor-pointer bg-[#EFEFEF] text-seam-black"
+                className="p-1 cursor-pointer rounded-full bg-[#EFEFEF] text-seam-black"
                 onClick={undo}
               >
-                <RotateCw size={24} />
+                <Undo />
               </div>
               <div
-                className="p-1 cursor-pointer bg-[#EFEFEF] text-seam-black"
+                className="p-1 rounded-full cursor-pointer bg-[#EFEFEF] text-seam-black"
                 onClick={clearCanvas}
               >
-                <XCircle size={24} />
+                <X size={24} />
               </div>
             </div>
           </div>
