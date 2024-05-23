@@ -13,7 +13,6 @@ import RedMarkerSvg from './assets/WhiteboardBlock/red_marker.svg';
 import GreenMarkerSvg from './assets/WhiteboardBlock/green_marker.svg';
 import MarkerCapOnSound from './assets/WhiteboardBlock/marker_cap_on.mp3';
 import MarkerCapOffSound from './assets/WhiteboardBlock/marker_cap_off.mp3';
-import _ from 'lodash';
 
 const SOUND_ATTRIBUTION = `
   dry erase marker_cap_on.wav by sjturia
@@ -119,6 +118,21 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     setPoints([]); // Clear points at the end of drawing
   }
 
+  const saveImageData = useCallback(() => {
+    const canvas = canvasRef?.current;
+    if (!canvas) {
+      return;
+    }
+
+    const canvasContext = canvas.getContext('2d');
+    if (!canvasContext) {
+      return;
+    }
+
+    const imageData = canvas.toDataURL('image/png');
+    updateState(height, width, initialBackgroundColor, imageData);
+  }, [updateState, height, width, initialBackgroundColor]);
+
   // FUTURE: Expose as a customizable callback in props, takes a canvas context as an arg, can be used to access canvas
   const draw = useCallback(() => {
     const canvasContext = canvasRef?.current?.getContext('2d');
@@ -131,7 +145,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     canvasContext.lineWidth = 4;
     canvasContext.strokeStyle = foregroundColor;
 
-    if (points.length == 1) {
+    if (points.length === 1) {
       // Draw single dot
       // NOTE: this isn't working correctly, need to investigate if the first point is getting set correctly each time
       canvasContext.beginPath();
@@ -156,11 +170,12 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     canvasContext.stroke();
 
     // Update model state on every redraw... pretty inefficient; need to be able to listen to the external button event though
-    const imageData = canvasRef?.current?.toDataURL('image/png');
-    if (imageData) {
-      updateState(310, 480, initialBackgroundColor, imageData);
-    }
-  }, [points, foregroundColor, initialBackgroundColor, updateState])
+    // const imageData = canvasRef?.current?.toDataURL('image/png');
+    // if (imageData) {
+    //   updateState(310, 480, initialBackgroundColor, imageData);
+    // }
+    saveImageData();
+  }, [points, foregroundColor, saveImageData])
 
   // === Handle Renders and Re-renders ===
   // Render the outline on first render
@@ -183,7 +198,14 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     canvasContext.roundRect(lineWidth / 2, height - bottomRectHeight, width - lineWidth, bottomRectHeight - lineWidth, 4);
     canvasContext.fill();
 
-  }, [height, width])
+    // Save initial state
+    // const imageData = canvasRef?.current?.toDataURL('image/png');
+    // if (imageData) {
+    //   updateState(310, 480, initialBackgroundColor, imageData);
+    // }
+    saveImageData();
+
+  }, [height, width, saveImageData])
 
   // Update state variables based on changes to position
   useEffect(() => {
