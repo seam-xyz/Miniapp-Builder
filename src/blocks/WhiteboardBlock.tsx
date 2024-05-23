@@ -283,7 +283,6 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
   const [selectedColor, setSelectedColor] = useState<string>(initialUserState.initialForegroundColor);
 
   return (
-    // <form onSubmit={onSave} className='p-2 flex flex-col h-full'>
     <>
       <DrawableCanvas
         width={width}
@@ -298,7 +297,6 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
         onChange={(newColor: string) => setSelectedColor(newColor)}
       />
     </>
-    // </form>
   )
 }
 
