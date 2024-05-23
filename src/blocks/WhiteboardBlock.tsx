@@ -253,6 +253,7 @@ const MarkerColorSelector: React.FC<MarkerColorSelectorProps> = ({ color, onChan
             src={marker.svg}
             onClick={() => handleColorChange(marker.color)}
             onMouseEnter={playHoverSound}
+            onDragStart={(e) => e.preventDefault()}
           />
         ))}
       </div>
