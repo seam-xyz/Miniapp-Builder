@@ -5,11 +5,25 @@ import './BlockStyles.css'
 
 import CSS from 'csstype';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { AttributionOutlined } from '@mui/icons-material';
 import BlueMarkerSvg from './assets/WhiteboardBlock/blue_marker.svg';
 import BlackMarkerSvg from './assets/WhiteboardBlock/black_marker.svg';
 import YellowMarkerSvg from './assets/WhiteboardBlock/yellow_marker.svg';
 import RedMarkerSvg from './assets/WhiteboardBlock/red_marker.svg';
 import GreenMarkerSvg from './assets/WhiteboardBlock/green_marker.svg';
+import MarkerCapOnSound from './assets/WhiteboardBlock/marker_cap_on.mp3';
+import MarkerCapOffSound from './assets/WhiteboardBlock/marker_cap_off.mp3';
+import _ from 'lodash';
+
+const SOUND_ATTRIBUTION = `
+  dry erase marker_cap_on.wav by sjturia
+  https://freesound.org/s/370922/
+  License: Attribution 3.0
+
+  dry erase marker_cap_off.wav by sjturia
+  https://freesound.org/s/370917/
+  License: Attribution 3.0
+  `;
 
 interface DrawableCanvasInitialUserState {
   initialBackgroundColor: string,  // Hex string e.g. '#123abc'
@@ -211,23 +225,38 @@ const markers = [
 
 const MarkerColorSelector: React.FC<MarkerColorSelectorProps> = ({ color, onChange }) => {
   const [selectedColor, updateSelectedColor] = useState<string>(color);
+  const playSelectedSound = () => {
+    new Audio(MarkerCapOffSound).play();
+  }
+  const playHoverSound = () => {
+    var audio = new Audio(MarkerCapOnSound);
+    audio.volume = 0.2;
+    audio.play();
+  }
 
   const handleColorChange = (color: string) => {
+    playSelectedSound();
     updateSelectedColor(color);
     onChange(color);
   }
 
   return (
-    <div className='grid grid-cols-5 gap-2'>
-      {markers.map((marker) => (
-        <img 
-          key={marker.color}
-          className={`w-full transform transition-transform duration-300 ${marker.color === selectedColor ? 'translate-y-0 hover:-rotate-1' : 'hover:translate-y-8 translate-y-12'}`}
-          src={marker.svg}
-          onClick={() => handleColorChange(marker.color)}
-        />
-      ))}
-    </div>
+    <>
+      <div className='absolute right-0' title={SOUND_ATTRIBUTION}>
+        <AttributionOutlined />
+      </div>
+      <div className='grid grid-cols-5 gap-2'>
+        {markers.map((marker) => (
+          <img 
+            key={marker.color}
+            className={`w-full transform transition-transform duration-300 ${marker.color === selectedColor ? 'translate-y-0 hover:-rotate-1' : 'hover:translate-y-8 translate-y-12'}`}
+            src={marker.svg}
+            onClick={() => handleColorChange(marker.color)}
+            onMouseEnter={playHoverSound}
+          />
+        ))}
+      </div>
+    </>
   );
 }
 
