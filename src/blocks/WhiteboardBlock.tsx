@@ -283,7 +283,7 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
   const [selectedColor, setSelectedColor] = useState<string>(initialUserState.initialForegroundColor);
 
   return (
-    <>
+    <div className='overflow-y-clip'>
       <DrawableCanvas
         width={width}
         height={height}
@@ -296,7 +296,16 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
         color={selectedColor}
         onChange={(newColor: string) => setSelectedColor(newColor)}
       />
-    </>
+      <div className='absolute bottom-0 left-0 right-0 p-4'>
+        <button
+          className='font-sans w-full py-8 px-4 bg-seam-blue text-white rounded-lg hover:bg-blue-600'
+          onClick={onSave}
+          // disabled={props.}
+        >
+          Preview
+        </button>
+      </div>
+    </div>
   )
 }
 
