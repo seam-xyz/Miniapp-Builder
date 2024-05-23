@@ -2,11 +2,13 @@ import Block from './Block'
 import { BlockModel } from './types'
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
+import SaveButton from '../components/SeamSaveButton';
 
 import CSS from 'csstype';
 import React, { useEffect, useRef, useState } from 'react';
 import { SizeMe, SizeMeProps } from 'react-sizeme';
 import { Button, Stack, Grid } from '@mui/material';
+import SeamSaveButton from '../components/SeamSaveButton';
 
 interface BasePixelCanvasProps {
   initialNumPixelsPerSide: number;          // e.g. '5' represents a 5x5 pixel grid
@@ -352,18 +354,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
         onMouseUp={() => setIsMouseDownOnCanvas(false)}
         onContextMenu={(e) => e.preventDefault()}
       />
-      {isEditMode &&
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '10px', }}>
-          <Button
-            type='submit'
-            variant='contained'
-            className='save-modal-button'
-            onClick={savePixelState}
-          >
-            PREVIEW
-          </Button>
-        </div>
-      }
+      {isEditMode && <SeamSaveButton onClick={savePixelState} />}
     </div>
   );
 };
@@ -378,7 +369,7 @@ const PixelCanvasWithSize = (props: BasePixelCanvasProps) => {
           width: '100%',
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center',
+          alignItems: 'between',
 
         }}>
           <PixelCanvas

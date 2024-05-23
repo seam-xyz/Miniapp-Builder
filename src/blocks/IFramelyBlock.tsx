@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import TitleComponent from './utils/TitleComponent';
+import SeamSaveButton from '../components/SeamSaveButton';
 
 export default class IFramelyBlock extends Block {
   props: any;
@@ -65,7 +66,7 @@ export default class IFramelyBlock extends Block {
       <Box
         component="form"
         onSubmit={onFinish}
-        style={{}}
+        style={{height: 'auto'}}
       >
         <TextField
           margin="normal"
@@ -84,14 +85,7 @@ export default class IFramelyBlock extends Block {
           name="header"
           defaultValue={this.model.data['title']}
         />
-        <Button
-          type="submit"
-          variant="contained"
-          className="save-modal-button"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          PREVIEW
-        </Button>
+        <SeamSaveButton onClick={onFinish} />
       </Box>
     )
   }

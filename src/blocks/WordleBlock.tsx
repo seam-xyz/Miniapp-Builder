@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Button, Box, TextField, Typography, Divider, IconButton } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import BlockFactory from './BlockFactory';
+import SeamSaveButton from '../components/SeamSaveButton';
 
 export default class WordleBlock extends Block {
   render() {
@@ -250,15 +251,7 @@ const WordleEditor = ({
           </Box>
         )}
         {isGameOver && (
-        <Button
-          onClick={handleCopyResults}
-          fullWidth
-          variant="contained"
-          color="primary"
-          className="mt-4 h-[60px] justify-center items-center flex rounded-[8px] bg-seam-blue"
-        >
-          <h3 className="text-seam-white">COPY RESULTS</h3>
-        </Button>
+          <SeamSaveButton onClick={handleCopyResults} />
         )}
       </Box>
     </Box>

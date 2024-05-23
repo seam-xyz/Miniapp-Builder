@@ -5,6 +5,7 @@ import './BlockStyles.css'
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import SeamSaveButton from '../components/SeamSaveButton';
 
 type MarqueeProps = React.HTMLAttributes<HTMLElement>
 
@@ -68,14 +69,7 @@ export default class MarqueeBlock extends Block {
           label="Text"
           name="text"
         />
-        <Button
-          type="submit"
-          variant="contained"
-          className="save-modal-button"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          Save
-        </Button>
+        <SeamSaveButton onClick={onFinish} />
       </Box>
     )
   }

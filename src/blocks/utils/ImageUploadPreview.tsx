@@ -5,6 +5,7 @@ import FileUploadComponent from './FileUploadComponent';
 import { Button, IconButton, Box } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import ImageEmptyIcon from "../blockIcons/ImageEmptyIcon.png";
+import SeamSaveButton from '../../components/SeamSaveButton';
 
 interface ImageUploadPreviewProps {
   initialUrls: string[];
@@ -59,16 +60,7 @@ const ImageUploadPreview: React.FC<ImageUploadPreviewProps> = ({ initialUrls, on
           maxFiles={10}
         />
         {previewUrls.length > 0 && (
-          <Button
-            component="label"
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={onFinalize}
-            sx={{ p: '10px', textTransform: 'none', mt: '8px', height: '60px', fontFamily: "Public Sans", fontSize: "16px", backgroundColor: "#101010" }}
-          >
-            Preview
-          </Button>
+          <SeamSaveButton onClick={onFinalize} />
         )}
       </Box>
     </>

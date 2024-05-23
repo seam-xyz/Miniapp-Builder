@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import TitleComponent from './utils/TitleComponent';
 import FileUploadComponent from './utils/FileUploadComponent';
 import ReactPlayer from 'react-player/lazy'
+import SeamSaveButton from '../components/SeamSaveButton';
 
 export default class VideoBlock extends Block {
   render() {
@@ -65,7 +66,7 @@ export default class VideoBlock extends Block {
     return (
       <>
         {uploaderComponent}
-        <Typography style={{ textAlign: "center", width: "100%", paddingBottom: "10px", paddingTop: "18px" }}>Or</Typography>
+        <Typography style={{ textAlign: "center", width: "100%", paddingTop: "18px" }}>Or</Typography>
         <Box
           component="form"
           onSubmit={onFinish}
@@ -80,14 +81,7 @@ export default class VideoBlock extends Block {
             name="url"
             defaultValue={this.model.data['url']}
           />
-          <Button
-            type="submit"
-            variant="contained"
-            className="save-modal-button"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            PREVIEW
-          </Button>
+          <SeamSaveButton onClick={onFinish} />
         </Box>
       </>
     );

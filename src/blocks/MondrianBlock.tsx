@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Button, Tabs, Tab, Box, Grid, IconButton } from '@mui/material';
 import BlockFactory from './BlockFactory';
 import { ArrowUp, ArrowRight, RotateCw, XCircle } from 'react-feather';
+import SeamSaveButton from '../components/SeamSaveButton';
 
 const colors = [
   'white', '#D6D6D6', '#999999', '#5C5C5C', '#474747', 'black',
@@ -205,16 +206,7 @@ const MondrianEditor = ({
             ))}
           </Grid>
         )}
-        <Button
-          component="label"
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={handleSave}
-          sx={{ p: '10px', textTransform: 'none', mt: '8px', height: '60px', fontFamily: "Public Sans", fontSize: "16px", backgroundColor: "#101010" }}
-        >
-          Preview
-        </Button>
+      <SeamSaveButton onClick={handleSave} />
       </Box>
     </Box>
   );

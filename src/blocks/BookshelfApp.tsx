@@ -74,8 +74,8 @@ const Bookshelf: React.FC<BookshelfProps> = ({ done, model }) => {
   };
 
   return (
-    <div className="p-6 bg-[#F1ECE6] min-h-screen">
-      <div className="flex items-center justify-center mb-8">
+    <div className="bg-[#F1ECE6] h-full">
+      <div className="flex items-center justify-center mb-8 pt-[50px]">
         <h2 className="text-2xl text-[#57231E]" style={fontLoaded ? { fontFamily: "Cormorant Garamond, serif" } : {}}>Bookshelf</h2>
       </div>
       <p className="text-center text- mb-6 text-xl" style={fontLoaded ? { fontFamily: "Cormorant Garamond, serif", color: 'rgba(0, 0, 0, 0.60)' } : {}}>Add a book to your shelf</p>

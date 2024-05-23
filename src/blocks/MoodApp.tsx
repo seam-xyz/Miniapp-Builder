@@ -4,6 +4,7 @@ import { BlockModel } from './types';
 import './BlockStyles.css';
 import './utils/Dial.css';
 import { Button } from '@mui/material';
+import SeamSaveButton from '../components/SeamSaveButton';
 
 const emojis = [
   { mood: 'Feeling Happy', emoji: '😄', color: '#FFD700' },
@@ -86,7 +87,7 @@ const MoodVisualizer: React.FC<MoodVisualizerProps> = ({ model, done }) => {
 
   return (
     <div
-      className="w-full min-h-screen overflow-hidden flex flex-col items-center justify-between"
+      className="w-full h-full overflow-hidden flex flex-col items-center justify-between"
       style={{
         background: `linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, ${currentColor}40 100%)`, // 40 is 25% opacity
       }}
@@ -98,18 +99,9 @@ const MoodVisualizer: React.FC<MoodVisualizerProps> = ({ model, done }) => {
       <div style={{marginTop: '20px',}}>
         <Dial index={index} onDialChange={handleDialChange} color={currentColor} />
       </div>
-      <div         style={{paddingBottom: 'calc(env(safe-area-inset-bottom) + 64px)'}}>
-      <Button
-        onClick={handleSave}
-        fullWidth
-        variant="contained"
-        color="primary"
-        className="h-[60px] w-[300px] justify-center items-center flex rounded-[8px] bg-seam-blue"
-      >
-        <h3 className="p-2 text-seam-white">PREVIEW</h3>
-      </Button>
-        
-        </div>
+      <div className="w-[90%] mx-4" style={{paddingBottom: 'calc(env(safe-area-inset-bottom))'}}>
+        <SeamSaveButton onClick={handleSave} />
+      </div>
     </div>
   );
 };

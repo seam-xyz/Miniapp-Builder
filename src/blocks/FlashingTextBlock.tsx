@@ -4,6 +4,7 @@ import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 import { FormControlLabel, Checkbox, TextField, Box, Button, Slider, InputLabel } from '@mui/material';
 import { useState, useEffect } from "react";
+import SeamSaveButton from '../components/SeamSaveButton';
 
 interface FlashingTextProps {
   content: string;
@@ -208,14 +209,7 @@ export default class FlashingTextBlock extends Block {
         {this.model.data['isAscii'] === "true" 
           ? <AsciiArtControls checked={true} lineHeight={this.model.data['lineHeight'] || "1.0"}></AsciiArtControls>
           : <AsciiArtControls checked={false} lineHeight={this.model.data['lineHeight'] || "1.0"}></AsciiArtControls>}
-        <Button
-          type="submit"
-          variant="contained"
-          className="save-modal-button"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          Save
-        </Button>
+        <SeamSaveButton onClick={onFinish} />
       </Box>
     );
   }
