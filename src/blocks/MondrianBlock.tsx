@@ -10,7 +10,7 @@ const colors = [
   'white', '#D6D6D6', '#999999', '#5C5C5C', '#474747', 'black',
   '#008CB4', '#7A219F', '#D38303', '#F6ED00', '#C3D116', '#679D34',
   '#54D6FC', '#874FFD', '#FFA57D', '#FEDA77', '#EBF28F', '#B1DD8B',
-  '#CBF0FF', '#F9D4E0', '#F9D4E0', '#FEF2D5', '#FEF2D5', '#DEEFD4'
+  '#CBF0FF', '#F9D4E0', '#BA4D2A', '#FEF2D5', '#416222', '#DEEFD4'
 ];
 
 export default class MondrianBlock extends Block {
