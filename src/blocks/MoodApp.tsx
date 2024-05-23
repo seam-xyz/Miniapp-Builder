@@ -210,7 +210,7 @@ const MoodDisplay: React.FC<MoodDisplayProps> = ({ mood, emoji }) => {
     >
       <div className={`text-[24px] mb-6`} style={{ color: darkenColor(moodObj.color, -20) }}>{mood}</div>
       <div
-        className="text-6xl flex items-center justify-center p-16 rounded-full"
+        className="text-6xl flex items-center justify-center p-16 mb-[60px] rounded-full "
         style={{ backgroundColor: moodObj.color }}
       >
         {emoji}
