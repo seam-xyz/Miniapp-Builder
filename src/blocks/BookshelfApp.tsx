@@ -98,7 +98,7 @@ const Bookshelf: React.FC<BookshelfProps> = ({ done, model }) => {
           />
         </form>
       </div>
-      <div className="pt-4">
+      <div className="p-4 bg-[#F1ECE6]">
         {books.length > 0 && (
           <ul>
             {books.map((book) => (

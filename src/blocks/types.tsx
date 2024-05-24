@@ -333,7 +333,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptyTitle: "Setup Countdown Timer",
     emptySubtitle: "Tap here to setup your countdown Timer!",
     icon: clockIcon,
-    deprecated: false,
+    deprecated: true,
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: "coldreactor",

@@ -69,7 +69,14 @@ export default class MarqueeBlock extends Block {
           label="Text"
           name="text"
         />
-        <SeamSaveButton onClick={onFinish} />
+        <Button
+          type="submit"
+          variant="contained"
+          className="save-modal-button"
+          sx={{ mt: 3, mb: 2 }}
+        >
+          Save
+        </Button>
       </Box>
     )
   }

@@ -47,7 +47,7 @@ export default class IFramelyBlock extends Block {
     } else if (blockType === 'video') {
       urlLabel = "Video URL (YouTube, TikTok, Instagram, etc.)";
     }
-    
+
     const onFinish = (event: any) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
@@ -58,15 +58,11 @@ export default class IFramelyBlock extends Block {
       done(this.model)
     };
 
-    const onFinishFailed = (errorInfo: any) => {
-      console.log('Failed:', errorInfo);
-    };
-
     return (
       <Box
         component="form"
         onSubmit={onFinish}
-        style={{height: 'auto'}}
+        style={{ height: 'auto' }}
       >
         <TextField
           margin="normal"
@@ -85,7 +81,14 @@ export default class IFramelyBlock extends Block {
           name="header"
           defaultValue={this.model.data['title']}
         />
-        <SeamSaveButton onClick={onFinish} />
+        <Button
+          type="submit"
+          variant="contained"
+          className="save-modal-button"
+          sx={{ mt: 3, mb: 2 }}
+        >
+          Preview
+        </Button>
       </Box>
     )
   }

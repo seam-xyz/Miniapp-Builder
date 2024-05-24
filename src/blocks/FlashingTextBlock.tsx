@@ -209,7 +209,14 @@ export default class FlashingTextBlock extends Block {
         {this.model.data['isAscii'] === "true" 
           ? <AsciiArtControls checked={true} lineHeight={this.model.data['lineHeight'] || "1.0"}></AsciiArtControls>
           : <AsciiArtControls checked={false} lineHeight={this.model.data['lineHeight'] || "1.0"}></AsciiArtControls>}
-        <SeamSaveButton onClick={onFinish} />
+        <Button
+          type="submit"
+          variant="contained"
+          className="save-modal-button"
+          sx={{ mt: 3, mb: 2 }}
+        >
+          Preview
+        </Button>
       </Box>
     );
   }

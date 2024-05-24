@@ -30,7 +30,7 @@ export default class VideoBlock extends Block {
           <ReactPlayer
             controls={true}
             url={url}
-            style={{minHeight: '300px', width: '100%', height: 'auto', flexGrow: 1, }}
+            style={{ minHeight: '300px', width: '100%', height: 'auto', flexGrow: 1, }}
           />
         </div>
       </div>
@@ -81,7 +81,14 @@ export default class VideoBlock extends Block {
             name="url"
             defaultValue={this.model.data['url']}
           />
-          <SeamSaveButton onClick={onFinish} />
+          <Button
+            type="submit"
+            variant="contained"
+            className="save-modal-button"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            PREVIEW
+          </Button>
         </Box>
       </>
     );
