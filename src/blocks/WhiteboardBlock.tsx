@@ -53,7 +53,6 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
   // === Initialize ===
   const {
     initialBackgroundColor,
-    initialForegroundColor,
     initialImageData,
   } = props.userInitialState;
   const foregroundColor = props.foregroundColor;
@@ -136,7 +135,6 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     updateState(height, width, initialBackgroundColor, imageData);
   }, [updateState, height, width, initialBackgroundColor]);
 
-  // FUTURE: Expose as a customizable callback in props, takes a canvas context as an arg, can be used to access canvas
   const draw = useCallback(() => {
     const canvasContext = canvasRef?.current?.getContext('2d');
     if (!canvasContext || points.length < 1) {
@@ -337,7 +335,6 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
 // stringSizeToNumber takes an input size string like '400px' and returns 400
 function stringSizeToNumber(size: string | undefined): number {
   if (size === undefined) {
-    // handle edge case, size should never be undefined from Seam render
     return 400
   }
 
