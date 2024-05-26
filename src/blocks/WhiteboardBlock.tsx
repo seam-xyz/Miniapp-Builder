@@ -118,6 +118,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
   const handleStopDrawing = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent> | React.TouchEvent<HTMLCanvasElement>) => {
     setIsDrawing(false);
     setPoints([]); // Clear points at the end of drawing
+    saveImageData(); // Save current image state
   }
 
   const saveImageData = useCallback(() => {
@@ -170,10 +171,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     const lastIndex = points.length - 1;
     canvasContext.quadraticCurveTo(points[lastIndex - 1].x, points[lastIndex - 1].y, points[lastIndex].x, points[lastIndex].y);
     canvasContext.stroke();
-
-    // Update model state on every redraw... pretty inefficient; need to be able to listen to the external button event though
-    saveImageData();
-  }, [points, foregroundColor, saveImageData])
+  }, [points, foregroundColor])
 
   // === Handle Renders and Re-renders ===
   // Render the outline on first render
