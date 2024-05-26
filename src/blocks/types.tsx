@@ -466,6 +466,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "emilee"
+    createdBy: "emilee",
+    fullscreenEdit: false,
   },
 };

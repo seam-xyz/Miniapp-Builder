@@ -27,6 +27,7 @@ const SOUND_ATTRIBUTION = `
 interface DrawableCanvasInitialUserState {
   initialBackgroundColor: string,  // Hex string e.g. '#123abc'
   initialForegroundColor: string,  // Hex string e.g. '#123abc'
+  initialImageData?: string,       // Optional base64 image data
 }
 
 interface DrawableCanvasProps {
@@ -53,6 +54,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
   const {
     initialBackgroundColor,
     initialForegroundColor,
+    initialImageData,
   } = props.userInitialState;
   const foregroundColor = props.foregroundColor;
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -170,10 +172,6 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     canvasContext.stroke();
 
     // Update model state on every redraw... pretty inefficient; need to be able to listen to the external button event though
-    // const imageData = canvasRef?.current?.toDataURL('image/png');
-    // if (imageData) {
-    //   updateState(310, 480, initialBackgroundColor, imageData);
-    // }
     saveImageData();
   }, [points, foregroundColor, saveImageData])
 
@@ -182,6 +180,15 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
   useEffect(() => {
     const canvasContext = canvasRef?.current?.getContext('2d');
     if (!canvasContext) {
+      return;
+    }
+
+    if (initialImageData !== undefined) {
+      const image = new Image();
+      image.src = initialImageData;
+      image.onload = () => {
+        canvasContext.drawImage(image, 0, 0);
+      }
       return;
     }
 
@@ -199,13 +206,9 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     canvasContext.fill();
 
     // Save initial state
-    // const imageData = canvasRef?.current?.toDataURL('image/png');
-    // if (imageData) {
-    //   updateState(310, 480, initialBackgroundColor, imageData);
-    // }
     saveImageData();
 
-  }, [height, width, saveImageData])
+  }, [height, width, saveImageData, initialImageData])
 
   // Update state variables based on changes to position
   useEffect(() => {
@@ -287,6 +290,7 @@ interface WhiteboardEditProps {
   width: number,
   initialForegroundColor: string,
   initialBackgroundColor: string,
+  initialImageData?: string,
   onSave: () => void,    // Callback for saving state when editing
   updateState: ((
     height: number,
@@ -302,6 +306,7 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
   const initialUserState = {
     initialForegroundColor: props.initialForegroundColor,
     initialBackgroundColor: props.initialBackgroundColor,
+    initialImageData: props.initialImageData,
   }
   const [selectedColor, setSelectedColor] = useState<string>(initialUserState.initialForegroundColor);
 
@@ -323,7 +328,6 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
         <button
           className='font-sans w-full py-8 px-4 bg-seam-blue text-white rounded-lg hover:bg-blue-600'
           onClick={onSave}
-          // disabled={props.}
         >
           Preview
         </button>
@@ -368,12 +372,14 @@ export default class WhiteboardBlock extends Block {
   }
 
   renderEditModal(done: (data: BlockModel) => void, width?: string) {
-    console.log('got the width in render', width);
     const widthInt = width !== undefined ? stringSizeToNumber(width) : 450;
     const defaultBackgroundColor = '#ffffff';
     const defaultForegroundColor = '#373737';
 
-    // TODO: load from saved state
+    const {
+      backgroundColor,
+      imageData,
+    } = this.model.data;
 
     const updateState = (
       height: number,
@@ -390,12 +396,13 @@ export default class WhiteboardBlock extends Block {
     const onSave = () => {
       done(this.model);
     }
-
+    
     return (
       <WhiteboardEdit
         width={widthInt}
-        initialBackgroundColor={defaultBackgroundColor}
+        initialBackgroundColor={backgroundColor || defaultBackgroundColor}
         initialForegroundColor={defaultForegroundColor}
+        initialImageData={imageData}
         onSave={onSave}
         updateState={updateState}
       />
