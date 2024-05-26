@@ -80,17 +80,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     canvasContext.fillRect(0, 0, width, height);
   }
 
-  const handleDrawDrag = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent> | React.TouchEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef?.current;
-    if (!canvas) {
-      return;
-    }
-
-    const canvasContext = canvas.getContext('2d');
-    if (!canvasContext) {
-      return;
-    }
-
+  const getRelativePosition = (canvas: HTMLCanvasElement, e: React.MouseEvent<HTMLCanvasElement, MouseEvent> | React.TouchEvent<HTMLCanvasElement>) => {
     // Translate page coordinates to relative canvas coordinates
     const canvasBoundingRect = canvas.getBoundingClientRect();
     var pageObj: any = e;
@@ -103,14 +93,33 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     const relativeX = Math.floor(pageObj.pageX - canvasBoundingRect.left);
     const relativeY = Math.floor(pageObj.pageY - canvasBoundingRect.top);
 
+    return {x: relativeX, y: relativeY}
+  }
+
+  const handleDrawDrag = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent> | React.TouchEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef?.current;
+    if (!canvas) {
+      return;
+    }
+
+    const canvasContext = canvas.getContext('2d');
+    if (!canvasContext) {
+      return;
+    }
+
+    const { x: relativeX, y: relativeY } = getRelativePosition(canvas, e);
+
     if (isDrawing) {
       setPoints(prevPoints => [...prevPoints, { x: relativeX, y: relativeY }]); // Updated to add points to the state
     }
   }
 
   const handleStartDrawing = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent> | React.TouchEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef?.current;
+    if (!canvas) return;
+    
     setIsDrawing(true);
-    setPoints([]); // Clear points at the start of drawing
+    setPoints([getRelativePosition(canvas, e)]); // Reset points at the start of drawing
     handleDrawDrag(e);
   }
 
@@ -141,20 +150,19 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
       return;
     }
 
-    canvasContext.lineCap = 'round';
-    canvasContext.lineJoin = 'round';
-    canvasContext.lineWidth = 4;
-    canvasContext.strokeStyle = foregroundColor;
-
     if (points.length === 1) {
-      // Draw single dot
-      // NOTE: this isn't working correctly, need to investigate if the first point is getting set correctly each time
+      // Draw single point
+      canvasContext.fillStyle = foregroundColor;
       canvasContext.beginPath();
-      canvasContext.roundRect(points[0].x, points[0].y, 4, 4, 2);
+      canvasContext.roundRect(points[0].x-3, points[0].y-3, 3, 3, 1);
       canvasContext.fill();
       return;
     }
 
+    canvasContext.lineCap = 'round';
+    canvasContext.lineJoin = 'round';
+    canvasContext.lineWidth = 4;
+    canvasContext.strokeStyle = foregroundColor;
     canvasContext.beginPath();
     canvasContext.moveTo(points[0].x, points[0].y);
 
