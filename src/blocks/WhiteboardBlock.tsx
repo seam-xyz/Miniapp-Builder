@@ -14,15 +14,20 @@ import GreenMarkerSvg from './assets/WhiteboardBlock/green_marker.svg';
 import MarkerCapOnSound from './assets/WhiteboardBlock/marker_cap_on.mp3';
 import MarkerCapOffSound from './assets/WhiteboardBlock/marker_cap_off.mp3';
 
-const SOUND_ATTRIBUTION = `
-  dry erase marker_cap_on.wav by sjturia
-  https://freesound.org/s/370922/
-  License: Attribution 3.0
+const ATTRIBUTION = `Design by @rocco
+https://seam.so/user/rocco
 
-  dry erase marker_cap_off.wav by sjturia
-  https://freesound.org/s/370917/
-  License: Attribution 3.0
-  `;
+Code by @emilee
+https://seam.so/user/emilee
+
+dry erase marker_cap_on.wav by sjturia
+https://freesound.org/s/370922/
+License: Attribution 3.0
+
+dry erase marker_cap_off.wav by sjturia
+https://freesound.org/s/370917/
+License: Attribution 3.0
+`;
 
 interface DrawableCanvasInitialUserState {
   initialBackgroundColor: string,  // Hex string e.g. '#123abc'
@@ -66,7 +71,6 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
   }
 
   // === Methods to Update Canvas ===
-  // FUTURE: Expose as a customizable callback in props, this is default behavior
   const [isDrawing, setIsDrawing] = useState(false);
   const [points, setPoints] = useState<{ x: number, y: number }[]>([]); // Updated state to store points
 
@@ -125,7 +129,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
 
   const handleStopDrawing = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent> | React.TouchEvent<HTMLCanvasElement>) => {
     setIsDrawing(false);
-    setPoints([]); // Clear points at the end of drawing
+    setPoints([]);   // Clear points at the end of drawing
     saveImageData(); // Save current image state
   }
 
@@ -223,7 +227,8 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
 
   // === Finally, Return ===
   return (
-    <canvas
+    <>
+      <canvas
         ref={canvasRef}
         width={width + 'px'}
         height={height + 'px'}
@@ -236,6 +241,16 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
         onTouchEnd={handleStopDrawing}
         onContextMenu={(e) => e.preventDefault()}
       />
+      <div className='absolute right-0 flex flex-row'>
+        <button onClick={clearCanvas}>
+          Clear
+        </button>
+        <p>|</p>
+        <div title={ATTRIBUTION}>
+          <AttributionOutlined />
+        </div>
+      </div>
+    </>
   )
 }
 
@@ -255,11 +270,13 @@ const markers = [
 const MarkerColorSelector: React.FC<MarkerColorSelectorProps> = ({ color, onChange }) => {
   const [selectedColor, updateSelectedColor] = useState<string>(color);
   const playSelectedSound = () => {
-    new Audio(MarkerCapOffSound).play();
+    var audio = new Audio(MarkerCapOffSound);
+    audio.volume = 0.5;
+    audio.play()
   }
   const playHoverSound = () => {
     var audio = new Audio(MarkerCapOnSound);
-    audio.volume = 0.2;
+    audio.volume = 0.15;
     audio.play();
   }
 
@@ -270,23 +287,18 @@ const MarkerColorSelector: React.FC<MarkerColorSelectorProps> = ({ color, onChan
   }
 
   return (
-    <>
-      <div className='absolute right-0' title={SOUND_ATTRIBUTION}>
-        <AttributionOutlined />
-      </div>
-      <div className='grid grid-cols-5 gap-2'>
-        {markers.map((marker) => (
-          <img 
-            key={marker.color}
-            className={`w-full transform transition-transform duration-300 ${marker.color === selectedColor ? 'translate-y-0 hover:-rotate-1' : 'hover:translate-y-8 translate-y-12'}`}
-            src={marker.svg}
-            onClick={() => handleColorChange(marker.color)}
-            onMouseEnter={playHoverSound}
-            onDragStart={(e) => e.preventDefault()}
-          />
-        ))}
-      </div>
-    </>
+    <div className='grid grid-cols-5 gap-2'>
+      {markers.map((marker) => (
+        <img 
+          key={marker.color}
+          className={`w-full transform transition-transform duration-300 ${marker.color === selectedColor ? 'translate-y-0 hover:-rotate-1' : 'hover:translate-y-8 translate-y-12'}`}
+          src={marker.svg}
+          onClick={() => handleColorChange(marker.color)}
+          onMouseEnter={playHoverSound}
+          onDragStart={(e) => e.preventDefault()}
+        />
+      ))}
+    </div>
   );
 }
 
@@ -364,10 +376,7 @@ export default class WhiteboardBlock extends Block {
       return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
     }
 
-    const {
-      backgroundColor,
-      imageData,
-    } = this.model.data;
+    const { imageData } = this.model.data;
 
     return (
       <img src={imageData} alt='a drawing' className='w-full object-contain'></img>
