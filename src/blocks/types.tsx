@@ -24,6 +24,7 @@ import MondrianIcon from './blockIcons/MondrianIcon.png'
 import bookIcon from './blockIcons/bookIcon.png'
 import WordleIcon from './blockIcons/WordleIcon.png'
 import MoodIcon from './blockIcons/MoodIcon.png'
+import WhiteboardIcon from './blockIcons/whiteboardIcon.png'
 
 export type BlockModel = {
   type: string;
@@ -462,7 +463,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     displayDescription: "Draw on a whiteboard!",
     emptyTitle: "Empty Whiteboard Block",
     emptySubtitle: "Tap here to setup your Whiteboard block!",
-    icon: "WhiteboardIcon", // TODO: insert your block icon here
+    icon: WhiteboardIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
