@@ -289,8 +289,9 @@ const MarkerColorSelector: React.FC<MarkerColorSelectorProps> = ({ color, onChan
   return (
     <div className='grid grid-cols-5 gap-2'>
       {markers.map((marker) => (
-        <img 
+        <img
           key={marker.color}
+          alt={`Clipart of a whiteboard marker with hex color ${marker.color}`}
           className={`w-full transform transition-transform duration-300 ${marker.color === selectedColor ? 'translate-y-0 hover:-rotate-1' : 'hover:translate-y-8 translate-y-12'}`}
           src={marker.svg}
           onClick={() => handleColorChange(marker.color)}
