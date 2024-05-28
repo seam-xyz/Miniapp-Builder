@@ -13,6 +13,7 @@ import RedMarkerSvg from './assets/WhiteboardBlock/red_marker.svg';
 import GreenMarkerSvg from './assets/WhiteboardBlock/green_marker.svg';
 import MarkerCapOnSound from './assets/WhiteboardBlock/marker_cap_on.mp3';
 import MarkerCapOffSound from './assets/WhiteboardBlock/marker_cap_off.mp3';
+import SeamSaveButton from '../components/SeamSaveButton';
 
 const ATTRIBUTION = `Design by @rocco
 https://seam.so/user/rocco
@@ -342,12 +343,7 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
         onChange={(newColor: string) => setSelectedColor(newColor)}
       />
       <div className='absolute bottom-0 left-0 right-0 p-4'>
-        <button
-          className='font-sans w-full py-8 px-4 bg-seam-blue text-white rounded-lg hover:bg-blue-600'
-          onClick={onSave}
-        >
-          Preview
-        </button>
+        <SeamSaveButton onClick={onSave} />
       </div>
     </div>
   )
