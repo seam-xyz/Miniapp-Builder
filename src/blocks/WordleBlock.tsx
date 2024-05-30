@@ -8,28 +8,34 @@ import SeamSaveButton from '../components/SeamSaveButton';
 
 export default class WordleBlock extends Block {
   render() {
-    if (!this.model.data.results) {
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!);
-    }
+    const { results, wordleDay } = this.model.data;
+
+    // Convert wordleDay to a number if it exists
+    const wordleDayNumber = wordleDay !== undefined ? Number(wordleDay) : undefined;
+
+    // Determine if the post is from today (#16 onward)
+    const todayWordleDay = getWordleDay();
+    const displayWordleDay = wordleDayNumber !== undefined && wordleDayNumber >= 16 ? `#${wordleDayNumber}` : '';
 
     return (
       <Box className="flex flex-col h-auto justify-between items-center w-full">
         <Box className="mt-1 w-full flex items-center justify-center flex-col">
           <Typography variant="h4" component="h2">
-            SEAMDLE #{getWordleDay()}
+            SEAMDLE {displayWordleDay}
           </Typography>
           <Divider className="w-full mt-1" />
         </Box>
         <Box className="flex flex-1 items-center justify-center w-full">
-          <WordleResults results={this.model.data.results} />
+          <WordleResults results={results} />
         </Box>
       </Box>
     );
   }
 
-  renderEditModal(done: (data: BlockModel) => void) {
-    const handleSave = (results: any) => {
+  renderEditModal(done: (data: BlockModel) => any) {
+    const handleSave = (results: any, wordleDay: any) => {
       this.model.data.results = results;
+      this.model.data.wordleDay = wordleDay;
       done(this.model);
     };
 
@@ -112,7 +118,7 @@ const WordleEditor = ({
   onSave
 }: {
   initialResults: any;
-  onSave: (results: any) => void;
+  onSave: (results: any, wordleDay: any) => void;
 }) => {
   const [currentGuess, setCurrentGuess] = useState<string>('');
   const [results, setResults] = useState<any>(initialResults);
@@ -202,7 +208,8 @@ const WordleEditor = ({
             return 'B';
           })
           .join('')
-      )
+      ),
+      wordleDay
     );
   };
 
