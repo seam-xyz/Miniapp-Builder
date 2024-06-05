@@ -11,40 +11,100 @@ import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 import MicIcon from '@mui/icons-material/Mic';
 import Fab from '@mui/material/Fab';
 
-type FakeFormProps = {
+/*
+
+  TYPES
+
+*/
+
+type AudioButtonProps = {
   onSave: (name: string) => void;
 }
 
-const FakeForm = ({onSave}: FakeFormProps) => {
-  const [name, setName] = useState<string>()
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (name) {
-     onSave(name)
-     
-    }
+/*
+
+  VoiceApp COMPONENTS
+
+*/
+
+const AudioButtons = ({onSave}: AudioButtonProps) => {
+
+  const handleSubmit = () => {
+    const name = "sam iyana"
+    onSave(name)
   }
+
   return (
-    <div>
-    <form onSubmit={handleSubmit}>
-      <input style={{border: "1px solid"}} type="text" value={name} onChange={(e) => setName(e.target.value)}  />
-      <button type='submit'>POST</button>
-    </form>
-    </div>
+    <Box style={{
+      backgroundColor: 'none', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '20px', width: '100%'
+    }} >
+      {/* Microphone button */}
+      <Fab sx={{ width: { xs: "150px", md: "250px", lg: "250px" }, height: { xs: "150px", md: "250px", lg: "250px" } }} style={{
+        backgroundColor: 'black'
+      }}>
+        <MicIcon style={{
+          borderRadius: '50%',
+          color: 'white',
+        }} />
+      </Fab>
+      {/* Post button */}
+      <Fab sx={{
+        width: { xs: "75px", md: "150px", lg: "150px" }, height: { xs: "75px", md: "150px", lg: "150px" }, color: 'white', padding: '20px'
+      }} style={{
+        backgroundColor: 'red'
+      }} onClick={handleSubmit}>
+        Post
+      </Fab>
+
+    </Box>
   )
-  
 }
 
+const AudioCard = () => {
+  return (
+    <Card style={{ backgroundColor: 'black', borderRadius: '30px' }} >
+
+    <CardContent style={{ backgroundColor: 'black', padding: '24px', height: 240, display: 'flex', alignItems: 'center', }}>
+      <Box style={{
+        color: 'black', backgroundColor: 'none', display: 'flex', justifyContent: 'space-between', width: '100%'
+      }}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          <DeleteOutlineIcon style={{ color: 'black', backgroundColor: 'white', borderRadius: '50px' }} />
+          <span style={{ color: 'white' }}>0.00</span>
+        </div>
+        <span style={{ color: 'white' }}>
+          .....<GraphicEqIcon />.....
+        </span>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} >
+          < PlayCircleIcon style={{ color: 'white', backgroundColor: 'transparent', borderRadius: '50px' }} />
+          <span style={{ color: 'white' }}>0.00</span>
+
+        </div>
+      </Box>
+    </CardContent>
+
+  </Card>
+)
+}
+
+/* 
+
+  SEAM CLASS
+
+*/
+
 export default class VoiceBlock extends Block {
+
   render() {
     return (
       <div>
-        <div>{this.model.data['']}</div>
+        <div>{this.model.data["name"]}</div>
         <div></div>
         <div></div>
       </div>
     );
   }
+
   renderEditModal(done: (data: BlockModel) => void) {
     const handleSave = (name: string) => {
       this.model.data["name"] = name
@@ -53,51 +113,8 @@ export default class VoiceBlock extends Block {
 
     return (
       <>
-      <FakeForm onSave={handleSave}/>
-        <Card style={{ backgroundColor: 'black', borderRadius: '30px' }} >
-
-          <CardContent style={{ backgroundColor: 'black', padding: '24px', height: 240, display: 'flex', alignItems: 'center', }}>
-            <Box style={{
-              color: 'black', backgroundColor: 'none', display: 'flex', justifyContent: 'space-between', width: '100%'
-            }}>
-              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                <DeleteOutlineIcon style={{ color: 'black', backgroundColor: 'white', borderRadius: '50px' }} />
-                <span style={{ color: 'white' }}>0.00</span>
-              </div>
-              <span style={{ color: 'white' }}>
-                .....<GraphicEqIcon />.....
-              </span>
-              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} >
-                < PlayCircleIcon style={{ color: 'white', backgroundColor: 'transparent', borderRadius: '50px' }} />
-                <span style={{ color: 'white' }}>0.00</span>
-
-              </div>
-            </Box>
-          </CardContent>
-
-        </Card>
-        <Box style={{
-          backgroundColor: 'none', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', width: '100%'
-        }} >
-          {/* Microphone button */}
-          <Fab sx={{ width: { xs: "150px", md: "250px", lg: "250px" }, height: { xs: "150px", md: "250px", lg: "250px" } }} style={{
-            backgroundColor: 'black'
-          }}>
-            <MicIcon style={{
-              borderRadius: '50%',
-              color: 'white',
-            }} />
-          </Fab>
-          {/* Post button */}
-          <Fab sx={{
-            width: { xs: "75px", md: "150px", lg: "150px" }, height: { xs: "75px", md: "150px", lg: "150px" }, color: 'white', margin: '10px', padding: '20px'
-          }} style={{
-            backgroundColor: 'red'
-          }}>
-            Post
-          </Fab>
-
-        </Box>
+        <AudioCard />
+        <AudioButtons onSave={handleSave}/>
       </>
 
     )
