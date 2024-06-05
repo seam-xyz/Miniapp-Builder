@@ -470,4 +470,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "emilee",
     fullscreenEdit: false,
   },
+  "Voice": { 
+    type: "Voice",
+    displayName: "Voice Note",
+    displayDescription: "Use the microphone to record a voice note. The post then allows users to play it back.",
+    emptyTitle: "Empty Voice Note App",
+    emptySubtitle: "Tap here to setup your Voice Note app!",
+    icon: "VoiceIcon", // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "Voice Note - yaya sam",
+    fullscreenEdit: false,
+},
 };
