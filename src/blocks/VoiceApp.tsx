@@ -1,7 +1,7 @@
 import Block from './Block'
 import { BlockModel } from './types'
 import './BlockStyles.css'
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
@@ -27,7 +27,45 @@ type AudioButtonProps = {
 
 */
 
-const AudioButtons = ({onSave}: AudioButtonProps) => {
+const AudioButtons = ({ onSave }: AudioButtonProps) => {
+  const [isRecording, setIsRecording] = useState<boolean>(false)
+  const mediaRecorder = useRef<MediaRecorder | null>(null)
+  const [chunks, setChunks] = useState<Blob[]>([]);
+  const [audio, setAudio] = useState('')
+
+  const initializeDevice = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+      mediaRecorder.current = new MediaRecorder(stream);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => { initializeDevice() }, [])
+
+  const toggleRecord = () => {
+    if (isRecording) {
+      if (mediaRecorder.current) {
+        mediaRecorder.current.stop() 
+        setIsRecording(false)
+        mediaRecorder.current.ondataavailable = (e) => {
+          setChunks([...chunks, e.data])};
+          mediaRecorder.current.onstop =(e)=>{
+            const blob = new Blob(chunks, { type: "audio/wav" });
+            const audioURL = URL.createObjectURL(blob);
+            setAudio(audioURL)
+          }
+        return
+      }
+    }
+    if (mediaRecorder.current) {
+      mediaRecorder.current.start()
+      setIsRecording(true);
+    }
+  }
 
   const handleSubmit = () => {
     const name = "sam iyana"
@@ -39,7 +77,7 @@ const AudioButtons = ({onSave}: AudioButtonProps) => {
       backgroundColor: 'none', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '20px', width: '100%'
     }} >
       {/* Microphone button */}
-      <Fab sx={{ width: { xs: "150px", md: "250px", lg: "250px" }, height: { xs: "150px", md: "250px", lg: "250px" } }} style={{
+      <Fab onClick={toggleRecord} sx={{ width: { xs: "150px", md: "250px", lg: "250px" }, height: { xs: "150px", md: "250px", lg: "250px" } }} style={{
         backgroundColor: 'black'
       }}>
         <MicIcon style={{
@@ -64,27 +102,27 @@ const AudioCard = () => {
   return (
     <Card style={{ backgroundColor: 'black', borderRadius: '30px' }} >
 
-    <CardContent style={{ backgroundColor: 'black', padding: '24px', height: 240, display: 'flex', alignItems: 'center', }}>
-      <Box style={{
-        color: 'black', backgroundColor: 'none', display: 'flex', justifyContent: 'space-between', width: '100%'
-      }}>
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-          <DeleteOutlineIcon style={{ color: 'black', backgroundColor: 'white', borderRadius: '50px' }} />
-          <span style={{ color: 'white' }}>0.00</span>
-        </div>
-        <span style={{ color: 'white' }}>
-          .....<GraphicEqIcon />.....
-        </span>
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} >
-          < PlayCircleIcon style={{ color: 'white', backgroundColor: 'transparent', borderRadius: '50px' }} />
-          <span style={{ color: 'white' }}>0.00</span>
+      <CardContent style={{ backgroundColor: 'black', padding: '24px', height: 240, display: 'flex', alignItems: 'center', }}>
+        <Box style={{
+          color: 'black', backgroundColor: 'none', display: 'flex', justifyContent: 'space-between', width: '100%'
+        }}>
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+            <DeleteOutlineIcon style={{ color: 'black', backgroundColor: 'white', borderRadius: '50px' }} />
+            <span style={{ color: 'white' }}>0.00</span>
+          </div>
+          <span style={{ color: 'white' }}>
+            .....<GraphicEqIcon />.....
+          </span>
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} >
+            < PlayCircleIcon style={{ color: 'white', backgroundColor: 'transparent', borderRadius: '50px' }} />
+            <span style={{ color: 'white' }}>0.00</span>
 
-        </div>
-      </Box>
-    </CardContent>
+          </div>
+        </Box>
+      </CardContent>
 
-  </Card>
-)
+    </Card>
+  )
 }
 
 /* 
@@ -97,11 +135,10 @@ export default class VoiceBlock extends Block {
 
   render() {
     return (
-      <div>
-        <div>{this.model.data["name"]}</div>
-        <div></div>
-        <div></div>
-      </div>
+      <>
+
+      </>
+     
     );
   }
 
@@ -114,7 +151,7 @@ export default class VoiceBlock extends Block {
     return (
       <>
         <AudioCard />
-        <AudioButtons onSave={handleSave}/>
+        <AudioButtons onSave={handleSave} />
       </>
 
     )
