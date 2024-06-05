@@ -17,6 +17,8 @@ import MicIcon from '@mui/icons-material/Mic';
 import { makeStyles } from '@mui/styles';
 import Fab from '@mui/material/Fab';
 import { withStyles } from '@mui/styles';
+import useMediaQuery from '@mui/material/useMediaQuery/useMediaQuery';
+import useTheme from '@mui/material/styles/useTheme';
 
 
 
@@ -30,6 +32,7 @@ export default class VoiceBlock extends Block {
 
 
   renderEditModal(done: (data: BlockModel) => void) {
+
 
     return (
       <>
@@ -57,11 +60,11 @@ export default class VoiceBlock extends Block {
 
         </Card>
         <Box style={{
-          backgroundColor: 'none', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', 
+          backgroundColor: 'none', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', width:'100%' 
         }} >
           {/* Microphone button */}
-          <Fab style={{
-            width: '250px', height: '250px', backgroundColor: 'black'
+          <Fab sx={{ width: { xs: "150px", md: "250px", lg: "250px" }, height: { xs: "150px", md: "250px", lg: "250px" } }} style={{
+            backgroundColor: 'black'
           }}>
             <MicIcon style={{
               borderRadius: '50%',
@@ -69,8 +72,8 @@ export default class VoiceBlock extends Block {
             }} />
           </Fab>
           {/* Post button */}
-          <Fab style={{
-            width: '150px', height: '150px', backgroundColor: 'red'
+          <Fab sx={{ width: { xs: "75px", md: "150px", lg: "150px" }, height: { xs: "75px", md: "150px", lg: "150px" } }}  style={{
+             backgroundColor: 'red'
           }}>
             <Button style={{
               color: 'white', margin: '10px', padding: '20px'
