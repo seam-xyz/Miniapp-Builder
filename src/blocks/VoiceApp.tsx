@@ -17,7 +17,7 @@ import Fab from '@mui/material/Fab';
 
 */
 
-type FakeFormProps = {
+type AudioButtonProps = {
   onSave: (name: string) => void;
 }
 
@@ -27,10 +27,18 @@ type FakeFormProps = {
 
 */
 
-const AudioButtons = () => {
+const AudioButtons = ({onSave}: AudioButtonProps) => {
+  const [name, setName] = useState<string>("")
+
+  const handleSubmit = () => {
+    if (name) {
+     onSave(name)
+    }
+  }
+
   return (
     <Box style={{
-      backgroundColor: 'none', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', width: '100%'
+      backgroundColor: 'none', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '20px', width: '100%'
     }} >
       {/* Microphone button */}
       <Fab sx={{ width: { xs: "150px", md: "250px", lg: "250px" }, height: { xs: "150px", md: "250px", lg: "250px" } }} style={{
@@ -43,10 +51,13 @@ const AudioButtons = () => {
       </Fab>
       {/* Post button */}
       <Fab sx={{
-        width: { xs: "75px", md: "150px", lg: "150px" }, height: { xs: "75px", md: "150px", lg: "150px" }, color: 'white', margin: '10px', padding: '20px'
+        width: { xs: "75px", md: "150px", lg: "150px" }, height: { xs: "75px", md: "150px", lg: "150px" }, color: 'white', padding: '20px'
       }} style={{
         backgroundColor: 'red'
-      }}>
+      }} onClick={() => {
+          setName("Sam Iyana");
+          handleSubmit();
+        }}>
         Post
       </Fab>
 
@@ -81,26 +92,6 @@ const AudioCard = () => {
 )
 }
 
-const FakeForm = ({onSave}: FakeFormProps) => {
-  const [name, setName] = useState<string>()
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (name) {
-     onSave(name)
-     
-    }
-  }
-  return (
-    <div>
-    <form onSubmit={handleSubmit}>
-      <input style={{border: "1px solid"}} type="text" value={name} onChange={(e) => setName(e.target.value)}  />
-      <button type='submit'>POST</button>
-    </form>
-    </div>
-  )
-  
-}
-
 /* 
 
   SEAM CLASS
@@ -112,7 +103,7 @@ export default class VoiceBlock extends Block {
   render() {
     return (
       <div>
-        <div>{this.model.data['']}</div>
+        <div>{this.model.data["name"]}</div>
         <div></div>
         <div></div>
       </div>
@@ -127,9 +118,8 @@ export default class VoiceBlock extends Block {
 
     return (
       <>
-        <FakeForm onSave={handleSave}/>
         <AudioCard />
-        <AudioButtons />
+        <AudioButtons onSave={handleSave}/>
       </>
 
     )
