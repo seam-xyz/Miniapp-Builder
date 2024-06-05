@@ -28,12 +28,10 @@ type AudioButtonProps = {
 */
 
 const AudioButtons = ({onSave}: AudioButtonProps) => {
-  const [name, setName] = useState<string>("")
 
   const handleSubmit = () => {
-    if (name) {
-     onSave(name)
-    }
+    const name = "sam iyana"
+    onSave(name)
   }
 
   return (
@@ -54,10 +52,7 @@ const AudioButtons = ({onSave}: AudioButtonProps) => {
         width: { xs: "75px", md: "150px", lg: "150px" }, height: { xs: "75px", md: "150px", lg: "150px" }, color: 'white', padding: '20px'
       }} style={{
         backgroundColor: 'red'
-      }} onClick={() => {
-          setName("Sam Iyana");
-          handleSubmit();
-        }}>
+      }} onClick={handleSubmit}>
         Post
       </Fab>
 
