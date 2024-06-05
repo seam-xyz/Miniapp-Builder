@@ -60,7 +60,7 @@ export default class VoiceBlock extends Block {
 
         </Card>
         <Box style={{
-          backgroundColor: 'none', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', width:'100%' 
+          backgroundColor: 'none', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', width: '100%'
         }} >
           {/* Microphone button */}
           <Fab sx={{ width: { xs: "150px", md: "250px", lg: "250px" }, height: { xs: "150px", md: "250px", lg: "250px" } }} style={{
@@ -72,12 +72,12 @@ export default class VoiceBlock extends Block {
             }} />
           </Fab>
           {/* Post button */}
-          <Fab sx={{ width: { xs: "75px", md: "150px", lg: "150px" }, height: { xs: "75px", md: "150px", lg: "150px" } }}  style={{
-             backgroundColor: 'red'
+          <Fab sx={{
+            width: { xs: "75px", md: "150px", lg: "150px" }, height: { xs: "75px", md: "150px", lg: "150px" }, color: 'white', margin: '10px', padding: '20px'
+          }} style={{
+            backgroundColor: 'red'
           }}>
-            <Button style={{
-              color: 'white', margin: '10px', padding: '20px'
-            }}>Post</Button>
+            Post
           </Fab>
 
         </Box>
