@@ -1,27 +1,14 @@
 import Block from './Block'
 import { BlockModel } from './types'
-import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 import Card from '@mui/material/Card';
-import * as React from 'react';
 import Box from '@mui/material/Box';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import CardMedia from '@mui/material/CardMedia';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 import MicIcon from '@mui/icons-material/Mic';
-import { makeStyles } from '@mui/styles';
 import Fab from '@mui/material/Fab';
-import { withStyles } from '@mui/styles';
-import useMediaQuery from '@mui/material/useMediaQuery/useMediaQuery';
-import useTheme from '@mui/material/styles/useTheme';
-
-
-
 
 export default class VoiceBlock extends Block {
   render() {
@@ -29,10 +16,7 @@ export default class VoiceBlock extends Block {
       <h1>Voice Block!</h1>
     );
   }
-
-
   renderEditModal(done: (data: BlockModel) => void) {
-
 
     return (
       <>
@@ -48,7 +32,6 @@ export default class VoiceBlock extends Block {
               </div>
               <span style={{ color: 'white' }}>
                 .....<GraphicEqIcon />.....
-
               </span>
               <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} >
                 < PlayCircleIcon style={{ color: 'white', backgroundColor: 'transparent', borderRadius: '50px' }} />
