@@ -42,7 +42,6 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
 
   const [isRecording, setIsRecording] = useState<boolean>(false)
   const [audio, setAudio] = useState<string>("")
-  const [test, setTest] = useState<number>(0)
 
   const initializeDevice = async () => {
     try {
@@ -51,7 +50,7 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
       });
       mediaRecorder.current = new MediaRecorder(stream);
     } catch (err) {
-      console.log(err, "couldn't initialize recorder");
+      alert("The recorder couldn't be set up, please reload")
     }
   };
 
@@ -83,25 +82,10 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
     onSave(audio)
   }
 
-  useEffect(() => {
-    if (mediaRecorder.current) {
-      if (isRecording) {
-        mediaRecorder.current.requestData()
-        
-        mediaRecorder.current.ondataavailable = (e) => {
-          const blob = new Blob([e.data], { type: "audio/webm;codecs=opus" });
-          console.log(blob.size)
-          setTest(blob.size)
-        };
-      }
-    }
-  },[test, isRecording])
-
   return (
     <Box style={{
       backgroundColor: 'none', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '20px', width: '100%'
     }} >
-      {test}
       {/* Microphone button */}
       <Fab onClick={toggleRecord} sx={{ width: { xs: "150px", md: "250px", lg: "250px" }, height: { xs: "150px", md: "250px", lg: "250px" } }}
         style={
@@ -181,8 +165,9 @@ export default class VoiceBlock extends Block {
   }
 
   renderErrorState() {
+    // Shouldn't have to use this anywhere because all types should be properly narrowed
     return (
-      <h1>Error!</h1>
+      <h1>Unexpected Error, Try Reloading</h1>
     )
   }
 }
