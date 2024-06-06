@@ -165,8 +165,9 @@ export default class VoiceBlock extends Block {
   }
 
   renderErrorState() {
+    // Shouldn't have to use this anywhere because all types should be properly narrowed
     return (
-      <h1>Error!</h1>
+      <h1>Unexpected Error, Try Reloading</h1>
     )
   }
 }
