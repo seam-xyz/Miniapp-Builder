@@ -27,35 +27,21 @@ type PostInFeedProps = {
 
 /*
 
-  VoiceApp DATA
-
-*/
-
-const useAudioData = () => {
-  const [audio, setAudio] = useState<string>("")
-  return { audio, setAudio }
-}
-
-/*
-
   VoiceApp COMPONENTS
 
 */
 
 const PostInFeed = ({url}: PostInFeedProps) => {
-  console.log("post in feed url", url)
   return (
     <audio controls src={url} />
   )
 }
 
 const AudioButtons = ({ onSave }: AudioButtonProps) => {
-  const { audio, setAudio } = useAudioData()
-
   const mediaRecorder = useRef<MediaRecorder | null>(null)
 
   const [isRecording, setIsRecording] = useState<boolean>(false)
-  const [chunks, setChunks] = useState<any>([]);
+  const [audio, setAudio] = useState<string>("")
 
   const initializeDevice = async () => {
     try {
@@ -185,47 +171,3 @@ export default class VoiceBlock extends Block {
     )
   }
 }
-
-
-  // const [audioChunks, setAudioChunks] = useState<Blob[]>([])
-  // const [recording, setRecording] = useState<boolean>(false)
-  // // const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>()
-  // let mediaRecorder: MediaRecorder | null = null
-
-  // const startRecording = () => {
-  //   navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-  //     mediaRecorder = new MediaRecorder(stream)
-  //     mediaRecorder.start();
-  //     setRecording(!recording)
-  //     console.log(mediaRecorder.state);
-  //   });
-  // }
-
-  // const stopRecording = () => {
-  //   if (mediaRecorder?.state == "recording") {
-  //     mediaRecorder.stop();
-  //     setRecording(!recording)
-  //     console.log(mediaRecorder?.state);
-
-  //     mediaRecorder.ondataavailable = (e) => {
-  //       setAudioChunks([...audioChunks, e.data])
-  //     };
-
-  //     mediaRecorder.onstop = () => {
-  //       const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
-  //       const url = URL.createObjectURL(audioBlob);
-  //       setAudio(url);
-  //       setAudioChunks([])
-  //     };
-  //   } else {
-  //     console.log("No active recording to stop");
-  //   }
-  // }
-
-  // const toggleRecord = () => {
-  //   if (recording) {
-  //     stopRecording();
-  //     return;
-  //   };
-  //   startRecording()
-  // }
