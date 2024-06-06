@@ -25,6 +25,7 @@ import bookIcon from './blockIcons/bookIcon.png'
 import WordleIcon from './blockIcons/WordleIcon.png'
 import MoodIcon from './blockIcons/MoodIcon.png'
 import WhiteboardIcon from './blockIcons/whiteboardIcon.png'
+import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 
 export type BlockModel = {
   type: string;
@@ -476,7 +477,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     displayDescription: "Use the microphone to record a voice note. The post then allows users to play it back.",
     emptyTitle: "Empty Voice Note App",
     emptySubtitle: "Tap here to setup your Voice Note app!",
-    icon: "VoiceIcon", // TODO: insert your app icon here
+    icon: voiceNoteIcon, // TODO: insert your app icon here
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
