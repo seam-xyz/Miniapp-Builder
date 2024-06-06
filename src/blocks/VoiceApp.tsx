@@ -50,7 +50,7 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
       });
       mediaRecorder.current = new MediaRecorder(stream);
     } catch (err) {
-      console.log(err, "couldn't initialize recorder");
+      alert("The recorder couldn't be set up, please reload")
     }
   };
 
@@ -165,8 +165,9 @@ export default class VoiceBlock extends Block {
   }
 
   renderErrorState() {
+    // Shouldn't have to use this anywhere because all types should be properly narrowed
     return (
-      <h1>Error!</h1>
+      <h1>Unexpected Error, Try Reloading</h1>
     )
   }
 }
