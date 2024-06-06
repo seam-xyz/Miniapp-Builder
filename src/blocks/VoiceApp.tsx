@@ -60,7 +60,6 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
     if (isRecording) {
       if (mediaRecorder.current) {
         mediaRecorder.current.stop() 
-        console.log(mediaRecorder.current.state);
         setIsRecording(false)
 
         mediaRecorder.current.ondataavailable = (e) => {
@@ -75,7 +74,6 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
     
     if (mediaRecorder.current) {
       mediaRecorder.current.start()
-      console.log(mediaRecorder.current.state);
       setIsRecording(true);
     }
   }
@@ -146,7 +144,6 @@ const AudioCard = () => {
 export default class VoiceBlock extends Block {
 
   render() {
-    console.log(this.model.data["audio"])
     return <PostInFeed url={this.model.data["audio"]} />;
   }
 
