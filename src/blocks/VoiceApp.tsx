@@ -50,7 +50,7 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
       });
       mediaRecorder.current = new MediaRecorder(stream);
     } catch (err) {
-      console.log(err, "couldn't initialize recorder");
+      alert("The recorder couldn't be set up, please reload")
     }
   };
 
