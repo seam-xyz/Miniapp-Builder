@@ -7,7 +7,6 @@ import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 import MicIcon from '@mui/icons-material/Mic';
 import Fab from '@mui/material/Fab';
 
@@ -27,6 +26,93 @@ type PostInFeedProps = {
 
 /*
 
+  VoiceApp DATA
+
+*/
+
+const start = (stream: MediaStream) => {
+  let audioCtx = new (window.AudioContext)();
+
+  let realAudioInput = audioCtx.createMediaStreamSource(stream);
+
+  let analyser = audioCtx.createAnalyser();
+  analyser.smoothingTimeConstant = .9;
+  realAudioInput.connect(analyser);
+
+  // ...
+
+  analyser.fftSize = 2048;
+  let bufferLength = analyser.frequencyBinCount;
+  let timeDomainData = new Uint8Array(bufferLength);
+  let frequencyData = new Uint8Array(bufferLength);
+  analyser.getByteTimeDomainData(timeDomainData);
+  analyser.getByteFrequencyData(frequencyData);
+
+  // Get a canvas defined with ID "oscilloscope"
+  let canvas = document.getElementById("oscilloscope") as HTMLCanvasElement;
+  if (!canvas) return alert("The audio visualizer is missing! Reload.")
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  let canvasCtx = canvas.getContext("2d");
+
+
+  // draw an oscilloscope of the current audio source
+
+  const draw = () => {
+    if (!canvasCtx) return alert("The audio visualizer is missing! Reload.")
+    canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+
+    canvasCtx.lineWidth = 1;
+    canvasCtx.strokeStyle = "rgb(255, 255, 255)";
+  
+    canvasCtx.beginPath();
+
+    let sliceWidth = (canvas.width * 1.0) / bufferLength;
+    let x = 0;
+
+    analyser.getByteTimeDomainData(timeDomainData);
+
+    for (let i = 0; i < bufferLength; i++) {
+      let v = timeDomainData[i] / 128.0;
+      let y = (v * canvas.height) / 2;
+
+      if (i === 0) {
+        canvasCtx.moveTo(x, y);
+      } else {
+        canvasCtx.lineTo(x, y);
+      }
+
+      x += sliceWidth;
+    }
+
+    // canvasCtx.lineTo(canvas.width, canvas.height / 2);
+    // canvasCtx.stroke();
+
+    //bars
+    // Affects the number of bars and their width
+    let barWidth = (canvas.width / bufferLength) * 5;
+    let barHeight;
+    x = 0;
+    analyser.getByteFrequencyData(frequencyData);
+
+    for (let i = 0; i < bufferLength; i++) {
+      // Affects the amplitude of the displayed bars (height)
+      barHeight = frequencyData[i] * .5;
+
+      canvasCtx.fillStyle = "rgb(255, 255, 255)";
+      canvasCtx.fillRect(x, (canvas.height /2) - (barHeight / 2), barWidth, barHeight);
+
+      x += barWidth + 1;
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+}
+
+/*
+
   VoiceApp COMPONENTS
 
 */
@@ -34,6 +120,7 @@ type PostInFeedProps = {
 const PostInFeed = ({url}: PostInFeedProps) => {
   return (
     <audio controls src={url} />
+  
   )
 }
 
@@ -75,6 +162,7 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
     if (mediaRecorder.current) {
       mediaRecorder.current.start()
       setIsRecording(true);
+      start(mediaRecorder.current.stream)
     }
   }
 
@@ -116,20 +204,9 @@ const AudioCard = () => {
 
       <CardContent style={{ backgroundColor: 'black', padding: '24px', height: 240, display: 'flex', alignItems: 'center', }}>
         <Box style={{
-          color: 'black', backgroundColor: 'none', display: 'flex', justifyContent: 'space-between', width: '100%'
+          color: 'black', backgroundColor: 'none', display: 'flex', width: '100%'
         }}>
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-            <DeleteOutlineIcon style={{ color: 'black', backgroundColor: 'white', borderRadius: '50px' }} />
-            <span style={{ color: 'white' }}>0.00</span>
-          </div>
-          <span style={{ color: 'white' }}>
-            .....<GraphicEqIcon />.....
-          </span>
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} >
-            < PlayCircleIcon style={{ color: 'white', backgroundColor: 'transparent', borderRadius: '50px' }} />
-            <span style={{ color: 'white' }}>0.00</span>
-
-          </div>
+          <canvas style={{ color: 'white', width: "100%"}} id="oscilloscope"></canvas>
         </Box>
       </CardContent>
 
