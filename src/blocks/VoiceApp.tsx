@@ -18,7 +18,22 @@ import Fab from '@mui/material/Fab';
 */
 
 type AudioButtonProps = {
-  onSave: (name: string) => void;
+  onSave: (url: string) => void;
+}
+
+type PostInFeedProps = {
+  url: string
+}
+
+/*
+
+  VoiceApp DATA
+
+*/
+
+const useAudioData = () => {
+  const [audio, setAudio] = useState<string>("")
+  return { audio, setAudio }
 }
 
 /*
@@ -27,11 +42,20 @@ type AudioButtonProps = {
 
 */
 
+const PostInFeed = ({url}: PostInFeedProps) => {
+  console.log("post in feed url", url)
+  return (
+    <audio controls src={url} />
+  )
+}
+
 const AudioButtons = ({ onSave }: AudioButtonProps) => {
-  const [isRecording, setIsRecording] = useState<boolean>(false)
+  const { audio, setAudio } = useAudioData()
+
   const mediaRecorder = useRef<MediaRecorder | null>(null)
-  const [chunks, setChunks] = useState<Blob[]>([]);
-  const [audio, setAudio] = useState('')
+
+  const [isRecording, setIsRecording] = useState<boolean>(false)
+  const [chunks, setChunks] = useState<any>([]);
 
   const initializeDevice = async () => {
     try {
@@ -40,7 +64,7 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
       });
       mediaRecorder.current = new MediaRecorder(stream);
     } catch (err) {
-      console.log(err);
+      console.log(err, "couldn't initialize recorder");
     }
   };
 
@@ -50,26 +74,28 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
     if (isRecording) {
       if (mediaRecorder.current) {
         mediaRecorder.current.stop() 
+        console.log(mediaRecorder.current.state);
         setIsRecording(false)
+
         mediaRecorder.current.ondataavailable = (e) => {
-          setChunks([...chunks, e.data])};
-          mediaRecorder.current.onstop =(e)=>{
-            const blob = new Blob(chunks, { type: "audio/wav" });
+          const blob = new Blob([e.data], { type: "audio/webm;codecs=opus" });
             const audioURL = URL.createObjectURL(blob);
             setAudio(audioURL)
-          }
+        };
+
         return
       }
     }
+    
     if (mediaRecorder.current) {
       mediaRecorder.current.start()
+      console.log(mediaRecorder.current.state);
       setIsRecording(true);
     }
   }
 
   const handleSubmit = () => {
-    const name = "sam iyana"
-    onSave(name)
+    onSave(audio)
   }
 
   return (
@@ -134,17 +160,13 @@ const AudioCard = () => {
 export default class VoiceBlock extends Block {
 
   render() {
-    return (
-      <>
-
-      </>
-     
-    );
+    console.log(this.model.data["audio"])
+    return <PostInFeed url={this.model.data["audio"]} />;
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
-    const handleSave = (name: string) => {
-      this.model.data["name"] = name
+    const handleSave = (audio: string) => {
+      this.model.data["audio"] = audio
       done(this.model)
     }
 
@@ -163,3 +185,47 @@ export default class VoiceBlock extends Block {
     )
   }
 }
+
+
+  // const [audioChunks, setAudioChunks] = useState<Blob[]>([])
+  // const [recording, setRecording] = useState<boolean>(false)
+  // // const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>()
+  // let mediaRecorder: MediaRecorder | null = null
+
+  // const startRecording = () => {
+  //   navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+  //     mediaRecorder = new MediaRecorder(stream)
+  //     mediaRecorder.start();
+  //     setRecording(!recording)
+  //     console.log(mediaRecorder.state);
+  //   });
+  // }
+
+  // const stopRecording = () => {
+  //   if (mediaRecorder?.state == "recording") {
+  //     mediaRecorder.stop();
+  //     setRecording(!recording)
+  //     console.log(mediaRecorder?.state);
+
+  //     mediaRecorder.ondataavailable = (e) => {
+  //       setAudioChunks([...audioChunks, e.data])
+  //     };
+
+  //     mediaRecorder.onstop = () => {
+  //       const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+  //       const url = URL.createObjectURL(audioBlob);
+  //       setAudio(url);
+  //       setAudioChunks([])
+  //     };
+  //   } else {
+  //     console.log("No active recording to stop");
+  //   }
+  // }
+
+  // const toggleRecord = () => {
+  //   if (recording) {
+  //     stopRecording();
+  //     return;
+  //   };
+  //   startRecording()
+  // }
