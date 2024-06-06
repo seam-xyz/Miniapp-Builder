@@ -100,8 +100,10 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
         width: { xs: "75px", md: "150px", lg: "150px" }, height: { xs: "75px", md: "150px", lg: "150px" }, color: 'white', padding: '20px'
       }} style={{
         backgroundColor: 'red'
-      }} onClick={handleSubmit}>
-        Post
+      }} onClick={() => {
+        audio === "" ? alert("Record some audio first") : handleSubmit();
+        }}>
+        Preview
       </Fab>
 
     </Box>
