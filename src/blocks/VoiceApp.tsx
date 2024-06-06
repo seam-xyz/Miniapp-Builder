@@ -87,13 +87,13 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
       backgroundColor: 'none', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '20px', width: '100%'
     }} >
       {/* Microphone button */}
-      <Fab onClick={toggleRecord} sx={{ width: { xs: "150px", md: "250px", lg: "250px" }, height: { xs: "150px", md: "250px", lg: "250px" } }} style={{
-        backgroundColor: 'black'
-      }}>
-        <MicIcon style={{
-          borderRadius: '50%',
-          color: 'white',
-        }} />
+      <Fab onClick={toggleRecord} sx={{ width: { xs: "150px", md: "250px", lg: "250px" }, height: { xs: "150px", md: "250px", lg: "250px" } }}
+        style={
+          isRecording ? 
+          {backgroundColor: 'white', border: "5px solid black"} : 
+          {backgroundColor: "black"}
+      }>
+        <MicIcon style={isRecording ? {color: 'black',}: { color: 'white',}} />
       </Fab>
       {/* Post button */}
       <Fab sx={{
