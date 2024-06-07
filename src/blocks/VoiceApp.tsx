@@ -1,13 +1,10 @@
 import Block from './Block'
 import { BlockModel } from './types'
 import './BlockStyles.css'
-import { useEffect, useRef, useState } from 'react';
+import { createContext, SetStateAction, useContext, useEffect, useRef, useState, Dispatch, ReactNode } from 'react';
 import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 import MicIcon from '@mui/icons-material/Mic';
 import Fab from '@mui/material/Fab';
 
@@ -17,6 +14,11 @@ import Fab from '@mui/material/Fab';
 
 */
 
+type AudioContextProps = {
+  isRecording: boolean;
+  setIsRecording: Dispatch<SetStateAction<boolean>>
+}
+
 type AudioButtonProps = {
   onSave: (url: string) => void;
 }
@@ -25,22 +27,134 @@ type PostInFeedProps = {
   url: string
 }
 
+type AudioProviderProps = {
+  children: ReactNode;
+}
+
+/*
+
+  VoiceApp DATA
+
+*/
+
+const defaultAudioContext = { isRecording: false, setIsRecording: () => { } }
+
+const audioContext = createContext<AudioContextProps>(defaultAudioContext);
+
+const { Provider: AudioProvider } = audioContext;
+
+const AudioContext = ({ children }: AudioProviderProps) => {
+  const [isRecording, setIsRecording] = useState(false);
+
+  return (
+    <AudioProvider value={{ isRecording, setIsRecording }}>
+      {children}
+    </AudioProvider>
+  )
+
+}
+
+const start = (mediaRecorder: MediaRecorder) => {
+  const stream = mediaRecorder.stream;
+  let audioCtx = new (window.AudioContext)();
+
+  let realAudioInput = audioCtx.createMediaStreamSource(stream);
+
+  let analyser = audioCtx.createAnalyser();
+  analyser.smoothingTimeConstant = .9;
+  realAudioInput.connect(analyser);
+
+  // ...
+
+  analyser.fftSize = 2048;
+  let bufferLength = analyser.frequencyBinCount;
+  let timeDomainData = new Uint8Array(bufferLength);
+  let frequencyData = new Uint8Array(bufferLength);
+  analyser.getByteTimeDomainData(timeDomainData);
+  analyser.getByteFrequencyData(frequencyData);
+
+  // Get a canvas defined with ID "oscilloscope"
+  let canvas = document.getElementById("oscilloscope") as HTMLCanvasElement;
+  if (!canvas) return alert("The audio visualizer is missing! Reload.")
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  let canvasCtx = canvas.getContext("2d");
+
+
+  // draw an oscilloscope of the current audio source
+  const draw = () => {
+    if (!canvasCtx) return alert("The audio visualizer is missing! Reload.")
+    canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+
+    canvasCtx.lineWidth = 1;
+    canvasCtx.strokeStyle = "rgb(255, 255, 255)";
+
+    canvasCtx.beginPath();
+
+    let sliceWidth = (canvas.width * 1.0) / bufferLength;
+    let x = 0;
+
+    analyser.getByteTimeDomainData(timeDomainData);
+
+    for (let i = 0; i < bufferLength; i++) {
+      let v = timeDomainData[i] / 128.0;
+      let y = (v * canvas.height) / 2;
+
+      if (i === 0) {
+        canvasCtx.moveTo(x, y);
+      } else {
+        canvasCtx.lineTo(x, y);
+      }
+
+      x += sliceWidth;
+    }
+
+    //bars
+    // Affects the number of bars and their width
+    let barWidth = (canvas.width / bufferLength) * 5;
+    let barHeight;
+    x = 0;
+    analyser.getByteFrequencyData(frequencyData);
+
+    for (let i = 0; i < bufferLength; i++) {
+      // Affects the amplitude of the displayed bars (height)
+      barHeight = frequencyData[i] * .5;
+
+      canvasCtx.fillStyle = "rgb(255, 255, 255)";
+      canvasCtx.fillRect(x, (canvas.height / 2) - (barHeight / 2), barWidth, barHeight);
+
+      x += barWidth + 1;
+    }
+
+    if (mediaRecorder.state === "recording") {
+      requestAnimationFrame(draw);
+    } else {
+      canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+  }
+
+  draw();
+}
+
 /*
 
   VoiceApp COMPONENTS
 
 */
 
-const PostInFeed = ({url}: PostInFeedProps) => {
+const PostInFeed = ({ url }: PostInFeedProps) => {
   return (
     <audio controls src={url} />
+
   )
 }
 
 const AudioButtons = ({ onSave }: AudioButtonProps) => {
+  const { isRecording, setIsRecording } = useContext(audioContext)
+
   const mediaRecorder = useRef<MediaRecorder | null>(null)
 
-  const [isRecording, setIsRecording] = useState<boolean>(false)
   const [audio, setAudio] = useState<string>("")
 
   const initializeDevice = async () => {
@@ -59,22 +173,23 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
   const toggleRecord = () => {
     if (isRecording) {
       if (mediaRecorder.current) {
-        mediaRecorder.current.stop() 
-        setIsRecording(false)
+        mediaRecorder.current.stop();
+        setIsRecording(false);
 
         mediaRecorder.current.ondataavailable = (e) => {
           const blob = new Blob([e.data], { type: "audio/webm;codecs=opus" });
-            const audioURL = URL.createObjectURL(blob);
-            setAudio(audioURL)
+          const audioURL = URL.createObjectURL(blob);
+          setAudio(audioURL)
         };
 
         return
       }
     }
-    
+
     if (mediaRecorder.current) {
       mediaRecorder.current.start()
       setIsRecording(true);
+      start(mediaRecorder.current)
     }
   }
 
@@ -89,11 +204,11 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
       {/* Microphone button */}
       <Fab onClick={toggleRecord} sx={{ width: { xs: "150px", md: "250px", lg: "250px" }, height: { xs: "150px", md: "250px", lg: "250px" } }}
         style={
-          isRecording ? 
-          {backgroundColor: 'white', border: "5px solid black"} : 
-          {backgroundColor: "black"}
-      }>
-        <MicIcon style={isRecording ? {color: 'black',}: { color: 'white',}} />
+          isRecording ?
+            { backgroundColor: 'white', border: "5px solid black" } :
+            { backgroundColor: "black" }
+        }>
+        <MicIcon style={isRecording ? { color: 'black', } : { color: 'white', }} />
       </Fab>
       {/* Post button */}
       <Fab sx={{
@@ -102,7 +217,7 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
         backgroundColor: 'red'
       }} onClick={() => {
         audio === "" ? alert("Record some audio first") : handleSubmit();
-        }}>
+      }}>
         Preview
       </Fab>
 
@@ -111,28 +226,16 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
 }
 
 const AudioCard = () => {
+
   return (
     <Card style={{ backgroundColor: 'black', borderRadius: '30px' }} >
-
       <CardContent style={{ backgroundColor: 'black', padding: '24px', height: 240, display: 'flex', alignItems: 'center', }}>
         <Box style={{
-          color: 'black', backgroundColor: 'none', display: 'flex', justifyContent: 'space-between', width: '100%'
+          color: 'black', backgroundColor: 'none', width: '100%', height: "100%",
         }}>
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-            <DeleteOutlineIcon style={{ color: 'black', backgroundColor: 'white', borderRadius: '50px' }} />
-            <span style={{ color: 'white' }}>0.00</span>
-          </div>
-          <span style={{ color: 'white' }}>
-            .....<GraphicEqIcon />.....
-          </span>
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} >
-            < PlayCircleIcon style={{ color: 'white', backgroundColor: 'transparent', borderRadius: '50px' }} />
-            <span style={{ color: 'white' }}>0.00</span>
-
-          </div>
+          <canvas style={{ color: 'white', width: "100%", height: "100%" }} id="oscilloscope"></canvas>
         </Box>
       </CardContent>
-
     </Card>
   )
 }
@@ -156,11 +259,10 @@ export default class VoiceBlock extends Block {
     }
 
     return (
-      <>
+      <AudioContext>
         <AudioCard />
         <AudioButtons onSave={handleSave} />
-      </>
-
+      </AudioContext>
     )
   }
 
