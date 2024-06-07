@@ -1,12 +1,10 @@
 import Block from './Block'
 import { BlockModel } from './types'
 import './BlockStyles.css'
-import { useEffect, useRef, useState } from 'react';
+import { createContext, SetStateAction, useContext, useEffect, useRef, useState, Dispatch, ReactNode } from 'react';
 import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import MicIcon from '@mui/icons-material/Mic';
 import Fab from '@mui/material/Fab';
 
@@ -15,6 +13,11 @@ import Fab from '@mui/material/Fab';
   TYPES
 
 */
+
+type AudioContextProps = {
+  isRecording: boolean;
+  setIsRecording: Dispatch<SetStateAction<boolean>>
+}
 
 type AudioButtonProps = {
   onSave: (url: string) => void;
@@ -30,7 +33,27 @@ type PostInFeedProps = {
 
 */
 
-const start = (stream: MediaStream) => {
+const defaultAudioContext = { isRecording: false, setIsRecording: () => { } }
+
+const audioContext = createContext<AudioContextProps>(defaultAudioContext);
+
+const { Provider: AudioProvider } = audioContext;
+
+type AudioProviderProps = {
+  children: ReactNode;
+}
+
+const AudioContext = ({ children }: AudioProviderProps) => {
+  const [isRecording, setIsRecording] = useState(false);
+
+  return <AudioProvider value={{ isRecording, setIsRecording }}>
+    {children}
+  </AudioProvider>
+
+}
+
+const start = (mediaRecorder: MediaRecorder) => {
+  const stream = mediaRecorder.stream;
   let audioCtx = new (window.AudioContext)();
 
   let realAudioInput = audioCtx.createMediaStreamSource(stream);
@@ -57,14 +80,13 @@ const start = (stream: MediaStream) => {
 
 
   // draw an oscilloscope of the current audio source
-
   const draw = () => {
     if (!canvasCtx) return alert("The audio visualizer is missing! Reload.")
     canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
 
     canvasCtx.lineWidth = 1;
     canvasCtx.strokeStyle = "rgb(255, 255, 255)";
-  
+
     canvasCtx.beginPath();
 
     let sliceWidth = (canvas.width * 1.0) / bufferLength;
@@ -100,12 +122,17 @@ const start = (stream: MediaStream) => {
       barHeight = frequencyData[i] * .5;
 
       canvasCtx.fillStyle = "rgb(255, 255, 255)";
-      canvasCtx.fillRect(x, (canvas.height /2) - (barHeight / 2), barWidth, barHeight);
+      canvasCtx.fillRect(x, (canvas.height / 2) - (barHeight / 2), barWidth, barHeight);
 
       x += barWidth + 1;
     }
 
-    requestAnimationFrame(draw);
+    if (mediaRecorder.state === "recording") {
+      requestAnimationFrame(draw);
+    } else {
+      canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
   }
 
   draw();
@@ -117,17 +144,18 @@ const start = (stream: MediaStream) => {
 
 */
 
-const PostInFeed = ({url}: PostInFeedProps) => {
+const PostInFeed = ({ url }: PostInFeedProps) => {
   return (
     <audio controls src={url} />
-  
+
   )
 }
 
 const AudioButtons = ({ onSave }: AudioButtonProps) => {
+  const { isRecording, setIsRecording } = useContext(audioContext)
+
   const mediaRecorder = useRef<MediaRecorder | null>(null)
 
-  const [isRecording, setIsRecording] = useState<boolean>(false)
   const [audio, setAudio] = useState<string>("")
 
   const initializeDevice = async () => {
@@ -146,23 +174,23 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
   const toggleRecord = () => {
     if (isRecording) {
       if (mediaRecorder.current) {
-        mediaRecorder.current.stop() 
-        setIsRecording(false)
+        mediaRecorder.current.stop();
+        setIsRecording(false);
 
         mediaRecorder.current.ondataavailable = (e) => {
           const blob = new Blob([e.data], { type: "audio/webm;codecs=opus" });
-            const audioURL = URL.createObjectURL(blob);
-            setAudio(audioURL)
+          const audioURL = URL.createObjectURL(blob);
+          setAudio(audioURL)
         };
 
         return
       }
     }
-    
+
     if (mediaRecorder.current) {
       mediaRecorder.current.start()
       setIsRecording(true);
-      start(mediaRecorder.current.stream)
+      const callback = start(mediaRecorder.current)
     }
   }
 
@@ -170,18 +198,21 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
     onSave(audio)
   }
 
+  console.log(isRecording)
+
   return (
     <Box style={{
       backgroundColor: 'none', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '20px', width: '100%'
     }} >
+      <button onClick={() => setIsRecording(!isRecording)}>WHAT THE FUCK</button>
       {/* Microphone button */}
       <Fab onClick={toggleRecord} sx={{ width: { xs: "150px", md: "250px", lg: "250px" }, height: { xs: "150px", md: "250px", lg: "250px" } }}
         style={
-          isRecording ? 
-          {backgroundColor: 'white', border: "5px solid black"} : 
-          {backgroundColor: "black"}
-      }>
-        <MicIcon style={isRecording ? {color: 'black',}: { color: 'white',}} />
+          isRecording ?
+            { backgroundColor: 'white', border: "5px solid black" } :
+            { backgroundColor: "black" }
+        }>
+        <MicIcon style={isRecording ? { color: 'black', } : { color: 'white', }} />
       </Fab>
       {/* Post button */}
       <Fab sx={{
@@ -190,7 +221,7 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
         backgroundColor: 'red'
       }} onClick={() => {
         audio === "" ? alert("Record some audio first") : handleSubmit();
-        }}>
+      }}>
         Preview
       </Fab>
 
@@ -199,17 +230,19 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
 }
 
 const AudioCard = () => {
+  const { isRecording } = useContext(audioContext)
+
+  console.log("AUDIO CARD: ", isRecording);
+
   return (
     <Card style={{ backgroundColor: 'black', borderRadius: '30px' }} >
-
       <CardContent style={{ backgroundColor: 'black', padding: '24px', height: 240, display: 'flex', alignItems: 'center', }}>
         <Box style={{
-          color: 'black', backgroundColor: 'none', display: 'flex', width: '100%'
+          color: 'black', backgroundColor: 'none', width: '100%', height: "100%",
         }}>
-          <canvas style={{ color: 'white', width: "100%"}} id="oscilloscope"></canvas>
+          <canvas style={{ color: 'white', width: "100%", height: "100%" }} id="oscilloscope"></canvas>
         </Box>
       </CardContent>
-
     </Card>
   )
 }
@@ -234,8 +267,10 @@ export default class VoiceBlock extends Block {
 
     return (
       <>
-        <AudioCard />
-        <AudioButtons onSave={handleSave} />
+        <AudioContext>
+          <AudioCard />
+          <AudioButtons onSave={handleSave} />
+        </AudioContext>
       </>
 
     )
