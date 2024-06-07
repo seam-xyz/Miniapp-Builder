@@ -17,6 +17,7 @@ import Fab from '@mui/material/Fab';
 type AudioContextProps = {
   isRecording: boolean;
   setIsRecording: Dispatch<SetStateAction<boolean>>
+  mediaRecorder: React.MutableRefObject<MediaRecorder | null>
 }
 
 type AudioButtonProps = {
@@ -37,7 +38,7 @@ type AudioProviderProps = {
 
 */
 
-const defaultAudioContext = { isRecording: false, setIsRecording: () => { } }
+const defaultAudioContext = { isRecording: false, setIsRecording: () => { }, mediaRecorder: { current: null } }
 
 const audioContext = createContext<AudioContextProps>(defaultAudioContext);
 
@@ -45,9 +46,11 @@ const { Provider: AudioProvider } = audioContext;
 
 const AudioContext = ({ children }: AudioProviderProps) => {
   const [isRecording, setIsRecording] = useState(false);
+  const mediaRecorder = useRef<MediaRecorder | null>(null)
+
 
   return (
-    <AudioProvider value={{ isRecording, setIsRecording }}>
+    <AudioProvider value={{ isRecording, setIsRecording, mediaRecorder }}>
       {children}
     </AudioProvider>
   )
@@ -55,7 +58,9 @@ const AudioContext = ({ children }: AudioProviderProps) => {
 }
 
 const start = (mediaRecorder: MediaRecorder) => {
+  console.log("made it!")
   const stream = mediaRecorder.stream;
+  console.log(stream)
   let audioCtx = new (window.AudioContext)();
 
   let realAudioInput = audioCtx.createMediaStreamSource(stream);
@@ -127,6 +132,7 @@ const start = (mediaRecorder: MediaRecorder) => {
     }
 
     if (mediaRecorder.state === "recording") {
+      console.log("about to request")
       requestAnimationFrame(draw);
     } else {
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
@@ -143,17 +149,52 @@ const start = (mediaRecorder: MediaRecorder) => {
 
 */
 
-const PostInFeed = ({ url }: PostInFeedProps) => {
-  return (
-    <audio controls src={url} />
+// when user clicks play on the audio, it sets recording the true and the visual starts.
 
+const PostInFeed = ({ url }: PostInFeedProps) => {
+  const { mediaRecorder } = useContext(audioContext)
+
+  const initializeDevice = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+      mediaRecorder.current = new MediaRecorder(stream);
+    } catch (err) {
+      alert("The recorder couldn't be set up, please reload")
+    }
+  };
+
+  // useEffect(() => { initializeDevice() }, [])
+  initializeDevice()
+
+  return (
+    <Card style={{ backgroundColor: 'black', borderRadius: '30px' }} >
+      <CardContent style={{ backgroundColor: 'black', padding: '24px', height: 240, display: 'flex', alignItems: 'center', }}>
+        <Box style={{
+          color: 'black', backgroundColor: 'none', width: '100%', height: "100%",
+        }}>
+          <audio controls src={url} onPlay={() => {
+            mediaRecorder.current?.start();
+            if (mediaRecorder.current?.state === "recording") {
+              start(mediaRecorder.current)
+            }
+      
+          }} onEnded={() => {
+            mediaRecorder.current?.stop(); 
+            console.log(mediaRecorder.current?.state);
+          }} />
+          <canvas style={{ color: 'white', width: "100%", height: "100%" }} id="oscilloscope"></canvas>
+        </Box>
+      </CardContent>
+    </Card>
   )
+
 }
 
 const AudioButtons = ({ onSave }: AudioButtonProps) => {
-  const { isRecording, setIsRecording } = useContext(audioContext)
+  const { isRecording, setIsRecording, mediaRecorder } = useContext(audioContext)
 
-  const mediaRecorder = useRef<MediaRecorder | null>(null)
 
   const [audio, setAudio] = useState<string>("")
 
