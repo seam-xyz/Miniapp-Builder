@@ -27,6 +27,10 @@ type PostInFeedProps = {
   url: string
 }
 
+type AudioProviderProps = {
+  children: ReactNode;
+}
+
 /*
 
   VoiceApp DATA
@@ -39,16 +43,14 @@ const audioContext = createContext<AudioContextProps>(defaultAudioContext);
 
 const { Provider: AudioProvider } = audioContext;
 
-type AudioProviderProps = {
-  children: ReactNode;
-}
-
 const AudioContext = ({ children }: AudioProviderProps) => {
   const [isRecording, setIsRecording] = useState(false);
 
-  return <AudioProvider value={{ isRecording, setIsRecording }}>
-    {children}
-  </AudioProvider>
+  return (
+    <AudioProvider value={{ isRecording, setIsRecording }}>
+      {children}
+    </AudioProvider>
+  )
 
 }
 
@@ -106,9 +108,6 @@ const start = (mediaRecorder: MediaRecorder) => {
 
       x += sliceWidth;
     }
-
-    // canvasCtx.lineTo(canvas.width, canvas.height / 2);
-    // canvasCtx.stroke();
 
     //bars
     // Affects the number of bars and their width
@@ -190,7 +189,7 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
     if (mediaRecorder.current) {
       mediaRecorder.current.start()
       setIsRecording(true);
-      const callback = start(mediaRecorder.current)
+      start(mediaRecorder.current)
     }
   }
 
@@ -198,13 +197,10 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
     onSave(audio)
   }
 
-  console.log(isRecording)
-
   return (
     <Box style={{
       backgroundColor: 'none', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '20px', width: '100%'
     }} >
-      <button onClick={() => setIsRecording(!isRecording)}>WHAT THE FUCK</button>
       {/* Microphone button */}
       <Fab onClick={toggleRecord} sx={{ width: { xs: "150px", md: "250px", lg: "250px" }, height: { xs: "150px", md: "250px", lg: "250px" } }}
         style={
@@ -230,9 +226,6 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
 }
 
 const AudioCard = () => {
-  const { isRecording } = useContext(audioContext)
-
-  console.log("AUDIO CARD: ", isRecording);
 
   return (
     <Card style={{ backgroundColor: 'black', borderRadius: '30px' }} >
@@ -266,13 +259,10 @@ export default class VoiceBlock extends Block {
     }
 
     return (
-      <>
-        <AudioContext>
-          <AudioCard />
-          <AudioButtons onSave={handleSave} />
-        </AudioContext>
-      </>
-
+      <AudioContext>
+        <AudioCard />
+        <AudioButtons onSave={handleSave} />
+      </AudioContext>
     )
   }
 
