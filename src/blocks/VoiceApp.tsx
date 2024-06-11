@@ -7,7 +7,8 @@ import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
 import MicIcon from '@mui/icons-material/Mic';
 import Fab from '@mui/material/Fab';
-
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 /*
 
   TYPES
@@ -17,6 +18,7 @@ import Fab from '@mui/material/Fab';
 type AudioContextProps = {
   isRecording: boolean;
   setIsRecording: Dispatch<SetStateAction<boolean>>
+  mediaRecorder: React.MutableRefObject<MediaRecorder | null>
 }
 
 type AudioButtonProps = {
@@ -31,38 +33,42 @@ type AudioProviderProps = {
   children: ReactNode;
 }
 
+type StartProps = {
+  node: AudioNode
+  context: AudioContext
+  getPlayable: (node: AudioNode, context: AudioContext) => boolean
+}
+
 /*
 
   VoiceApp DATA
 
 */
 
-const defaultAudioContext = { isRecording: false, setIsRecording: () => { } }
+const defaultAudioContext = { isRecording: false, setIsRecording: () => { }, mediaRecorder: { current: null } }
 
 const audioContext = createContext<AudioContextProps>(defaultAudioContext);
 
 const { Provider: AudioProvider } = audioContext;
 
-const AudioContext = ({ children }: AudioProviderProps) => {
+const AudioCtx = ({ children }: AudioProviderProps) => {
   const [isRecording, setIsRecording] = useState(false);
+  const mediaRecorder = useRef<MediaRecorder | null>(null)
+
 
   return (
-    <AudioProvider value={{ isRecording, setIsRecording }}>
+    <AudioProvider value={{ isRecording, setIsRecording, mediaRecorder }}>
       {children}
     </AudioProvider>
   )
 
 }
 
-const start = (mediaRecorder: MediaRecorder) => {
-  const stream = mediaRecorder.stream;
-  let audioCtx = new (window.AudioContext)();
-
-  let realAudioInput = audioCtx.createMediaStreamSource(stream);
-
-  let analyser = audioCtx.createAnalyser();
+const start = ({ node, context, getPlayable }: StartProps) => {
+  // Hi, I'm doing the drawing
+  let analyser = context.createAnalyser();
   analyser.smoothingTimeConstant = .9;
-  realAudioInput.connect(analyser);
+  node.connect(analyser);
 
   // ...
 
@@ -126,7 +132,7 @@ const start = (mediaRecorder: MediaRecorder) => {
       x += barWidth + 1;
     }
 
-    if (mediaRecorder.state === "recording") {
+    if (getPlayable(node, context)) {
       requestAnimationFrame(draw);
     } else {
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
@@ -143,17 +149,63 @@ const start = (mediaRecorder: MediaRecorder) => {
 
 */
 
-const PostInFeed = ({ url }: PostInFeedProps) => {
-  return (
-    <audio controls src={url} />
+// when user clicks play on the audio, it sets recording the true and the visual starts.
 
+const PostInFeed = ({ url }: PostInFeedProps) => {
+  // const audioTime = document.getElementById("player") as HTMLMediaElement
+  // const duration = audioTime.duration.toString()
+
+  const playback = () => {
+    const context = new AudioContext()
+    const audio = new Audio();
+
+    audio.src = url;
+
+    const node = context.createMediaElementSource(audio)
+
+    audio.play();
+
+    start({ node, context, getPlayable: (node) => !(node as MediaElementAudioSourceNode).mediaElement.ended })
+  }
+
+
+
+
+  return (
+
+    <Card style={{ backgroundColor: 'black', borderRadius: '30px', width: "100%", height: "fit-content" }} >
+      <CardContent style={{ backgroundColor: 'black', padding: '24px', display: 'flex', alignItems: 'center', }}>
+        <Box style={{
+          color: 'black', backgroundColor: 'none', display: 'flex', justifyContent: 'space-between', width: '100%'
+        }}>
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+            <DeleteOutlineIcon style={{ color: 'black', backgroundColor: 'white', borderRadius: '50px' }} />
+          </div>
+          <div style={{ color: 'white' }}>
+            <audio id='player' src={url} onPlay={playback} />
+
+            <canvas style={{ color: 'white', width: "100%", height: "100%" }} id="oscilloscope"></canvas>
+
+
+          </div>
+          <div onClick={() => {
+            const audio = document.getElementById("player") as HTMLMediaElement
+            audio.play();
+          }} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} >
+            <PlayCircleIcon style={{ color: 'white', backgroundColor: 'transparent', borderRadius: '50px' }} />
+          </div>
+        </Box>
+      </CardContent>
+
+    </Card>
   )
+
 }
 
 const AudioButtons = ({ onSave }: AudioButtonProps) => {
-  const { isRecording, setIsRecording } = useContext(audioContext)
+  const { isRecording, setIsRecording, mediaRecorder } = useContext(audioContext)
 
-  const mediaRecorder = useRef<MediaRecorder | null>(null)
+
 
   const [audio, setAudio] = useState<string>("")
 
@@ -189,7 +241,21 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
     if (mediaRecorder.current) {
       mediaRecorder.current.start()
       setIsRecording(true);
-      start(mediaRecorder.current)
+
+      // Get media recorder
+      const currentMediaRecorder = mediaRecorder.current
+
+      // Get the stream
+      const stream = currentMediaRecorder.stream;
+
+      // Create a new context
+      let context = new AudioContext();
+
+      // Create a new node
+      let node = context.createMediaStreamSource(stream);
+
+
+      start({ node, context, getPlayable: () => currentMediaRecorder.state === "recording" })
     }
   }
 
@@ -259,10 +325,10 @@ export default class VoiceBlock extends Block {
     }
 
     return (
-      <AudioContext>
+      <AudioCtx>
         <AudioCard />
         <AudioButtons onSave={handleSave} />
-      </AudioContext>
+      </AudioCtx>
     )
   }
 
