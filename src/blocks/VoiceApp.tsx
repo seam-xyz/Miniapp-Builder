@@ -152,17 +152,8 @@ const start = ({ node, context, getPlayable }: StartProps) => {
 // when user clicks play on the audio, it sets recording the true and the visual starts.
 
 const PostInFeed = ({ url }: PostInFeedProps) => {
-  const { mediaRecorder } = useContext(audioContext)
-
-  const [currentTime, setCurrentTime] = useState<number>(0)
-
   // const audioTime = document.getElementById("player") as HTMLMediaElement
   // const duration = audioTime.duration.toString()
-
-  useEffect(() => {
-    const audioTime = document.getElementById("player") as HTMLMediaElement
-    setCurrentTime(audioTime.currentTime)
-  }, [currentTime])
 
   const playback = () => {
     const context = new AudioContext()
@@ -189,7 +180,6 @@ const PostInFeed = ({ url }: PostInFeedProps) => {
         }}>
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <DeleteOutlineIcon style={{ color: 'black', backgroundColor: 'white', borderRadius: '50px' }} />
-            <span style={{ color: 'white' }}>{currentTime}</span>
           </div>
           <div style={{ color: 'white' }}>
             <audio id='player' src={url} onPlay={playback} />
