@@ -133,15 +133,8 @@ const start = ({ node, context, getPlayable }: StartProps) => {
     }
 
     if (getPlayable(node, context)) {
-      console.log("about to request")
-
-      //
-      // doesn't work
-
       requestAnimationFrame(draw);
     } else {
-      // setCanvases([...canvases, canvas])
-
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
@@ -210,7 +203,6 @@ const PostInFeed = ({ url }: PostInFeedProps) => {
             audio.play();
           }} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} >
             <PlayCircleIcon style={{ color: 'white', backgroundColor: 'transparent', borderRadius: '50px' }} />
-            {/* <span style={{ color: 'white' }}>{duration}</span> */}
           </div>
         </Box>
       </CardContent>
@@ -275,10 +267,6 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
 
       start({ node, context, getPlayable: () => currentMediaRecorder.state === "recording" })
     }
-  }
-
-  const playback = () => {
-
   }
 
   const handleSubmit = () => {
