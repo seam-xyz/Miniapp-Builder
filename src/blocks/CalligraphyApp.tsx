@@ -11,7 +11,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import p5 from 'p5';
 
 interface CalligraphyCanvasProps {
-  width: string
+  width: string,
+  activeColor: string,
 }
 const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   const [p5Instance, setP5Instance] = useState<p5 | null>(null)
@@ -23,19 +24,24 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   const sketch = (s:p5) => {
     s.setup = () => {
       s.createCanvas(canvasWidth,canvasWidth * ASPECT_RATIO)
+      s.background(220)
+      s.noStroke();
     }
     s.draw = () => {
-      s.background(s.frameCount % 60 > 30 ? "red" : "white")
+    }
+    s.touchMoved = () => {
+      s.circle(s.mouseX, s.mouseY, 30)
+      return false;
     }
   }
   /** /end p5 Sketch Code! */
-
 
   useEffect(() => {
     const myP5: p5 = new p5(sketch, canvasDivRef.current!);
     setP5Instance(myP5);
     return myP5.remove;
   }, []);
+  useEffect(() => {p5Instance === null || p5Instance.fill(props.activeColor)},[props.activeColor])
   return (
     <div ref={canvasDivRef}></div>
   )
@@ -132,7 +138,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
     <div>
       <h1>Edit Calligraphy Block!</h1>
       <div className='flex flex-1 h-full flex-col gap-6'>
-        <CalligraphyCanvas width={props.width}/>
+        <CalligraphyCanvas width={props.width} activeColor={activeColor}/>
         { activePaletteTab === PaletteTab.COLOR &&
         <CalligraphyPalette
           colors={[ '#cdb4db', '#ffc8ddff', '#ffafccff', '#bde0feff', '#a2d2ffff', '#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51', ]}
