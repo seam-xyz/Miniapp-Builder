@@ -173,27 +173,27 @@ const PostInFeed = ({ url }: PostInFeedProps) => {
 
   return (
 
-    <Card style={{ backgroundColor: 'black', borderRadius: '30px', width: "100%", height: "fit-content" }} >
-      <CardContent style={{ backgroundColor: 'black', padding: '24px', display: 'flex', alignItems: 'center', }}>
+    <Card style={{ backgroundColor: 'black', borderRadius: '30px', width: "100%", display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} sx={{ height: { xs: "350px", md: "600px", lg: "600px" } }} >
+      <CardContent style={{ backgroundColor: 'black', padding: '24px' }}>
         <Box style={{
-          color: 'black', backgroundColor: 'none', display: 'flex', justifyContent: 'space-between', width: '100%'
+          color: 'black', backgroundColor: 'none', display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center'
         }}>
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          {/* <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <DeleteOutlineIcon style={{ color: 'black', backgroundColor: 'white', borderRadius: '50px' }} />
+          </div> */}
+          <div onClick={() => {
+            const audio = document.getElementById("player") as HTMLMediaElement
+            audio.play();
+          }} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} >
+            <PlayCircleIcon sx={{ fontSize: 90 }} style={{ color: 'white', backgroundColor: '', borderRadius: '50px', margin: '20px' }} />
           </div>
           <div style={{ color: 'white' }}>
             <audio id='player' src={url} onPlay={playback} />
 
             <canvas style={{ color: 'white', width: "100%", height: "100%" }} id="oscilloscope"></canvas>
 
-
           </div>
-          <div onClick={() => {
-            const audio = document.getElementById("player") as HTMLMediaElement
-            audio.play();
-          }} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} >
-            <PlayCircleIcon style={{ color: 'white', backgroundColor: 'transparent', borderRadius: '50px' }} />
-          </div>
+  
         </Box>
       </CardContent>
 
@@ -294,10 +294,10 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
 const AudioCard = () => {
 
   return (
-    <Card style={{ backgroundColor: 'black', borderRadius: '30px' }} >
-      <CardContent style={{ backgroundColor: 'black', padding: '24px', height: 240, display: 'flex', alignItems: 'center', }}>
+    <Card style={{ backgroundColor: 'black', borderRadius: '30px', width: "100%", display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} sx={{ height: { xs: "350px", md: "600px", lg: "600px" } }} >
+      <CardContent style={{ backgroundColor: 'black', padding: '24px' }}>
         <Box style={{
-          color: 'black', backgroundColor: 'none', width: '100%', height: "100%",
+          color: 'black', backgroundColor: 'none', display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center'
         }}>
           <canvas style={{ color: 'white', width: "100%", height: "100%" }} id="oscilloscope"></canvas>
         </Box>
