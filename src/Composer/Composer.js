@@ -112,23 +112,32 @@ function Composer({ addNewPost }) {
   };
 
   const chooseBlockStep = () => (
-    <div className={`${classes.noScrollBar} mx-4 my-0`}>
+    <div className={`${classes.noScrollBar} mx-4 my-0 h-full`}>
       <div className={`${classes.noScrollBar} flex items-center justify-between bg-white`}>
-        <div className="flex items-start flex-col mt-4">
-          <h2>Create Something</h2>
-        </div>
-        <div
-          onClick={() => {
-            dismiss();
-          }}
-          className="flex justify-center items-center gap-2 py-2 px-2 text-white rounded-full bg-[#efefef]"
-        >
-          <X color="black" />
+        <div className="flex items-start w-full flex-col mt-4 space-y-4">
+          <div className="flex flex-row w-full justify-between items-center">
+            <h2 className="w-full">Test your new miniapp here!</h2>
+            <div
+              onClick={() => {
+                dismiss();
+              }}
+              className="flex justify-center items-center gap-2 py-2 px-2 text-white rounded-full bg-[#efefef]"
+            >
+              <X color="black" />
+            </div>
+          </div>
+          <h3>See how making a post with your miniapp would look on Seam.</h3>
+          <Divider className="w-full h-auto" />
+          <div className="space-y-2">
+            <h3 style={{fontWeight: '600'}} className="text-[#E12451]">**Please read: The Miniapp Builder is a work in progress.</h3>
+            <h4 style={{fontWeight: '500'}}>If you're having trouble with your miniapp, try reading <a target="_blank" href="http://docs.getseam.xyz"><span>our docs!</span></a></h4>
+            <h4 style={{fontWeight: '500'}}>Alternatively, you can <a target="_blank" href="mailto:hello@getseam.xyz"><span>contact the Seam Team </span></a>for help or to report an issue.**</h4>
+          </div>
         </div>
       </div>
       <Divider className="mt-4 mb-4" />
-      <h3 className="mb-4">All miniapps</h3>
-      <IonList>
+      <h2 >All miniapps</h2>
+      <IonList className={`${classes.noScrollBar}`}>
         {supportedBlocks.map((block) => (
           <div id={block[1].type}>
             <ComposerMiniAppItem
@@ -287,7 +296,7 @@ function Composer({ addNewPost }) {
         <Plus color="white" />
       </div>
       <IonModal
-        className={`${classes.noScrollBar} composer-modal`}
+        className={`${classes.noScrollBar} overflow-y-scroll composer-modal`}
         ref={modal}
         isOpen={state.isOpen}
         canDismiss={true}
@@ -298,11 +307,9 @@ function Composer({ addNewPost }) {
           dispatch({ type: "dismiss" });
         }}
       >
-        <IonContent>
-          <div className={`flex flex-col justify-between h-full ${classes.noScrollBar}`}>
-            {renderContent()}
-          </div>
-        </IonContent>
+        <div className={`flex flex-col overflow-y-scroll justify-between h-full ${classes.noScrollBar}`}>
+          {renderContent()}
+        </div>
       </IonModal>
     </div>
   );
