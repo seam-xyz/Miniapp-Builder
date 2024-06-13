@@ -33,7 +33,7 @@ const defaultTheme = createTheme({
 const firebaseConfig = {
   apiKey: "demo-api-key",
   authDomain: "localhost",
-  projectId: "demo-project",
+  projectId: "demo-seam-miniapp-builder",
   storageBucket: "localhost:9199",
   messagingSenderId: "demo-messaging-sender-id",
   appId: "demo-app-id",
