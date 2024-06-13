@@ -9,23 +9,11 @@ interface CalligraphyCanvasProps {
 
 }
 const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  
-  const drawGreenRect = () => {
-    if (!canvasRef.current) return;
-    const ctx = canvasRef.current.getContext('2d')
-    if (!ctx) return;
-    ctx.beginPath();
-    ctx.fillStyle = "green"
-    ctx.fillRect(10,10,10,10)
-  }
-  useEffect( () => drawGreenRect(),[])
+  const canvasDivRef = useRef<HTMLDivElement>(null)
+  const sketch = (s)
+  useEffect( () => new p5(sketch))
   return (
-    <canvas
-      ref={canvasRef}
-      width="100px"
-      height="100px"
-      />
+    <div ref={canvasDivRef}></div>
   )
   }
 
