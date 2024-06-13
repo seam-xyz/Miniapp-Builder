@@ -2,7 +2,7 @@ import ComposerMiniAppPhoto from './ComposerMiniAppPhoto';
 
 function ComposerMiniAppItem({ block, tapAction }) {
   return (
-    <div className="flex flex-row items-start" onClick={() => { tapAction() }}>
+    <div className="flex flex-row items-start my-4" onClick={() => { tapAction() }}>
       <ComposerMiniAppPhoto block={block} size={60} />
       <div className="flex flex-col justify-center items-start">
         <h3 className='align-top'>{block.displayName}</h3>
