@@ -25,7 +25,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       s.createCanvas(canvasWidth,canvasWidth * ASPECT_RATIO)
     }
     s.draw = () => {
-      s.background("red")
+      s.background(s.frameCount % 60 > 30 ? "red" : "white")
     }
   }
   /** /end p5 Sketch Code! */
@@ -142,7 +142,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
         }
         <CalligraphyToolbar activeColor={activeColor} setActivePaletteTab={setActivePaletteTab} activePaletteTab={activePaletteTab} />
       </div>
-      <div className='absolute bottom-0 left-0 right-0 p-4'>
+      <div>
         <SeamSaveButton onClick={props.onSave}/>
       </div>
     </div>
