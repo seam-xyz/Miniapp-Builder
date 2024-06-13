@@ -70,16 +70,34 @@ const CalligraphyPalette = (props: CalligraphyPaletteProps) => {
 
 interface CalligraphyToolbarProps {
   activeColor: string
+  setActivePaletteTab: (tab: PaletteTab) => void
+  activePaletteTab: PaletteTab
 }
 const CalligraphyToolbar = (props: CalligraphyToolbarProps) => {
   return (
     <div className='flex justify-between'>
       <div className='flex gap-4 border-2 rounded-full p-4 bg-[#fbfbfb]'>
-        <div className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'>
+        <div
+          className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center border-fuchsia-500'
+          onClick={() => props.setActivePaletteTab(PaletteTab.COLOR)}
+          style={{ borderWidth: props.activePaletteTab === PaletteTab.COLOR ? '2px' : '0px' }}
+        >
           <div className='w-8 h-8 rounded-full border border-white' style={{ backgroundColor: props.activeColor }} />
         </div>
-        <div className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'><EditIcon /></div>
-        <div className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'><BorderOuterIcon /></div>
+        <div
+          className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center border-fuchsia-500'
+          onClick={() => props.setActivePaletteTab(PaletteTab.BRUSHES)}
+          style={{ borderWidth: props.activePaletteTab === PaletteTab.BRUSHES ? '2px' : '0px' }}
+        >
+          <EditIcon />
+        </div>
+        <div
+          className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center border-fuchsia-500'
+          onClick={() => props.setActivePaletteTab(PaletteTab.BACKGROUNDS)}
+          style={{ borderWidth: props.activePaletteTab === PaletteTab.BACKGROUNDS ? '2px' : '0px' }}
+        >
+          <BorderOuterIcon />
+        </div>
       </div>
       <div className='flex gap-4 border-2 rounded-full p-4 bg-[#fbfbfb]'>
         <div className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'><UndoIcon /></div>
@@ -89,22 +107,31 @@ const CalligraphyToolbar = (props: CalligraphyToolbarProps) => {
   )
 }
 
+enum PaletteTab {
+  COLOR,
+  BRUSHES,
+  BACKGROUNDS
+}
 interface CalligraphyEditProps {
   onSave: () => void
 }
 const CalligraphyEdit = (props: CalligraphyEditProps) => {
   const [activeColor, setActiveColor] = useState('#cdb4db');
+  const [activePaletteTab, setActivePaletteTab] = useState(PaletteTab.COLOR)
 
   return (
     <div>
       <h1>Edit Calligraphy Block!</h1>
-      <div className='flex flex-col gap-6'>
+      <div className='flex flex-1 h-full flex-col gap-6'>
         <CalligraphyCanvas/>
+        { activePaletteTab === PaletteTab.COLOR &&
         <CalligraphyPalette
           colors={[ '#cdb4db', '#ffc8ddff', '#ffafccff', '#bde0feff', '#a2d2ffff', '#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51', ]}
           onColorSelected={color => setActiveColor(color)}
-          activeColor={activeColor} />
-        <CalligraphyToolbar activeColor={activeColor}/>
+          activeColor={activeColor}
+        />
+        }
+        <CalligraphyToolbar activeColor={activeColor} setActivePaletteTab={setActivePaletteTab} activePaletteTab={activePaletteTab} />
       </div>
       <div className='absolute bottom-0 left-0 right-0 p-4'>
         <SeamSaveButton onClick={props.onSave}/>
