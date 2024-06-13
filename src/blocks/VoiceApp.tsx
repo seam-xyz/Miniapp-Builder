@@ -7,7 +7,6 @@ import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
 import MicIcon from '@mui/icons-material/Mic';
 import Fab from '@mui/material/Fab';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 /*
 
@@ -152,8 +151,6 @@ const start = ({ node, context, getPlayable }: StartProps) => {
 // when user clicks play on the audio, it sets recording the true and the visual starts.
 
 const PostInFeed = ({ url }: PostInFeedProps) => {
-  // const audioTime = document.getElementById("player") as HTMLMediaElement
-  // const duration = audioTime.duration.toString()
   const [playing, setPlaying] = useState<boolean>(false)
 
   const playback = () => {
@@ -203,8 +200,6 @@ const PostInFeed = ({ url }: PostInFeedProps) => {
 
 const AudioButtons = ({ onSave }: AudioButtonProps) => {
   const { isRecording, setIsRecording, mediaRecorder } = useContext(audioContext)
-
-
 
   const [audio, setAudio] = useState<string>("")
 
@@ -266,7 +261,6 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
     <Box style={{
       backgroundColor: 'none', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '20px', width: '100%'
     }} >
-      {/* Microphone button */}
       <Fab onClick={toggleRecord} sx={{ width: { xs: "150px", md: "250px", lg: "250px" }, height: { xs: "150px", md: "250px", lg: "250px" } }}
         style={
           isRecording ?
@@ -275,7 +269,6 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
         }>
         <MicIcon style={isRecording ? { color: 'black', } : { color: 'white', }} />
       </Fab>
-      {/* Post button */}
       <Fab sx={{
         width: { xs: "75px", md: "150px", lg: "150px" }, height: { xs: "75px", md: "150px", lg: "150px" }, color: 'white', padding: '20px'
       }} style={{
