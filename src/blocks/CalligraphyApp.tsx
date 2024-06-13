@@ -8,28 +8,36 @@ import EditIcon from '@mui/icons-material/Edit';
 import BorderOuterIcon from '@mui/icons-material/BorderOuter';
 import UndoIcon from '@mui/icons-material/Undo';
 import CloseIcon from '@mui/icons-material/Close';
+import p5 from 'p5';
 
 interface CalligraphyCanvasProps {
-
+  width: string
 }
 const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  
-  const drawGreenRect = () => {
-    if (!canvasRef.current) return;
-    const ctx = canvasRef.current.getContext('2d')
-    if (!ctx) return;
-    ctx.beginPath();
-    ctx.fillStyle = "green"
-    ctx.fillRect(10,10,10,10)
+  const [p5Instance, setP5Instance] = useState<p5 | null>(null)
+  const canvasDivRef = useRef<HTMLDivElement>(null)
+  const canvasWidth = parseInt(props.width)
+  const ASPECT_RATIO = 1
+
+  /** p5 Sketch Code That SHould Be Its Own File! */
+  const sketch = (s:p5) => {
+    s.setup = () => {
+      s.createCanvas(canvasWidth,canvasWidth * ASPECT_RATIO)
+    }
+    s.draw = () => {
+      s.background(s.frameCount % 60 > 30 ? "red" : "white")
+    }
   }
-  useEffect( () => drawGreenRect(),[])
+  /** /end p5 Sketch Code! */
+
+
+  useEffect(() => {
+    const myP5: p5 = new p5(sketch, canvasDivRef.current!);
+    setP5Instance(myP5);
+    return myP5.remove;
+  }, []);
   return (
-    <canvas
-      ref={canvasRef}
-      width="100px"
-      height="100px"
-      />
+    <div ref={canvasDivRef}></div>
   )
 }
 
@@ -113,7 +121,8 @@ enum PaletteTab {
   BACKGROUNDS
 }
 interface CalligraphyEditProps {
-  onSave: () => void
+  onSave: () => void;
+  width: string;
 }
 const CalligraphyEdit = (props: CalligraphyEditProps) => {
   const [activeColor, setActiveColor] = useState('#cdb4db');
@@ -123,7 +132,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
     <div>
       <h1>Edit Calligraphy Block!</h1>
       <div className='flex flex-1 h-full flex-col gap-6'>
-        <CalligraphyCanvas/>
+        <CalligraphyCanvas width={props.width}/>
         { activePaletteTab === PaletteTab.COLOR &&
         <CalligraphyPalette
           colors={[ '#cdb4db', '#ffc8ddff', '#ffafccff', '#bde0feff', '#a2d2ffff', '#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51', ]}
@@ -133,7 +142,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
         }
         <CalligraphyToolbar activeColor={activeColor} setActivePaletteTab={setActivePaletteTab} activePaletteTab={activePaletteTab} />
       </div>
-      <div className='absolute bottom-0 left-0 right-0 p-4'>
+      <div>
         <SeamSaveButton onClick={props.onSave}/>
       </div>
     </div>
@@ -149,10 +158,10 @@ export default class CalligraphyBlock extends Block {
   }
 
 
-  renderEditModal(done: (data: BlockModel) => void) {
+  renderEditModal(done: (data: BlockModel) => void, width:string="450") {
     const onSave = () => done(this.model)
     return (
-      <CalligraphyEdit onSave={onSave} />
+      <CalligraphyEdit onSave={onSave} width={width}/>
     )
   }
 
