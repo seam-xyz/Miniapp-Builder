@@ -43,13 +43,9 @@ export default class CalligraphyBlock extends Block {
       <div>
         <h1>Edit Calligraphy Block!</h1>
 
-        {/* Canvas */}
         <CalligraphyCanvas/>
-        {/* Pallete */}
-        <div>
-
-        </div>
-
+        {/* <CalligraphyPalette/>
+        <CalligraphyToolbar/> */}
         <div className='absolute bottom-0 left-0 right-0 p-4'>
           <SeamSaveButton onClick={onSave}/>
         </div>
