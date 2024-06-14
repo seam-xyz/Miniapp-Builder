@@ -14,6 +14,9 @@ interface CalligraphyCanvasProps {
   width: string,
   activeColor: string,
   backgroundStyle: string
+  canvasClearSwitch: boolean
+  canvasUndoSwitch: boolean
+  
 }
 const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   const [p5Instance, setP5Instance] = useState<p5 | null>(null)
@@ -22,7 +25,6 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   const canvasWidth = parseInt(props.width)
   const ASPECT_RATIO = 1
 
-  const activeColorCallback = useCallback(() => props.activeColor, [props.activeColor])
   /** p5 Sketch Code That SHould Be Its Own File! */
   const sketch = (s:p5) => {
     let buffer: p5.Graphics
@@ -34,6 +36,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       buffer = s.createGraphics(s.width, s.height)
       buffer.noStroke();
       setBufferInstance(buffer)
+      writeBackground(s)
       }
     s.draw = () => {
       writeBackground(s)
@@ -43,11 +46,9 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       buffer.circle(s.mouseX, s.mouseY, 30)
       return false;
     }
-    const clearCanvas = () => {
-      s.image(buffer,0,0)
-    }
     const writeBackground = (g:p5.Graphics | p5) => {
       g.push();
+      g.background(BACKGROUND_COLOR)
       const GRID_COUNT = 15;
       const GRID_SIZE = g.width/(GRID_COUNT + 1);
       switch (props.backgroundStyle) {
@@ -90,6 +91,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   }, []);
   useEffect(() => {p5Instance === null || p5Instance.fill(props.activeColor)},[props.activeColor])
   useEffect(() => {bufferInstance === null || bufferInstance.fill(props.activeColor)},[props.activeColor])
+  useEffect(() => {bufferInstance === null || bufferInstance.clear()},[props.canvasClearSwitch])
   return (
     <><div className="flex justify-center"ref={canvasDivRef}></div>
     </>
@@ -135,6 +137,8 @@ interface CalligraphyToolbarProps {
   activeColor: string
   setActivePaletteTab: (tab: PaletteTab) => void
   activePaletteTab: PaletteTab
+  toggleCanvasClearSwitch: () => void
+  toggleCanvasUndoSwitch: () => void
 }
 const CalligraphyToolbar = (props: CalligraphyToolbarProps) => {
   return (
@@ -163,10 +167,9 @@ const CalligraphyToolbar = (props: CalligraphyToolbarProps) => {
         </div>
       </div>
       <div className='flex gap-4 border-2 rounded-full p-4 bg-[#fbfbfb]'>
-        <div className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'><UndoIcon /></div>
-        <div className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'><CloseIcon /></div>
-      </div>
-    </div>
+        <div onClick={props.toggleCanvasUndoSwitch} className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'><UndoIcon /></div>
+        <div onClick={props.toggleCanvasClearSwitch}className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'><CloseIcon /></div>
+      </div>   </div>
   )
 }
 
@@ -181,6 +184,8 @@ interface CalligraphyEditProps {
 }
 const CalligraphyEdit = (props: CalligraphyEditProps) => {
   const [activeColor, setActiveColor] = useState('#cdb4db');
+  const [canvasClearSwitch, setCanvasClearSwitch] = useState(false)
+  const [canvasUndoSwitch, setCanvasUndoSwitch] = useState(false)
   const [backgroundStyle, setBackgroundStyle] = useState("lines")
   const [activePaletteTab, setActivePaletteTab] = useState(PaletteTab.COLOR)
 
@@ -188,7 +193,13 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
     <div>
       <h1>Edit Calligraphy Block!</h1>
       <div className='flex flex-1 h-full flex-col gap-6'>
-        <CalligraphyCanvas width={props.width} activeColor={activeColor} backgroundStyle={backgroundStyle}/>
+        <CalligraphyCanvas 
+          width={props.width} 
+          canvasClearSwitch={canvasClearSwitch}
+          canvasUndoSwitch={canvasUndoSwitch}
+          activeColor={activeColor} 
+          backgroundStyle={backgroundStyle}
+        />
         { activePaletteTab === PaletteTab.COLOR &&
         <CalligraphyPalette
           colors={[ '#cdb4db', '#ffc8ddff', '#ffafccff', '#bde0feff', '#a2d2ffff', '#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51', ]}
@@ -196,7 +207,12 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
           activeColor={activeColor}
         />
         }
-        <CalligraphyToolbar activeColor={activeColor} setActivePaletteTab={setActivePaletteTab} activePaletteTab={activePaletteTab} />
+        <CalligraphyToolbar 
+          activeColor={activeColor}
+          setActivePaletteTab={setActivePaletteTab} 
+          toggleCanvasUndoSwitch={() => setCanvasUndoSwitch(!canvasUndoSwitch)} 
+          toggleCanvasClearSwitch={() => setCanvasClearSwitch(!canvasClearSwitch)} 
+          activePaletteTab={activePaletteTab} />
       </div>
       <div>
         <SeamSaveButton onClick={props.onSave}/>
