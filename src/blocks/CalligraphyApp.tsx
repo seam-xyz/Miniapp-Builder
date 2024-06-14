@@ -22,6 +22,9 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   const [p5Instance, setP5Instance] = useState<p5 | null>(null)
   const [bufferInstance, setBufferInstance] = useState<p5.Graphics | null>(null)
   const canvasDivRef = useRef<HTMLDivElement>(null)
+
+  const p5PassinRef = useRef<Record<string,any>>({})
+  useEffect(() => {p5PassinRef.current = {...p5PassinRef.current, activeColor:props.activeColor}},[props.activeColor])
   const canvasWidth = parseInt(props.width)
   const ASPECT_RATIO = 1
 
@@ -40,7 +43,9 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       }
     s.draw = () => {
       writeBackground(s)
+
       s.image(buffer,0,0)
+      buffer.fill(p5PassinRef.current.activeColor)
     }
     s.touchMoved = () => {
       buffer.circle(s.mouseX, s.mouseY, 30)
@@ -89,8 +94,6 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
     setP5Instance(myP5);
     return myP5.remove;
   }, []);
-  useEffect(() => {p5Instance === null || p5Instance.fill(props.activeColor)},[props.activeColor])
-  useEffect(() => {bufferInstance === null || bufferInstance.fill(props.activeColor)},[props.activeColor])
   useEffect(() => {bufferInstance === null || bufferInstance.clear()},[props.canvasClearSwitch])
   return (
     <><div className="flex justify-center"ref={canvasDivRef}></div>
