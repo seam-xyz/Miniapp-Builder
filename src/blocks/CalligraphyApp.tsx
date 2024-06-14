@@ -2,14 +2,13 @@ import Block from './Block'
 import { BlockModel } from './types'
 import './BlockStyles.css'
 import SeamSaveButton from '../components/SeamSaveButton';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import EditIcon from '@mui/icons-material/Edit';
 import BorderOuterIcon from '@mui/icons-material/BorderOuter';
 import UndoIcon from '@mui/icons-material/Undo';
 import CloseIcon from '@mui/icons-material/Close';
 import p5 from 'p5';
-import { buffer } from 'stream/consumers';
 
 interface CalligraphyCanvasProps {
   width: string,
@@ -18,10 +17,13 @@ interface CalligraphyCanvasProps {
 }
 const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   const [p5Instance, setP5Instance] = useState<p5 | null>(null)
+  const [bufferInstance, setBufferInstance] = useState<p5.Graphics | null>(null)
   const canvasDivRef = useRef<HTMLDivElement>(null)
+  const bufferRef = useRef<p5.Graphics>(null)
   const canvasWidth = parseInt(props.width)
   const ASPECT_RATIO = 1
 
+  const activeColorCallback = useCallback(() => props.activeColor, [props.activeColor])
   /** p5 Sketch Code That SHould Be Its Own File! */
   const sketch = (s:p5) => {
     let buffer: p5.Graphics
@@ -30,62 +32,69 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       s.createCanvas(canvasWidth,canvasWidth * ASPECT_RATIO)
       s.background(BACKGROUND_COLOR)
       s.noStroke();
-      buffer = s.createGraphics(s.width, s.height)
-      writeBackgroundToBuffer()
+      buffer = s.createGraphics(s.width, s.height, s.P2D, bufferRef.current!)
+      buffer.noStroke();
+      setBufferInstance(buffer)
+      s.image(buffer,0,0)
+      }
+    s.draw = () => {
+      writeBackground(s)
       s.image(buffer,0,0)
     }
-    s.draw = () => {
-    }
     s.touchMoved = () => {
-      s.circle(s.mouseX, s.mouseY, 30)
+      buffer.circle(s.mouseX, s.mouseY, 30)
       return false;
     }
-    const writeBackgroundToBuffer = () => {
-      buffer.push();
+    const clearCanvas = () => {
+      s.image(buffer,0,0)
+    }
+    const writeBackground = (g:p5.Graphics | p5) => {
+      g.push();
       const GRID_COUNT = 15;
-      const GRID_SIZE = buffer.width/(GRID_COUNT + 1);
+      const GRID_SIZE = g.width/(GRID_COUNT + 1);
       switch (props.backgroundStyle) {
         case "grid":
-          buffer.stroke(220);
-          buffer.strokeWeight(3);
-          buffer.fill(BACKGROUND_COLOR);
+          g.stroke(220);
+          g.strokeWeight(3);
+          g.fill(BACKGROUND_COLOR);
           for (let i = 0; i < 15; i++) {
-            for (let j = 0; j < buffer.height/GRID_SIZE - 1; j++) {
-              buffer.rect(GRID_SIZE * (.5 + i), GRID_SIZE * (.5 + j),GRID_SIZE)
+            for (let j = 0; j < g.height/GRID_SIZE - 1; j++) {
+              g.rect(GRID_SIZE * (.5 + i), GRID_SIZE * (.5 + j),GRID_SIZE)
             }
           }
           break;
         case "dots":
-          buffer.fill(150);
+          g.fill(150);
           for (let i = 0; i < 16; i++) {
-            for (let j = 0; j < buffer.height/GRID_SIZE; j++) {
-              buffer.circle(GRID_SIZE * (.5 + i), GRID_SIZE * (.5 + j),2)
+            for (let j = 0; j < g.height/GRID_SIZE; j++) {
+              g.circle(GRID_SIZE * (.5 + i), GRID_SIZE * (.5 + j),2)
             }
           }
           break;
         case "lines":
           const LINE_COUNT = 25;
-          const LINE_SPACING = (buffer.height - GRID_SIZE)/LINE_COUNT
-          buffer.stroke(215);
-          buffer.strokeWeight(2);
+          const LINE_SPACING = (g.height - GRID_SIZE)/LINE_COUNT
+          g.stroke(215);
+          g.strokeWeight(2);
           for (let i = 0; i <= LINE_COUNT ; i++) {
-            buffer.line(GRID_SIZE/2, GRID_SIZE/2 + (i * LINE_SPACING),buffer.width-GRID_SIZE/2,GRID_SIZE/2 + (i * LINE_SPACING))
+            g.line(GRID_SIZE/2, GRID_SIZE/2 + (i * LINE_SPACING),g.width-GRID_SIZE/2,GRID_SIZE/2 + (i * LINE_SPACING))
           }
           break;
         }
-      buffer.pop();
+      g.pop();
     }
   }
   /** /end p5 Sketch Code! */
-  useEffect(() => {if (p5Instance != null) p5Instance.clear()},[])
   useEffect(() => {
     const myP5: p5 = new p5(sketch, canvasDivRef.current!);
     setP5Instance(myP5);
     return myP5.remove;
   }, []);
   useEffect(() => {p5Instance === null || p5Instance.fill(props.activeColor)},[props.activeColor])
+  useEffect(() => {bufferInstance === null || bufferInstance.fill(props.activeColor)},[props.activeColor])
   return (
-    <div ref={canvasDivRef}></div>
+    <><div ref={canvasDivRef}></div>
+    </>
   )
 }
 
