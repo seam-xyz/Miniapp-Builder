@@ -13,6 +13,7 @@ import p5 from 'p5';
 interface CalligraphyCanvasProps {
   width: string,
   activeColor: string,
+  backgroundStyle: string
 }
 const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   const [p5Instance, setP5Instance] = useState<p5 | null>(null)
@@ -22,20 +23,50 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
 
   /** p5 Sketch Code That SHould Be Its Own File! */
   const sketch = (s:p5) => {
+    let buffer: p5.Graphics
+    const BACKGROUND_COLOR = 235
     s.setup = () => {
       s.createCanvas(canvasWidth,canvasWidth * ASPECT_RATIO)
-      s.background(220)
+      s.background(BACKGROUND_COLOR)
       s.noStroke();
+      buffer = s.createGraphics(s.width, s.height)
     }
     s.draw = () => {
+      backgroundFunction();
+      s.image(buffer,0,0)
     }
     s.touchMoved = () => {
-      s.circle(s.mouseX, s.mouseY, 30)
+      buffer.circle(s.mouseX, s.mouseY, 30)
       return false;
+    }
+    const backgroundFunction = () => {
+      s.push();
+      const GRID_COUNT = 15;
+      const GRID_SIZE = s.width/(GRID_COUNT + 1);
+      switch (props.backgroundStyle) {
+      case "grid":
+        s.stroke(220);
+        s.strokeWeight(3);
+        s.fill(BACKGROUND_COLOR);
+        for (let i = 0; i < 15; i++) {
+          for (let j = 0; j < s.height/GRID_SIZE - 1; j++) {
+            s.rect(GRID_SIZE * (.5 + i), GRID_SIZE * (.5 + j),GRID_SIZE)
+          }
+        }
+        break;
+      case "dots":
+        s.fill(150);
+        for (let i = 0; i < 16; i++) {
+          for (let j = 0; j < s.height/GRID_SIZE; j++) {
+            s.circle(GRID_SIZE * (.5 + i), GRID_SIZE * (.5 + j),2)
+          }
+        }
+      }
+      s.pop();
     }
   }
   /** /end p5 Sketch Code! */
-
+  useEffect(() => {if (p5Instance != null) p5Instance.clear()},[])
   useEffect(() => {
     const myP5: p5 = new p5(sketch, canvasDivRef.current!);
     setP5Instance(myP5);
@@ -132,13 +163,14 @@ interface CalligraphyEditProps {
 }
 const CalligraphyEdit = (props: CalligraphyEditProps) => {
   const [activeColor, setActiveColor] = useState('#cdb4db');
+  const [backgroundStyle, setBackgroundStyle] = useState("dots")
   const [activePaletteTab, setActivePaletteTab] = useState(PaletteTab.COLOR)
 
   return (
     <div>
       <h1>Edit Calligraphy Block!</h1>
       <div className='flex flex-1 h-full flex-col gap-6'>
-        <CalligraphyCanvas width={props.width} activeColor={activeColor}/>
+        <CalligraphyCanvas width={props.width} activeColor={activeColor} backgroundStyle={backgroundStyle}/>
         { activePaletteTab === PaletteTab.COLOR &&
         <CalligraphyPalette
           colors={[ '#cdb4db', '#ffc8ddff', '#ffafccff', '#bde0feff', '#a2d2ffff', '#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51', ]}
