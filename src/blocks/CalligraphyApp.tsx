@@ -9,6 +9,7 @@ import BorderOuterIcon from '@mui/icons-material/BorderOuter';
 import UndoIcon from '@mui/icons-material/Undo';
 import CloseIcon from '@mui/icons-material/Close';
 import p5 from 'p5';
+import { buffer } from 'stream/consumers';
 
 interface CalligraphyCanvasProps {
   width: string,
@@ -30,39 +31,49 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       s.background(BACKGROUND_COLOR)
       s.noStroke();
       buffer = s.createGraphics(s.width, s.height)
-    }
-    s.draw = () => {
-      backgroundFunction();
+      writeBackgroundToBuffer()
       s.image(buffer,0,0)
     }
+    s.draw = () => {
+    }
     s.touchMoved = () => {
-      buffer.circle(s.mouseX, s.mouseY, 30)
+      s.circle(s.mouseX, s.mouseY, 30)
       return false;
     }
-    const backgroundFunction = () => {
-      s.push();
+    const writeBackgroundToBuffer = () => {
+      buffer.push();
       const GRID_COUNT = 15;
-      const GRID_SIZE = s.width/(GRID_COUNT + 1);
+      const GRID_SIZE = buffer.width/(GRID_COUNT + 1);
       switch (props.backgroundStyle) {
-      case "grid":
-        s.stroke(220);
-        s.strokeWeight(3);
-        s.fill(BACKGROUND_COLOR);
-        for (let i = 0; i < 15; i++) {
-          for (let j = 0; j < s.height/GRID_SIZE - 1; j++) {
-            s.rect(GRID_SIZE * (.5 + i), GRID_SIZE * (.5 + j),GRID_SIZE)
+        case "grid":
+          buffer.stroke(220);
+          buffer.strokeWeight(3);
+          buffer.fill(BACKGROUND_COLOR);
+          for (let i = 0; i < 15; i++) {
+            for (let j = 0; j < buffer.height/GRID_SIZE - 1; j++) {
+              buffer.rect(GRID_SIZE * (.5 + i), GRID_SIZE * (.5 + j),GRID_SIZE)
+            }
           }
-        }
-        break;
-      case "dots":
-        s.fill(150);
-        for (let i = 0; i < 16; i++) {
-          for (let j = 0; j < s.height/GRID_SIZE; j++) {
-            s.circle(GRID_SIZE * (.5 + i), GRID_SIZE * (.5 + j),2)
+          break;
+        case "dots":
+          buffer.fill(150);
+          for (let i = 0; i < 16; i++) {
+            for (let j = 0; j < buffer.height/GRID_SIZE; j++) {
+              buffer.circle(GRID_SIZE * (.5 + i), GRID_SIZE * (.5 + j),2)
+            }
           }
+          break;
+        case "lines":
+          const LINE_COUNT = 25;
+          const LINE_SPACING = (buffer.height - GRID_SIZE)/LINE_COUNT
+          buffer.stroke(215);
+          buffer.strokeWeight(2);
+          for (let i = 0; i <= LINE_COUNT ; i++) {
+            buffer.line(GRID_SIZE/2, GRID_SIZE/2 + (i * LINE_SPACING),buffer.width-GRID_SIZE/2,GRID_SIZE/2 + (i * LINE_SPACING))
+          }
+          break;
         }
-      }
-      s.pop();
+      buffer.pop();
     }
   }
   /** /end p5 Sketch Code! */
@@ -163,7 +174,7 @@ interface CalligraphyEditProps {
 }
 const CalligraphyEdit = (props: CalligraphyEditProps) => {
   const [activeColor, setActiveColor] = useState('#cdb4db');
-  const [backgroundStyle, setBackgroundStyle] = useState("dots")
+  const [backgroundStyle, setBackgroundStyle] = useState("lines")
   const [activePaletteTab, setActivePaletteTab] = useState(PaletteTab.COLOR)
 
   return (
