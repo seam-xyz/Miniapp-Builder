@@ -19,7 +19,6 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   const [p5Instance, setP5Instance] = useState<p5 | null>(null)
   const [bufferInstance, setBufferInstance] = useState<p5.Graphics | null>(null)
   const canvasDivRef = useRef<HTMLDivElement>(null)
-  const bufferRef = useRef<p5.Graphics>(null)
   const canvasWidth = parseInt(props.width)
   const ASPECT_RATIO = 1
 
@@ -32,10 +31,9 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       s.createCanvas(canvasWidth,canvasWidth * ASPECT_RATIO)
       s.background(BACKGROUND_COLOR)
       s.noStroke();
-      buffer = s.createGraphics(s.width, s.height, s.P2D, bufferRef.current!)
+      buffer = s.createGraphics(s.width, s.height)
       buffer.noStroke();
       setBufferInstance(buffer)
-      s.image(buffer,0,0)
       }
     s.draw = () => {
       writeBackground(s)
@@ -93,7 +91,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   useEffect(() => {p5Instance === null || p5Instance.fill(props.activeColor)},[props.activeColor])
   useEffect(() => {bufferInstance === null || bufferInstance.fill(props.activeColor)},[props.activeColor])
   return (
-    <><div ref={canvasDivRef}></div>
+    <><div className="flex justify-center"ref={canvasDivRef}></div>
     </>
   )
 }
