@@ -42,13 +42,14 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
     let SPRING = .5; 
     let [vy, vx, brushX, brushY] = [0,0,0,0]
     let currentStrokeTotalLength = 0
+    let localBufferClearSwitch = false;
     s.setup = () => {
       s.createCanvas(canvasWidth,canvasWidth * ASPECT_RATIO)
       s.background(BACKGROUND_COLOR)
       buffer = s.createGraphics(s.width, s.height)
       s.noStroke();
       buffer.noStroke();
-      setBufferInstance(buffer)
+      // setBufferInstance(buffer)
       }
     s.draw = () => {
       buffer.fill(state.current.activeColor)
@@ -91,6 +92,11 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       }
 
       s.image(buffer,0,0)
+      //if the clear switch has been toggled by the toolbar, we clear, and align the local tracking variable to match it so we cathc the next flip
+      if (state.current.canvasClearSwitch != localBufferClearSwitch) {
+        buffer.clear();
+        localBufferClearSwitch = state.current.canvasClearSwitch
+      }
     }
     //on touch, set current path length to 0, snap brush to mouse, vel to 0
     s.mousePressed = () => {
