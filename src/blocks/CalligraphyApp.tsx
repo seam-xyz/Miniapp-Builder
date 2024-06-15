@@ -16,42 +16,133 @@ interface CalligraphyCanvasProps {
   backgroundStyle: string
   canvasClearSwitch: boolean
   canvasUndoSwitch: boolean
+  brushStyle: string
   
 }
 const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   const [p5Instance, setP5Instance] = useState<p5 | null>(null)
   const [bufferInstance, setBufferInstance] = useState<p5.Graphics | null>(null)
   const canvasDivRef = useRef<HTMLDivElement>(null)
+
+  /**A reference object accessible inside the p5 sketch */
+  const p5PassInRef = useRef<CalligraphyCanvasProps>({...props})
   const canvasWidth = parseInt(props.width)
   const ASPECT_RATIO = 1
-
+  
   /** p5 Sketch Code That SHould Be Its Own File! */
   const sketch = (s:p5) => {
     let buffer: p5.Graphics
     const BACKGROUND_COLOR = 235
+    const state = p5PassInRef //gives the p5 sketch access to all the component props
+    
+    const BRUSH_SIZE = 25; //make configurable later?
+    const VEL_DEPENDENT_SHADE = false //make the stroke lighter the faster the brush moves
+    let previousStrokeWidth = 0; //stroke width on prior frame
+    let FRICTION = 2; //divides velocity
+    let SPRING = .5; 
+    let [vy, vx, brushX, brushY] = [0,0,0,0]
+    let currentStrokeTotalLength = 0
+    let localBufferClearSwitch = false;
     s.setup = () => {
       s.createCanvas(canvasWidth,canvasWidth * ASPECT_RATIO)
       s.background(BACKGROUND_COLOR)
-      s.noStroke();
       buffer = s.createGraphics(s.width, s.height)
+      s.noStroke();
       buffer.noStroke();
-      setBufferInstance(buffer)
-      writeBackground(s)
+      // setBufferInstance(buffer)
       }
     s.draw = () => {
+      buffer.fill(state.current.activeColor)
       writeBackground(s)
+      switch (state.current.brushStyle || "default") {
+        case "ink":
+          const maxBRUSH_SIZE = Math.min(
+            (BRUSH_SIZE / 2) * (1 + currentStrokeTotalLength / 1000),
+            BRUSH_SIZE
+          );
+          const dx = s.mouseX - brushX;
+          const dy = s.mouseY - brushY;
+          const vel = s.sqrt(dx ** 2 + dy ** 2);
+          currentStrokeTotalLength += vel;
+          const velocityStrokeScaling = vel / 100;
+          const velocityShadeScaling = VEL_DEPENDENT_SHADE ? vel / 2 : 0;
+          const strokeSize = Math.min(
+            maxBRUSH_SIZE,
+            s.max(BRUSH_SIZE / (1 + velocityStrokeScaling), 1)
+          );
+          //To lighten depending on velocity
+          const scaledStrokeShade = s.min(
+            BACKGROUND_COLOR * 0.75,
+            (s.brightness(state.current.activeColor) * 2.55) + velocityShadeScaling
+          );
+          if (s.mouseIsPressed) {
+            //   s.fill(127 * (1 + 0.5 * s.sin(s.frameCount * 3)));
+      
+            vx += (dx * SPRING) / 2;
+            vy += (dy * SPRING) / 2;
+            vx /= FRICTION;
+            vy /= FRICTION;
+            const [prevX, prevY] = [brushX, brushY];
+            (brushX += vx);
+            (brushY += vy);
+      
+            taperLine(buffer, prevX, prevY, brushX, brushY, previousStrokeWidth, strokeSize, true);
+          }
+          previousStrokeWidth = strokeSize;
+      }
+
       s.image(buffer,0,0)
+      //if the clear switch has been toggled by the toolbar, we clear, and align the local tracking variable to match it so we cathc the next flip
+      if (state.current.canvasClearSwitch != localBufferClearSwitch) {
+        buffer.clear();
+        localBufferClearSwitch = state.current.canvasClearSwitch
+      }
     }
-    s.touchMoved = () => {
-      buffer.circle(s.mouseX, s.mouseY, 30)
-      return false;
+    //on touch, set current path length to 0, snap brush to mouse, vel to 0
+    s.mousePressed = () => {
+      currentStrokeTotalLength = 0;
+      [brushX, brushY] = [s.mouseX, s.mouseY];
+      [vx, vy] = [0, 0];
+    };
+    //Function to draw a tapered line (trapezoid) for smoothness
+    function taperLine(
+      s: p5,
+      start_x: number,
+      start_y: number,
+      end_x: number,
+      end_y: number,
+      start_width: number,
+      end_width: number,
+      endRound = false
+    ) {
+      s.push();
+      s.angleMode(s.DEGREES);
+      let deltaX = end_x - start_x;
+      let deltaY = end_y - start_y;
+      let distance = s.sqrt(deltaX ** 2 + deltaY ** 2);
+      let slope = s.atan2(deltaY, deltaX);
+      s.translate(start_x, start_y);
+      s.rotate(-90 + slope);
+  
+      s.beginShape();
+      s.vertex(-start_width / 2, 0);
+      s.vertex(start_width / 2, 0);
+      s.vertex(end_width / 2, distance);
+      s.vertex(-end_width / 2, distance);
+      s.endShape(s.CLOSE);
+      if (endRound) {
+        s.circle(0, 0, start_width);
+        s.circle(0, distance, end_width);
+      }
+      s.pop();
     }
+    /**write the background (lines/grid/etc) to a graphics element */
     const writeBackground = (g:p5.Graphics | p5) => {
       g.push();
       g.background(BACKGROUND_COLOR)
       const GRID_COUNT = 15;
       const GRID_SIZE = g.width/(GRID_COUNT + 1);
-      switch (props.backgroundStyle) {
+      switch (state.current.backgroundStyle) {
         case "grid":
           g.stroke(220);
           g.strokeWeight(3);
@@ -79,19 +170,22 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
             g.line(GRID_SIZE/2, GRID_SIZE/2 + (i * LINE_SPACING),g.width-GRID_SIZE/2,GRID_SIZE/2 + (i * LINE_SPACING))
           }
           break;
+        case "blank":
+          break;
         }
       g.pop();
     }
   }
   /** /end p5 Sketch Code! */
+  /**Passes information in to the p5 context through ref */
+  useEffect(() => {p5PassInRef.current = {...props}},[props])
+  /**Creates the p5 canvas instance */
   useEffect(() => {
     const myP5: p5 = new p5(sketch, canvasDivRef.current!);
     setP5Instance(myP5);
     return myP5.remove;
   }, []);
-  useEffect(() => {p5Instance === null || p5Instance.fill(props.activeColor)},[props.activeColor])
-  useEffect(() => {bufferInstance === null || bufferInstance.fill(props.activeColor)},[props.activeColor])
-  useEffect(() => {bufferInstance === null || bufferInstance.clear()},[props.canvasClearSwitch])
+  // useEffect(() => {bufferInstance === null || bufferInstance.clear()},[props.canvasClearSwitch]) //clears the buffer when the switch is hit
   return (
     <><div className="flex justify-center"ref={canvasDivRef}></div>
     </>
@@ -188,7 +282,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
   const [canvasUndoSwitch, setCanvasUndoSwitch] = useState(false)
   const [backgroundStyle, setBackgroundStyle] = useState("lines")
   const [activePaletteTab, setActivePaletteTab] = useState(PaletteTab.COLOR)
-
+  const [brushStyle, setBrushStyle] = useState("ink")
   return (
     <div>
       <h1>Edit Calligraphy Block!</h1>
@@ -199,6 +293,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
           canvasUndoSwitch={canvasUndoSwitch}
           activeColor={activeColor} 
           backgroundStyle={backgroundStyle}
+          brushStyle={brushStyle}
         />
         { activePaletteTab === PaletteTab.COLOR &&
         <CalligraphyPalette
