@@ -237,7 +237,7 @@ interface CalligraphyColorSelectorProps {
 }
 const CalligraphyColorSelector = (props: CalligraphyColorSelectorProps) => {
   return (
-    <div className='flex flex-1 flex-row flex-wrap gap-2 py-2 border-2 rounded-md bg-[#fbfbfb] justify-start overflow-x-auto'>
+    <div className='flex flex-1 flex-row flex-wrap gap-2 py-2 border-2 rounded-md bg-[#fbfbfb] justify-start'>
       {props.colors.map (color =>
         <ColorSwatch key={color} color={color} onClick={() => props.onColorSelected(color)} activeColor={props.activeColor} />
       )}
@@ -337,7 +337,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
   const [activePaletteTab, setActivePaletteTab] = useState(CalligraphyToolbarView.COLOR);
   const [brushStyle, setBrushStyle] = useState("ink");
   return (
-    <div className='flex flex-col h-[90vh] gap-3 justify-between'>
+    <div className='flex flex-col gap-3 justify-between h-[88vh]'>
         <CalligraphyCanvas 
           width={props.width} 
           canvasClearSwitch={canvasClearSwitch}
@@ -348,7 +348,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
         />
           <div className='flex flex-0 flex-col'>
           <div className='flex flex-col gap-4'>
-        <div className='flex grow-1 shrink-1'>
+        <div className='flex flex-1'>
             { activePaletteTab === CalligraphyToolbarView.COLOR &&
             <CalligraphyColorSelector
               colors={[ '#cdb4db', '#ffc8ddff', '#ffafccff', '#bde0feff', '#a2d2ffff', '#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51', ]}
@@ -359,8 +359,8 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
             { activePaletteTab === CalligraphyToolbarView.BACKGROUND &&
             <CalligraphyBackgroundSelector currentBackground={currentBackground} setCurrentBackground={setCurrentBackground} width={props.width}/>
             }
-                    </div>
-                    <CalligraphyToolbar
+          </div>
+          <CalligraphyToolbar
             activeColor={activeColor}
             setActiveToolbarTab={setActivePaletteTab}
             toggleCanvasUndoSwitch={() => setCanvasUndoSwitch(!canvasUndoSwitch)}
