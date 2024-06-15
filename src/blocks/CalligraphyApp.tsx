@@ -9,6 +9,9 @@ import BorderOuterIcon from '@mui/icons-material/BorderOuter';
 import UndoIcon from '@mui/icons-material/Undo';
 import CloseIcon from '@mui/icons-material/Close';
 import p5 from 'p5';
+import dots from "./assets/Calligraphy/dotsPreview.png"
+import grid from "./assets/Calligraphy/gridPreview.png"
+import lines from "./assets/Calligraphy/linesPreview.png"
 
 interface CalligraphyCanvasProps {
   width: string,
@@ -154,10 +157,10 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
           }
           break;
         case "dots":
-          g.fill(150);
+          g.fill(125);
           for (let i = 0; i < 16; i++) {
             for (let j = 0; j < g.height/GRID_SIZE; j++) {
-              g.circle(GRID_SIZE * (.5 + i), GRID_SIZE * (.5 + j),2)
+              g.circle(GRID_SIZE * (.5 + i), GRID_SIZE * (.5 + j),4)
             }
           }
           break;
@@ -226,19 +229,29 @@ const CalligraphyPalette = (props: CalligraphyPaletteProps) => {
     </div>
   )
 }
-type Background = "grid" | "dots" | "lines"
 interface CalligraphyBackgroundSelectorProps {
-  activeBackground: Background
-  setBackgroundStyle: (x: Background) => void
+  currentBackground: Background
+  setCurrentBackground: (x: Background) => void
+  width:string
 }
-const CalligraphyBackgroundSelector = (props: CalligraphyBackgroundSelectorProps) => {
-  const backgroundOptions = [
-    "lines": 
-  ]
+const CalligraphyBackgroundSelectorTab = (props: CalligraphyBackgroundSelectorProps) => {
+  const backgroundOptions: Record<Background,string> = {
+    "lines":lines,
+    "grid":grid,
+    "dots":dots
+  }
   return (
-    {backgroundOptions.map( background => 
-      <div></div>
-    )}
+    <div className='flex space-between'>
+      {Object.entries(backgroundOptions).map(( [background,imgPath] )=>
+        <img 
+        className={`basis-1/3 border-[#d903ff] rounded-lg m-[10px] ${props.currentBackground === background ? "border-2" : "border-0"} `}
+        style={{width: `${((parseInt(props.width)/3)-20).toString()}px`}}
+        src={imgPath}
+        key={background}
+        onClick={() => props.setCurrentBackground(background as Background)}
+        />
+      )}
+    </div>
   )
 }
 interface CalligraphyToolbarProps {
@@ -261,15 +274,15 @@ const CalligraphyToolbar = (props: CalligraphyToolbarProps) => {
         </div>
         <div
           className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center border-fuchsia-500'
-          onClick={() => props.setActivePaletteTab(PaletteTab.BRUSHES)}
-          style={{ borderWidth: props.activePaletteTab === PaletteTab.BRUSHES ? '2px' : '0px' }}
+          onClick={() => props.setActivePaletteTab(PaletteTab.BRUSH)}
+          style={{ borderWidth: props.activePaletteTab === PaletteTab.BRUSH ? '2px' : '0px' }}
         >
           <EditIcon />
         </div>
         <div
           className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center border-fuchsia-500'
-          onClick={() => props.setActivePaletteTab(PaletteTab.BACKGROUNDS)}
-          style={{ borderWidth: props.activePaletteTab === PaletteTab.BACKGROUNDS ? '2px' : '0px' }}
+          onClick={() => props.setActivePaletteTab(PaletteTab.BACKGROUND)}
+          style={{ borderWidth: props.activePaletteTab === PaletteTab.BACKGROUND ? '2px' : '0px' }}
         >
           <BorderOuterIcon />
         </div>
@@ -283,18 +296,20 @@ const CalligraphyToolbar = (props: CalligraphyToolbarProps) => {
 
 enum PaletteTab {
   COLOR,
-  BRUSHES,
-  BACKGROUNDS
+  BRUSH,
+  BACKGROUND
 }
 interface CalligraphyEditProps {
   onSave: () => void;
   width: string;
 }
+type Background = "grid" | "dots" | "lines"
+
 const CalligraphyEdit = (props: CalligraphyEditProps) => {
   const [activeColor, setActiveColor] = useState('#cdb4db');
   const [canvasClearSwitch, setCanvasClearSwitch] = useState(false)
   const [canvasUndoSwitch, setCanvasUndoSwitch] = useState(false)
-  const [backgroundStyle, setBackgroundStyle] = useState("lines")
+  const [currentBackground, setCurrentBackground] = useState<Background>("lines")
   const [activePaletteTab, setActivePaletteTab] = useState(PaletteTab.COLOR)
   const [brushStyle, setBrushStyle] = useState("ink")
   return (
@@ -306,7 +321,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
           canvasClearSwitch={canvasClearSwitch}
           canvasUndoSwitch={canvasUndoSwitch}
           activeColor={activeColor} 
-          backgroundStyle={backgroundStyle}
+          backgroundStyle={currentBackground}
           brushStyle={brushStyle}
         />
         { activePaletteTab === PaletteTab.COLOR &&
@@ -316,6 +331,10 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
           activeColor={activeColor}
         />
         }
+        { activePaletteTab === PaletteTab.BACKGROUND &&
+        <CalligraphyBackgroundSelectorTab currentBackground={currentBackground} setCurrentBackground={setCurrentBackground} width={props.width}/>
+        }
+
 
         <CalligraphyToolbar 
           activeColor={activeColor}
