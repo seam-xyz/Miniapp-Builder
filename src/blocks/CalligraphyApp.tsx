@@ -35,6 +35,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   /** p5 Sketch Code That SHould Be Its Own File! */
   const sketch = (s:p5) => {
     let buffer: p5.Graphics
+    let undoBuffer: p5.Graphics
     const BACKGROUND_COLOR = 235
     const state = p5PassInRef //gives the p5 sketch access to all the component props
     
@@ -45,11 +46,13 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
     let SPRING = .5; 
     let [vy, vx, brushX, brushY] = [0,0,0,0]
     let currentStrokeTotalLength = 0
-    let localBufferClearSwitch = false;
+    let localBufferClearSwitch = state.current.canvasClearSwitch;
+    let localUndoSwitch = state.current.canvasUndoSwitch;
     s.setup = () => {
       s.createCanvas(canvasWidth,canvasWidth * ASPECT_RATIO)
       s.background(BACKGROUND_COLOR)
       buffer = s.createGraphics(s.width, s.height)
+      undoBuffer = s.createGraphics(s.width, s.height)
       s.noStroke();
       buffer.noStroke();
       // setBufferInstance(buffer)
@@ -78,7 +81,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
             BACKGROUND_COLOR * 0.75,
             (s.brightness(state.current.activeColor) * 2.55) + velocityShadeScaling
           );
-          if (s.mouseIsPressed) {
+          if (s.mouseIsPressed && !mouseOffCanvas()) {
             //   s.fill(127 * (1 + 0.5 * s.sin(s.frameCount * 3)));
       
             vx += (dx * SPRING) / 2;
@@ -98,15 +101,26 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       //if the clear switch has been toggled by the toolbar, we clear, and align the local tracking variable to match it so we cathc the next flip
       if (state.current.canvasClearSwitch != localBufferClearSwitch) {
         buffer.clear();
+
         localBufferClearSwitch = state.current.canvasClearSwitch
+      }
+      //If the undo switch is tripped, clear the buffer, image the undo buffer (should be one stroke behind)
+      if (state.current.canvasUndoSwitch != localUndoSwitch) {
+        buffer.clear();
+        buffer.image(undoBuffer,0,0)
+        localUndoSwitch = state.current.canvasUndoSwitch
       }
     }
     //on touch, set current path length to 0, snap brush to mouse, vel to 0
     s.mousePressed = () => {
+      if (mouseOffCanvas()) return;
+      undoBuffer.clear()
+      undoBuffer.image(buffer,0,0)
       currentStrokeTotalLength = 0;
       [brushX, brushY] = [s.mouseX, s.mouseY];
       [vx, vy] = [0, 0];
     };
+    const mouseOffCanvas = () => (s.mouseX > s.width || s.mouseX < 0 || s.mouseY > s.height || s.mouseY < 0)
     //Function to draw a tapered line (trapezoid) for smoothness
     function taperLine(
       s: p5,
@@ -222,7 +236,7 @@ interface CalligraphyPaletteProps {
 }
 const CalligraphyPalette = (props: CalligraphyPaletteProps) => {
   return (
-    <div className='flex flex-row flex-wrap gap-2 py-2 border-2 rounded-md bg-[#fbfbfb] justify-start'>
+    <div className='flex flex-row flex-wrap gap-2 py-2 border-2 rounded-md bg-[#fbfbfb] justify-start overflow-x-auto'>
       {props.colors.map (color =>
         <ColorSwatch key={color} color={color} onClick={() => props.onColorSelected(color)} activeColor={props.activeColor} />
       )}
@@ -241,7 +255,7 @@ const CalligraphyBackgroundSelectorTab = (props: CalligraphyBackgroundSelectorPr
     "dots":dots
   }
   return (
-    <div className='flex space-between'>
+    <div className='flex space-between overflow-x-auto'>
       {Object.entries(backgroundOptions).map(( [background,imgPath] )=>
         <img 
         className={`basis-1/3 border-[#d903ff] rounded-lg m-[10px] ${props.currentBackground === background ? "border-2" : "border-0"} `}
@@ -266,21 +280,21 @@ const CalligraphyToolbar = (props: CalligraphyToolbarProps) => {
     <div className='flex justify-between'>
       <div className='flex gap-4 border-2 rounded-full p-4 bg-[#fbfbfb]'>
         <div
-          className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center border-fuchsia-500'
+          className='flex flex-0 w-10 h-10 rounded-full active:bg-slate-300 bg-[#ededed] place-items-center place-content-center border-fuchsia-500'
           onClick={() => props.setActivePaletteTab(PaletteTab.COLOR)}
           style={{ borderWidth: props.activePaletteTab === PaletteTab.COLOR ? '2px' : '0px' }}
         >
           <div className='w-8 h-8 rounded-full border border-white' style={{ backgroundColor: props.activeColor }} />
         </div>
         <div
-          className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center border-fuchsia-500'
+          className='flex flex-0 w-10 h-10 rounded-full active:bg-slate-300 bg-[#ededed] place-items-center place-content-center border-fuchsia-500'
           onClick={() => props.setActivePaletteTab(PaletteTab.BRUSH)}
           style={{ borderWidth: props.activePaletteTab === PaletteTab.BRUSH ? '2px' : '0px' }}
         >
           <EditIcon />
         </div>
         <div
-          className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center border-fuchsia-500'
+          className='flex flex-0 w-10 h-10 rounded-full active:bg-slate-300 bg-[#ededed] place-items-center place-content-center border-fuchsia-500'
           onClick={() => props.setActivePaletteTab(PaletteTab.BACKGROUND)}
           style={{ borderWidth: props.activePaletteTab === PaletteTab.BACKGROUND ? '2px' : '0px' }}
         >
@@ -288,8 +302,8 @@ const CalligraphyToolbar = (props: CalligraphyToolbarProps) => {
         </div>
       </div>
       <div className='flex gap-4 border-2 rounded-full p-4 bg-[#fbfbfb]'>
-        <div onClick={props.toggleCanvasUndoSwitch} className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'><UndoIcon /></div>
-        <div onClick={props.toggleCanvasClearSwitch}className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'><CloseIcon /></div>
+        <div onClick={props.toggleCanvasUndoSwitch} className='flex flex-0 active:bg-slate-300 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'><UndoIcon /></div>
+        <div onClick={props.toggleCanvasClearSwitch}className='flex flex-0 active:bg-slate-300 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'><CloseIcon /></div>
       </div>   </div>
   )
 }
