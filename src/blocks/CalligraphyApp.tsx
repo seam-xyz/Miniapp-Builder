@@ -226,7 +226,21 @@ const CalligraphyPalette = (props: CalligraphyPaletteProps) => {
     </div>
   )
 }
-
+type Background = "grid" | "dots" | "lines"
+interface CalligraphyBackgroundSelectorProps {
+  activeBackground: Background
+  setBackgroundStyle: (x: Background) => void
+}
+const CalligraphyBackgroundSelector = (props: CalligraphyBackgroundSelectorProps) => {
+  const backgroundOptions = [
+    "lines": 
+  ]
+  return (
+    {backgroundOptions.map( background => 
+      <div></div>
+    )}
+  )
+}
 interface CalligraphyToolbarProps {
   activeColor: string
   setActivePaletteTab: (tab: PaletteTab) => void
@@ -302,6 +316,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
           activeColor={activeColor}
         />
         }
+
         <CalligraphyToolbar 
           activeColor={activeColor}
           setActivePaletteTab={setActivePaletteTab} 
