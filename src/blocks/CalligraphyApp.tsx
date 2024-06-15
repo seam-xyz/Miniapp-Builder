@@ -35,7 +35,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   /** p5 Sketch Code That SHould Be Its Own File! */
   const sketch = (s:p5) => {
     let buffer: p5.Graphics
-    let undoBuffer: p5.Graphics
+    let undoBufferStack: p5.Graphics[]=[]
     const BACKGROUND_COLOR = 235
     const state = p5PassInRef //gives the p5 sketch access to all the component props
     
@@ -52,10 +52,9 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       s.createCanvas(canvasWidth,canvasWidth * ASPECT_RATIO)
       s.background(BACKGROUND_COLOR)
       buffer = s.createGraphics(s.width, s.height)
-      undoBuffer = s.createGraphics(s.width, s.height)
+      // undoBuffer = s.createGraphics(s.width, s.height)
       s.noStroke();
       buffer.noStroke();
-      // setBufferInstance(buffer)
       }
     s.draw = () => {
       buffer.fill(state.current.activeColor)
@@ -104,22 +103,34 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
 
         localBufferClearSwitch = state.current.canvasClearSwitch
       }
-      //If the undo switch is tripped, clear the buffer, image the undo buffer (should be one stroke behind)
+      //If the undo switch is tripped, clear the buffer, image the undo buffer (should be one stroke behind) and remove that undo frame from the stack
       if (state.current.canvasUndoSwitch != localUndoSwitch) {
+        if (undoBufferStack.length == 0) return;
         buffer.clear();
-        buffer.image(undoBuffer,0,0)
+        buffer.image(undoBufferStack.pop()!,0,0)
         localUndoSwitch = state.current.canvasUndoSwitch
       }
     }
-    //on touch, set current path length to 0, snap brush to mouse, vel to 0
+    
     s.mousePressed = () => {
       if (mouseOffCanvas()) return;
-      undoBuffer.clear()
-      undoBuffer.image(buffer,0,0)
+      onStrokeStart()
+    };
+    s.touchStarted = () => {
+      if (mouseOffCanvas()) return;
+      onStrokeStart()
+    }
+    const onStrokeStart = () => {
+      /** Whenever we start a drawing move, first save the pre-stroke state as a frame in the undo stack */
+      const newUndoBufferFrame =s.createGraphics(s.width, s.height) //create a new undo history frame
+      newUndoBufferFrame.image(buffer,0,0) //image the state of the buffer canvas to it
+      undoBufferStack.push(newUndoBufferFrame); //place the latest saved frame at the end of the undo stack
+      
+      /** Reset the brush position/velocity and total stroke lenghth */
       currentStrokeTotalLength = 0;
       [brushX, brushY] = [s.mouseX, s.mouseY];
       [vx, vy] = [0, 0];
-    };
+    }
     const mouseOffCanvas = () => (s.mouseX > s.width || s.mouseX < 0 || s.mouseY > s.height || s.mouseY < 0)
     //Function to draw a tapered line (trapezoid) for smoothness
     function taperLine(
