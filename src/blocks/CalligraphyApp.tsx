@@ -48,7 +48,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       buffer = s.createGraphics(s.width, s.height)
       s.noStroke();
       buffer.noStroke();
-      // setBufferInstance(buffer)
+      setBufferInstance(buffer)
       }
     s.draw = () => {
       buffer.fill(state.current.activeColor)
@@ -179,7 +179,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
     setP5Instance(myP5);
     return myP5.remove;
   }, []);
-  // useEffect(() => {bufferInstance === null || bufferInstance.clear()},[props.canvasClearSwitch])
+  useEffect(() => {bufferInstance === null || bufferInstance.clear()},[props.canvasClearSwitch]) //clears the buffer when the switch is hit
   return (
     <><div className="flex justify-center"ref={canvasDivRef}></div>
     </>
