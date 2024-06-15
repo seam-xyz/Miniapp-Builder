@@ -35,6 +35,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   /** p5 Sketch Code That SHould Be Its Own File! */
   const sketch = (s:p5) => {
     let buffer: p5.Graphics
+    let undoBuffer: p5.Graphics
     const BACKGROUND_COLOR = 235
     const state = p5PassInRef //gives the p5 sketch access to all the component props
     
@@ -45,11 +46,13 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
     let SPRING = .5; 
     let [vy, vx, brushX, brushY] = [0,0,0,0]
     let currentStrokeTotalLength = 0
-    let localBufferClearSwitch = false;
+    let localBufferClearSwitch = state.current.canvasClearSwitch;
+    let localUndoSwitch = state.current.canvasUndoSwitch;
     s.setup = () => {
       s.createCanvas(canvasWidth,canvasWidth * ASPECT_RATIO)
       s.background(BACKGROUND_COLOR)
       buffer = s.createGraphics(s.width, s.height)
+      undoBuffer = s.createGraphics(s.width, s.height)
       s.noStroke();
       buffer.noStroke();
       // setBufferInstance(buffer)
@@ -78,7 +81,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
             BACKGROUND_COLOR * 0.75,
             (s.brightness(state.current.activeColor) * 2.55) + velocityShadeScaling
           );
-          if (s.mouseIsPressed) {
+          if (s.mouseIsPressed && !mouseOffCanvas()) {
             //   s.fill(127 * (1 + 0.5 * s.sin(s.frameCount * 3)));
       
             vx += (dx * SPRING) / 2;
@@ -98,15 +101,26 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       //if the clear switch has been toggled by the toolbar, we clear, and align the local tracking variable to match it so we cathc the next flip
       if (state.current.canvasClearSwitch != localBufferClearSwitch) {
         buffer.clear();
+
         localBufferClearSwitch = state.current.canvasClearSwitch
+      }
+      //If the undo switch is tripped, clear the buffer, image the undo buffer (should be one stroke behind)
+      if (state.current.canvasUndoSwitch != localUndoSwitch) {
+        buffer.clear();
+        buffer.image(undoBuffer,0,0)
+        localUndoSwitch = state.current.canvasUndoSwitch
       }
     }
     //on touch, set current path length to 0, snap brush to mouse, vel to 0
     s.mousePressed = () => {
+      if (mouseOffCanvas()) return;
+      undoBuffer.clear()
+      undoBuffer.image(buffer,0,0)
       currentStrokeTotalLength = 0;
       [brushX, brushY] = [s.mouseX, s.mouseY];
       [vx, vy] = [0, 0];
     };
+    const mouseOffCanvas = () => (s.mouseX > s.width || s.mouseX < 0 || s.mouseY > s.height || s.mouseY < 0)
     //Function to draw a tapered line (trapezoid) for smoothness
     function taperLine(
       s: p5,
