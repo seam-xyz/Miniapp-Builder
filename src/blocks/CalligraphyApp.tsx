@@ -185,7 +185,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
     setP5Instance(myP5);
     return myP5.remove;
   }, []);
-  useEffect(() => {bufferInstance === null || bufferInstance.clear()},[props.canvasClearSwitch]) //clears the buffer when the switch is hit
+  // useEffect(() => {bufferInstance === null || bufferInstance.clear()},[props.canvasClearSwitch]) //clears the buffer when the switch is hit
   return (
     <><div className="flex justify-center"ref={canvasDivRef}></div>
     </>
