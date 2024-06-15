@@ -35,7 +35,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   /** p5 Sketch Code That SHould Be Its Own File! */
   const sketch = (s:p5) => {
     let buffer: p5.Graphics
-    let undoBufferStack: p5.Graphics[]=[]
+    let undoBufferStack: p5.Image[]=[]
     const BACKGROUND_COLOR = 235
     const state = p5PassInRef //gives the p5 sketch access to all the component props
     
@@ -97,17 +97,16 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       }
 
       s.image(buffer,0,0)
-      //if the clear switch has been toggled by the toolbar, we clear, and align the local tracking variable to match it so we cathc the next flip
+      //if the clear switch has been toggled by the toolbar, we save an undo frame, clear, and align the local tracking variable to match it so we cathc the next flip
       if (state.current.canvasClearSwitch != localBufferClearSwitch) {
+        saveUndoFrame();
         buffer.clear();
 
         localBufferClearSwitch = state.current.canvasClearSwitch
       }
       //If the undo switch is tripped, clear the buffer, image the undo buffer (should be one stroke behind) and remove that undo frame from the stack
       if (state.current.canvasUndoSwitch != localUndoSwitch) {
-        if (undoBufferStack.length == 0) return;
-        buffer.clear();
-        buffer.image(undoBufferStack.pop()!,0,0)
+        undo();
         localUndoSwitch = state.current.canvasUndoSwitch
       }
     }
@@ -122,14 +121,23 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
     }
     const onStrokeStart = () => {
       /** Whenever we start a drawing move, first save the pre-stroke state as a frame in the undo stack */
-      const newUndoBufferFrame =s.createGraphics(s.width, s.height) //create a new undo history frame
-      newUndoBufferFrame.image(buffer,0,0) //image the state of the buffer canvas to it
-      undoBufferStack.push(newUndoBufferFrame); //place the latest saved frame at the end of the undo stack
-      
+      saveUndoFrame();
+
       /** Reset the brush position/velocity and total stroke lenghth */
       currentStrokeTotalLength = 0;
       [brushX, brushY] = [s.mouseX, s.mouseY];
       [vx, vy] = [0, 0];
+    }
+    const undo = () => {
+      if (undoBufferStack.length === 0) return;
+      buffer.clear();
+      buffer.image(undoBufferStack.pop()!,0,0)
+    }
+    
+    const saveUndoFrame = () => {
+      buffer.loadPixels(); //load the pixels array for the buffer
+      const newUndoBufferFrame = buffer.get() //get it as a p5.Image object
+      undoBufferStack.push(newUndoBufferFrame) //push it onto the undo state stack
     }
     const mouseOffCanvas = () => (s.mouseX > s.width || s.mouseX < 0 || s.mouseY > s.height || s.mouseY < 0)
     //Function to draw a tapered line (trapezoid) for smoothness
