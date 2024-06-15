@@ -38,7 +38,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
     let undoBufferStack: p5.Image[]=[]
     const BACKGROUND_COLOR = 235
     const state = p5PassInRef //gives the p5 sketch access to all the component props
-    
+    let inStroke = false
     const BRUSH_SIZE = 25; //make configurable later?
     const VEL_DEPENDENT_SHADE = false //make the stroke lighter the faster the brush moves
     let previousStrokeWidth = 0; //stroke width on prior frame
@@ -80,7 +80,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
             BACKGROUND_COLOR * 0.75,
             (s.brightness(state.current.activeColor) * 2.55) + velocityShadeScaling
           );
-          if (s.mouseIsPressed && !mouseOffCanvas()) {
+          if (s.mouseIsPressed && inStroke) {
             //   s.fill(127 * (1 + 0.5 * s.sin(s.frameCount * 3)));
       
             vx += (dx * SPRING) / 2;
@@ -111,6 +111,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       }
     }
     
+    /**Our click/touch handlers check if mouse is in canvas and ignore it if not */
     s.mousePressed = () => {
       if (mouseOffCanvas()) return;
       onStrokeStart()
@@ -119,7 +120,15 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       if (mouseOffCanvas()) return;
       onStrokeStart()
     }
+    s.touchEnded = () => {
+      inStroke = false;
+    }
+    s.mouseReleased = () => {
+      inStroke = false;
+    }
     const onStrokeStart = () => {
+      /**Set the stroking status to true (so draw() knows to draw; this decouples drawing state from All mouseIsPressed() situations) */
+      inStroke = true;
       /** Whenever we start a drawing move, first save the pre-stroke state as a frame in the undo stack */
       saveUndoFrame();
 
