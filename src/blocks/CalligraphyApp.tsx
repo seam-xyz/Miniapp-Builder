@@ -236,7 +236,7 @@ interface CalligraphyPaletteProps {
 }
 const CalligraphyPalette = (props: CalligraphyPaletteProps) => {
   return (
-    <div className='flex flex-row flex-wrap gap-2 py-2 border-2 rounded-md bg-[#fbfbfb] justify-start'>
+    <div className='flex flex-row flex-wrap gap-2 py-2 border-2 rounded-md bg-[#fbfbfb] justify-start overflow-x-auto'>
       {props.colors.map (color =>
         <ColorSwatch key={color} color={color} onClick={() => props.onColorSelected(color)} activeColor={props.activeColor} />
       )}
@@ -255,7 +255,7 @@ const CalligraphyBackgroundSelectorTab = (props: CalligraphyBackgroundSelectorPr
     "dots":dots
   }
   return (
-    <div className='flex space-between'>
+    <div className='flex space-between overflow-x-auto'>
       {Object.entries(backgroundOptions).map(( [background,imgPath] )=>
         <img 
         className={`basis-1/3 border-[#d903ff] rounded-lg m-[10px] ${props.currentBackground === background ? "border-2" : "border-0"} `}
