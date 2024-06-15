@@ -280,21 +280,21 @@ const CalligraphyToolbar = (props: CalligraphyToolbarProps) => {
     <div className='flex justify-between'>
       <div className='flex gap-4 border-2 rounded-full p-4 bg-[#fbfbfb]'>
         <div
-          className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center border-fuchsia-500'
+          className='flex flex-0 w-10 h-10 rounded-full active:bg-slate-300 bg-[#ededed] place-items-center place-content-center border-fuchsia-500'
           onClick={() => props.setActivePaletteTab(PaletteTab.COLOR)}
           style={{ borderWidth: props.activePaletteTab === PaletteTab.COLOR ? '2px' : '0px' }}
         >
           <div className='w-8 h-8 rounded-full border border-white' style={{ backgroundColor: props.activeColor }} />
         </div>
         <div
-          className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center border-fuchsia-500'
+          className='flex flex-0 w-10 h-10 rounded-full active:bg-slate-300 bg-[#ededed] place-items-center place-content-center border-fuchsia-500'
           onClick={() => props.setActivePaletteTab(PaletteTab.BRUSH)}
           style={{ borderWidth: props.activePaletteTab === PaletteTab.BRUSH ? '2px' : '0px' }}
         >
           <EditIcon />
         </div>
         <div
-          className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center border-fuchsia-500'
+          className='flex flex-0 w-10 h-10 rounded-full active:bg-slate-300 bg-[#ededed] place-items-center place-content-center border-fuchsia-500'
           onClick={() => props.setActivePaletteTab(PaletteTab.BACKGROUND)}
           style={{ borderWidth: props.activePaletteTab === PaletteTab.BACKGROUND ? '2px' : '0px' }}
         >
@@ -302,8 +302,8 @@ const CalligraphyToolbar = (props: CalligraphyToolbarProps) => {
         </div>
       </div>
       <div className='flex gap-4 border-2 rounded-full p-4 bg-[#fbfbfb]'>
-        <div onClick={props.toggleCanvasUndoSwitch} className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'><UndoIcon /></div>
-        <div onClick={props.toggleCanvasClearSwitch}className='flex flex-0 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'><CloseIcon /></div>
+        <div onClick={props.toggleCanvasUndoSwitch} className='flex flex-0 active:bg-slate-300 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'><UndoIcon /></div>
+        <div onClick={props.toggleCanvasClearSwitch}className='flex flex-0 active:bg-slate-300 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'><CloseIcon /></div>
       </div>   </div>
   )
 }
