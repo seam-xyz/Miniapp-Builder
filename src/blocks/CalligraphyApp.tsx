@@ -265,7 +265,7 @@ interface CalligraphyColorSelectorProps {
 }
 const CalligraphyColorSelector = (props: CalligraphyColorSelectorProps) => {
   return (
-    <div className='flex flex-1 max-h-[20vh] flex-row flex-wrap gap-2 py-2 border-2 rounded-md bg-[#fbfbfb] justify-start overflow-y-auto'>
+    <div className='flex flex-1 max-h-[20vh] flex-row flex-wrap gap-2 py-2 border-2 rounded-md bg-[#fbfbfb] justify-start align-content-start overflow-y-auto'>
       {props.colors.map (color =>
         <ColorSwatch key={color} color={color} onColorSelected={() => props.onColorSelected(color)} activeColor={props.activeColor} />
       )}
@@ -289,18 +289,16 @@ const CalligraphyBackgroundSelector = (props: CalligraphyBackgroundSelectorProps
     "dots":dots
   }
   return (
-    <div className='flex flex-initial flex-row gap-3 justify-start overflow-x-auto border-2 p-2 rounded-md bg-[#fbfbfb]'>
+    <div className='flex flex-1 flex-row gap-3 justify-start overflow-x-auto border-2 p-2 rounded-md bg-[#fbfbfb] overflow-x-auto'>
       {Object.entries(backgroundOptions).map(( [background,imgPath] )=>
-        <div key={background} className='flex flex-initial basis-1/4'>
           <img 
-          className={`border-[#d903ff] rounded-lg ${props.currentBackground === background ? "border-2" : "border-0"} `}
+          className={`border-[#d903ff] aspect-square object-cover rounded-lg ${props.currentBackground === background ? "border-2" : "border-0"} `}
           // style={{width: `${((parseInt(props.width)/3)-20).toString()}px`}}
           src={imgPath}
           key={background}
           onClick={() => props.setCurrentBackground(background as CalligraphyBackground)}
           alt={`Background selector: ${background}`}
           />
-        </div>
       )}
     </div>
   )
@@ -363,7 +361,7 @@ interface CalligraphyToolbarTabProps {
 }
 const CalligraphyToolbarTab = (props: CalligraphyToolbarTabProps) => {
   return (
-    <div className='flex flex-1'>
+    <div className='flex flex-1 max-h-[18vh] min-h-[18vh]'>
       {
         props.activeToolbarTab === CalligraphyToolbarView.COLOR
           && <CalligraphyColorSelector
