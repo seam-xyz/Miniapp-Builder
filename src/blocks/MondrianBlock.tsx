@@ -45,8 +45,8 @@ export default class MondrianBlock extends Block {
 
 const MondrianCanvas = ({ squares, onSquareClick }: { squares: any, onSquareClick: (id: string) => void }) => {
   return (
-    <div style={{ position: 'relative', width: '100%', paddingTop: '100%', boxSizing: 'border-box' }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, border: '2px solid black' }}>
+    <div style={{ position: 'relative', alignSelf: 'center', justifySelf: 'center', width: '100%', maxHeight: '532px', paddingTop: '100%', boxSizing: 'border-box' }}>
+      <div className="self-center mx-auto my-auto" style={{ position: 'absolute', width: '100%', maxWidth: '532px', maxHeight: '532px', top: 0, left: 0, right: 0, bottom: 0, border: '2px solid black' }}>
         {squares.map((square: any) => (
           <div
             key={square.id}
