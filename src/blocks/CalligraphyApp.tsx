@@ -14,6 +14,11 @@ import grid from "./assets/Calligraphy/gridPreview.png"
 import lines from "./assets/Calligraphy/linesPreview.png"
 import brushInk from "./assets/Calligraphy/brushInkPreview.png"
 
+const COLORS_DEFAULT = [
+  '#cdb4db', '#ffc8ddff', '#ffafccff', '#bde0feff', '#a2d2ffff', '#264653',
+  '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51', '#000000', '#333333',
+  '#666666', '#999999', '#cccccc', '#ffffff' ]
+
 // Component using a p5-wrapped canvas to draw
 interface CalligraphyCanvasProps {
   width: string,
@@ -397,7 +402,7 @@ const CalligraphyToolbarTab = (props: CalligraphyToolbarTabProps) => {
     <div className='flex flex-1 max-h-[18vh] min-h-[18vh]'>
       { props.activeToolbarTab === CalligraphyToolbarView.COLOR
           && <CalligraphyColorSelector
-            colors={[ '#cdb4db', '#ffc8ddff', '#ffafccff', '#bde0feff', '#a2d2ffff', '#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51' ]}
+            colors={COLORS_DEFAULT}
             onColorSelected={color => props.setActiveColor(color)}
             activeColor={props.activeColor}
         />
