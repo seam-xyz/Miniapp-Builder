@@ -2,7 +2,7 @@ import Block from './Block'
 import { BlockModel } from './types'
 import './BlockStyles.css'
 import SeamSaveButton from '../components/SeamSaveButton';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import EditIcon from '@mui/icons-material/Edit';
 import BorderOuterIcon from '@mui/icons-material/BorderOuter';
@@ -265,7 +265,7 @@ interface CalligraphyColorSelectorProps {
 }
 const CalligraphyColorSelector = (props: CalligraphyColorSelectorProps) => {
   return (
-    <div className='flex flex-1 flex-row flex-wrap gap-2 py-2 border-2 rounded-md bg-[#fbfbfb] justify-start'>
+    <div className='flex flex-1 max-h-[20vh] flex-row flex-wrap gap-2 py-2 border-2 rounded-md bg-[#fbfbfb] justify-start overflow-y-auto'>
       {props.colors.map (color =>
         <ColorSwatch key={color} color={color} onColorSelected={() => props.onColorSelected(color)} activeColor={props.activeColor} />
       )}
@@ -298,6 +298,7 @@ const CalligraphyBackgroundSelector = (props: CalligraphyBackgroundSelectorProps
           src={imgPath}
           key={background}
           onClick={() => props.setCurrentBackground(background as CalligraphyBackground)}
+          alt={`Background selector: ${background}`}
           />
         </div>
       )}
@@ -366,7 +367,7 @@ const CalligraphyToolbarTab = (props: CalligraphyToolbarTabProps) => {
       {
         props.activeToolbarTab === CalligraphyToolbarView.COLOR
           && <CalligraphyColorSelector
-            colors={[ '#cdb4db', '#ffc8ddff', '#ffafccff', '#bde0feff', '#a2d2ffff', '#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51', ]}
+            colors={[ '#cdb4db', '#ffc8ddff', '#ffafccff', '#bde0feff', '#a2d2ffff', '#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51' ]}
             onColorSelected={color => props.setActiveColor(color)}
             activeColor={props.activeColor}
         />
