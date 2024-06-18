@@ -2,7 +2,7 @@ import Block from './Block'
 import { BlockModel } from './types'
 import './BlockStyles.css'
 import SeamSaveButton from '../components/SeamSaveButton';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import EditIcon from '@mui/icons-material/Edit';
 import BorderOuterIcon from '@mui/icons-material/BorderOuter';
@@ -12,6 +12,12 @@ import p5 from 'p5';
 import dots from "./assets/Calligraphy/dotsPreview.png"
 import grid from "./assets/Calligraphy/gridPreview.png"
 import lines from "./assets/Calligraphy/linesPreview.png"
+import brushInk from "./assets/Calligraphy/brushInkPreview.png"
+
+const COLORS_DEFAULT = [
+  '#cdb4db', '#ffc8ddff', '#ffafccff', '#bde0feff', '#a2d2ffff', '#264653',
+  '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51', '#000000', '#333333',
+  '#666666', '#999999', '#cccccc', '#ffffff' ]
 
 // Component using a p5-wrapped canvas to draw
 interface CalligraphyCanvasProps {
@@ -20,7 +26,7 @@ interface CalligraphyCanvasProps {
   backgroundStyle: string
   canvasClearSwitch: boolean
   canvasUndoSwitch: boolean
-  brushStyle: string
+  currentBrush: string
   
 }
 const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
@@ -60,7 +66,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
     s.draw = () => {
       buffer.fill(state.current.activeColor)
       writeBackground(s)
-      switch (state.current.brushStyle || "default") {
+      switch (state.current.currentBrush || "default") {
         case "ink":
           const maxBRUSH_SIZE = Math.min(
             (BRUSH_SIZE / 2) * (1 + currentStrokeTotalLength / 1000),
@@ -265,7 +271,7 @@ interface CalligraphyColorSelectorProps {
 }
 const CalligraphyColorSelector = (props: CalligraphyColorSelectorProps) => {
   return (
-    <div className='flex flex-1 flex-row flex-wrap gap-2 py-2 border-2 rounded-md bg-[#fbfbfb] justify-start'>
+    <div className='flex flex-1 max-h-[20vh] flex-row flex-wrap gap-2 py-2 border-2 rounded-md bg-[#fbfbfb] justify-start align-content-start overflow-y-auto'>
       {props.colors.map (color =>
         <ColorSwatch key={color} color={color} onColorSelected={() => props.onColorSelected(color)} activeColor={props.activeColor} />
       )}
@@ -274,8 +280,12 @@ const CalligraphyColorSelector = (props: CalligraphyColorSelectorProps) => {
 }
 
 // Available options for the background selector
-type CalligraphyBackground = "grid" | "dots" | "lines";
-
+const backgroundOptions: Record<string, string> = {
+  'dots': dots,
+  'lines': lines,
+  'grid': grid
+}
+type CalligraphyBackground = keyof typeof backgroundOptions;
 // Component for selecting the canvas background
 interface CalligraphyBackgroundSelectorProps {
   currentBackground: CalligraphyBackground
@@ -289,17 +299,42 @@ const CalligraphyBackgroundSelector = (props: CalligraphyBackgroundSelectorProps
     "dots":dots
   }
   return (
-    <div className='flex flex-initial flex-row gap-3 justify-start overflow-x-auto border-2 p-2 rounded-md bg-[#fbfbfb]'>
+    <div className='flex flex-1 flex-row gap-3 justify-start overflow-x-auto border-2 p-2 rounded-md bg-[#fbfbfb] overflow-x-auto'>
       {Object.entries(backgroundOptions).map(( [background,imgPath] )=>
-        <div key={background} className='flex flex-initial basis-1/4'>
           <img 
-          className={`border-[#d903ff] rounded-lg ${props.currentBackground === background ? "border-2" : "border-0"} `}
+          className={`border-[#d903ff] aspect-square object-cover rounded-lg ${props.currentBackground === background ? "border-2" : "border-0"} `}
           // style={{width: `${((parseInt(props.width)/3)-20).toString()}px`}}
           src={imgPath}
           key={background}
           onClick={() => props.setCurrentBackground(background as CalligraphyBackground)}
+          alt={`Background selector: ${background}`}
           />
-        </div>
+      )}
+    </div>
+  )
+}
+
+// Available options for the brush selector
+const brushOptions: Record<string, string> = {
+  'ink': brushInk
+}
+type CalligraphyBrush = keyof typeof brushOptions;
+// Component for selecting the brush
+interface CalligraphyBrushSelectorProps {
+  currentBrush: CalligraphyBrush;
+  setCurrentBrush: (brush: CalligraphyBrush) => void;
+}
+const CalligraphyBrushSelector = (props: CalligraphyBrushSelectorProps) => {
+  return (
+    <div className='flex flex-1 flex-row gap-3 justify-start overflow-x-auto border-2 p-2 rounded-md bg-[#fbfbfb] overflow-x-auto'>
+      {Object.entries(brushOptions).map(( [brush, imgPath] )=>
+          <img 
+          key={brush}
+          src={imgPath}
+          className={`border-[#d903ff] aspect-square object-cover rounded-lg ${props.currentBrush === brush ? "border-2" : "border-0"} `}
+          onClick={() => props.setCurrentBrush(brush)}
+          alt={`Brush selector: ${brush}`}
+          />
       )}
     </div>
   )
@@ -359,21 +394,27 @@ interface CalligraphyToolbarTabProps {
   setActiveColor: (color: string) => void
   currentBackground: CalligraphyBackground
   setCurrentBackground: (bg: CalligraphyBackground) => void
+  currentBrush: CalligraphyBrush
+  setCurrentBrush: (brush: CalligraphyBrush) => void
 }
 const CalligraphyToolbarTab = (props: CalligraphyToolbarTabProps) => {
   return (
-    <div className='flex flex-1'>
-      {
-        props.activeToolbarTab === CalligraphyToolbarView.COLOR
+    <div className='flex flex-1 max-h-[18vh] min-h-[18vh]'>
+      { props.activeToolbarTab === CalligraphyToolbarView.COLOR
           && <CalligraphyColorSelector
-            colors={[ '#cdb4db', '#ffc8ddff', '#ffafccff', '#bde0feff', '#a2d2ffff', '#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51', ]}
+            colors={COLORS_DEFAULT}
             onColorSelected={color => props.setActiveColor(color)}
             activeColor={props.activeColor}
         />
       }
-      { props.activeToolbarTab === CalligraphyToolbarView.BACKGROUND &&
-        <CalligraphyBackgroundSelector currentBackground={props.currentBackground} setCurrentBackground={props.setCurrentBackground} />
+      { props.activeToolbarTab === CalligraphyToolbarView.BACKGROUND
+        && <CalligraphyBackgroundSelector currentBackground={props.currentBackground} setCurrentBackground={props.setCurrentBackground}
+        />
       }
+      { props.activeToolbarTab === CalligraphyToolbarView.BRUSH
+        && <CalligraphyBrushSelector currentBrush={props.currentBrush} setCurrentBrush={props.setCurrentBrush} />
+      }
+      {}
     </div>
   );
 }
@@ -389,7 +430,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
   const [canvasUndoSwitch, setCanvasUndoSwitch] = useState(false);
   const [currentBackground, setCurrentBackground] = useState<CalligraphyBackground>("lines");
   const [activeToolbarTab, setActivePaletteTab] = useState(CalligraphyToolbarView.COLOR);
-  const [brushStyle, setBrushStyle] = useState("ink");
+  const [currentBrush, setCurrentBrush] = useState("ink");
   return (
     <div className='flex flex-col gap-3 justify-between h-[88vh]'>
       <CalligraphyCanvas 
@@ -398,7 +439,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
         canvasUndoSwitch={canvasUndoSwitch}
         activeColor={activeColor} 
         backgroundStyle={currentBackground}
-        brushStyle={brushStyle}
+        currentBrush={currentBrush}
       />
       <div className='flex flex-0 flex-col'>
         <div className='flex flex-col gap-4'>
@@ -408,6 +449,8 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
             setActiveColor={setActiveColor}
             currentBackground={currentBackground}
             setCurrentBackground={setCurrentBackground}
+            currentBrush={currentBrush}
+            setCurrentBrush={setCurrentBrush}
           />
           <CalligraphyToolbar
             activeColor={activeColor}
