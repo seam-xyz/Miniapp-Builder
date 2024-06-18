@@ -45,24 +45,26 @@ export default class MondrianBlock extends Block {
 
 const MondrianCanvas = ({ squares, onSquareClick }: { squares: any, onSquareClick: (id: string) => void }) => {
   return (
-    <div className="self-center mx-auto my-auto" style={{ position: 'relative', alignSelf: 'center', justifySelf: 'center', width: '532px', height: '420px', maxHeight: '420px', maxWidth: '420px', paddingTop: '100%', boxSizing: 'border-box' }}>
-      <div className="self-center mx-auto my-auto" style={{ position: 'absolute', width: '420px', height: '420px', maxWidth: '420px', maxHeight: '420px', top: 0, left: 0, right: 0, bottom: 0, border: '2px solid black' }}>
-        {squares.map((square: any) => (
-          <div
-            key={square.id}
-            onClick={() => onSquareClick(square.id)}
-            style={{
-              position: 'absolute',
-              left: `${square.x}%`,
-              top: `${square.y}%`,
-              width: `${square.width}%`,
-              height: `${square.height}%`,
-              border: '2px solid black',
-              backgroundColor: square.color || 'white',
-              cursor: 'pointer'
-            }}
-          ></div>
-        ))}
+    <div className="flex items-center justify-center h-full" style={{ width: '100%' }}>
+      <div className="relative w-full pb-[100%] box-border">
+        <div className="absolute top-0 left-0 w-full h-full border-2 border-black">
+          {squares.map((square: any) => (
+            <div
+              key={square.id}
+              onClick={() => onSquareClick(square.id)}
+              style={{
+                position: 'absolute',
+                left: `${square.x}%`,
+                top: `${square.y}%`,
+                width: `${square.width}%`,
+                height: `${square.height}%`,
+                border: '2px solid black',
+                backgroundColor: square.color || 'white',
+                cursor: 'pointer'
+              }}
+            ></div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -172,7 +174,7 @@ const MondrianEditor = ({
                 className={`p-1 cursor-pointer rounded-full ${cutDirection === 'vertical' ? 'bg-seam-pink fill-white text-white' : 'bg-[#EFEFEF] fill-seam-black text-seam-black'}`}
                 onClick={() => setCutDirection('vertical')}
               >
-                <BorderVert className={`${cutDirection === 'vertical' ? 'fill-white text-white' : 'fill-black text-blakc'}`} />
+                <BorderVert className={`${cutDirection === 'vertical' ? 'fill-white text-white' : 'fill-black text-black'}`} />
               </div>
               <Divider orientation="vertical" flexItem={true} />
               <div
