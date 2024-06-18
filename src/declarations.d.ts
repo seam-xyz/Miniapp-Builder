@@ -4,5 +4,6 @@ declare module '*.mp3' {
   }
 
 declare module 'react-google-streetview' {
-
+  const apikey: string;
+  export default apikey
 }
