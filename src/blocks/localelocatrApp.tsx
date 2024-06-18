@@ -7,7 +7,7 @@ import React from "react";
 import { GoogleMap, StreetViewPanorama } from "@react-google-maps/api";
 import { LoadScript } from "@react-google-maps/api";
 
-const key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY
 
 function Map() {
   const containerStyle = {
@@ -25,9 +25,6 @@ function Map() {
     </GoogleMap>
   );
 }
-
-
-
 
 type Nation = {
   id: number;
@@ -90,9 +87,7 @@ const randomNation = (): Nation => {
 
 
 
-{/* <LoadScript googleMapsApiKey={key} libraries={lib}>
-        <Map />
-      </LoadScript> */}
+ 
 
 
 const lib = ["places"];
@@ -113,10 +108,10 @@ export default class localelocatrBlock extends Block {
         
         <h1>Edit localelocatr Block!</h1>
         <div> and again again  </div>
-        <p> jfieoaCJEWOIFNEIA HELLO</p>
         {randomNation().flag}
 
       </div>
+
       <div>
       </div>
       </div>
