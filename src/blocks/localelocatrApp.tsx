@@ -3,6 +3,32 @@ import { BlockModel } from './types'
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 
+import React from "react";
+import { GoogleMap, StreetViewPanorama } from "@react-google-maps/api";
+import { LoadScript } from "@react-google-maps/api";
+
+const key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+
+function Map() {
+  const containerStyle = {
+    height: "400px",
+    width: "800px"
+  };
+
+  const center = {
+    lat: 54.364442,
+    lng: 18.643173
+  };
+  return (
+    <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
+      <StreetViewPanorama/>
+    </GoogleMap>
+  );
+}
+
+
+
+
 type Nation = {
   id: number;
   name: string;
@@ -64,10 +90,12 @@ const randomNation = (): Nation => {
 
 
 
+{/* <LoadScript googleMapsApiKey={key} libraries={lib}>
+        <Map />
+      </LoadScript> */}
 
 
-
-
+const lib = ["places"];
 
 
 
@@ -81,11 +109,16 @@ export default class localelocatrBlock extends Block {
   renderEditModal(done: (data: BlockModel) => void) {
     return (
       <div>
+      <div>
+        
         <h1>Edit localelocatr Block!</h1>
         <div> and again again  </div>
         <p> jfieoaCJEWOIFNEIA HELLO</p>
         {randomNation().flag}
 
+      </div>
+      <div>
+      </div>
       </div>
     )
   }

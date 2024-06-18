@@ -1,0 +1,1 @@
+- .env variables need a REACT_APP_* prefix
