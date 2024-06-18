@@ -37,7 +37,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   /**A reference object accessible inside the p5 sketch */
   const p5PassInRef = useRef<CalligraphyCanvasProps>({...props})
   const canvasWidth = parseInt(props.width)
-  const ASPECT_RATIO = .9
+  const ASPECT_RATIO = 1
   
   /** p5 Sketch Code That SHould Be Its Own File! */
   const sketch = (s:p5) => {
@@ -46,15 +46,38 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
     const BACKGROUND_COLOR = 235
     const state = p5PassInRef //gives the p5 sketch access to all the component props
     let inStroke = false
-    const BRUSH_SIZE = 25; //make configurable later?
-    const VEL_DEPENDENT_SHADE = false //make the stroke lighter the faster the brush moves
-    let previousStrokeWidth = 0; //stroke width on prior frame
-    let FRICTION = 2; //divides velocity
-    let SPRING = .5; 
-    let [vy, vx, brushX, brushY] = [0,0,0,0]
-    let currentStrokeTotalLength = 0
     let localBufferClearSwitch = state.current.canvasClearSwitch;
     let localUndoSwitch = state.current.canvasUndoSwitch;
+    /**namespaces for each brush option */
+    const ink = {
+      BRUSH_SIZE : 25, //make configurable later?
+      VEL_DEPENDENT_SHADE : false, //make the stroke lighter the faster the brush moves
+      previousStrokeWidth : 0, //stroke width on prior frame
+      FRICTION : 2, //divides velocity
+      SPRING : .5, 
+      vy: 0,
+      vx: 0,
+      brushX: 0,
+      brushY: 0,
+      currentStrokeTotalLength : 0
+    }
+    const brush1 = {
+      brushSize : 15,
+      f : true,
+      spring : 0.4,
+      friction : 0.45,
+      v : 0.5,
+      r : 0,
+      vx : 0,
+      vy : 0,
+      splitNum : 100,
+      diff : 2,
+      x : 0,
+      y: 0,
+      oldX : 0,
+      oldY : 0,
+      oldR : 0
+     }
     s.setup = () => {
       s.createCanvas(canvasWidth,canvasWidth * ASPECT_RATIO)
       s.background(BACKGROUND_COLOR)
@@ -67,20 +90,71 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       buffer.fill(state.current.activeColor)
       writeBackground(s)
       switch (state.current.currentBrush || "default") {
+        /** adapted from  https://editor.p5js.org/AhmadMoussa/sketches/SlFQgTID_  */
+        case "brush1":
+        /*
+          Draw multiple lines with different positions and thicknesses, 
+          and make it look like a brush
+        */
+        /*
+          Parameters used
+            size : Brush size
+            spring : Spring constant(Larger value means stronger spring)
+            friction : Friction(Smaller value means, the more slippery)
+            splitNum : Number of divisions from old coordinates to new coordinates
+            diff : Misalignment of different lines
+        */
+        buffer.stroke(state.current.activeColor)
+        if(s.mouseIsPressed && inStroke) {
+          if(!brush1.f) {
+            brush1.f = true;
+            brush1.x = s.mouseX;
+            brush1.y = s.mouseY;
+          }
+          brush1.vx += ( s.mouseX - brush1.x ) * brush1.spring;
+          brush1.vy += ( s.mouseY - brush1.y ) * brush1.spring;
+          brush1.vx *= brush1.friction;
+          brush1.vy *= brush1.friction;
+          
+          brush1.v += s.sqrt( brush1.vx*brush1.vx + brush1.vy*brush1.vy ) - brush1.v;
+          brush1.v *= 0.55;
+          
+          brush1.oldR = brush1.r;
+          brush1.r = brush1.brushSize - brush1.v;
+          var num = s.random(0.1,1)
+          for( let i = 0; i < brush1.splitNum; ++i ) {
+            brush1.oldX = brush1.x;
+            brush1.oldY = brush1.y;
+            brush1.x += brush1.vx / brush1.splitNum;
+            brush1.y += brush1.vy / brush1.splitNum;
+            brush1.oldR += ( brush1.r - brush1.oldR ) / brush1.splitNum;
+            if(brush1.oldR < 1) { brush1.oldR = 1; }
+            buffer.strokeWeight( brush1.oldR+brush1.diff );  // AMEND: oldR -> oldR+brush1.diff
+            buffer.line( brush1.x+s.random(0,2), brush1.y+s.random(0,2), brush1.oldX+s.random(0,2), brush1.oldY+s.random(0,2) );
+            buffer.strokeWeight( brush1.oldR );  // ADD
+            buffer.line( brush1.x+brush1.diff*s.random(0.1,2), brush1.y+brush1.diff*s.random(0.1,2), brush1.oldX+brush1.diff*s.random(0.1,2), brush1.oldY+brush1.diff*s.random(0.1,2) );  // ADD
+            buffer.line( brush1.x-brush1.diff*s.random(0.1,2), brush1.y-brush1.diff*s.random(0.1,2), brush1.oldX-brush1.diff*s.random(0.1,2), brush1.oldY-brush1.diff*s.random(0.1,2) );  // ADD
+          }
+          
+        } else if(brush1.f) {
+          brush1.vx = brush1.vy = 0;
+          brush1.f = false;
+        }
+        break;
         case "ink":
           const maxBRUSH_SIZE = Math.min(
-            (BRUSH_SIZE / 2) * (1 + currentStrokeTotalLength / 1000),
-            BRUSH_SIZE
+            (ink.BRUSH_SIZE / 2) * (1 + ink.currentStrokeTotalLength / 1000),
+            ink.BRUSH_SIZE
           );
-          const dx = s.mouseX - brushX;
-          const dy = s.mouseY - brushY;
+          const dx = s.mouseX - ink.brushX;
+          const dy = s.mouseY - ink.brushY;
           const vel = s.sqrt(dx ** 2 + dy ** 2);
-          currentStrokeTotalLength += vel;
+          ink.currentStrokeTotalLength += vel;
           const velocityStrokeScaling = vel / 100;
-          const velocityShadeScaling = VEL_DEPENDENT_SHADE ? vel / 2 : 0;
+          const velocityShadeScaling = ink.VEL_DEPENDENT_SHADE ? vel / 2 : 0;
           const strokeSize = Math.min(
             maxBRUSH_SIZE,
-            s.max(BRUSH_SIZE / (1 + velocityStrokeScaling), 1)
+            s.max(ink.BRUSH_SIZE / (1 + velocityStrokeScaling), 1)
           );
           //To lighten depending on velocity
           const scaledStrokeShade = s.min(
@@ -90,17 +164,18 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
           if (s.mouseIsPressed && inStroke) {
             //   s.fill(127 * (1 + 0.5 * s.sin(s.frameCount * 3)));
       
-            vx += (dx * SPRING) / 2;
-            vy += (dy * SPRING) / 2;
-            vx /= FRICTION;
-            vy /= FRICTION;
-            const [prevX, prevY] = [brushX, brushY];
-            (brushX += vx);
-            (brushY += vy);
+            ink.vx += (dx * ink.SPRING) / 2;
+            ink.vy += (dy * ink.SPRING) / 2;
+            ink.vx /= ink.FRICTION;
+            ink.vy /= ink.FRICTION;
+            const [prevX, prevY] = [ink.brushX, ink.brushY];
+            (ink.brushX += ink.vx);
+            (ink.brushY += ink.vy);
       
-            taperLine(buffer, prevX, prevY, brushX, brushY, previousStrokeWidth, strokeSize, true);
+            taperLine(buffer, prevX, prevY, ink.brushX, ink.brushY, ink.previousStrokeWidth, strokeSize, true);
           }
-          previousStrokeWidth = strokeSize;
+          ink.previousStrokeWidth = strokeSize;
+          break
       }
 
       s.image(buffer,0,0)
@@ -140,9 +215,9 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       saveUndoFrame();
 
       /** Reset the brush position/velocity and total stroke lenghth */
-      currentStrokeTotalLength = 0;
-      [brushX, brushY] = [s.mouseX, s.mouseY];
-      [vx, vy] = [0, 0];
+      ink.currentStrokeTotalLength = 0;
+      [ink.brushX, ink.brushY] = [s.mouseX, s.mouseY];
+      [ink.vx, ink.vy] = [0, 0];
     }
     const undo = () => {
       if (undoBufferStack.length === 0) return;
@@ -199,8 +274,8 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
           g.stroke(220);
           g.strokeWeight(3);
           g.fill(BACKGROUND_COLOR);
-          for (let i = 0; i < 15; i++) {
-            for (let j = 0; j < g.height/GRID_SIZE - 1; j++) {
+          for (let i = 0; i < GRID_COUNT; i++) {
+            for (let j = 0; j < (g.height/GRID_SIZE) - 1; j++) {
               g.rect(GRID_SIZE * (.5 + i), GRID_SIZE * (.5 + j),GRID_SIZE)
             }
           }
@@ -430,7 +505,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
   const [canvasUndoSwitch, setCanvasUndoSwitch] = useState(false);
   const [currentBackground, setCurrentBackground] = useState<CalligraphyBackground>("lines");
   const [activeToolbarTab, setActivePaletteTab] = useState(CalligraphyToolbarView.COLOR);
-  const [currentBrush, setCurrentBrush] = useState("ink");
+  const [currentBrush, setCurrentBrush] = useState("brush1");
   return (
     <div className='flex flex-col gap-3 justify-between h-[88vh]'>
       <CalligraphyCanvas 
