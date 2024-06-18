@@ -470,4 +470,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "emilee",
     fullscreenEdit: false,
   },
+  "Image": { 
+    type: "Image",
+    displayName: "Image Puzzle",
+    displayDescription: "Turns an image into a solveable sliding puzzle.",
+    emptyTitle: "Empty Image Puzzle App",
+    emptySubtitle: "Tap here to setup your Image Puzzle app!",
+    icon: "ImageIcon", // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "ssebexen",
+    fullscreenEdit: false,
+},
 };
