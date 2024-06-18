@@ -2,7 +2,7 @@ import Block from './Block'
 import { BlockModel } from './types'
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
-
+import { NationDropdown } from './temp_locale_components/NationDropdown';
 import React from "react";
 import { GoogleMap, StreetViewPanorama } from "@react-google-maps/api";
 import { LoadScript } from "@react-google-maps/api";
@@ -109,6 +109,7 @@ export default class localelocatrBlock extends Block {
         <h1>Edit localelocatr Block!</h1>
         <div> and again again  </div>
         {randomNation().flag}
+        <NationDropdown />
 
       </div>
 
