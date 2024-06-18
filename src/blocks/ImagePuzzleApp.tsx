@@ -2,11 +2,113 @@ import Block from './Block'
 import { BlockModel } from './types'
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import ImageIcon from '@mui/icons-material/Image';
 import SeamSaveButton from '../components/SeamSaveButton';
 import { propsToClassKey } from '@mui/styles';
+import { SelfImprovement } from '@mui/icons-material';
+
+// Block model .data
+interface ImagePuzzleData {
+  imageData: string;
+  puzzleSize: number
+}
+
+// Tile for the game board
+interface ImagePuzzleTileProps {
+  imageData: string;
+  puzzleSize: number;
+  tileId: number;
+  pos: number;
+  image: HTMLImageElement | undefined;
+  boardDimensions: Array<number | undefined>;
+}
+function ImagePuzzleTile(props: ImagePuzzleTileProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (!props.image || !props.boardDimensions[0] || !props.boardDimensions[1]) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const tileDimensions = [Math.ceil(props.boardDimensions[0] / props.puzzleSize), Math.ceil(props.boardDimensions[1] / props.puzzleSize)];
+    canvas.width = tileDimensions[0];
+    canvas.height = tileDimensions[1];
+
+    const context = canvas?.getContext('2d');
+    if (!context) return;
+    const imageDimensions = [props.image.width, props.image.height];
+
+    // Coordinates of current tile on the puzzle grid (before shuffling tiles)
+    const selfGridCoords = [props.tileId % props.puzzleSize, Math.floor(props.tileId / props.puzzleSize)];
+    // Top left position of top left "tile" on the source image.
+    const imageAnchorCoords = [
+      imageDimensions[0] / 2 - tileDimensions[0] * (props.puzzleSize / 2),
+      imageDimensions[1] / 2 - tileDimensions[1] * (props.puzzleSize / 2)
+    ];
+
+    const [sx, sy] = [
+      imageAnchorCoords[0] + tileDimensions[0] * selfGridCoords[0],
+      imageAnchorCoords[1] + tileDimensions[1] * selfGridCoords[1]
+    ];
+    const [sw, sh] = [tileDimensions[0], tileDimensions[1]];
+    const [dx, dy] = [0, 0];
+    const [dw, dh] = [tileDimensions[0], tileDimensions[1]];
+
+    context.drawImage(props.image, sx, sy, sw, sh, dx, dy, dw, dh);
+  }, [props.image]);
+
+  return (
+    <div
+      className='flex-0 overflow-hidden aspect-square'
+      style={{
+        flexBasis: `calc(100%/${props.puzzleSize})`,
+        left: `calc(100% * ${props.pos % props.puzzleSize} / ${props.puzzleSize})`,
+        top: `calc(100% * ${Math.floor(props.pos / props.puzzleSize)} / ${props.puzzleSize})`
+      }}
+    >
+      <canvas ref={canvasRef} />
+    </div>
+  )
+}
+
+// Game piece
+interface Tile {
+  tileId: number;
+  pos: number;
+}
+// Image puzzle game board
+interface ImagePuzzleBoardProps {
+  imageData: string;
+  puzzleSize: number;
+}
+function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
+  const [tiles, setTiles] = useState<Array<Tile>>([])
+  const [image, setImage] = useState<HTMLImageElement | undefined>(undefined);
+  const selfRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const image = new Image();
+    image.src = props.imageData;
+    image.onload = () => {
+      setImage(image);
+    };
+    setTiles(Array(props.puzzleSize ** 2 - 1).fill(0).map((_, i): Tile => { return ({ tileId: i, pos: i }) }));
+  }, []);
+
+  return (
+    <div className='flex flex-0 mx-10 mt-4 aspect-square' ref={selfRef} >
+      <div className='flex flex-1 flex-row flex-wrap'>
+        {
+          tiles.map(tile => 
+            <ImagePuzzleTile key={tile.tileId} imageData={props.imageData} puzzleSize={props.puzzleSize} tileId={tile.tileId} pos={tile.pos} image={image} boardDimensions={[selfRef.current?.clientWidth, selfRef.current?.clientHeight]} />
+          )
+        }
+      </div>
+    </div>
+  )
+}
 
 // Puzzle size selector
 interface ImagePuzzleSizeProps {
@@ -41,7 +143,6 @@ function getBorderStyleGrid(index: number, side: number, borderWidth: string): s
   const bottom = index >= (side ** 2 - side) ? '0px' : borderWidth;
   const left = index % side === 0 ? '0px' : borderWidth;
 
-  console.log([top, right, bottom, left].join(' '));
   return [top, right, bottom, left].join(' ');
 }
 
@@ -73,7 +174,7 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
                 )
               }
             </div>
-            <img className='min-w-full min-h-full object-cover rounded-lg' src={URL.createObjectURL(props.image)} />
+            <img className='min-w-full min-h-full object-none rounded-lg' src={URL.createObjectURL(props.image)} />
           </>
           : <>
             <ImageIcon htmlColor='#aaaaaa' style={{ fontSize: '6rem' }} />
@@ -86,24 +187,41 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
   )
 }
 
-// Edit mode view for the block
+// Public view for the block
+interface ImagePuzzlePublicProps {
+  data: ImagePuzzleData;
+}
+function ImagePuzzlePublic(props: ImagePuzzlePublicProps) {
+  return (
+    <div className='flex flex-col'>
+      <ImagePuzzleBoard imageData={props.data.imageData} puzzleSize={props.data.puzzleSize} />
+    </div>
+  )
+}
+
+// Edit view for the block
 interface ImagePuzzleProps {
   done: () => void;
   width?: string;
-  setData: (data: object) => void;
+  setData: (data: ImagePuzzleData) => void;
 }
 function ImagePuzzleEdit(props: ImagePuzzleProps) {
   const [image, setImage] = useState<File | null>(null);
   const [puzzleSize, setPuzzleSize] = useState<number>(3);
 
-  async function onSave() {
-    const imageData = await image?.text();
-    if (imageData) {
-      props.setData({ imageData, puzzleSize });
-      props.done();
-    } else {
-      // TODO: Prompt for image
-      console.log('No image selected');
+  function onSave() {
+    if (!image) return;
+    const reader = new FileReader();
+    reader.readAsDataURL(image);
+    reader.onloadend = () => {
+      if (reader.result) {
+        const imageData = reader.result.toString();
+        props.setData({ imageData, puzzleSize });
+        props.done();
+      } else {
+        // TODO: Prompt for image
+        console.log('No image selected');
+      }
     }
   }
 
@@ -125,19 +243,20 @@ function ImagePuzzleEdit(props: ImagePuzzleProps) {
 
 // Top-level component for the block; wraps the functional component views
 export default class ImageBlock extends Block {
-  setData(data: object) {
+  setData(data: ImagePuzzleData) {
     Object.assign(this.model.data, data);
   }
 
-  render(width?: string) {
+  render() {
+    const data = this.model.data as any;
     return (
-      <h1>Image Block!</h1>
+      <ImagePuzzlePublic data={data} />
     );
   }
 
-  renderEditModal(done: (data: BlockModel) => void, width?: string) {
+  renderEditModal(done: (data: BlockModel) => void) {
     return (
-      <ImagePuzzleEdit done={() => { console.log(this.model); done(this.model); }} setData={ (data: object) => this.setData(data) } />
+      <ImagePuzzleEdit done={ () => done(this.model) } setData={ (data: ImagePuzzleData) => this.setData(data) } />
     )
   }
 
