@@ -61,11 +61,12 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
 
   return (
     <div
-      className='flex-0 overflow-hidden aspect-square'
+      className='flex-0 overflow-hidden aspect-square absolute transition-transform'
       style={{
         flexBasis: `calc(100%/${props.puzzleSize})`,
-        left: `calc(100% * ${props.pos % props.puzzleSize} / ${props.puzzleSize})`,
-        top: `calc(100% * ${Math.floor(props.pos / props.puzzleSize)} / ${props.puzzleSize})`
+        transform: `translate(calc(100% * ${props.tileId % props.puzzleSize}), calc(100% * ${Math.floor(props.tileId / props.puzzleSize)})`
+        // left: `calc(100% * ${props.pos % props.puzzleSize} / ${props.puzzleSize})`,
+        // top: `calc(100% * ${Math.floor(props.pos / props.puzzleSize)} / ${props.puzzleSize})`
       }}
     >
       <canvas ref={canvasRef} />
@@ -98,14 +99,12 @@ function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
   }, []);
 
   return (
-    <div className='flex flex-0 mx-10 mt-4 aspect-square' ref={selfRef} >
-      <div className='flex flex-1 flex-row flex-wrap'>
-        {
-          tiles.map(tile => 
-            <ImagePuzzleTile key={tile.tileId} imageData={props.imageData} puzzleSize={props.puzzleSize} tileId={tile.tileId} pos={tile.pos} image={image} boardDimensions={[selfRef.current?.clientWidth, selfRef.current?.clientHeight]} />
-          )
-        }
-      </div>
+    <div className='w-full aspect-square relative overflow-hidden rounded-lg border-2 drop-shadow-md bg-white' ref={selfRef}>
+      {
+        tiles.map(tile => 
+          <ImagePuzzleTile key={tile.tileId} imageData={props.imageData} puzzleSize={props.puzzleSize} tileId={tile.tileId} pos={tile.pos} image={image} boardDimensions={[selfRef.current?.clientWidth, selfRef.current?.clientHeight]} />
+        )
+      }
     </div>
   )
 }
@@ -193,7 +192,7 @@ interface ImagePuzzlePublicProps {
 }
 function ImagePuzzlePublic(props: ImagePuzzlePublicProps) {
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col w-full'>
       <ImagePuzzleBoard imageData={props.data.imageData} puzzleSize={props.data.puzzleSize} />
     </div>
   )
