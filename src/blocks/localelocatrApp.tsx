@@ -6,10 +6,16 @@ import { NationDropdown } from './temp_locale_components/NationDropdown';
 import React from "react";
 import { GoogleMap, StreetViewPanorama } from "@react-google-maps/api";
 import { LoadScript } from "@react-google-maps/api";
+import {APIProvider, Map, MapCameraChangedEvent} from '@vis.gl/react-google-maps';
+import Streetview from 'react-google-streetview';
 
-const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+const api_Key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY!
 
-function Map() {
+console.log(api_Key)
+
+
+Streetview
+function Map2() {
   const containerStyle = {
     height: "400px",
     width: "800px"
@@ -104,20 +110,19 @@ export default class localelocatrBlock extends Block {
   renderEditModal(done: (data: BlockModel) => void) {
     return (
       <div>
-      <div>
         
         <h1>Edit localelocatr Block!</h1>
         <div> and again again  </div>
         {randomNation().flag}
         <NationDropdown />
+        {/** @ts-ignore */}
+        <Streetview apiKey={api_Key} />
 
-      </div>
-
-      <div>
-      </div>
-      </div>
-    )
-  }
+        
+     
+      </div>)}
+    
+  
 
   renderErrorState() {
     return (

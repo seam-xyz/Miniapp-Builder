@@ -37,6 +37,7 @@
     "react-dom": "^18.2.0",
     "react-feather": "^2.0.10",
     "react-giphy-searchbox": "^1.5.4",
+    "react-google-streetview": "^0.0.9",
     "react-infinite-scroll-component": "^6.1.0",
     "react-player": "^2.15.0",
     "react-scripts": "5.0.1",
