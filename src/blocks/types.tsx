@@ -484,4 +484,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "Voice Note - yaya sam",
     fullscreenEdit: false,
 },
+  "localelocatr": { 
+    type: "localelocatr",
+    displayName: "localelocatr",
+    displayDescription: "locates locales",
+    emptyTitle: "Empty localelocatr App",
+    emptySubtitle: "Tap here to setup your localelocatr app!",
+    icon: "localelocatrIcon", // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "mbehera",
+    fullscreenEdit: false,
+},
 };
