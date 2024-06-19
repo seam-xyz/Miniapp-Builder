@@ -259,6 +259,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
         case "streak":
           //taken from https://openprocessing.org/sketch/793375?ref=gorillasun.de
           if(s.mouseIsPressed && inStroke) {
+            buffer.noStroke()
             streak.vx = ( s.mouseX - streak.brushX ) * streak.spring;
             streak.vy = ( s.mouseY - streak.brushY ) * streak.spring;
             streak.vx *= streak.friction;
