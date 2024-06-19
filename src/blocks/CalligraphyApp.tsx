@@ -50,7 +50,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
     let localUndoSwitch = state.current.canvasUndoSwitch;
     /**namespaces for each brush option */
     const ink = {
-      BRUSH_SIZE : 25, //make configurable later?
+      BRUSH_SIZE : 15, //make configurable later?
       VEL_DEPENDENT_SHADE : false, //make the stroke lighter the faster the brush moves
       previousStrokeWidth : 0, //stroke width on prior frame
       FRICTION : 2, //divides velocity
@@ -62,7 +62,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       currentStrokeTotalLength : 0
     }
     const brush1 = {
-      brushSize : 15,
+      brushSize : 20,
       f : true,
       spring : 0.4,
       friction : 0.45,
@@ -436,7 +436,9 @@ const CalligraphyBackgroundSelector = (props: CalligraphyBackgroundSelectorProps
 
 // Available options for the brush selector
 const brushOptions: Record<string, string> = {
-  'ink': brushInk
+  'ink': brushInk,
+  'brush1': brushInk,
+  'spray': brushInk
 }
 type CalligraphyBrush = keyof typeof brushOptions;
 // Component for selecting the brush
