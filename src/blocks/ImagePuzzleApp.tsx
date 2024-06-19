@@ -269,9 +269,9 @@ function ImagePuzzlePublic(props: ImagePuzzlePublicProps) {
     <div className='flex w-full flex-col gap-4 justify-between'>
       <ImagePuzzleBoard imageData={imageData} puzzleSize={puzzleSize}
         image={image} tiles={tiles} onTileClicked={(tileId) => onTileClicked(tileId)} />
-      <div className='flex flex-row justify-around text-2xl p-4 gap-8'>
-        <button className='flex-1 py-2 drop-shadow-sm border border-solid rounded-md border-[#aaaaaa]' onClick={() => setTiles(getInitPositions())}>Solve</button>
-        <button className='flex-1 py-2 drop-shadow-sm border border-solid rounded-md border-[#aaaaaa]' onClick={() => setTiles(getRandomMove(tiles, 500))}>Shuffle</button>
+      <div className='flex flex-row justify-around text-md p-4 gap-8'>
+        <button className='flex-1 py-2 drop-shadow-md border border-solid rounded-md border-[#aaaaaa]' onClick={() => setTiles(getInitPositions())}>Solve</button>
+        <button className='flex-1 py-2 drop-shadow-md border border-solid rounded-md border-[#aaaaaa]' onClick={() => setTiles(getRandomMove(tiles, 500))}>Shuffle</button>
       </div>
     </div>
   )
