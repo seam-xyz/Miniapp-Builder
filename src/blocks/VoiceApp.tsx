@@ -328,6 +328,7 @@ export default class VoiceBlock extends Block {
     )
   }
 
+  // I would like to pass at least a message into this but the block class forbids it...
   renderErrorState() {
     return (
       <h1>Unexpected Error, Try Reloading</h1>
