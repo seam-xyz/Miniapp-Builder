@@ -88,6 +88,22 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       prevR: 0,
       prevSpeed: 0,
     }
+    const streak = {
+      vx:0,
+      vy:0,
+      friction:.5,
+      spring: .5,
+      oldR: 0,
+      oldX: 0,
+      oldY: 0,
+      brushX: 0,
+      brushY: 0,
+      splitNum: 30,
+      brushRadius: 10,
+      baseBrushSize: 10,
+      brushOffset: 5,
+      minRadius: 1
+    }
     s.setup = () => {
       s.createCanvas(canvasWidth,canvasWidth * ASPECT_RATIO)
       s.background(BACKGROUND_COLOR)
@@ -187,6 +203,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
           ink.previousStrokeWidth = strokeSize;
           break
         case "spray":
+          //adapted from https://library.superhi.com/posts/how-to-paint-with-code-creating-paintbrushes
           if(s.mouseIsPressed && inStroke){	// set the color and brush style
             buffer.stroke(state.current.activeColor)
             buffer.strokeWeight(1)
@@ -220,7 +237,43 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
             spray.pMouseY = s.mouseY;
             spray.prevSpeed = speed;
           }
+          break;
+        case "streak":
+          //taken from https://openprocessing.org/sketch/793375?ref=gorillasun.de
+          if(s.mouseIsPressed && inStroke) {
+            buffer.stroke(state.current.activeColor)
+            streak.vx += ( s.mouseX - streak.brushX ) * streak.spring;
+            streak.vy += ( s.mouseY - streak.brushY ) * streak.spring;
+            streak.vx *= streak.friction;
+            streak.vy *= streak.friction;
+            
+            let v = s.sqrt( streak.vx**2 + streak.vy**2 );
+            v *= 0.6;
+            
+            streak.oldR = streak.brushRadius;
+            streak.brushRadius = streak.baseBrushSize - v;
+            
+            for( let i = 0; i < streak.splitNum; ++i ) {
+              streak.oldX = streak.brushX;
+              streak.oldY = streak.brushY;
+              streak.brushX += streak.vx / streak.splitNum;
+              streak.brushY += streak.vy / streak.splitNum;
+              const startR = s.max(streak.oldR,streak.minRadius);
+              streak.oldR += ( streak.brushRadius - streak.oldR ) / streak.splitNum;
+              if(streak.oldR < streak.minRadius) { streak.oldR = streak.minRadius; }
+              // buffer.strokeWeight( streak.oldR+streak.brushOffset );  // AMEND: streak.oldR -> streak.oldR+streak.brushOffset
+              taperLine(buffer, streak.oldX, streak.oldY, streak.brushX, streak.brushY,startR, streak.oldR + streak.brushOffset,true)
+              // buffer.line( streak.oldX, streak.oldY, streak.brushX, streak.brushY );
+              // buffer.strokeWeight( streak.oldR );  // ADD
+              taperLine(buffer, streak.oldX + streak.brushOffset * 2, streak.oldY + streak.brushOffset* 2, streak.brushX + streak.brushOffset * 2, streak.brushY + streak.brushOffset*2, startR, streak.oldR,true)
+              // buffer.line( streak.brushX+streak.brushOffset*2, streak.brushY+streak.brushOffset*2, streak.oldX+streak.brushOffset*2, streak.oldY+streak.brushOffset*2 );  // ADD
+              taperLine(buffer, streak.oldX - streak.brushOffset, streak.oldY - streak.brushOffset, streak.brushX - streak.brushOffset, streak.brushY - streak.brushOffset, startR, streak.oldR,true)
+              // buffer.line( streak.brushX-streak.brushOffset, streak.brushY-streak.brushOffset, streak.oldX-streak.brushOffset, streak.oldY-streak.brushOffset );  // ADD
+            }
+          }
+          break;
         }
+        
 
       s.image(buffer,0,0)
       //if the clear switch has been toggled by the toolbar, we save an undo frame, clear, and align the local tracking variable to match it so we cathc the next flip
@@ -261,8 +314,10 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       /** Reset the brush position/velocity and total stroke lenghth */
       ink.currentStrokeTotalLength = 0;
       [ink.brushX, ink.brushY] = [s.mouseX, s.mouseY];
-      [spray.pMouseX, spray.pMouseY] = [s.mouseX, s.mouseY];
       [ink.vx, ink.vy] = [0, 0];
+      [spray.pMouseX, spray.pMouseY] = [s.mouseX, s.mouseY];
+      [streak.brushX, streak.brushY] = [s.mouseX, s.mouseY];
+      [streak.vx, streak.vy] = [0,0];
     }
     const undo = () => {
       if (undoBufferStack.length === 0) return;
@@ -436,6 +491,7 @@ const CalligraphyBackgroundSelector = (props: CalligraphyBackgroundSelectorProps
 
 // Available options for the brush selector
 const brushOptions: Record<string, string> = {
+  'streak': brushInk,
   'ink': brushInk,
   'brush1': brushInk,
   'spray': brushInk
