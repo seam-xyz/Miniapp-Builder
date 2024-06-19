@@ -111,7 +111,9 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       currentStrokeLength: 0,
       LINES: 5,
       lineSpacing: 5,
-      lineSpacingVar: 2,
+      /**parameters which vary the spacing between the parallel lines; we may want to set these generally and not once per stroke */
+      lineSpacingVar: .6,
+      lineSpacingOffsets: [0],
       lineWeight: 2, //baseline line width, will be  +/-'d with granularity
       crossAxisNoiseParam: 0,
       crossAxisNoiseIncrement: 0.001,
@@ -297,7 +299,8 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
             s.beginShape();
             const steps = d / lines.lerpStepSize;
             //loop for each of the parallel lines
-            for (let j = -(lines.LINES - 1) / 2; j <= (lines.LINES - 1) / 2; j++) {
+            for (let j = 0; j < lines.LINES; j++) {
+              const lineOffset = (j -(lines.LINES - 1) / 2) + (lines.lineSpacingOffsets.length === lines.LINES ? lines.lineSpacingOffsets[j] : 0)
               for (let i = 0; i < steps; i++) {
                 const lerpX = s.lerp(prevX, lines.brushX, i / steps);
                 const lerpY = s.lerp(prevY, lines.brushY, i / steps);
@@ -306,13 +309,13 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
                 );
                 // const lineSpacing = lines.lineSpacing + s.random();
                 buffer.line(
-                  prevX + j * lines.lineSpacing * Math.cos(lines.penAngle),
-                  prevY + j * lines.lineSpacing * Math.sin(lines.penAngle),
+                  prevX + lineOffset * lines.lineSpacing * Math.cos(lines.penAngle),
+                  prevY + lineOffset * lines.lineSpacing * Math.sin(lines.penAngle),
                   lerpX +
-                    j * lines.lineSpacing * Math.cos(lines.penAngle) +
+                    lineOffset * lines.lineSpacing * Math.cos(lines.penAngle) +
                     s.random(lines.roughness),
                   lerpY +
-                    j * lines.lineSpacing * Math.sin(lines.penAngle) +
+                    lineOffset * lines.lineSpacing * Math.sin(lines.penAngle) +
                     s.random(lines.roughness)
                 );
               }
@@ -363,6 +366,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       [spray.pMouseX, spray.pMouseY] = [s.mouseX, s.mouseY];
       [streak.brushX, streak.brushY] = [s.mouseX, s.mouseY];
       [lines.brushX, lines.brushY] = [s.mouseX, s.mouseY];
+      lines.lineSpacingOffsets = Array.from({length: lines.LINES}, ()=>s.random(-lines.lineSpacingVar/2,lines.lineSpacingVar/2))
 
     }
     const undo = () => {
