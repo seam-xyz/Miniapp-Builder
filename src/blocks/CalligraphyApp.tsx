@@ -50,13 +50,13 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
     let localUndoSwitch = state.current.canvasUndoSwitch;
     /**namespaces for each brush option */
     const ink = {
-      BRUSH_SIZE : 15, //make configurable later?
+      BRUSH_SIZE : 17, //make configurable later?
       VEL_DEPENDENT_SHADE : false, //make the stroke lighter the faster the brush moves
       previousStrokeWidth : 0, //stroke width on prior frame
-      FRICTION : 2, //divides velocity
+      FRICTION : 1.5, //divides velocity
+      
       SPRING : .5, 
-      vy: 0,
-      vx: 0,
+      velocityScaling: 50,
       brushX: 0,
       brushY: 0,
       currentStrokeTotalLength : 0
@@ -195,7 +195,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
           const dy = s.mouseY - ink.brushY;
           const vel = s.sqrt(dx ** 2 + dy ** 2);
           ink.currentStrokeTotalLength += vel;
-          const velocityStrokeScaling = vel / 100;
+          const velocityStrokeScaling = vel / ink.velocityScaling;
           const velocityShadeScaling = ink.VEL_DEPENDENT_SHADE ? vel / 2 : 0;
           const strokeSize = Math.min(
             maxBRUSH_SIZE,
@@ -209,13 +209,13 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
           if (s.mouseIsPressed && inStroke) {
             //   s.fill(127 * (1 + 0.5 * s.sin(s.frameCount * 3)));
       
-            ink.vx = (dx * ink.SPRING) / 2;
-            ink.vy = (dy * ink.SPRING) / 2;
-            ink.vx /= ink.FRICTION;
-            ink.vy /= ink.FRICTION;
+            let vx = (dx * ink.SPRING) / 2;
+            let vy = (dy * ink.SPRING) / 2;
+            vx /= ink.FRICTION;
+            vy /= ink.FRICTION;
             const [prevX, prevY] = [ink.brushX, ink.brushY];
-            (ink.brushX += ink.vx);
-            (ink.brushY += ink.vy);
+            (ink.brushX += vx);
+            (ink.brushY += vy);
       
             taperLine(buffer, prevX, prevY, ink.brushX, ink.brushY, ink.previousStrokeWidth, strokeSize, true);
           }
