@@ -78,6 +78,16 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       oldY : 0,
       oldR : 0
      }
+    const spray = {
+      pMouseX: 0,
+      pMouseY:0,
+      minRadius: 5,
+      sprayDensity: 5,
+      lerps: 100,
+      speedScaling: .04,
+      prevR: 0,
+      prevSpeed: 0,
+    }
     s.setup = () => {
       s.createCanvas(canvasWidth,canvasWidth * ASPECT_RATIO)
       s.background(BACKGROUND_COLOR)
@@ -90,8 +100,8 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       buffer.fill(state.current.activeColor)
       writeBackground(s)
       switch (state.current.currentBrush || "default") {
-        /** adapted from  https://editor.p5js.org/AhmadMoussa/sketches/SlFQgTID_  */
         case "brush1":
+        /** adapted from  https://editor.p5js.org/AhmadMoussa/sketches/SlFQgTID_  */
         /*
           Draw multiple lines with different positions and thicknesses, 
           and make it look like a brush
@@ -176,7 +186,41 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
           }
           ink.previousStrokeWidth = strokeSize;
           break
-      }
+        case "spray":
+          if(s.mouseIsPressed && inStroke){	// set the color and brush style
+            buffer.stroke(state.current.activeColor)
+            buffer.strokeWeight(1)
+
+            // find the speed of the mouse movement
+            const speed = s.abs(s.mouseX - spray.pMouseX) + s.abs(s.mouseY - spray.pMouseY)
+            let r = spray.prevR
+            
+            // repeat the random points with lerping
+            for (let i = 0; i < spray.lerps; i++) {
+              
+              // find the lerped X and Y coordinates
+              const lerpX = s.lerp( spray.pMouseX,s.mouseX, i / spray.lerps)
+              const lerpY = s.lerp( spray.pMouseY,s.mouseY, i / spray.lerps)
+              const lerpedSpeed = s.lerp(spray.prevSpeed, speed, i/ spray.lerps)
+              // find radius of the spray paint brush and radius squared
+              r = (lerpedSpeed + spray.minRadius) * spray.speedScaling
+              spray.prevR = r
+              // draw a bunch of random points within a circle
+              for (let j = 0; j < (spray.sprayDensity * speed * spray.speedScaling); j++) {
+
+                // pick a random position within the circle
+                const randX = s.random(-r, r)
+                const randY = s.random(-1, 1) * s.sqrt(r * r - randX * randX)
+
+                // draw the random point
+                buffer.point(lerpX + randX, lerpY + randY)
+              }
+            }
+            spray.pMouseX = s.mouseX;
+            spray.pMouseY = s.mouseY;
+            spray.prevSpeed = speed;
+          }
+        }
 
       s.image(buffer,0,0)
       //if the clear switch has been toggled by the toolbar, we save an undo frame, clear, and align the local tracking variable to match it so we cathc the next flip
@@ -217,6 +261,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       /** Reset the brush position/velocity and total stroke lenghth */
       ink.currentStrokeTotalLength = 0;
       [ink.brushX, ink.brushY] = [s.mouseX, s.mouseY];
+      [spray.pMouseX, spray.pMouseY] = [s.mouseX, s.mouseY];
       [ink.vx, ink.vy] = [0, 0];
     }
     const undo = () => {
@@ -505,7 +550,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
   const [canvasUndoSwitch, setCanvasUndoSwitch] = useState(false);
   const [currentBackground, setCurrentBackground] = useState<CalligraphyBackground>("lines");
   const [activeToolbarTab, setActivePaletteTab] = useState(CalligraphyToolbarView.COLOR);
-  const [currentBrush, setCurrentBrush] = useState("brush1");
+  const [currentBrush, setCurrentBrush] = useState("spray");
   return (
     <div className='flex flex-col gap-3 justify-between h-[88vh]'>
       <CalligraphyCanvas 
