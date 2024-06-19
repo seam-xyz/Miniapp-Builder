@@ -66,7 +66,7 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
       className='flex-0 overflow-hidden aspect-square absolute transition-transform'
       style={{
         flexBasis: `calc(100%/${props.puzzleSize})`,
-        transform: `translate(calc(100% * ${props.tileId % props.puzzleSize}), calc(100% * ${Math.floor(props.tileId / props.puzzleSize)})`
+        transform: `translate(calc(100% * ${props.pos % props.puzzleSize}), calc(100% * ${Math.floor(props.pos / props.puzzleSize)})`
         // left: `calc(100% * ${props.pos % props.puzzleSize} / ${props.puzzleSize})`,
         // top: `calc(100% * ${Math.floor(props.pos / props.puzzleSize)} / ${props.puzzleSize})`
       }}
@@ -94,8 +94,8 @@ function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
   const selfRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <div className='flex flex-1 mx-10 mt-4 aspect-square' ref={selfRef} >
-      <div className='flex w-full h-full flex-row flex-wrap relative bg-red-200'>
+    <div className='flex flex-0 mx-10 mt-4 aspect-square' ref={selfRef} >
+      <div className='flex w-full h-full flex-row flex-wrap relative'>
         {
           props.tiles.map(tile => 
             <ImagePuzzleTile
@@ -178,7 +178,7 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
           </>
           : <>
             <ImageIcon htmlColor='#aaaaaa' style={{ fontSize: '6rem' }} />
-            <p className='text-[#aaaaaa]'>Upload Image</p>
+            <p className='text-[#aaaaaa] select-none'>Upload Image</p>
           </>
         }
       </div>
@@ -208,7 +208,8 @@ function ImagePuzzlePublic(props: ImagePuzzlePublicProps) {
     setTiles(Array(puzzleSize ** 2 - 1).fill(0).map((_, i): Tile => { return ({ tileId: i, pos: i }) }));
   }, []);
 
-  function tileNeighbors(posA: number, posB: number): boolean {
+  function tileNeighbors(tiles: Tile[], posA: number, posB: number): boolean {
+    if (posA < 0 || posB < 0 || posA >= puzzleSize ** 2 || posB >= puzzleSize ** 2) return false;  // One of the tiles doesn't exist.
     const directions = {
       'up': -puzzleSize,
       'right': 1,
@@ -224,34 +225,54 @@ function ImagePuzzlePublic(props: ImagePuzzlePublicProps) {
     return true;
   }
 
-  function findEmptyPos() {
-    return (
-    Array(puzzleSize ** 2).fill(0)
+  function findEmptyPos(tiles: Tile[]): number {
+    const result = Array(puzzleSize ** 2).fill(0)
       .map((_, i) => i)
       .filter(i => 
         !tiles.map(tile => tile.pos).includes(i)
       )
-      .at(0)
-    );
+      .at(0);
+    if (result === undefined) throw new Error('Could not find empty position');
+
+    return result;
+  }
+
+  function getInitPositions() {
+    return Array(puzzleSize ** 2 - 1).fill(0).map((_, i): Tile => ({tileId: i, pos: i}));
+  }
+
+  function applyMove(tiles: Tile[], posTile: number): Tile[] {
+    const posEmpty = findEmptyPos(tiles);
+    if (!tileNeighbors(tiles, posTile, posEmpty)) {
+      return tiles;
+    } else {
+      return tiles.map(tile => tile.pos === posTile ? { tileId: tile.tileId, pos: posEmpty} : tile);
+    }
+  }
+
+  function getRandomMove(tiles: Tile[], depth: number): Tile[] {
+    if (depth <= 0) return tiles;
+    const emptyPos = findEmptyPos(tiles);
+    const neighbors = [1, -1, puzzleSize, -puzzleSize].filter(neighbor => tileNeighbors(tiles, emptyPos, emptyPos + neighbor))
+    const chosenMove = emptyPos + neighbors[Math.floor(Math.random() * neighbors.length)];
+    return getRandomMove(applyMove(tiles, chosenMove), depth - 1);
   }
 
   function onTileClicked(tileId: number): void {
     const posTile = tiles.find(x => x.tileId === tileId)?.pos;
-    const posEmpty = findEmptyPos();
-    if (!posTile || !posEmpty) {throw new Error('Something went seriously wrong.')};
-    if (!tileNeighbors(posTile, posEmpty)) {
-      // Can't move tile
-    } else {
-      const tiles0 = tiles.map(tile => tile.tileId === tileId ? { tileId: tile.tileId, pos: posEmpty} : tile);
-      console.log(tiles0);
-      setTiles(tiles0);
-    }
+    if (posTile === undefined) {throw new Error('Something went seriously wrong.')};
+    const tiles0 = applyMove(tiles, posTile);
+    setTiles(tiles0);
   }
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex w-full flex-col gap-4 justify-between'>
       <ImagePuzzleBoard imageData={imageData} puzzleSize={puzzleSize}
         image={image} tiles={tiles} onTileClicked={(tileId) => onTileClicked(tileId)} />
+      <div className='flex flex-row justify-around text-2xl p-4 gap-8'>
+        <button className='flex-1 py-2 drop-shadow-sm border border-solid rounded-md border-[#aaaaaa]' onClick={() => setTiles(getInitPositions())}>Solve</button>
+        <button className='flex-1 py-2 drop-shadow-sm border border-solid rounded-md border-[#aaaaaa]' onClick={() => setTiles(getRandomMove(tiles, 500))}>Shuffle</button>
+      </div>
     </div>
   )
 }
@@ -288,7 +309,7 @@ function ImagePuzzleEdit(props: ImagePuzzleProps) {
         className='flex flex-col gap-4'
         style={{ width: props.width || '100%' }}
       >
-        <ImagePuzzleUpload image={image} puzzleSize={puzzleSize} onImageUploaded={ (value: File | null) => { setImage(value); console.log(value); } } />
+        <ImagePuzzleUpload image={image} puzzleSize={puzzleSize} onImageUploaded={ (value: File | null) => setImage(value) } />
         <ImagePuzzleSize value={puzzleSize} onSizeChanged={ (value: number) => setPuzzleSize(value) } puzzleSize={puzzleSize} />
       </div>
       <div className='absolute right-4 bottom-4 left-4'>
