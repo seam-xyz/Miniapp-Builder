@@ -23,10 +23,12 @@ interface ImagePuzzleTileProps {
   pos: number;
   image: HTMLImageElement | undefined;
   boardDimensions: Array<number | undefined>;
+  onTileClicked: (tileId: number) => void;
 }
 function ImagePuzzleTile(props: ImagePuzzleTileProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
+  
+  // TODO: Clean this lad up. There's stuff in here that does not need to be.
   useEffect(() => {
     if (!props.image || !props.boardDimensions[0] || !props.boardDimensions[1]) return;
     const canvas = canvasRef.current;
@@ -61,12 +63,12 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
 
   return (
     <div
-      className='flex-0 overflow-hidden aspect-square'
+      className='flex-0 overflow-hidden aspect-square absolute'
       style={{
-        flexBasis: `calc(100%/${props.puzzleSize})`,
-        left: `calc(100% * ${props.pos % props.puzzleSize} / ${props.puzzleSize})`,
-        top: `calc(100% * ${Math.floor(props.pos / props.puzzleSize)} / ${props.puzzleSize})`
+        left: `${props.pos % props.puzzleSize / props.puzzleSize * 100}%`,
+        top: `${Math.floor(props.pos / props.puzzleSize / props.puzzleSize) * 100}%`
       }}
+      onClick={() => props.onTileClicked(props.tileId)}
     >
       <canvas ref={canvasRef} />
     </div>
@@ -82,27 +84,23 @@ interface Tile {
 interface ImagePuzzleBoardProps {
   imageData: string;
   puzzleSize: number;
+  onTileClicked: (tileId: number) => void;
+  image: HTMLImageElement | undefined;
+  tiles: Tile[]
 }
 function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
-  const [tiles, setTiles] = useState<Array<Tile>>([])
-  const [image, setImage] = useState<HTMLImageElement | undefined>(undefined);
-  const selfRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const image = new Image();
-    image.src = props.imageData;
-    image.onload = () => {
-      setImage(image);
-    };
-    setTiles(Array(props.puzzleSize ** 2 - 1).fill(0).map((_, i): Tile => { return ({ tileId: i, pos: i }) }));
-  }, []);
+  const selfRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <div className='flex flex-0 mx-10 mt-4 aspect-square' ref={selfRef} >
-      <div className='flex flex-1 flex-row flex-wrap'>
+    <div className='flex flex-1 mx-10 mt-4 aspect-square' ref={selfRef} >
+      <div className='flex w-full h-full flex-row flex-wrap relative bg-red-200'>
         {
-          tiles.map(tile => 
-            <ImagePuzzleTile key={tile.tileId} imageData={props.imageData} puzzleSize={props.puzzleSize} tileId={tile.tileId} pos={tile.pos} image={image} boardDimensions={[selfRef.current?.clientWidth, selfRef.current?.clientHeight]} />
+          props.tiles.map(tile => 
+            <ImagePuzzleTile
+              key={tile.tileId} imageData={props.imageData} puzzleSize={props.puzzleSize}
+              tileId={tile.tileId} pos={tile.pos} image={props.image} 
+              boardDimensions={[selfRef.current?.clientWidth, selfRef.current?.clientHeight]} 
+              onTileClicked={(tileId: number) => props.onTileClicked(tileId)} />
           )
         }
       </div>
@@ -192,9 +190,66 @@ interface ImagePuzzlePublicProps {
   data: ImagePuzzleData;
 }
 function ImagePuzzlePublic(props: ImagePuzzlePublicProps) {
+  const [tiles, setTiles] = useState<Array<Tile>>([])
+  const [image, setImage] = useState<HTMLImageElement | undefined>(undefined);
+  const selfRef = useRef<HTMLDivElement>(null);
+
+  const puzzleSize = props.data.puzzleSize;
+  const imageData = props.data.imageData;
+
+  useEffect(() => {
+    const image = new Image();
+    image.src = imageData;
+    image.onload = () => {
+      setImage(image);
+    };
+    setTiles(Array(puzzleSize ** 2 - 1).fill(0).map((_, i): Tile => { return ({ tileId: i, pos: i }) }));
+  }, []);
+
+  function tileNeighbors(posA: number, posB: number): boolean {
+    const directions = {
+      'up': -puzzleSize,
+      'right': 1,
+      'down': puzzleSize,
+      'left': -1
+    };
+    const dPos = posB - posA;
+    const dir = Object.entries(directions).find(direction => direction[1] === dPos)?.at(0);
+    if (!dir) return false;  // Tiles are not in a cardinal direction from one another.
+    if ((dir === 'right' && posA % puzzleSize === puzzleSize - 1) || (dir === 'left' && posA % puzzleSize === 0)) {
+      return false;  // Direction implies a row wrap
+    }
+    return true;
+  }
+
+  function findEmptyPos() {
+    return (
+    Array(puzzleSize ** 2).fill(0)
+      .map((_, i) => i)
+      .filter(i => 
+        !tiles.map(tile => tile.pos).includes(i)
+      )
+      .at(0)
+    );
+  }
+
+  function onTileClicked(tileId: number): void {
+    const posTile = tiles.find(x => x.tileId === tileId)?.pos;
+    const posEmpty = findEmptyPos();
+    if (!posTile || !posEmpty) {throw new Error('Something went seriously wrong.')};
+    if (!tileNeighbors(posTile, posEmpty)) {
+      // Can't move tile
+    } else {
+      const tiles0 = tiles.map(tile => tile.tileId === tileId ? { tileId: tile.tileId, pos: posEmpty} : tile);
+      console.log(tiles0);
+      setTiles(tiles0);
+    }
+  }
+
   return (
     <div className='flex flex-col'>
-      <ImagePuzzleBoard imageData={props.data.imageData} puzzleSize={props.data.puzzleSize} />
+      <ImagePuzzleBoard imageData={imageData} puzzleSize={puzzleSize}
+        image={image} tiles={tiles} onTileClicked={(tileId) => onTileClicked(tileId)} />
     </div>
   )
 }
