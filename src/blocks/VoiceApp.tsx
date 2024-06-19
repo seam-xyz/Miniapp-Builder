@@ -8,6 +8,8 @@ import CardContent from '@mui/material/CardContent';
 import MicIcon from '@mui/icons-material/Mic';
 import Fab from '@mui/material/Fab';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import { StopCircleRounded } from '@mui/icons-material';
+import FileUploadComponent from './utils/FileUploadComponent';
 /*
 
   TYPES
@@ -41,7 +43,13 @@ type StartProps = {
   context: AudioContext;
   getPlayable: (node: AudioNode, context: AudioContext) => boolean;
   canvasId: string;
+  isPlayback: boolean;
+  normalMatch?: boolean;
+  smallMatch?: boolean;
+  xsMatch?: boolean;
 }
+
+
 
 /*
 
@@ -71,7 +79,9 @@ const AudioCtx = ({ children }: AudioProviderProps) => {
 
 }
 
-const start = ({ node, context, getPlayable, renderErrorState, canvasId }: StartProps) => {
+let coolCanvas: any;
+
+const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayback, normalMatch, xsMatch, smallMatch }: StartProps) => {
 
   // Hi, I'm doing the drawing
   let analyser = context.createAnalyser();
@@ -131,14 +141,14 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId }: Start
 
     // bars
     // Affects the number of bars and their width
-    let barWidth = (canvas.width / bufferLength) * 5;
+    let barWidth = xsMatch ? (canvas.width / bufferLength) * 25 : smallMatch ? (canvas.width / bufferLength) * 15 : normalMatch ? (canvas.width / bufferLength) * 10 : (canvas.width / bufferLength) * 10
     let barHeight;
     x = 0;
     analyser.getByteFrequencyData(frequencyData);
 
     for (let i = 0; i < bufferLength; i++) {
       // Affects the amplitude of the displayed bars (height)
-      barHeight = frequencyData[i] * 1;
+      barHeight = !isPlayback ? frequencyData[i] * 1 : xsMatch ? frequencyData[i] * 0.2 : smallMatch ? frequencyData[i] * 0.25 : normalMatch ? frequencyData[i] * 0.30 : frequencyData[i] * 0.35;
 
       canvasCtx.fillStyle = "rgb(255, 255, 255)";
       canvasCtx.fillRect(x, (canvas.height / 2) - (barHeight / 2), barWidth, barHeight);
@@ -146,9 +156,14 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId }: Start
       x += barWidth + 1;
     }
 
+    
+
     if (getPlayable(node, context)) {
       requestAnimationFrame(draw);
     } else {
+      coolCanvas = canvasCtx.canvas.toDataURL()
+      console.log(coolCanvas);
+      
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
@@ -167,49 +182,85 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId }: Start
 
 const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
   const [playing, setPlaying] = useState<boolean>(false)
+  const [duration, setDuration] = useState<number>(0)
+  const [currentTime, setCurrentTime] = useState<number>(0)
+
+
+  const normalMediaMatch: MediaQueryList = window.matchMedia("(max-width: 599px )")
+  const smallMediaMatch: MediaQueryList = window.matchMedia("(max-width: 499px )")
+  const xsMediaMatch: MediaQueryList = window.matchMedia("(max-width: 399px )")
+
+  const [normalMatch, setNormalMatch] = useState<boolean>(normalMediaMatch.matches)
+  const [smallMatch, setSmallMatch] = useState<boolean>(smallMediaMatch.matches)
+  const [xsMatch, setXSMatch] = useState<boolean>(xsMediaMatch.matches)
+
+  useEffect(() => {
+    const handler = (e: any) => setNormalMatch(e.matches)
+    normalMediaMatch.addEventListener("change", handler)
+    return () => normalMediaMatch.removeEventListener("change", handler)
+  })
+  useEffect(() => {
+    const handler = (e: any) => setSmallMatch(e.matches)
+    smallMediaMatch.addEventListener("change", handler)
+    return () => normalMediaMatch.removeEventListener("change", handler)
+  })
+  useEffect(() => {
+    const handler = (e: any) => setXSMatch(e.matches)
+    xsMediaMatch.addEventListener("change", handler)
+    return () => normalMediaMatch.removeEventListener("change", handler)
+  })
+
+  console.log("normal", normalMatch)
+  console.log("small", smallMatch)
+  console.log("xs", xsMatch)
+
 
   const { canvasId } = useContext(audioContext)
   console.log("canvas id set in post in feed:", canvasId);
+
   
-
+  
   const audioPlayerId = useId()
-
+  
+  const context = new AudioContext()
+  const audio = new Audio();
+  audio.src = url;
 
   const playback = () => {
-    const context = new AudioContext()
-    const audio = new Audio();
-
-    audio.src = url;
-
+    
     const node = context.createMediaElementSource(audio)
 
     audio.play();
-
-    start({ node, context, getPlayable: (node) => !(node as MediaElementAudioSourceNode).mediaElement.ended, renderErrorState, canvasId })
+    const isPlayback = true 
+    start({ node, context, getPlayable: (node) => !(node as MediaElementAudioSourceNode).mediaElement.ended, renderErrorState, canvasId, isPlayback, normalMatch, smallMatch, xsMatch })
   }
 
   return (
 
-    <Card style={{ backgroundColor: 'black', borderRadius: '30px', width: "100%", display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} sx={{ height: { xs: "350px", md: "400px", lg: "400px" } }} >
-      <CardContent style={{ backgroundColor: 'black', padding: '24px', height: "100%", width: "100%", display: "flex" }}>
-        <Box style={{
-          color: 'black', backgroundColor: 'none', display: 'flex', justifyContent: 'center', width: '100%'
-        }}>
-          <div onClick={() => {
-            const audio = document.getElementById(audioPlayerId) as HTMLMediaElement
-            console.log("this is the audio:", audio)
-            audio.play();
-          }} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: "100%", height: "100%" }} >
-            <audio id={audioPlayerId} src={url} onPlay={() => { setTimeout(playback, 100) }} onPlaying={() => setPlaying(true)} onEnded={() => setPlaying(false)} />
+    <div style={{ backgroundColor: 'black', borderRadius: '125px', width: "100%", height: 'fit-content', aspectRatio: "5 / 1" }} >
 
-            <div style={{ color: 'white', display: `${playing ? "" : "none"}`, height: "100%", width: "100%" }}>
-              <canvas style={{ color: 'white', width: "100%", height: "100%" }} id={canvasId}></canvas>
+      <div style={{ height: "100%", width: "100%", display: "flex" }}>
+        <div style={{
+          color: 'black', backgroundColor: 'none', display: 'flex', flexDirection: "row", width: '100%'
+        }}>
+          <div style={{ padding: "8px 12px", display: 'flex', flexDirection: 'row', justifyContent: 'start', alignItems: 'center', width: "100%", height: "100%" }} >
+            <audio id={audioPlayerId} src={url} onPlay={() => { setTimeout(playback, 100) }} onPlaying={() => setPlaying(true)} onEnded={() => setPlaying(false)} />
+              <div onClick={() => {
+                  const audio = document.getElementById(audioPlayerId) as HTMLMediaElement
+                  audio.play();
+              }} style={{cursor: "pointer"}}>
+                {playing ? <StopCircleRounded style={{ color: 'white'}} sx={{fontSize: {xs: "50px", sm: "80px"}}} /> : <PlayCircleIcon style={{ color: 'white'}} sx={{fontSize: {xs: "50px", sm: "80px"}}} />}
+              </div>
+              <div style={{color: 'white', padding: "18px"}}>0:00</div>
+
+            <div style={{ color: 'white', height: "100%", width: "100%" }}>
+              <canvas style={{ color: 'white', width: "100%", height: "100%", display: `${playing ? "" : "none"}` }} id={canvasId}></canvas>
             </div>
-            <PlayCircleIcon sx={{ fontSize: { xs: "100px", md: "200px", lg: "200px" } }} style={{ color: 'white', backgroundColor: '', borderRadius: '50px', margin: '20px', display: `${playing ? "none" : ""}` }} />
+            <div style={{color: "white", padding: "18px"}}>0:00</div>
           </div>
-        </Box>
-      </CardContent>
-    </Card>
+        </div>
+      </div> 
+    </div>
   )
 
 }
@@ -264,8 +315,8 @@ const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
       // Create a new node
       let node = context.createMediaStreamSource(stream);
 
-
-      start({ node, context, getPlayable: () => currentMediaRecorder.state === "recording", renderErrorState, canvasId })
+      const isPlayback = false;
+      start({ node, context, getPlayable: () => currentMediaRecorder.state === "recording", renderErrorState, canvasId, isPlayback })
     }
   }
 
