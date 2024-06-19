@@ -62,11 +62,12 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       currentStrokeTotalLength : 0
     }
     const brush1 = {
-      brushSize : 20,
+      brushSize : 15,
       f : true,
       spring : 0.4,
       friction : 0.45,
       v : 0.5,
+      vScale: 1,
       r : 0,
       vx : 0,
       vy : 0,
@@ -162,7 +163,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
           brush1.v *= 0.55;
           
           brush1.oldR = brush1.r;
-          brush1.r = brush1.brushSize - brush1.v;
+          brush1.r = brush1.brushSize - brush1.v * brush1.vScale;
           var num = s.random(0.1,1)
           for( let i = 0; i < brush1.splitNum; ++i ) {
             brush1.oldX = brush1.x;
