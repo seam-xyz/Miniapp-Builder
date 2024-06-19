@@ -9,12 +9,14 @@ import MicIcon from '@mui/icons-material/Mic';
 import Fab from '@mui/material/Fab';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import { StopCircleRounded } from '@mui/icons-material';
-import FileUploadComponent from './utils/FileUploadComponent';
+
+
 /*
 
-  TYPES
+  ----------  VoiceApp TYPES  ----------
 
 */
+
 
 type AudioContextProps = {
   isRecording: boolean;
@@ -50,18 +52,16 @@ type StartProps = {
 }
 
 
-
 /*
 
-  VoiceApp DATA
+  ----------  VoiceApp DATA  ----------
 
 */
 
-// canvas id context
-
-
+// Default values for audio context
 const defaultAudioContext: AudioContextProps = { isRecording: false, setIsRecording: () => { }, mediaRecorder: { current: null }, canvasId: ""}
 
+// 
 const audioContext = createContext<AudioContextProps>(defaultAudioContext);
 
 const { Provider: AudioProvider } = audioContext;
@@ -174,7 +174,7 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayb
 
 /*
 
-  VoiceApp COMPONENTS
+  ----------  VoiceApp COMPONENTS  ----------
 
 */
 
@@ -368,12 +368,13 @@ const AudioCard = () => {
 
 /* 
 
-  SEAM CLASS
+  ----------  SEAM CLASS  ----------
 
 */
 
 export default class VoiceBlock extends Block {
 
+  // This method returns the component that seam users see in their feeds
   render() {
     return  (
     <AudioCtx>
@@ -382,6 +383,7 @@ export default class VoiceBlock extends Block {
     )
   }
 
+  // This method returns the component that seam users see when 
   renderEditModal(done: (data: BlockModel) => void) {
     const handleSave = (audio: string) => {
       this.model.data["audio"] = audio
@@ -398,7 +400,9 @@ export default class VoiceBlock extends Block {
     )
   }
 
-  // I would like to pass at least a message into this but the block class forbids it...
+  // NOTE: I would like to pass at least a message into this but the block class forbids it...
+  // This method gracefully returns an error to the user, I do not know what it looks like 
+  // because I couldn't get it to render in the testing environment
   renderErrorState() {
     return (
       <h1>Unexpected Error, Try Reloading</h1>
