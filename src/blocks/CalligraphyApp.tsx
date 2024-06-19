@@ -104,6 +104,22 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       brushOffset: 5,
       minRadius: 1
     }
+    const lines = {
+      brushX: 0,
+      brushY: 0,
+      currentStrokeLength: 0,
+      LINES: 5,
+      lineSpacing: 5,
+      lineSpacingVar: 2,
+      lineWeight: 2, //baseline line width, will be  +/-'d with granularity
+      crossAxisNoiseParam: 0,
+      crossAxisNoiseIncrement: 0.001,
+      spring: 0.5,
+      lerpStepSize: 3,
+      granularity: 1.5, //line weight variation
+      roughness: 1, //line path variation
+      penAngle: 75
+    };
     s.setup = () => {
       s.createCanvas(canvasWidth,canvasWidth * ASPECT_RATIO)
       s.background(BACKGROUND_COLOR)
@@ -272,6 +288,42 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
             }
           }
           break;
+        case "lines":
+          if (s.mouseIsPressed && inStroke) {
+            const dx = s.mouseX - lines.brushX;
+            const dy = s.mouseY - lines.brushY;
+            const d = Math.sqrt(dx ** 2 + dy ** 2);
+            const vx = dx * lines.spring;
+            const vy = dy * lines.spring;
+            const v = Math.sqrt(vx ** 2 + vy ** 2);
+            const prevX = lines.brushX;
+            const prevY = lines.brushY;
+            lines.brushX += vx;
+            lines.brushY += vy;
+            s.beginShape();
+            const steps = d / lines.lerpStepSize;
+            //loop for each of the parallel lines
+            for (let j = -(lines.LINES - 1) / 2; j <= (lines.LINES - 1) / 2; j++) {
+              for (let i = 0; i < steps; i++) {
+                const lerpX = s.lerp(prevX, lines.brushX, i / steps);
+                const lerpY = s.lerp(prevY, lines.brushY, i / steps);
+                buffer.strokeWeight(
+                  lines.lineWeight + s.random(-0.5, 0.5) * lines.granularity
+                );
+                // const lineSpacing = lines.lineSpacing + s.random();
+                buffer.line(
+                  prevX + j * lines.lineSpacing * Math.cos(lines.penAngle),
+                  prevY + j * lines.lineSpacing * Math.sin(lines.penAngle),
+                  lerpX +
+                    j * lines.lineSpacing * Math.cos(lines.penAngle) +
+                    s.random(lines.roughness),
+                  lerpY +
+                    j * lines.lineSpacing * Math.sin(lines.penAngle) +
+                    s.random(lines.roughness)
+                );
+              }
+            }
+          }
         }
         
 
@@ -317,7 +369,8 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       [ink.vx, ink.vy] = [0, 0];
       [spray.pMouseX, spray.pMouseY] = [s.mouseX, s.mouseY];
       [streak.brushX, streak.brushY] = [s.mouseX, s.mouseY];
-      [streak.vx, streak.vy] = [0,0];
+      [lines.brushX, lines.brushY] = [s.mouseX, s.mouseY];
+
     }
     const undo = () => {
       if (undoBufferStack.length === 0) return;
@@ -492,6 +545,7 @@ const CalligraphyBackgroundSelector = (props: CalligraphyBackgroundSelectorProps
 // Available options for the brush selector
 const brushOptions: Record<string, string> = {
   'streak': brushInk,
+  'lines': brushInk,
   'ink': brushInk,
   'brush1': brushInk,
   'spray': brushInk
