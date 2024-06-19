@@ -16,16 +16,18 @@ import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 
 type AudioContextProps = {
   isRecording: boolean;
-  setIsRecording: Dispatch<SetStateAction<boolean>>
-  mediaRecorder: React.MutableRefObject<MediaRecorder | null>
+  setIsRecording: Dispatch<SetStateAction<boolean>>;
+  mediaRecorder: React.MutableRefObject<MediaRecorder | null>;
 }
 
 type AudioButtonProps = {
+  renderErrorState: () => JSX.Element;
   onSave: (url: string) => void;
 }
 
 type PostInFeedProps = {
-  url: string
+  url: string;
+  renderErrorState: () => JSX.Element;
 }
 
 type AudioProviderProps = {
@@ -33,9 +35,10 @@ type AudioProviderProps = {
 }
 
 type StartProps = {
-  node: AudioNode
-  context: AudioContext
-  getPlayable: (node: AudioNode, context: AudioContext) => boolean
+  renderErrorState: () => JSX.Element;
+  node: AudioNode;
+  context: AudioContext;
+  getPlayable: (node: AudioNode, context: AudioContext) => boolean;
 }
 
 /*
@@ -63,7 +66,7 @@ const AudioCtx = ({ children }: AudioProviderProps) => {
 
 }
 
-const start = ({ node, context, getPlayable }: StartProps) => {
+const start = ({ node, context, getPlayable, renderErrorState }: StartProps) => {
   // Hi, I'm doing the drawing
   let analyser = context.createAnalyser();
   analyser.smoothingTimeConstant = .9;
@@ -80,7 +83,10 @@ const start = ({ node, context, getPlayable }: StartProps) => {
 
   // Get a canvas defined with ID "oscilloscope"
   let canvas = document.getElementById("oscilloscope") as HTMLCanvasElement;
-  if (!canvas) return alert("The audio visualizer is missing! Reload.")
+  if (!canvas) {
+    console.error("The audio visualizer (canvas) is missing");
+    return renderErrorState();
+  }
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
   let canvasCtx = canvas.getContext("2d");
@@ -88,7 +94,10 @@ const start = ({ node, context, getPlayable }: StartProps) => {
 
   // draw an oscilloscope of the current audio source
   const draw = () => {
-    if (!canvasCtx) return alert("The audio visualizer is missing! Reload.")
+    if (!canvasCtx) {
+      console.error("The audio visualizer (canvas) is missing");
+      return renderErrorState();
+    }
     canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
 
     canvasCtx.lineWidth = 1;
@@ -114,7 +123,7 @@ const start = ({ node, context, getPlayable }: StartProps) => {
       x += sliceWidth;
     }
 
-    //bars
+    // bars
     // Affects the number of bars and their width
     let barWidth = (canvas.width / bufferLength) * 5;
     let barHeight;
@@ -150,7 +159,7 @@ const start = ({ node, context, getPlayable }: StartProps) => {
 
 // when user clicks play on the audio, it sets recording the true and the visual starts.
 
-const PostInFeed = ({ url }: PostInFeedProps) => {
+const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
   const [playing, setPlaying] = useState<boolean>(false)
 
   const playback = () => {
@@ -163,11 +172,8 @@ const PostInFeed = ({ url }: PostInFeedProps) => {
 
     audio.play();
 
-    start({ node, context, getPlayable: (node) => !(node as MediaElementAudioSourceNode).mediaElement.ended })
+    start({ node, context, getPlayable: (node) => !(node as MediaElementAudioSourceNode).mediaElement.ended, renderErrorState })
   }
-
-
-
 
   return (
 
@@ -180,25 +186,21 @@ const PostInFeed = ({ url }: PostInFeedProps) => {
             const audio = document.getElementById("player") as HTMLMediaElement
             audio.play();
           }} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: "100%", height: "100%" }} >
-            <audio id='player' src={url} onPlay={() => {setTimeout(playback, 100)}} onPlaying={() => setPlaying(true)} onEnded={() => setPlaying(false)} />
+            <audio id='player' src={url} onPlay={() => { setTimeout(playback, 100) }} onPlaying={() => setPlaying(true)} onEnded={() => setPlaying(false)} />
 
             <div style={{ color: 'white', display: `${playing ? "" : "none"}`, height: "100%", width: "100%" }}>
               <canvas style={{ color: 'white', width: "100%", height: "100%" }} id="oscilloscope"></canvas>
             </div>
-
             <PlayCircleIcon sx={{ fontSize: { xs: "100px", md: "200px", lg: "200px" } }} style={{ color: 'white', backgroundColor: '', borderRadius: '50px', margin: '20px', display: `${playing ? "none" : ""}` }} />
-
           </div>
-
         </Box>
       </CardContent>
-
     </Card>
   )
 
 }
 
-const AudioButtons = ({ onSave }: AudioButtonProps) => {
+const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
   const { isRecording, setIsRecording, mediaRecorder } = useContext(audioContext)
 
   const [audio, setAudio] = useState<string>("")
@@ -210,7 +212,8 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
       });
       mediaRecorder.current = new MediaRecorder(stream);
     } catch (err) {
-      alert("The recorder couldn't be set up, please reload")
+      console.error(err);
+      renderErrorState();
     }
   };
 
@@ -225,9 +228,8 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
         mediaRecorder.current.ondataavailable = (e) => {
           const blob = new Blob([e.data], { type: "audio/webm;codecs=opus" });
           const audioURL = URL.createObjectURL(blob);
-          setAudio(audioURL)
+          setAudio(audioURL);
         };
-
         return
       }
     }
@@ -249,7 +251,7 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
       let node = context.createMediaStreamSource(stream);
 
 
-      start({ node, context, getPlayable: () => currentMediaRecorder.state === "recording" })
+      start({ node, context, getPlayable: () => currentMediaRecorder.state === "recording", renderErrorState })
     }
   }
 
@@ -274,7 +276,7 @@ const AudioButtons = ({ onSave }: AudioButtonProps) => {
       }} style={{
         backgroundColor: 'red'
       }} onClick={() => {
-        audio === "" ? alert("Record some audio first") : handleSubmit();
+        audio === "" ? renderErrorState() : handleSubmit();
       }}>
         Preview
       </Fab>
@@ -307,7 +309,7 @@ const AudioCard = () => {
 export default class VoiceBlock extends Block {
 
   render() {
-    return <PostInFeed url={this.model.data["audio"]} />;
+    return <PostInFeed url={this.model.data["audio"]} renderErrorState={this.renderErrorState} />;
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
@@ -320,14 +322,14 @@ export default class VoiceBlock extends Block {
       <AudioCtx>
         <div style={{ maxWidth: "100vw", overflow: "visible", display: "flex", flexDirection: "column", height: "100%", alignItems: "center", justifyContent: "space-around" }}>
           <AudioCard />
-          <AudioButtons onSave={handleSave} />
+          <AudioButtons onSave={handleSave} renderErrorState={this.renderErrorState} />
         </div>
       </AudioCtx>
     )
   }
 
+  // I would like to pass at least a message into this but the block class forbids it...
   renderErrorState() {
-    // Shouldn't have to use this anywhere because all types should be properly narrowed
     return (
       <h1>Unexpected Error, Try Reloading</h1>
     )
