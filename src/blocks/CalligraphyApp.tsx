@@ -379,6 +379,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       buffer.loadPixels(); //load the pixels array for the buffer
       const newUndoBufferFrame = buffer.get() //get it as a p5.Image object
       undoBufferStack.push(newUndoBufferFrame) //push it onto the undo state stack
+      if (undoBufferStack.length > 150) undoBufferStack.splice(0,undoBufferStack.length - 150)
     }
     const mouseOffCanvas = () => (s.mouseX > s.width || s.mouseX < 0 || s.mouseY > s.height || s.mouseY < 0)
     //Function to draw a tapered line (trapezoid) for smoothness
