@@ -63,10 +63,12 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
 
   return (
     <div
-      className='flex-0 overflow-hidden aspect-square absolute'
+      className='flex-0 overflow-hidden aspect-square absolute transition-transform'
       style={{
-        left: `${props.pos % props.puzzleSize / props.puzzleSize * 100}%`,
-        top: `${Math.floor(props.pos / props.puzzleSize / props.puzzleSize) * 100}%`
+        flexBasis: `calc(100%/${props.puzzleSize})`,
+        transform: `translate(calc(100% * ${props.tileId % props.puzzleSize}), calc(100% * ${Math.floor(props.tileId / props.puzzleSize)})`
+        // left: `calc(100% * ${props.pos % props.puzzleSize} / ${props.puzzleSize})`,
+        // top: `calc(100% * ${Math.floor(props.pos / props.puzzleSize)} / ${props.puzzleSize})`
       }}
       onClick={() => props.onTileClicked(props.tileId)}
     >
