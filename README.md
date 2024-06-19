@@ -35,4 +35,3 @@ The core piece of sharing on Seam is the **miniapp**. Miniapps are tiny playgrou
   * Eventually, you'll be able to earn Seam Points when other users unlock your miniapp.
 * You'll learn to code Javascript and React, one of the most used languages on the Internet.
 
-FRACTAL BOOTCAMP TAKEOVER
