@@ -1,7 +1,7 @@
 import Block from './Block'
 import { BlockModel } from './types'
 import './BlockStyles.css'
-import { createContext, SetStateAction, useContext, useEffect, useRef, useState, Dispatch, ReactNode } from 'react';
+import { createContext, SetStateAction, useContext, useEffect, useRef, useState, Dispatch, ReactNode, useId } from 'react';
 import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
@@ -18,6 +18,7 @@ type AudioContextProps = {
   isRecording: boolean;
   setIsRecording: Dispatch<SetStateAction<boolean>>;
   mediaRecorder: React.MutableRefObject<MediaRecorder | null>;
+  canvasId: string;
 }
 
 type AudioButtonProps = {
@@ -39,6 +40,7 @@ type StartProps = {
   node: AudioNode;
   context: AudioContext;
   getPlayable: (node: AudioNode, context: AudioContext) => boolean;
+  canvasId: string;
 }
 
 /*
@@ -47,7 +49,10 @@ type StartProps = {
 
 */
 
-const defaultAudioContext = { isRecording: false, setIsRecording: () => { }, mediaRecorder: { current: null } }
+// canvas id context
+
+
+const defaultAudioContext: AudioContextProps = { isRecording: false, setIsRecording: () => { }, mediaRecorder: { current: null }, canvasId: ""}
 
 const audioContext = createContext<AudioContextProps>(defaultAudioContext);
 
@@ -56,17 +61,18 @@ const { Provider: AudioProvider } = audioContext;
 const AudioCtx = ({ children }: AudioProviderProps) => {
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorder = useRef<MediaRecorder | null>(null)
-
+  const canvasId = useId()
 
   return (
-    <AudioProvider value={{ isRecording, setIsRecording, mediaRecorder }}>
+    <AudioProvider value={{ isRecording, setIsRecording, mediaRecorder, canvasId }}>
       {children}
     </AudioProvider>
   )
 
 }
 
-const start = ({ node, context, getPlayable, renderErrorState }: StartProps) => {
+const start = ({ node, context, getPlayable, renderErrorState, canvasId }: StartProps) => {
+
   // Hi, I'm doing the drawing
   let analyser = context.createAnalyser();
   analyser.smoothingTimeConstant = .9;
@@ -82,7 +88,7 @@ const start = ({ node, context, getPlayable, renderErrorState }: StartProps) => 
   analyser.getByteFrequencyData(frequencyData);
 
   // Get a canvas defined with ID "oscilloscope"
-  let canvas = document.getElementById("oscilloscope") as HTMLCanvasElement;
+  let canvas = document.getElementById(canvasId) as HTMLCanvasElement;
   if (!canvas) {
     console.error("The audio visualizer (canvas) is missing");
     return renderErrorState();
@@ -162,6 +168,13 @@ const start = ({ node, context, getPlayable, renderErrorState }: StartProps) => 
 const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
   const [playing, setPlaying] = useState<boolean>(false)
 
+  const { canvasId } = useContext(audioContext)
+  console.log("canvas id set in post in feed:", canvasId);
+  
+
+  const audioPlayerId = useId()
+
+
   const playback = () => {
     const context = new AudioContext()
     const audio = new Audio();
@@ -172,7 +185,7 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
 
     audio.play();
 
-    start({ node, context, getPlayable: (node) => !(node as MediaElementAudioSourceNode).mediaElement.ended, renderErrorState })
+    start({ node, context, getPlayable: (node) => !(node as MediaElementAudioSourceNode).mediaElement.ended, renderErrorState, canvasId })
   }
 
   return (
@@ -183,13 +196,14 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
           color: 'black', backgroundColor: 'none', display: 'flex', justifyContent: 'center', width: '100%'
         }}>
           <div onClick={() => {
-            const audio = document.getElementById("player") as HTMLMediaElement
+            const audio = document.getElementById(audioPlayerId) as HTMLMediaElement
+            console.log("this is the audio:", audio)
             audio.play();
           }} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: "100%", height: "100%" }} >
-            <audio id='player' src={url} onPlay={() => { setTimeout(playback, 100) }} onPlaying={() => setPlaying(true)} onEnded={() => setPlaying(false)} />
+            <audio id={audioPlayerId} src={url} onPlay={() => { setTimeout(playback, 100) }} onPlaying={() => setPlaying(true)} onEnded={() => setPlaying(false)} />
 
             <div style={{ color: 'white', display: `${playing ? "" : "none"}`, height: "100%", width: "100%" }}>
-              <canvas style={{ color: 'white', width: "100%", height: "100%" }} id="oscilloscope"></canvas>
+              <canvas style={{ color: 'white', width: "100%", height: "100%" }} id={canvasId}></canvas>
             </div>
             <PlayCircleIcon sx={{ fontSize: { xs: "100px", md: "200px", lg: "200px" } }} style={{ color: 'white', backgroundColor: '', borderRadius: '50px', margin: '20px', display: `${playing ? "none" : ""}` }} />
           </div>
@@ -201,7 +215,7 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
 }
 
 const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
-  const { isRecording, setIsRecording, mediaRecorder } = useContext(audioContext)
+  const { isRecording, setIsRecording, mediaRecorder, canvasId } = useContext(audioContext)
 
   const [audio, setAudio] = useState<string>("")
 
@@ -251,7 +265,7 @@ const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
       let node = context.createMediaStreamSource(stream);
 
 
-      start({ node, context, getPlayable: () => currentMediaRecorder.state === "recording", renderErrorState })
+      start({ node, context, getPlayable: () => currentMediaRecorder.state === "recording", renderErrorState, canvasId })
     }
   }
 
@@ -286,6 +300,7 @@ const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
 }
 
 const AudioCard = () => {
+  const { canvasId } = useContext(audioContext)
 
   return (
     <Card style={{ backgroundColor: 'black', borderRadius: '30px', width: "100%", display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} sx={{ height: { xs: "350px", md: "400px", lg: "400px" } }} >
@@ -293,7 +308,7 @@ const AudioCard = () => {
         <Box style={{
           color: 'black', backgroundColor: 'none', display: 'flex', justifyContent: 'space-between', width: '100%', height: "100%", alignItems: 'center'
         }}>
-          <canvas style={{ color: 'white', width: "100%", height: "100%" }} id="oscilloscope"></canvas>
+          <canvas style={{ color: 'white', width: "100%", height: "100%" }} id={canvasId}></canvas>
         </Box>
       </CardContent>
     </Card>
@@ -309,7 +324,11 @@ const AudioCard = () => {
 export default class VoiceBlock extends Block {
 
   render() {
-    return <PostInFeed url={this.model.data["audio"]} renderErrorState={this.renderErrorState} />;
+    return  (
+    <AudioCtx>
+      <PostInFeed url={this.model.data["audio"]} renderErrorState={this.renderErrorState} />
+    </AudioCtx>
+    )
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
