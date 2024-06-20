@@ -11,25 +11,27 @@ import { SelfImprovement } from '@mui/icons-material';
 
 // Block model .data
 interface ImagePuzzleData {
-  imageData: string;  // Base64 image data serialized to Block.model
-  puzzleSize: number;  // Puzzle size, in tiles
-  imagePos: Coordinate2D;  // Image position, in pixels (origin at center)
-  zoomLevel: number;  // The raw zoom level from 1.0 to maxZoomLevel
+  imageData: string;  // Base64 image data serialized to Block.model.
+  puzzleSize: number;  // Puzzle size, in tiles.
+  imagePos: Coordinate2D;  // Image position, in pixels (origin at center.)
+  zoomLevel: number;  // The raw zoom level from 1.0 to maxZoomLevel.
 }
 
 // Tile for the game board
 interface ImagePuzzleTileProps {
-  puzzleSize: number;  // Puzzle size, in tiles
-  tileId: number;  // Unique ID that corresponds to the "correct" position in the puzzle
-  pos: number;  // The current position on the grid
-  image: HTMLImageElement | undefined;  // Curently-loaded image
-  boardDims: Coordinate2D;  // Size of the puzzle grid, in pixels
+  puzzleSize: number;  // Puzzle size, in tiles.
+  tileId: number;  // Unique ID that corresponds to the "correct" position in the puzzle.
+  pos: number;  // The current position on the grid.
+  image: HTMLImageElement | undefined;  // Curently-loaded image.
+  boardDims: Coordinate2D;  // Size of the puzzle grid, in pixels.
   onTileClicked: (tileId: number) => void;
-  imagePos: Coordinate2D;  // Image position, in pixels (origin at center)
-  zoomLevel: number;  // The raw zoom level from 1.0 to maxZoomLevel
+  imagePos: Coordinate2D;  // Image position, in pixels (origin at center).
+  zoomLevel: number;  // The raw zoom level from 1.0 to maxZoomLevel.
+  puzzleSolved: boolean;
 }
 function ImagePuzzleTile(props: ImagePuzzleTileProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [scale, setScale] = useState<number>(100);
   
   // Render image.
   useEffect(() => {
@@ -70,12 +72,39 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
     context.drawImage(props.image, sx, sy, sw, sh, dx, dy, dw, dh);
   }, [props.image]);
 
+  // Trigger win animation.
+  useEffect(() => {
+    if (!props.puzzleSolved) return;
+    console.log('Playing anim');
+    const initDelayCoeff = 100;
+    const scaleSize = 75;
+    const delay = 350;
+    const diagonal = getDiagonal();
+
+    const initDelay = 300 + initDelayCoeff * diagonal;
+    setTimeout(() => {
+      setScale(scaleSize);
+      console.log(1);
+      setTimeout(() => {
+        setScale(100);
+        console.log(2);
+      }, delay);
+    }, initDelay);
+  }, [props.puzzleSolved]);
+
+  // Returns which "diagonal" the tile sits on for win animation.
+  function getDiagonal(): number {
+    const row = Math.floor(props.pos / props.puzzleSize);
+    const col = props.pos % props.puzzleSize;
+    return row + col;
+  }
+
   return (
     <div
       className='flex-0 overflow-hidden aspect-square absolute transition-transform duration-300'
       style={{
         flexBasis: `calc(100%/${props.puzzleSize})`,
-        transform: `translate(calc(100% * ${props.pos % props.puzzleSize}), calc(100% * ${Math.floor(props.pos / props.puzzleSize)})`
+        transform: `translate(calc(100% * ${props.pos % props.puzzleSize}), calc(100% * ${Math.floor(props.pos / props.puzzleSize)})) scale(${scale}%)`
       }}
       onClick={() => props.onTileClicked(props.tileId)}
     >
@@ -97,6 +126,7 @@ interface ImagePuzzleBoardProps {
   tiles: Tile[];  // A list of all tiles and their corresponding positions.
   imagePos: Coordinate2D;  // The image position, in pixels (origin at center.)
   zoomLevel: number; // The raw zoom level, from 1.0 to maxZoomLevel.
+  puzzleSolved: boolean;  // Whether or not the puzzle is solved.
 }
 function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
   const selfRef = useRef<HTMLDivElement | null>(null);
@@ -118,6 +148,7 @@ function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
               boardDims={getBoardDims()} 
               onTileClicked={(tileId: number) => props.onTileClicked(tileId)}
               imagePos={props.imagePos} zoomLevel={props.zoomLevel}
+              puzzleSolved={props.puzzleSolved}
             />
           )
         }
@@ -334,7 +365,7 @@ interface ImagePuzzleProps {
 function ImagePuzzle(props: ImagePuzzleProps) {
   const [tiles, setTiles] = useState<Array<Tile>>([])
   const [image, setImage] = useState<HTMLImageElement | undefined>(undefined);
-  const selfRef = useRef<HTMLDivElement>(null);
+  const [solved, setSolved] = useState<boolean>(false);
 
   const puzzleSize = props.data.puzzleSize;
   const imageData = props.data.imageData;
@@ -390,7 +421,7 @@ function ImagePuzzle(props: ImagePuzzleProps) {
     if (!tileNeighbors(tiles, posTile, posEmpty)) {
       return tiles;
     } else {
-      return tiles.map(tile => tile.pos === posTile ? { tileId: tile.tileId, pos: posEmpty} : tile);
+      return tiles.map(tile => tile.pos === posTile ? {tileId: tile.tileId, pos: posEmpty} : tile);
     }
   }
 
@@ -414,12 +445,13 @@ function ImagePuzzle(props: ImagePuzzleProps) {
     const tiles0 = applyMove(tiles, posTile);
 
     if (checkSolved(tiles0)) {
-      // TODO: Animation
       const finalTile: Tile = {tileId: puzzleSize ** 2 - 1, pos: puzzleSize ** 2 - 1};
       const tiles1 = [...tiles0, finalTile];
       setTiles(tiles1);
+      setSolved(true);
       return;
-    } else {
+    }
+    else {
       setTiles(tiles0);
     }
   }
@@ -428,16 +460,18 @@ function ImagePuzzle(props: ImagePuzzleProps) {
     const finalTile: Tile = {tileId: puzzleSize ** 2 - 1, pos: puzzleSize ** 2 -1};
     const tiles0 = [...getInitPositions(), finalTile];
     setTiles(tiles0);
+    setSolved(true);
   }
 
   function onRestartClicked() {
     const tiles0 = getRandomMove(getInitPositions(), 500);
     setTiles(tiles0);
+    setSolved(false);
   }
 
   return (
     <div className='flex w-full flex-col gap-4 justify-between'>
-      <ImagePuzzleBoard puzzleSize={puzzleSize} imagePos={imagePos}
+      <ImagePuzzleBoard puzzleSize={puzzleSize} imagePos={imagePos} puzzleSolved={solved}
         image={image} tiles={tiles} onTileClicked={(tileId) => onTileClicked(tileId)} zoomLevel={zoomLevel} />
       <div className='flex flex-row justify-around text-md p-4 gap-8'>
         <button className='flex-1 py-2 drop-shadow-md border border-solid rounded-md border-[#aaaaaa]' onClick={onSolveClicked}>Solve</button>
@@ -472,7 +506,6 @@ function ImagePuzzleEdit(props: ImagePuzzleEditProps) {
         props.setData({ imageData, puzzleSize, imagePos, zoomLevel });
         props.done();
       } else {
-        // TODO: Prompt for image
         console.log('No image selected');
       }
     }
@@ -512,7 +545,7 @@ function ImagePuzzleEdit(props: ImagePuzzleEditProps) {
           onPinchZoom={onPinchZoom} maxZoomLevel={maxZoomLevel} />
         <ImagePuzzleSizeSelector onSizeChanged={ (value: number) => setPuzzleSize(value) } puzzleSize={puzzleSize} />
       </div>
-      <div className='absolute right-4 bottom-4 left-4'>
+      <div className='absolute right-4 left-4 transition-all' style={{bottom: image ? '1rem' : '-16rem'}}>
         <SeamSaveButton onClick={() => onSave()} />
       </div>
     </>
