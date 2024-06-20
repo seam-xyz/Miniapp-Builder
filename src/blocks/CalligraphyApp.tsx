@@ -534,7 +534,7 @@ const CalligraphyBackgroundSelector = (props: CalligraphyBackgroundSelectorProps
     <div className='flex flex-1 flex-row gap-3 justify-start overflow-x-auto border-2 p-2 rounded-md bg-[#fbfbfb] overflow-x-auto'>
       {Object.entries(backgroundOptions).map(( [background,imgPath] )=>
           <img 
-          className={`border-[#d903ff] aspect-square object-cover rounded-lg ${props.currentBackground === background ? "border-2" : "border-0"} `}
+          className={`outline outline-offset-0 outline-[#d903ff] aspect-square object-cover rounded-lg ${props.currentBackground === background ? "outline-2" : "outline-0"} `}
           // style={{width: `${((parseInt(props.width)/3)-20).toString()}px`}}
           src={imgPath}
           key={background}
@@ -567,7 +567,7 @@ const CalligraphyBrushSelector = (props: CalligraphyBrushSelectorProps) => {
           <img 
           key={brush}
           src={imgPath}
-          className={`border-[#d903ff] object-cover rounded-lg h-full ${props.currentBrush === brush ? "border-2" : "border-0"} `}
+          className={`outline outline-[#d903ff] outline-offset-0 object-cover rounded-lg h-full ${props.currentBrush === brush ? "outline-2" : "outline-0"} `}
           onClick={() => props.setCurrentBrush(brush)}
           alt={`Brush selector: ${brush}`}
           />
