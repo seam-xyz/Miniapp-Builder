@@ -551,7 +551,7 @@ const CalligraphyBackgroundSelector = (props: CalligraphyBackgroundSelectorProps
     <div className='flex flex-1 flex-row gap-3 justify-start overflow-x-auto border-2 p-2 rounded-md bg-[#fbfbfb] overflow-x-auto'>
       {Object.entries(backgroundOptions).map(( [background,imgPath] )=>
           <img 
-          className={`outline outline-offset-0 outline-[#d903ff] object-contain rounded-lg ${props.currentBackground === background ? "outline-2" : "outline-0"} `}
+          className={`outline outline-offset-0 outline-[#d903ff] h-full object-contain rounded-lg ${props.currentBackground === background ? "outline-2" : "outline-0"} `}
           // style={{width: `${((parseInt(props.width)/3)-20).toString()}px`}}
           src={imgPath}
           key={background}
