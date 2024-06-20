@@ -311,7 +311,7 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
             </div>
 
             {/* Current audio time */}
-            <div style={{color: 'white', padding: "18px"}}>{minutes.toString().padStart(1, "0")}:{seconds.toString().padStart(2, "0")}</div>
+            <div style={{color: '#cecece', padding: "18px"}}>{minutes.toString().padStart(1, "0")}:{seconds.toString().padStart(2, "0")}</div>
 
             {/* Canvas */}
             <div style={{ color: 'white', height: "100%", width: "100%" }}>
@@ -319,7 +319,7 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
             </div>
            
            {/* Full audio duration  */}
-            <div style={{color: "white", padding: "18px"}}>{duration.min.toString().padStart(1, "0")}:{duration.sec.toString().padStart(2, "0")}</div>
+            <div style={{color: "#cecece", padding: "18px"}}>{duration.min.toString().padStart(1, "0")}:{duration.sec.toString().padStart(2, "0")}</div>
           
           </div>
         </div>
