@@ -210,8 +210,8 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
       if (prevTouchPos[0] && prevTouchPos[1]) {
         const dTouchPos = [touchPos[0] - prevTouchPos[0], touchPos[1] - prevTouchPos[1]];
         const imagePos0 = [
-          Math.max(-(image.width - canvas.width) / 2, Math.min((image.width - canvas.width) / 2, props.imagePos[0] + dTouchPos[0] * dragCoeff)),
-          Math.max(-(image.height - canvas.height) / 2, Math.min((image.height - canvas.height) / 2, props.imagePos[1] + dTouchPos[1] * dragCoeff))
+          Math.max(-(image.width - canvas.width / props.zoomLevel) / 2, Math.min((image.width - canvas.width / props.zoomLevel) / 2, props.imagePos[0] + dTouchPos[0] * dragCoeff)),
+          Math.max(-(image.height - canvas.height / props.zoomLevel) / 2, Math.min((image.height - canvas.height / props.zoomLevel) / 2, props.imagePos[1] + dTouchPos[1] * dragCoeff))
         ];
         console.log(imagePos0);
         props.setimagePos(imagePos0);
@@ -273,10 +273,10 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
 }
 
 // Public view for the block
-interface ImagePuzzlePublicProps {
+interface ImagePuzzleProps {
   data: ImagePuzzleData;
 }
-function ImagePuzzlePublic(props: ImagePuzzlePublicProps) {
+function ImagePuzzle(props: ImagePuzzleProps) {
   const [tiles, setTiles] = useState<Array<Tile>>([])
   const [image, setImage] = useState<HTMLImageElement | undefined>(undefined);
   const selfRef = useRef<HTMLDivElement>(null);
@@ -417,7 +417,7 @@ export default class ImageBlock extends Block {
   render() {
     const data = this.model.data as any;
     return (
-      <ImagePuzzlePublic data={data} />
+      <ImagePuzzle data={data} />
     );
   }
 
