@@ -67,10 +67,10 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       currentStrokeTotalLength : 0
     }
     const brush1 = {
-      brushSize : 15,
+      brushSize : 10,
       f : true,
       spring : 0.4,
-      friction : 0.45,
+      friction : 0.4,
       v : 0.5,
       vScale: 1,
       r : 0,
@@ -168,8 +168,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
           brush1.vy *= brush1.friction;
           
           brush1.v += s.sqrt( brush1.vx*brush1.vx + brush1.vy*brush1.vy ) - brush1.v;
-          brush1.v *= 0.55;
-          
+          brush1.v *= .8
           brush1.oldR = brush1.r;
           brush1.r = brush1.brushSize - brush1.v * brush1.vScale;
           var num = s.random(0.1,1)
@@ -489,7 +488,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   }, []);
   // useEffect(() => {bufferInstance === null || bufferInstance.clear()},[props.canvasClearSwitch]) //clears the buffer when the switch is hit
   return (
-    <><div className="flex justify-center"ref={canvasDivRef}></div>
+    <><div className="flex justify-center touch-none"ref={canvasDivRef}></div>
     </>
   )
 }
@@ -552,7 +551,7 @@ const CalligraphyBackgroundSelector = (props: CalligraphyBackgroundSelectorProps
     <div className='flex flex-1 flex-row gap-3 justify-start overflow-x-auto border-2 p-2 rounded-md bg-[#fbfbfb] overflow-x-auto'>
       {Object.entries(backgroundOptions).map(( [background,imgPath] )=>
           <img 
-          className={`outline outline-offset-0 outline-[#d903ff] aspect-square object-cover rounded-lg ${props.currentBackground === background ? "outline-2" : "outline-0"} `}
+          className={`outline outline-offset-0 outline-[#d903ff] rounded-lg ${props.currentBackground === background ? "outline-2" : "outline-0"} `}
           // style={{width: `${((parseInt(props.width)/3)-20).toString()}px`}}
           src={imgPath}
           key={background}
