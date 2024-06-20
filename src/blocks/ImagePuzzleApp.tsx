@@ -282,7 +282,7 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
     const zoom = normalizeZoomLevel(props.zoomLevel, [props.image.width, props.image.height], [canvas.width, canvas.height]);
 
     const dragCoeff = -1 / zoom;
-    const pinchCoeff = .05;
+    const pinchCoeff = .005;
     
     if (e.touches.length === 1) {
       const touchPos = [e.touches[0].screenX, e.touches[0].screenY]
@@ -295,6 +295,7 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
       setPrevTouchPos([touchPos[0], touchPos[1]]);
     }
     else if (e.touches.length === 2) {
+      e.preventDefault();
       const touchDistance = Math.hypot(e.touches[1].screenX - e.touches[0].screenX, e.touches[1].screenY - e.touches[0].screenY);
       if (prevTouchDistance) {
         const dTouchDistance = touchDistance - prevTouchDistance;
