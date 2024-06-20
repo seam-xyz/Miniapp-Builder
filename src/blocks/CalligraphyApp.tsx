@@ -489,7 +489,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   }, []);
   // useEffect(() => {bufferInstance === null || bufferInstance.clear()},[props.canvasClearSwitch]) //clears the buffer when the switch is hit
   return (
-    <><div className="flex justify-center"ref={canvasDivRef}></div>
+    <><div className="flex justify-center touch-none"ref={canvasDivRef}></div>
     </>
   )
 }
