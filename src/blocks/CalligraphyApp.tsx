@@ -70,7 +70,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       brushSize : 10,
       f : true,
       spring : 0.4,
-      friction : 0.45,
+      friction : 0.4,
       v : 0.5,
       vScale: 1,
       r : 0,
