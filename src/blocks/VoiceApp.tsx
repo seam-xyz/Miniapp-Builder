@@ -9,6 +9,7 @@ import MicIcon from '@mui/icons-material/Mic';
 import Fab from '@mui/material/Fab';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import { StopCircleRounded } from '@mui/icons-material';
+import { nn } from 'date-fns/locale';
 
 
 /*
@@ -183,8 +184,9 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayb
 
   // Initial call to draw function
   draw();
-  
+
 }
+
 
 /*
 
@@ -192,22 +194,24 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayb
 
 */
 
-// when user clicks play on the audio, it sets recording the true and the visual starts.
 
+// Componet that is rendered in the preview screen and in users feeds
+// We pass in the url of the saved audio data
 const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
+  // Define state for if the audio is being played back
   const [playing, setPlaying] = useState<boolean>(false)
-  const [duration, setDuration] = useState<number>(0)
-  const [currentTime, setCurrentTime] = useState<number>(0)
 
-
+  // Variables for each breakpoint
   const normalMediaMatch: MediaQueryList = window.matchMedia("(max-width: 599px )")
   const smallMediaMatch: MediaQueryList = window.matchMedia("(max-width: 499px )")
   const xsMediaMatch: MediaQueryList = window.matchMedia("(max-width: 399px )")
 
+  // Stateful booleans for breakpoints
   const [normalMatch, setNormalMatch] = useState<boolean>(normalMediaMatch.matches)
   const [smallMatch, setSmallMatch] = useState<boolean>(smallMediaMatch.matches)
   const [xsMatch, setXSMatch] = useState<boolean>(xsMediaMatch.matches)
 
+  // These useEffects listen to the media width and set booleans accordingly
   useEffect(() => {
     const handler = (e: any) => setNormalMatch(e.matches)
     normalMediaMatch.addEventListener("change", handler)
@@ -224,28 +228,28 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
     return () => normalMediaMatch.removeEventListener("change", handler)
   })
 
-  console.log("normal", normalMatch)
-  console.log("small", smallMatch)
-  console.log("xs", xsMatch)
 
-
+  // Here we grab the canvas id from the context
   const { canvasId } = useContext(audioContext)
-  console.log("canvas id set in post in feed:", canvasId);
-
   
-  
+  // Each audio player needs it's own id as well
   const audioPlayerId = useId()
   
-  const context = new AudioContext()
-  const audio = new Audio();
-  audio.src = url;
-
   const playback = () => {
+    const context = new AudioContext()
+    const audio = new Audio();
+    // Set the new audio to the recorded audio url
+    audio.src = url;
     
+    // define the audio node using the new context and audio
     const node = context.createMediaElementSource(audio)
 
     audio.play();
+
+    // Set a variable for oscilliscope responsiveness between recording screen and preview screen
     const isPlayback = true 
+
+    // Start drawing the oscilliscopes on the canvas
     start({ node, context, getPlayable: (node) => !(node as MediaElementAudioSourceNode).mediaElement.ended, renderErrorState, canvasId, isPlayback, normalMatch, smallMatch, xsMatch })
   }
 
@@ -258,19 +262,29 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
           color: 'black', backgroundColor: 'none', display: 'flex', flexDirection: "row", width: '100%'
         }}>
           <div style={{ padding: "8px 12px", display: 'flex', flexDirection: 'row', justifyContent: 'start', alignItems: 'center', width: "100%", height: "100%" }} >
+           
+            {/* Invisible audio tag */}
             <audio id={audioPlayerId} src={url} onPlay={() => { setTimeout(playback, 100) }} onPlaying={() => setPlaying(true)} onEnded={() => setPlaying(false)} />
-              <div onClick={() => {
-                  const audio = document.getElementById(audioPlayerId) as HTMLMediaElement
-                  audio.play();
-              }} style={{cursor: "pointer"}}>
-                {playing ? <StopCircleRounded style={{ color: 'white'}} sx={{fontSize: {xs: "50px", sm: "80px"}}} /> : <PlayCircleIcon style={{ color: 'white'}} sx={{fontSize: {xs: "50px", sm: "80px"}}} />}
-              </div>
-              <div style={{color: 'white', padding: "18px"}}>0:00</div>
+            
+            {/* Div (button) for playing audio */}
+            <div onClick={() => {
+                const audio = document.getElementById(audioPlayerId) as HTMLMediaElement
+                audio.play();
+            }} style={{cursor: "pointer"}}>
+              {playing ? <StopCircleRounded style={{ color: 'white'}} sx={{fontSize: {xs: "50px", sm: "80px"}}} /> : <PlayCircleIcon style={{ color: 'white'}} sx={{fontSize: {xs: "50px", sm: "80px"}}} />}
+            </div>
 
+            {/* Current audio time */}
+            <div style={{color: 'white', padding: "18px"}}>0:00</div>
+
+            {/* Canvas */}
             <div style={{ color: 'white', height: "100%", width: "100%" }}>
               <canvas style={{ color: 'white', width: "100%", height: "100%", display: `${playing ? "" : "none"}` }} id={canvasId}></canvas>
             </div>
+           
+           {/* Full audio duration  */}
             <div style={{color: "white", padding: "18px"}}>0:00</div>
+          
           </div>
         </div>
       </div> 
@@ -380,11 +394,13 @@ const AudioCard = () => {
   )
 }
 
+
 /* 
 
   ----------  SEAM CLASS  ----------
 
 */
+
 
 export default class VoiceBlock extends Block {
 
