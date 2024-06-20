@@ -2,7 +2,7 @@
 import React from 'react';
 import { Editor, EditorState, RichUtils, convertFromRaw, convertToRaw, DraftHandleValue, Modifier } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import { Button } from '@mui/material';
+import { Button, Box } from '@mui/material';
 import '../BlockStyles.css'
 import { List, AlignLeft, AlignCenter, AlignRight, Code, Link } from 'react-feather'
 import { ReactComponent as NumberedList } from "./images/NumberedList.svg"
@@ -172,8 +172,8 @@ const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
           autoCapitalize="sentences"
         />
       </div>
-      <div className="sticky bottom-0">
-        <div className="flex flex-row overflow-x-scroll hide-scrollbar space-x-2 mt-2">
+      <Box className="bg-seam-white" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 24px) + 24px)', paddingTop: 'calc(env(safe-area-inset-bottom, 24px) + 24px)' }} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 1301 }}>
+        <div className="flex flex-row overflow-x-scroll hide-scrollbar space-x-2 my-2 pr-4 ml-4">
           <ButtonContainer>
             <EditorButton onMouseDown={toggleBlockType('unstyled')} active={getBlockType() === 'unstyled'} label="P" styleType="header" />
             <EditorButton onMouseDown={toggleBlockType('header-one')} active={getBlockType() === 'header-one'} label="H1" styleType="header" />
@@ -207,8 +207,10 @@ const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
             <EditorButton onMouseDown={(e) => applyAlignment('right')} active={activeAlignment === 'right'} label={<AlignRight size={24} color="black" />} styleType="alignment" />
           </ButtonContainer>
         </div>
-        <SeamSaveButton onClick={saveContent} />
-      </div>
+        <div className="px-4">
+          <SeamSaveButton onClick={saveContent} />
+        </div>
+      </Box>
     </div>
   );
 };
