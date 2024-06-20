@@ -17,6 +17,7 @@ import sprayBrush from "./assets/Calligraphy/brushes/spray.png";
 import linesBrush from "./assets/Calligraphy/brushes/lines.png";
 import streakBrush from "./assets/Calligraphy/brushes/streak.png";
 import inkBrush from "./assets/Calligraphy/brushes/ink.png";
+import BlockFactory from './BlockFactory';
 
 const COLORS_DEFAULT = [
   '#cdb4db', '#ffc8ddff', '#ffafccff', '#bde0feff', '#a2d2ffff', '#264653',
@@ -31,7 +32,7 @@ interface CalligraphyCanvasProps {
   canvasClearSwitch: boolean
   canvasUndoSwitch: boolean
   currentBrush: string
-  
+  setImageDataURL: (imgDataURL: string) => void
 }
 const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   const [p5Instance, setP5Instance] = useState<p5 | null>(null)
@@ -191,6 +192,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
         }
         break;
         case "ink":
+          buffer.noStroke()
           const maxBRUSH_SIZE = Math.min(
             (ink.BRUSH_SIZE / 2) * (1 + ink.currentStrokeTotalLength / 1000),
             ink.BRUSH_SIZE
@@ -334,7 +336,9 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       if (state.current.canvasClearSwitch != localBufferClearSwitch) {
         saveUndoFrame();
         buffer.clear();
-
+        s.clear();
+        s.image(buffer,0,0)
+        saveDataToSeamModel();
         localBufferClearSwitch = state.current.canvasClearSwitch
       }
       //If the undo switch is tripped, clear the buffer, image the undo buffer (should be one stroke behind) and remove that undo frame from the stack
@@ -355,9 +359,11 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
     }
     s.touchEnded = () => {
       inStroke = false;
+      saveDataToSeamModel();
     }
     s.mouseReleased = () => {
       inStroke = false;
+      saveDataToSeamModel();
     }
     const onStrokeStart = () => {
       /**Set the stroking status to true (so draw() knows to draw; this decouples drawing state from All mouseIsPressed() situations) */
@@ -375,10 +381,13 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       lines.lineSpacingOffsets = Array.from({length: lines.LINES}, ()=>s.random(-lines.lineSpacingVar/2,lines.lineSpacingVar/2))
 
     }
+
     const undo = () => {
       if (undoBufferStack.length === 0) return;
       buffer.clear();
       buffer.image(undoBufferStack.pop()!,0,0)
+      s.image(buffer,0,0)
+      saveDataToSeamModel();
     }
     
     const saveUndoFrame = () => {
@@ -386,6 +395,11 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       const newUndoBufferFrame = buffer.get() //get it as a p5.Image object
       undoBufferStack.push(newUndoBufferFrame) //push it onto the undo state stack
       if (undoBufferStack.length > 150) undoBufferStack.splice(0,undoBufferStack.length - 150)
+    }
+    const saveDataToSeamModel = () => {
+      const canvas:HTMLCanvasElement = s.drawingContext.canvas
+      const imageData = canvas.toDataURL();
+        state.current.setImageDataURL(imageData);
     }
     const mouseOffCanvas = () => (s.mouseX > s.width || s.mouseX < 0 || s.mouseY > s.height || s.mouseY < 0)
     //Function to draw a tapered line (trapezoid) for smoothness
@@ -658,6 +672,7 @@ const CalligraphyToolbarTab = (props: CalligraphyToolbarTabProps) => {
 // The edit view for the Calligraphy block
 interface CalligraphyEditProps {
   onSave: () => void;
+  setImageDataURL: (imgDataURL: string) => void
   width: string;
 }
 const CalligraphyEdit = (props: CalligraphyEditProps) => {
@@ -676,6 +691,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
         activeColor={activeColor} 
         backgroundStyle={currentBackground}
         currentBrush={currentBrush}
+        setImageDataURL={props.setImageDataURL}
       />
       <div className='flex flex-0 flex-col'>
         <div className='flex flex-col gap-4'>
@@ -704,17 +720,25 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
 // Top level component; wrapper for functional React components
 export default class CalligraphyBlock extends Block {
 
-  render () {
+  render(width?: string, height?: string) {
+    if (Object.keys(this.model.data).length === 0) {
+      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
+    }
+
+    const { imageData } = this.model.data;
+
     return (
-      <h1>Calligraphy Block!</h1>
+      <img src={imageData} alt='a drawing' className='w-full object-contain'></img>
     );
   }
 
 
   renderEditModal(done: (data: BlockModel) => void, width:string="450") {
     const onSave = () => done(this.model)
+    //function to be called inside p5 sketch to save current canvas contents using HTMLCanvas.toDataURL()
+    const setImageDataURL = (imageDataURL:string) => this.model.data["imageData"] = imageDataURL
     return (
-      <CalligraphyEdit onSave={onSave} width={width}/>
+      <CalligraphyEdit onSave={onSave} setImageDataURL={setImageDataURL} width={width}/>
     )
   }
 
