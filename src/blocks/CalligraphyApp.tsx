@@ -20,9 +20,9 @@ import inkBrush from "./assets/Calligraphy/brushes/ink.png";
 import BlockFactory from './BlockFactory';
 
 const COLORS_DEFAULT = [
-  '#cdb4db', '#ffc8ddff', '#ffafccff', '#bde0feff', '#a2d2ffff', '#264653',
-  '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51', '#000000', '#333333',
-  '#666666', '#999999', '#cccccc', '#ffffff' ]
+  '#000000', '#333333',
+  '#666666', '#999999', '#cccccc', '#ffffff','#cdb4db', '#ffc8ddff', '#ffafccff', '#bde0feff', '#a2d2ffff', '#264653',
+  '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51' ]
 
 // Component using a p5-wrapped canvas to draw
 interface CalligraphyCanvasProps {
