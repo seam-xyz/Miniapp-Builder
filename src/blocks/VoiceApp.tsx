@@ -61,14 +61,20 @@ type StartProps = {
 // Default values for audio context
 const defaultAudioContext: AudioContextProps = { isRecording: false, setIsRecording: () => { }, mediaRecorder: { current: null }, canvasId: ""}
 
-// 
+// Instantiate react context
 const audioContext = createContext<AudioContextProps>(defaultAudioContext);
 
 const { Provider: AudioProvider } = audioContext;
 
+// Audio Context Component- not stored in VoiceApp COMPONENTS because it is just a context wrapper
 const AudioCtx = ({ children }: AudioProviderProps) => {
+  // Great place to define state and refs that are needed throughout the app
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorder = useRef<MediaRecorder | null>(null)
+
+  // Need a way to connect a specific canvas to specific play button
+  // By defining a canvas id in the wrapper, 
+  // the canvas can only be accessed by the play button using the corresponding id
   const canvasId = useId()
 
   return (
@@ -79,8 +85,9 @@ const AudioCtx = ({ children }: AudioProviderProps) => {
 
 }
 
-let coolCanvas: any;
-
+// This function is called twice before the user posts, 
+// once when a user clicks record and audio stream is started, 
+// and again when the audio is played back in the preview 
 const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayback, normalMatch, xsMatch, smallMatch }: StartProps) => {
 
   // Hi, I'm doing the drawing
@@ -97,18 +104,19 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayb
   analyser.getByteTimeDomainData(timeDomainData);
   analyser.getByteFrequencyData(frequencyData);
 
-  // Get a canvas defined with ID "oscilloscope"
+  // Get a canvas defined with the corresponding canvas ID 
   let canvas = document.getElementById(canvasId) as HTMLCanvasElement;
   if (!canvas) {
     console.error("The audio visualizer (canvas) is missing");
     return renderErrorState();
   }
+
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
   let canvasCtx = canvas.getContext("2d");
 
 
-  // draw an oscilloscope of the current audio source
+  // This function draws an oscilloscope of the current audio source
   const draw = () => {
     if (!canvasCtx) {
       console.error("The audio visualizer (canvas) is missing");
@@ -139,15 +147,19 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayb
       x += sliceWidth;
     }
 
-    // bars
+    // Oscilliscope bars
+
     // Affects the number of bars and their width
+    // In order for the oscilliscope to be responsive, xs, small, and normal breakpoints were defined
     let barWidth = xsMatch ? (canvas.width / bufferLength) * 25 : smallMatch ? (canvas.width / bufferLength) * 15 : normalMatch ? (canvas.width / bufferLength) * 10 : (canvas.width / bufferLength) * 10
+    
     let barHeight;
     x = 0;
     analyser.getByteFrequencyData(frequencyData);
 
     for (let i = 0; i < bufferLength; i++) {
       // Affects the amplitude of the displayed bars (height)
+      // Again in order for the oscilliscope to be responsive, xs, small, and normal breakpoints were defined
       barHeight = !isPlayback ? frequencyData[i] * 1 : xsMatch ? frequencyData[i] * 0.2 : smallMatch ? frequencyData[i] * 0.25 : normalMatch ? frequencyData[i] * 0.30 : frequencyData[i] * 0.35;
 
       canvasCtx.fillStyle = "rgb(255, 255, 255)";
@@ -158,19 +170,22 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayb
 
     
 
+    // Check if the audio is still playing/playable
     if (getPlayable(node, context)) {
+      // If so, we need to call the draw function to redraw the new oscilliscope
       requestAnimationFrame(draw);
     } else {
-      coolCanvas = canvasCtx.canvas.toDataURL()
-      console.log(coolCanvas);
-      
+      // Else, we need to clear/reset the canvas
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
   }
 
+  // Initial call to draw function
   draw();
+
 }
+
 
 /*
 
@@ -178,22 +193,24 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayb
 
 */
 
-// when user clicks play on the audio, it sets recording the true and the visual starts.
 
+// Componet that is rendered in the preview screen and in users feeds
+// We pass in the url of the saved audio data
 const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
+  // Define state for if the audio is being played back
   const [playing, setPlaying] = useState<boolean>(false)
-  const [duration, setDuration] = useState<number>(0)
-  const [currentTime, setCurrentTime] = useState<number>(0)
 
-
+  // Variables for each breakpoint
   const normalMediaMatch: MediaQueryList = window.matchMedia("(max-width: 599px )")
   const smallMediaMatch: MediaQueryList = window.matchMedia("(max-width: 499px )")
   const xsMediaMatch: MediaQueryList = window.matchMedia("(max-width: 399px )")
 
+  // Stateful booleans for breakpoints
   const [normalMatch, setNormalMatch] = useState<boolean>(normalMediaMatch.matches)
   const [smallMatch, setSmallMatch] = useState<boolean>(smallMediaMatch.matches)
   const [xsMatch, setXSMatch] = useState<boolean>(xsMediaMatch.matches)
 
+  // These useEffects listen to the media width and set booleans accordingly
   useEffect(() => {
     const handler = (e: any) => setNormalMatch(e.matches)
     normalMediaMatch.addEventListener("change", handler)
@@ -210,28 +227,28 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
     return () => normalMediaMatch.removeEventListener("change", handler)
   })
 
-  console.log("normal", normalMatch)
-  console.log("small", smallMatch)
-  console.log("xs", xsMatch)
 
-
+  // Here we grab the canvas id from the context
   const { canvasId } = useContext(audioContext)
-  console.log("canvas id set in post in feed:", canvasId);
-
   
-  
+  // Each audio player needs it's own id as well
   const audioPlayerId = useId()
   
-  const context = new AudioContext()
-  const audio = new Audio();
-  audio.src = url;
-
   const playback = () => {
+    const context = new AudioContext()
+    const audio = new Audio();
+    // Set the new audio to the recorded audio url
+    audio.src = url;
     
+    // define the audio node using the new context and audio
     const node = context.createMediaElementSource(audio)
 
     audio.play();
+
+    // Set a variable for oscilliscope responsiveness between recording screen and preview screen
     const isPlayback = true 
+
+    // Start drawing the oscilliscopes on the canvas
     start({ node, context, getPlayable: (node) => !(node as MediaElementAudioSourceNode).mediaElement.ended, renderErrorState, canvasId, isPlayback, normalMatch, smallMatch, xsMatch })
   }
 
@@ -244,19 +261,29 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
           color: 'black', backgroundColor: 'none', display: 'flex', flexDirection: "row", width: '100%'
         }}>
           <div style={{ padding: "8px 12px", display: 'flex', flexDirection: 'row', justifyContent: 'start', alignItems: 'center', width: "100%", height: "100%" }} >
+           
+            {/* Invisible audio tag */}
             <audio id={audioPlayerId} src={url} onPlay={() => { setTimeout(playback, 100) }} onPlaying={() => setPlaying(true)} onEnded={() => setPlaying(false)} />
-              <div onClick={() => {
-                  const audio = document.getElementById(audioPlayerId) as HTMLMediaElement
-                  audio.play();
-              }} style={{cursor: "pointer"}}>
-                {playing ? <StopCircleRounded style={{ color: 'white'}} sx={{fontSize: {xs: "50px", sm: "80px"}}} /> : <PlayCircleIcon style={{ color: 'white'}} sx={{fontSize: {xs: "50px", sm: "80px"}}} />}
-              </div>
-              <div style={{color: 'white', padding: "18px"}}>0:00</div>
+            
+            {/* Div (button) for playing audio */}
+            <div onClick={() => {
+                const audio = document.getElementById(audioPlayerId) as HTMLMediaElement
+                audio.play();
+            }} style={{cursor: "pointer"}}>
+              {playing ? <StopCircleRounded style={{ color: 'white'}} sx={{fontSize: {xs: "50px", sm: "80px"}}} /> : <PlayCircleIcon style={{ color: 'white'}} sx={{fontSize: {xs: "50px", sm: "80px"}}} />}
+            </div>
 
+            {/* Current audio time */}
+            <div style={{color: 'white', padding: "18px"}}>0:00</div>
+
+            {/* Canvas */}
             <div style={{ color: 'white', height: "100%", width: "100%" }}>
               <canvas style={{ color: 'white', width: "100%", height: "100%", display: `${playing ? "" : "none"}` }} id={canvasId}></canvas>
             </div>
+           
+           {/* Full audio duration  */}
             <div style={{color: "white", padding: "18px"}}>0:00</div>
+          
           </div>
         </div>
       </div> 
@@ -265,11 +292,15 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
 
 }
 
+// Pairs with AudioCard component
 const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
+  // Pull from context
   const { isRecording, setIsRecording, mediaRecorder, canvasId } = useContext(audioContext)
 
+  // This state is for the recorded audio url
   const [audio, setAudio] = useState<string>("")
 
+  // Here the audio stream is initialized and stored in the mediaRecorder ref
   const initializeDevice = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -282,10 +313,14 @@ const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
     }
   };
 
+  // this useEffect runs on mount and calls initializeDevice
   useEffect(() => { initializeDevice() }, [])
 
+  // This function is called from the record button
   const toggleRecord = () => {
+    // If recording, we need to stop the recording
     if (isRecording) {
+      // check for ref
       if (mediaRecorder.current) {
         mediaRecorder.current.stop();
         setIsRecording(false);
@@ -299,6 +334,7 @@ const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
       }
     }
 
+    // Else we need to start the recording
     if (mediaRecorder.current) {
       mediaRecorder.current.start()
       setIsRecording(true);
@@ -315,10 +351,13 @@ const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
       // Create a new node
       let node = context.createMediaStreamSource(stream);
 
+      // Variable for oscilliscope responsiveness
       const isPlayback = false;
+
       start({ node, context, getPlayable: () => currentMediaRecorder.state === "recording", renderErrorState, canvasId, isPlayback })
     }
   }
+
 
   const handleSubmit = () => {
     onSave(audio)
@@ -350,7 +389,9 @@ const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
   )
 }
 
+// Pairs with AudioButtons component
 const AudioCard = () => {
+  // Pull out the canvas id from context
   const { canvasId } = useContext(audioContext)
 
   return (
@@ -366,11 +407,13 @@ const AudioCard = () => {
   )
 }
 
+
 /* 
 
   ----------  SEAM CLASS  ----------
 
 */
+
 
 export default class VoiceBlock extends Block {
 
