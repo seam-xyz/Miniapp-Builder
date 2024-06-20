@@ -293,11 +293,15 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
 
 }
 
+// Pairs with AudioCard component
 const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
+  // Pull from context
   const { isRecording, setIsRecording, mediaRecorder, canvasId } = useContext(audioContext)
 
+  // This state is for the recorded audio url
   const [audio, setAudio] = useState<string>("")
 
+  // Here the audio stream is initialized and stored in the mediaRecorder ref
   const initializeDevice = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -310,10 +314,14 @@ const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
     }
   };
 
+  // this useEffect runs on mount and calls initializeDevice
   useEffect(() => { initializeDevice() }, [])
 
+  // This function is called from the record button
   const toggleRecord = () => {
+    // If recording, we need to stop the recording
     if (isRecording) {
+      // check for ref
       if (mediaRecorder.current) {
         mediaRecorder.current.stop();
         setIsRecording(false);
@@ -327,6 +335,7 @@ const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
       }
     }
 
+    // Else we need to start the recording
     if (mediaRecorder.current) {
       mediaRecorder.current.start()
       setIsRecording(true);
@@ -343,10 +352,13 @@ const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
       // Create a new node
       let node = context.createMediaStreamSource(stream);
 
+      // Variable for oscilliscope responsiveness
       const isPlayback = false;
+
       start({ node, context, getPlayable: () => currentMediaRecorder.state === "recording", renderErrorState, canvasId, isPlayback })
     }
   }
+
 
   const handleSubmit = () => {
     onSave(audio)
@@ -378,7 +390,9 @@ const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
   )
 }
 
+// Pairs with AudioButtons component
 const AudioCard = () => {
+  // Pull out the canvas id from context
   const { canvasId } = useContext(audioContext)
 
   return (
