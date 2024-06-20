@@ -12,7 +12,11 @@ import p5 from 'p5';
 import dots from "./assets/Calligraphy/dotsPreview.png"
 import grid from "./assets/Calligraphy/gridPreview.png"
 import lines from "./assets/Calligraphy/linesPreview.png"
-import brushInk from "./assets/Calligraphy/brushInkPreview.png"
+import brush1Brush from "./assets/Calligraphy/brushes/brush1.png";
+import sprayBrush from "./assets/Calligraphy/brushes/spray.png";
+import linesBrush from "./assets/Calligraphy/brushes/lines.png";
+import streakBrush from "./assets/Calligraphy/brushes/streak.png";
+import inkBrush from "./assets/Calligraphy/brushes/ink.png";
 
 const COLORS_DEFAULT = [
   '#cdb4db', '#ffc8ddff', '#ffafccff', '#bde0feff', '#a2d2ffff', '#264653',
@@ -259,6 +263,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
         case "streak":
           //taken from https://openprocessing.org/sketch/793375?ref=gorillasun.de
           if(s.mouseIsPressed && inStroke) {
+            buffer.noStroke()
             streak.vx = ( s.mouseX - streak.brushX ) * streak.spring;
             streak.vy = ( s.mouseY - streak.brushY ) * streak.spring;
             streak.vx *= streak.friction;
@@ -362,6 +367,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
 
       /** Reset the brush position/velocity and total stroke lenghth */
       ink.currentStrokeTotalLength = 0;
+      ink.previousStrokeWidth = 0;
       [ink.brushX, ink.brushY] = [s.mouseX, s.mouseY];
       [spray.pMouseX, spray.pMouseY] = [s.mouseX, s.mouseY];
       [streak.brushX, streak.brushY] = [s.mouseX, s.mouseY];
@@ -528,7 +534,7 @@ const CalligraphyBackgroundSelector = (props: CalligraphyBackgroundSelectorProps
     <div className='flex flex-1 flex-row gap-3 justify-start overflow-x-auto border-2 p-2 rounded-md bg-[#fbfbfb] overflow-x-auto'>
       {Object.entries(backgroundOptions).map(( [background,imgPath] )=>
           <img 
-          className={`border-[#d903ff] aspect-square object-cover rounded-lg ${props.currentBackground === background ? "border-2" : "border-0"} `}
+          className={`outline outline-offset-0 outline-[#d903ff] aspect-square object-cover rounded-lg ${props.currentBackground === background ? "outline-2" : "outline-0"} `}
           // style={{width: `${((parseInt(props.width)/3)-20).toString()}px`}}
           src={imgPath}
           key={background}
@@ -542,11 +548,11 @@ const CalligraphyBackgroundSelector = (props: CalligraphyBackgroundSelectorProps
 
 // Available options for the brush selector
 const brushOptions: Record<string, string> = {
-  'streak': brushInk,
-  'lines': brushInk,
-  'ink': brushInk,
-  'brush1': brushInk,
-  'spray': brushInk
+  'streak': streakBrush,
+  'lines': linesBrush,
+  'ink': inkBrush,
+  'brush1': brush1Brush,
+  'spray': sprayBrush
 }
 type CalligraphyBrush = keyof typeof brushOptions;
 // Component for selecting the brush
@@ -556,12 +562,12 @@ interface CalligraphyBrushSelectorProps {
 }
 const CalligraphyBrushSelector = (props: CalligraphyBrushSelectorProps) => {
   return (
-    <div className='flex flex-1 flex-row gap-3 justify-start overflow-x-auto border-2 p-2 rounded-md bg-[#fbfbfb] overflow-x-auto'>
+    <div className='flex flex-1 flex-row gap-3 justify-start overflow-x-auto border-2 p-2 rounded-md bg-[#fbfbfb]'>
       {Object.entries(brushOptions).map(( [brush, imgPath] )=>
           <img 
           key={brush}
           src={imgPath}
-          className={`border-[#d903ff] aspect-square object-cover rounded-lg ${props.currentBrush === brush ? "border-2" : "border-0"} `}
+          className={`outline outline-[#d903ff] outline-offset-0 object-cover rounded-lg h-full ${props.currentBrush === brush ? "outline-2" : "outline-0"} `}
           onClick={() => props.setCurrentBrush(brush)}
           alt={`Brush selector: ${brush}`}
           />
