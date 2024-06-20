@@ -2,7 +2,7 @@ import Block from './Block'
 import { BlockModel } from './types'
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import ImageIcon from '@mui/icons-material/Image';
 import SeamSaveButton from '../components/SeamSaveButton';
@@ -12,7 +12,9 @@ import { SelfImprovement } from '@mui/icons-material';
 // Block model .data
 interface ImagePuzzleData {
   imageData: string;
-  puzzleSize: number
+  puzzleSize: number;
+  imageObjPos: number[];
+  zoomLevel: number;
 }
 
 // Tile for the game board
@@ -24,6 +26,8 @@ interface ImagePuzzleTileProps {
   image: HTMLImageElement | undefined;
   boardDimensions: Array<number | undefined>;
   onTileClicked: (tileId: number) => void;
+  imageObjPos: number[];
+  zoomLevel: number;
 }
 function ImagePuzzleTile(props: ImagePuzzleTileProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -46,8 +50,8 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
     const selfGridCoords = [props.tileId % props.puzzleSize, Math.floor(props.tileId / props.puzzleSize)];
     // Top left position of top left "tile" on the source image.
     const imageAnchorCoords = [
-      imageDimensions[0] / 2 - tileDimensions[0] * (props.puzzleSize / 2),
-      imageDimensions[1] / 2 - tileDimensions[1] * (props.puzzleSize / 2)
+      (imageDimensions[0] - props.boardDimensions[0]) * props.imageObjPos[0],
+      (imageDimensions[1] - props.boardDimensions[1]) * props.imageObjPos[1]
     ];
 
     const [sx, sy] = [
@@ -88,7 +92,9 @@ interface ImagePuzzleBoardProps {
   puzzleSize: number;
   onTileClicked: (tileId: number) => void;
   image: HTMLImageElement | undefined;
-  tiles: Tile[]
+  tiles: Tile[];
+  imageObjPos: number[];
+  zoomLevel: number;
 }
 function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
   const selfRef = useRef<HTMLDivElement | null>(null);
@@ -102,7 +108,10 @@ function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
               key={tile.tileId} imageData={props.imageData} puzzleSize={props.puzzleSize}
               tileId={tile.tileId} pos={tile.pos} image={props.image} 
               boardDimensions={[selfRef.current?.clientWidth, selfRef.current?.clientHeight]} 
-              onTileClicked={(tileId: number) => props.onTileClicked(tileId)} />
+              onTileClicked={(tileId: number) => props.onTileClicked(tileId)}
+              imageObjPos={props.imageObjPos}
+              zoomLevel={props.zoomLevel}
+              />
           )
         }
       </div>
@@ -149,17 +158,57 @@ function getBorderStyleGrid(index: number, side: number, borderWidth: string): s
 // Image uploader
 interface ImagePuzzleUploadProps {
   onImageUploaded: (value: File | null) => void;
+  setImageObjPos: (imageObjPos: number[]) => void;
   image: File | null;
+  imageObjPos: number[]
   puzzleSize: number;
+  zoomLevel: number;
+  setZoomLevel: (zoomLevel: number) => void;
 }
 function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
-  const fileInput = useRef<HTMLInputElement>(null);
+  const fileInput = useRef<HTMLInputElement | null>(null);
+  const [prevTouchPos, setPrevTouchPos] = useState<Array<number | null>>([null, null]);
+  const [prevTouchDistance, setPrevTouchDistance] = useState<number | null>(null);
+
+  function onTouchMove(e: React.TouchEvent) {
+    const dragCoeff = -0.002;  // Adjusts the ratio between pixels and object position coords.
+    const pinchCoeff = .05;
+    if (e.touches.length === 1) {
+      const touchPos = [e.touches[0].screenX, e.touches[0].screenY]
+      if (prevTouchPos[0] && prevTouchPos[1]) {
+        const dTouchPos = [touchPos[0] - prevTouchPos[0], touchPos[1] - prevTouchPos[1]];
+        const imageObjPos0 = [
+          Math.max(0, Math.min(1, props.imageObjPos[0] + dTouchPos[0] * dragCoeff)),
+          Math.max(0, Math.min(1, props.imageObjPos[1] + dTouchPos[1] * dragCoeff))
+        ];
+        props.setImageObjPos(imageObjPos0);
+      }
+      setPrevTouchPos([touchPos[0], touchPos[1]]);
+    } else if (e.touches.length === 2) {
+      const touchDistance = Math.hypot(e.touches[1].screenX - e.touches[0].screenX, e.touches[1].screenY - e.touches[0].screenY);
+      if (prevTouchDistance) {
+        const dTouchDistance = touchDistance - prevTouchDistance;
+        props.setZoomLevel(Math.max(0, Math.min(1, props.zoomLevel + dTouchDistance * pinchCoeff)));
+      }
+      setPrevTouchDistance(touchDistance);
+    }
+  }
+
+  function onTouchEnd(e: React.TouchEvent) {
+    if (e.touches.length === 1) {
+      setPrevTouchDistance(null);
+    } else if (e.touches.length === 0) {
+      setPrevTouchPos([null, null]);
+    }
+  }
 
   return (
-    <div className='flex flex-0 mx-10 mt-4 aspect-square'>
+    <div className='flex flex-col flex-0 mx-10 mt-4 aspect-square'>
       <div
         className='flex flex-col flex-1 border-2 border-[#cccccc] rounded-lg drop-shadow-md place-items-center place-content-center overflow:hidden relative'
-        onClick={() => fileInput.current?.click()}
+        onClick={() => props.image || fileInput.current?.click()}
+        onTouchMove={e => onTouchMove(e)}
+        onTouchEnd={e => onTouchEnd(e)}
       >
         {
           props.image
@@ -174,7 +223,9 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
                 )
               }
             </div>
-            <img className='min-w-full min-h-full object-none rounded-lg' src={URL.createObjectURL(props.image)} />
+            <img className='min-w-full min-h-full object-none rounded-md'
+              src={URL.createObjectURL(props.image)}
+              style={{objectPosition: `${props.imageObjPos[0] * 100}% ${props.imageObjPos[1] * 100}%`}} />
           </>
           : <>
             <ImageIcon htmlColor='#aaaaaa' style={{ fontSize: '6rem' }} />
@@ -183,7 +234,9 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
         }
       </div>
       <input ref={fileInput} type='file' name='file' accept='image/*' onChange={e => props.onImageUploaded(e.target.files && e.target.files[0])} hidden />
+      <input type='range' min='1' max='4.0' step='0.25' value={props.zoomLevel} onChange={e => {props.setZoomLevel(Number(e.target.value)); console.log(e.target.value)}} />
     </div>
+    // TODO: Remove slider; it's just to test easily without phone.
   )
 }
 
@@ -198,6 +251,7 @@ function ImagePuzzlePublic(props: ImagePuzzlePublicProps) {
 
   const puzzleSize = props.data.puzzleSize;
   const imageData = props.data.imageData;
+  const imageObjPos = props.data.imageObjPos;
 
   useEffect(() => {
     const image = new Image();
@@ -267,8 +321,8 @@ function ImagePuzzlePublic(props: ImagePuzzlePublicProps) {
 
   return (
     <div className='flex w-full flex-col gap-4 justify-between'>
-      <ImagePuzzleBoard imageData={imageData} puzzleSize={puzzleSize}
-        image={image} tiles={tiles} onTileClicked={(tileId) => onTileClicked(tileId)} />
+      <ImagePuzzleBoard imageData={imageData} puzzleSize={puzzleSize} imageObjPos={imageObjPos}
+        image={image} tiles={tiles} onTileClicked={(tileId) => onTileClicked(tileId)} zoomLevel={props.data.zoomLevel} />
       <div className='flex flex-row justify-around text-md p-4 gap-8'>
         <button className='flex-1 py-2 drop-shadow-md border border-solid rounded-md border-[#aaaaaa]' onClick={() => setTiles(getInitPositions())}>Solve</button>
         <button className='flex-1 py-2 drop-shadow-md border border-solid rounded-md border-[#aaaaaa]' onClick={() => setTiles(getRandomMove(tiles, 500))}>Shuffle</button>
@@ -286,6 +340,8 @@ interface ImagePuzzleProps {
 function ImagePuzzleEdit(props: ImagePuzzleProps) {
   const [image, setImage] = useState<File | null>(null);
   const [puzzleSize, setPuzzleSize] = useState<number>(3);
+  const [imageObjPos, setImageObjPos] = useState<number[]>([0.5, 0.5]);
+  const [zoomLevel, setZoomLevel] = useState<number>(1);
 
   function onSave() {
     if (!image) return;
@@ -294,7 +350,7 @@ function ImagePuzzleEdit(props: ImagePuzzleProps) {
     reader.onloadend = () => {
       if (reader.result) {
         const imageData = reader.result.toString();
-        props.setData({ imageData, puzzleSize });
+        props.setData({ imageData, puzzleSize, imageObjPos, zoomLevel });
         props.done();
       } else {
         // TODO: Prompt for image
@@ -309,7 +365,8 @@ function ImagePuzzleEdit(props: ImagePuzzleProps) {
         className='flex flex-col gap-4'
         style={{ width: props.width || '100%' }}
       >
-        <ImagePuzzleUpload image={image} puzzleSize={puzzleSize} onImageUploaded={ (value: File | null) => setImage(value) } />
+        <ImagePuzzleUpload image={image} puzzleSize={puzzleSize} onImageUploaded={(value: File | null) => setImage(value)}
+          imageObjPos={imageObjPos} setImageObjPos={setImageObjPos} zoomLevel={zoomLevel} setZoomLevel={setZoomLevel} />
         <ImagePuzzleSize value={puzzleSize} onSizeChanged={ (value: number) => setPuzzleSize(value) } puzzleSize={puzzleSize} />
       </div>
       <div className='absolute right-4 bottom-4 left-4'>
