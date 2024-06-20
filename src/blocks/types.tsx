@@ -474,14 +474,14 @@ export const BlockTypes: { [key: string]: BlockType } = {
   "Calligraphy": { 
     type: "Calligraphy",
     displayName: "Calligraphy",
-    displayDescription: "Calligraphy",
-    emptyTitle: "Empty Calligraphy App",
-    emptySubtitle: "Tap here to setup your Calligraphy app!",
+    displayDescription: "Draw with expressive brushstrokes",
+    emptyTitle: "Empty calligraphy block",
+    emptySubtitle: "Empty calligraphy block",
     icon: CalligraphyIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "chevron",
+    createdBy: "ssebexen & @chevron",
     fullscreenEdit: false,
 },
 };
