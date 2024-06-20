@@ -25,6 +25,7 @@ import bookIcon from './blockIcons/bookIcon.png'
 import WordleIcon from './blockIcons/WordleIcon.png'
 import MoodIcon from './blockIcons/MoodIcon.png'
 import WhiteboardIcon from './blockIcons/whiteboardIcon.png'
+import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 
 export type BlockModel = {
   type: string;
@@ -476,7 +477,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     displayDescription: "Calligraphy",
     emptyTitle: "Empty Calligraphy App",
     emptySubtitle: "Tap here to setup your Calligraphy app!",
-    icon: "CalligraphyIcon", // TODO: insert your app icon here
+    icon: CalligraphyIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
