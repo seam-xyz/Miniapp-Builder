@@ -37,30 +37,27 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
     if (!props.image || !props.boardDimensions[0] || !props.boardDimensions[1]) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
-
+    const context = canvas?.getContext('2d');
+    if (!context) return;
+    
     const tileDimensions = [Math.ceil(props.boardDimensions[0] / props.puzzleSize), Math.ceil(props.boardDimensions[1] / props.puzzleSize)];
     canvas.width = tileDimensions[0];
     canvas.height = tileDimensions[1];
-
-    const context = canvas?.getContext('2d');
-    if (!context) return;
     const imageDimensions = [props.image.width, props.image.height];
 
-    // Coordinates of current tile on the puzzle grid (before shuffling tiles)
-    const selfGridCoords = [props.tileId % props.puzzleSize, Math.floor(props.tileId / props.puzzleSize)];
-    // Top left position of top left "tile" on the source image.
-    const imageAnchorCoords = [
-      (imageDimensions[0] - props.boardDimensions[0]) * props.imagePos[0],
-      (imageDimensions[1] - props.boardDimensions[1]) * props.imagePos[1]
-    ];
+    // Coordinates of current tile on the puzzle grid (before shuffling tiles). Origin at (0, 0) in center of grid.
+    const selfGridCoords = [props.tileId % props.puzzleSize - (props.puzzleSize - 1) / 2, Math.floor(props.tileId / props.puzzleSize) - (props.puzzleSize - 1) / 2];
+    // Adjusted image origin
+    const imagePos = [props.imagePos[0] + selfGridCoords[0] * canvas.width / props.zoomLevel, props.imagePos[1] + selfGridCoords[1] * canvas.height / props.zoomLevel];
 
-    const [sx, sy] = [
-      imageAnchorCoords[0] + tileDimensions[0] * selfGridCoords[0],
-      imageAnchorCoords[1] + tileDimensions[1] * selfGridCoords[1]
+    const [sx, sy, sw, sh] = [
+      imagePos[0] + props.image.width / 2 - canvas.width / 2 / props.zoomLevel,
+      imagePos[1] + props.image.height / 2 - canvas.height / 2 / props.zoomLevel,
+      canvas.width / props.zoomLevel,
+      canvas.height / props.zoomLevel
     ];
-    const [sw, sh] = [tileDimensions[0], tileDimensions[1]];
-    const [dx, dy] = [0, 0];
-    const [dw, dh] = [tileDimensions[0], tileDimensions[1]];
+    console.log(props.tileId, [sx, sy, sw, sh]);
+    const [dx, dy, dw, dh] = [0, 0, tileDimensions[0], tileDimensions[1]]; 
 
     context.drawImage(props.image, sx, sy, sw, sh, dx, dy, dw, dh);
   }, [props.image]);
@@ -206,7 +203,7 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
     if (!image) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const dragCoeff = -1;  // Adjusts the ratio between pixels and object position coords.
+    const dragCoeff = -1 / props.zoomLevel;  // Adjusts the ratio between pixels and object position coords.
     const pinchCoeff = .05;
     if (e.touches.length === 1) {
       const touchPos = [e.touches[0].screenX, e.touches[0].screenY]
@@ -367,12 +364,12 @@ function ImagePuzzlePublic(props: ImagePuzzlePublicProps) {
 }
 
 // Edit view for the block
-interface ImagePuzzleProps {
+interface ImagePuzzleEditProps {
   done: () => void;
   width?: string;
   setData: (data: ImagePuzzleData) => void;
 }
-function ImagePuzzleEdit(props: ImagePuzzleProps) {
+function ImagePuzzleEdit(props: ImagePuzzleEditProps) {
   const [image, setImage] = useState<File | null>(null);
   const [puzzleSize, setPuzzleSize] = useState<number>(3);
   const [imagePos, setimagePos] = useState<Array<number>>([0, 0]);
