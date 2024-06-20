@@ -199,7 +199,7 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayb
 const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
   // Define state for if the audio is being played back and for audio duration
   const [playing, setPlaying] = useState<boolean>(false)
-  const [duration, setDuration] = useState<number>(0)
+  const [duration, setDuration] = useState<{min: number, sec: number}>({min: 0,sec: 0})
   // state to store time
   const [time, setTime] = useState(0);
   // Here we grab the canvas id and the audio duration from the context
@@ -250,8 +250,9 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
      function getDuration(event: any) {
        event.target.currentTime = 0
        event.target.removeEventListener('timeupdate', getDuration)
-       console.log(event.target.duration)
-      setDuration(event.target.value)
+       
+      setDuration({min: Math.floor(event.target.duration / 60), sec: Math.floor(event.target.duration % 60)})
+
      }
      
   },[audioPlayerId])
@@ -279,14 +280,14 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
     let intervalId: NodeJS.Timer;
     if (playing) {
       // setting time from 0 to 1 every 10 milisecond using javascript setInterval method
-      intervalId = setInterval(() => setTime(time + 1), 10);
+      intervalId = setInterval(() => setTime(time + 1), 1000);
     }
     return () => clearInterval(intervalId);
   }, [playing, time]);
 
   // calculating minutes and seconds
-  const minutes = Math.floor((time % 360000) / 6000);
-  const seconds = Math.floor((time % 6000) / 100);
+  const minutes = Math.floor(time / 60);
+  const seconds = Math.floor(time % 60);
   
   return (
 
@@ -318,7 +319,7 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
             </div>
            
            {/* Full audio duration  */}
-            <div style={{color: "white", padding: "18px"}}>{duration}</div>
+            <div style={{color: "white", padding: "18px"}}>{duration.min.toString().padStart(1, "0")}:{duration.sec.toString().padStart(2, "0")}</div>
           
           </div>
         </div>
@@ -360,7 +361,6 @@ const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
       if (mediaRecorder.current) {
         mediaRecorder.current.stop();
         setIsRecording(false);
-        console.log(Date());
         
 
         mediaRecorder.current.ondataavailable = (e) => {
@@ -376,7 +376,6 @@ const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
     if (mediaRecorder.current) {
       mediaRecorder.current.start()
       setIsRecording(true);
-      console.log(Date());
       
       // Get media recorder
       const currentMediaRecorder = mediaRecorder.current
