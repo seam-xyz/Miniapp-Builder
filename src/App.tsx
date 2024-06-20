@@ -31,6 +31,13 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: 'calc(-50vw + 50%)',
     }
   },
+  noScrollBar: {
+    "&::-webkit-scrollbar": {
+      display: "none"
+    },
+    "-ms-overflow-style": "none",  /* IE and Edge */
+    "scrollbar-width": "none",  /* Firefox */
+  },
 }));
 
 export default function App() {
@@ -50,15 +57,17 @@ export default function App() {
   }
 
   return (
-    <IonPage className="w-full h-full">
+    <IonPage className={classes.noScrollBar}>
       <div className={classes.headerBorder}>
         <IonHeader class="ion-no-border border-b-[2px] border-seam-black/[5%]">
           <div className="flex items-center justify-between bg-white px-4 py-4" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
-            <QuestionMarkOutlined />
+            <div className="p-2 rounded-full bg-seam-gray cursor-pointer hover:bg-seam-gray/50" onClick={() => {window.open("http://docs.getseam.xyz")}}>
+              <QuestionMarkOutlined />
+            </div>
             <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', maxWidth: '60%', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               <h1 style={{ fontSize: 'calc(10px + 2vmin)' }}> Seam Miniapp Builder </h1>
             </div>
-            <div className={`flex max-w-justify-end items-center text-white rounded-full bg-[#ea3bf7]`} style={{ marginLeft: '16px' }}>
+            <div className={`flex max-w-justify-end items-center text-white rounded-full bg-[#ea3bf7] ${classes.noScrollBar}`} style={{ marginLeft: '16px' }}>
               <Composer addNewPost={addNewPost} />
             </div>
           </div>

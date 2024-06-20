@@ -1,7 +1,7 @@
 import Block from './Block'
 import { BlockModel } from './types'
 import './BlockStyles.css'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { ChevronRight, Search } from 'react-feather';
 import { loadFont } from './utils/Fonts';
@@ -55,6 +55,7 @@ const Bookshelf: React.FC<BookshelfProps> = ({ done, model }) => {
   const [query, setQuery] = useState<string>('');
   const [books, setBooks] = useState<Book[]>([]);
   const [fontLoaded, setFontLoaded] = useState<boolean>(false);
+  const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     loadFont("Cormorant Garamond").then(() => {
@@ -63,7 +64,7 @@ const Bookshelf: React.FC<BookshelfProps> = ({ done, model }) => {
   }, []);
 
   const searchBooks = async () => {
-    if (query) {
+    if (query && query.length > 0) {
       try {
         const response = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${query}`);
         setBooks(response.data.items || []);
@@ -71,6 +72,21 @@ const Bookshelf: React.FC<BookshelfProps> = ({ done, model }) => {
         console.error('Error fetching data from Google Books API', error);
       }
     }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setQuery(value);
+
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout);
+    }
+
+    const timeout = setTimeout(() => {
+      searchBooks();
+    }, 500);
+
+    setDebounceTimeout(timeout);
   };
 
   return (
@@ -93,7 +109,7 @@ const Bookshelf: React.FC<BookshelfProps> = ({ done, model }) => {
             className="w-full p-2 bg-transparent placeholder-[#5a2b1e] text-[#5a2b1e] focus:outline-none"
             style={{ fontSize: '32px', fontFamily: "Cormorant Garamond" }}
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={handleInputChange}
             autoFocus={true}
           />
         </form>

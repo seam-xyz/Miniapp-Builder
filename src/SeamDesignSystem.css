@@ -38,3 +38,8 @@
     margin: 0;
     padding: 0;
 }
+
+.firebase-emulator-warning {
+    display: none !important;
+  }
+  

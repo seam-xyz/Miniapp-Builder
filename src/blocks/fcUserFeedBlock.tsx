@@ -4,7 +4,6 @@ import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 import { useEffect, useState } from 'react';
 import { Box, Button, Card, Stack, TextField } from '@mui/material';
-import { Avatar } from 'antd';
 
 function CastFeed({ fid }: { fid: any }) {
   const [castData, setCastData] = useState<any>(undefined);
