@@ -12,6 +12,7 @@ import PokemonBlock from './PokemonBlock'
 import NFTsBlock from './NFTsBlock'
 import RefreshingGIFBlock from './RefreshingGIFBlock'
 import PixelArtBlock from './PixelArtBlock'
+import MusicBlock from './MusicBlock'
 import Block from './Block'
 import { Theme } from "@mui/material"
 import { BlockModel, BlockTypes } from './types'
@@ -43,7 +44,7 @@ export default class BlockFactory {
       case "tweet": return new TweetBlock(model, theme)
       case "Link Bookmark": return new LinkBookmarkBlock(model, theme)
       case "Map": return new IFramelyBlock(model, theme)
-      case "Music": return new IFramelyBlock(model, theme)
+      case "Music": return new MusicBlock(model, theme)
       case "video": return new VideoBlock(model, theme)
       case "profile": return new ProfileBlock(model, theme)
       case "giphy": return new GiphyBlock(model, theme)
