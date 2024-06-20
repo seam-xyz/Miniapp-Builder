@@ -138,8 +138,7 @@ function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
   }
 
   return (
-    <div className='flex flex-0 basis-full mx-auto mt-4 aspect-square mx-auto' ref={selfRef} >
-      <div className='flex w-full h-full flex-row flex-wrap relative'>
+    <div className='flex flex-0 w-full max-w-[50vh] aspect-square self-center' ref={selfRef} >
         {
           props.tiles.map(tile => 
             <ImagePuzzleTile
@@ -152,7 +151,6 @@ function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
             />
           )
         }
-      </div>
     </div>
   );
 }
@@ -341,9 +339,9 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
 
   return (
     <>
-      <div className='flex flex-0 basis-full mt-4 aspect-square max-w-[50vh] w-full mx-auto'>
+      <div className='flex flex-col flex-0 basis-full mt-4 max-w-[50vh] w-full mx-auto gap-4'>
         <div
-          className='flex flex-col w-full h-full border-2 border-[#cccccc] rounded-lg drop-shadow-md items-center justify-center overflow:hidden relative'
+          className='flex flex-col w-full h-full aspect-square border-2 border-[#cccccc] rounded-lg drop-shadow-md items-center justify-center overflow:hidden relative'
           onClick={() => props.image || fileInput.current?.click()}
           onTouchMove={e => onTouchMove(e)}
           onTouchEnd={e => onTouchEnd(e)}
@@ -374,8 +372,8 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
           }
         </div>
         <input ref={fileInput} type='file' name='file' accept='image/*' onChange={e => e.target.files?.item(0) && props.onImageUploaded(e.target.files[0])} hidden />
-      </div>
       <input type='range' min={1.0} max={props.maxZoomLevel} step='0.1' value={props.zoomLevel} onChange={onZoomLevelInputChange} />
+      </div>
     </>
   )
 }
@@ -467,9 +465,6 @@ function ImagePuzzle(props: ImagePuzzleProps) {
     const tiles0 = applyMove(tiles, posTile);
 
     if (checkSolved(tiles0)) {
-      const finalTile: Tile = {tileId: puzzleSize ** 2 - 1, pos: puzzleSize ** 2 - 1};
-      const tiles1 = [...tiles0, finalTile];
-      setTiles(tiles1);
       setSolved(true);
       return;
     }
@@ -479,8 +474,7 @@ function ImagePuzzle(props: ImagePuzzleProps) {
   }
 
   function onSolveClicked() {
-    const finalTile: Tile = {tileId: puzzleSize ** 2 - 1, pos: puzzleSize ** 2 -1};
-    const tiles0 = [...getInitPositions(), finalTile];
+    const tiles0 = getInitPositions();
     setTiles(tiles0);
     setSolved(true);
   }
@@ -492,7 +486,7 @@ function ImagePuzzle(props: ImagePuzzleProps) {
   }
 
   return (
-    <div className='flex w-full flex-col gap-4 justify-between'>
+    <div className='flex flex-1 basis-full flex-col gap-4 justify-between'>
       <ImagePuzzleBoard puzzleSize={puzzleSize} imagePos={imagePos} puzzleSolved={solved}
         image={image} tiles={tiles} onTileClicked={(tileId) => onTileClicked(tileId)} zoomLevel={zoomLevel} />
       <div className='flex flex-row justify-around text-md p-4 gap-8'>
