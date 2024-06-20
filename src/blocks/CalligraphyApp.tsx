@@ -85,12 +85,13 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       oldR : 0
      }
     const spray = {
-      pMouseX: 0,
-      pMouseY:0,
-      minRadius: 5,
-      sprayDensity: 5,
+      brushX: 0,
+      brushY:0,
+      SPRING: .4,
+      minRadius: 20,
+      sprayDensity: 3,
       lerps: 100,
-      speedScaling: .04,
+      speedScaling: .03,
       prevR: 0,
       prevSpeed: 0,
     }
@@ -233,19 +234,23 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
             buffer.strokeWeight(1)
 
             // find the speed of the mouse movement
-            const speed = s.abs(s.mouseX - spray.pMouseX) + s.abs(s.mouseY - spray.pMouseY)
-            let r = spray.prevR
-            
+            const vX = (s.mouseX - spray.brushX) * spray.SPRING
+            const vY = (s.mouseY - spray.brushY) * spray.SPRING
+            const speed = s.sqrt(vX**2 + vY**2)
+            const prevX = spray.brushX;
+            const prevY = spray.brushY;
+            spray.brushX += vX;
+            spray.brushY += vY;
+
             // repeat the random points with lerping
             for (let i = 0; i < spray.lerps; i++) {
               
               // find the lerped X and Y coordinates
-              const lerpX = s.lerp( spray.pMouseX,s.mouseX, i / spray.lerps)
-              const lerpY = s.lerp( spray.pMouseY,s.mouseY, i / spray.lerps)
+              const lerpX = s.lerp( prevX,spray.brushX, i / spray.lerps)
+              const lerpY = s.lerp( prevY,spray.brushY, i / spray.lerps)
               const lerpedSpeed = s.lerp(spray.prevSpeed, speed, i/ spray.lerps)
               // find radius of the spray paint brush and radius squared
-              r = (lerpedSpeed + spray.minRadius) * spray.speedScaling
-              spray.prevR = r
+              let r = (lerpedSpeed + spray.minRadius) * spray.speedScaling
               // draw a bunch of random points within a circle
               for (let j = 0; j < (spray.sprayDensity * speed * spray.speedScaling); j++) {
 
@@ -257,8 +262,6 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
                 buffer.point(lerpX + randX, lerpY + randY)
               }
             }
-            spray.pMouseX = s.mouseX;
-            spray.pMouseY = s.mouseY;
             spray.prevSpeed = speed;
           }
           break;
@@ -375,7 +378,8 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
       ink.currentStrokeTotalLength = 0;
       ink.previousStrokeWidth = 0;
       [ink.brushX, ink.brushY] = [s.mouseX, s.mouseY];
-      [spray.pMouseX, spray.pMouseY] = [s.mouseX, s.mouseY];
+      [spray.brushX, spray.brushY] = [s.mouseX, s.mouseY];
+      spray.prevSpeed = 0;
       [streak.brushX, streak.brushY] = [s.mouseX, s.mouseY];
       [lines.brushX, lines.brushY] = [s.mouseX, s.mouseY];
       lines.lineSpacingOffsets = Array.from({length: lines.LINES}, ()=>s.random(-lines.lineSpacingVar/2,lines.lineSpacingVar/2))
@@ -562,11 +566,11 @@ const CalligraphyBackgroundSelector = (props: CalligraphyBackgroundSelectorProps
 
 // Available options for the brush selector
 const brushOptions: Record<string, string> = {
+  'spray': sprayBrush,
   'streak': streakBrush,
   'lines': linesBrush,
   'ink': inkBrush,
   'brush1': brush1Brush,
-  'spray': sprayBrush
 }
 type CalligraphyBrush = keyof typeof brushOptions;
 // Component for selecting the brush
@@ -676,12 +680,12 @@ interface CalligraphyEditProps {
   width: string;
 }
 const CalligraphyEdit = (props: CalligraphyEditProps) => {
-  const [activeColor, setActiveColor] = useState('#cdb4db');
+  const [activeColor, setActiveColor] = useState('#000000');
   const [canvasClearSwitch, setCanvasClearSwitch] = useState(false);
   const [canvasUndoSwitch, setCanvasUndoSwitch] = useState(false);
   const [currentBackground, setCurrentBackground] = useState<CalligraphyBackground>("lines");
   const [activeToolbarTab, setActivePaletteTab] = useState(CalligraphyToolbarView.COLOR);
-  const [currentBrush, setCurrentBrush] = useState("spray");
+  const [currentBrush, setCurrentBrush] = useState("streak");
   return (
     <div className='flex flex-col gap-3 justify-between h-[88vh]'>
       <CalligraphyCanvas 
