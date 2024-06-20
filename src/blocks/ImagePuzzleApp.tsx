@@ -244,7 +244,9 @@ interface ImagePuzzleUploadProps {
 }
 function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
   const fileInput = useRef<HTMLInputElement | null>(null);
-  const [prevTouchPos, setPrevTouchPos] = useState<Array<number | null>>([null, null]);
+  const [prevMousePos, setPrevMousePos] = useState<Coordinate2D | null>(null);
+  const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
+  const [prevTouchPos, setPrevTouchPos] = useState<Coordinate2D | null>(null);
   const [prevTouchDistance, setPrevTouchDistance] = useState<number | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const divRef = useRef<HTMLDivElement | null>(null);
@@ -284,7 +286,7 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
     
     if (e.touches.length === 1) {
       const touchPos = [e.touches[0].screenX, e.touches[0].screenY]
-      if (prevTouchPos[0] && prevTouchPos[1]) {
+      if (prevTouchPos) {
         const dTouchPos: Coordinate2D = [(touchPos[0] - prevTouchPos[0]) * dragCoeff, (touchPos[1] - prevTouchPos[1]) * dragCoeff];
         const imagePosBounds = getImagePosBounds(zoom, [props.image.width, props.image.height], [canvas.width, canvas.height]);
         const imagePos0 = clampCoordinateXYToBounds(addCoordinateXY(props.imagePos, dTouchPos), imagePosBounds);
@@ -307,7 +309,7 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
     if (e.touches.length === 1) {
       setPrevTouchDistance(null);
     } else if (e.touches.length === 0) {
-      setPrevTouchPos([null, null]);
+      setPrevTouchPos(null);
     }
   }
 
@@ -320,6 +322,34 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
     props.onSlideZoom(zoomLevel, canvasDims)
   }
 
+  function onMouseMove(e: React.MouseEvent) {
+    if (!isMouseDown) return;
+    if (!props.image) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const zoom = normalizeZoomLevel(props.zoomLevel, [props.image.width, props.image.height], [canvas.width, canvas.height]);
+
+    const dragCoeff = -1 / zoom;
+    
+    const mousePos: Coordinate2D = [e.clientX, e.clientY]
+    if (prevMousePos) {
+      const dMousePos: Coordinate2D = [(mousePos[0] - prevMousePos[0]) * dragCoeff, (mousePos[1] - prevMousePos[1]) * dragCoeff];
+      const imagePosBounds = getImagePosBounds(zoom, [props.image.width, props.image.height], [canvas.width, canvas.height]);
+      const imagePos0 = clampCoordinateXYToBounds(addCoordinateXY(props.imagePos, dMousePos), imagePosBounds);
+      props.setImagePos(imagePos0);
+    }
+    setPrevMousePos([mousePos[0], mousePos[1]]);
+  }
+
+  function onMouseDown() {
+    setIsMouseDown(true);
+  }
+
+  function onMouseUp() {
+    setIsMouseDown(false);
+    setPrevMousePos(null);
+  }
+
   return (
     <>
       <div className='flex flex-0 basis-full mt-4 aspect-square max-w-[50vh] w-full mx-auto'>
@@ -328,6 +358,9 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
           onClick={() => props.image || fileInput.current?.click()}
           onTouchMove={e => onTouchMove(e)}
           onTouchEnd={e => onTouchEnd(e)}
+          onMouseMove={e => onMouseMove(e)}
+          onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
           ref={divRef}
         >
           {
