@@ -237,7 +237,6 @@ interface ImagePuzzleUploadProps {
   imagePos: Coordinate2D;  // The image position, in pixels (origin at center.)
   setImagePos: (imagePos: Coordinate2D) => void;
   puzzleSize: number;  // The puzzle size, in tiles.
-  onPinchZoom: (dZoom: number, canvasDims: Coordinate2D) => void;  // Called on mobile pinch gesture.
   zoomLevel: number;  // The raw zoom level, from 1.0 to maxZoomLevel
   onSlideZoom: (zoomLevel: number, canvasDims: Coordinate2D) => void;  // Called on changing the range <input>
   maxZoomLevel: number  // The maximum value for zoomLevel
@@ -282,7 +281,6 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
     const zoom = normalizeZoomLevel(props.zoomLevel, [props.image.width, props.image.height], [canvas.width, canvas.height]);
 
     const dragCoeff = -1 / zoom;
-    const pinchCoeff = .005;
     
     if (e.touches.length === 1) {
       const touchPos = [e.touches[0].screenX, e.touches[0].screenY]
@@ -293,16 +291,6 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
         props.setImagePos(imagePos0);
       }
       setPrevTouchPos([touchPos[0], touchPos[1]]);
-    }
-    else if (e.touches.length === 2) {
-      e.preventDefault();
-      const touchDistance = Math.hypot(e.touches[1].screenX - e.touches[0].screenX, e.touches[1].screenY - e.touches[0].screenY);
-      if (prevTouchDistance) {
-        const dTouchDistance = touchDistance - prevTouchDistance;
-        props.onPinchZoom(dTouchDistance * pinchCoeff, [canvas.width, canvas.height]);
-      }
-      console.log(touchDistance);
-      setPrevTouchDistance(touchDistance);
     }
   }
 
@@ -564,10 +552,6 @@ function ImagePuzzleEdit(props: ImagePuzzleEditProps) {
     setImagePos(imagePos0);
   }
 
-  function onPinchZoom(dZoomLevel: number, canvasDims: Coordinate2D): void {
-    setZoomLevelAndComputeImagePos(Math.max(0, Math.min(maxZoomLevel, zoomLevel + dZoomLevel)), canvasDims);
-  }
-
   return (
     <>
       <div
@@ -576,7 +560,7 @@ function ImagePuzzleEdit(props: ImagePuzzleEditProps) {
       >
         <ImagePuzzleUpload image={image} puzzleSize={puzzleSize} onImageUploaded={(value: File) => onImageUploaded(value)}
           imagePos={imagePos} setImagePos={setImagePos} zoomLevel={zoomLevel} onSlideZoom={setZoomLevelAndComputeImagePos}
-          onPinchZoom={onPinchZoom} maxZoomLevel={maxZoomLevel} />
+           maxZoomLevel={maxZoomLevel} />
         <ImagePuzzleSizeSelector onSizeChanged={ (value: number) => setPuzzleSize(value) } puzzleSize={puzzleSize} />
       </div>
       <div className='absolute right-4 left-4 transition-all' style={{bottom: image ? '1rem' : '-16rem'}}>
