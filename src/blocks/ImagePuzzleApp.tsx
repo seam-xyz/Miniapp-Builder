@@ -13,7 +13,7 @@ import { SelfImprovement } from '@mui/icons-material';
 interface ImagePuzzleData {
   imageData: string;
   puzzleSize: number;
-  imagePos: number[];
+  imagePos: CoordinateXY;
   zoomLevel: number;
 }
 
@@ -24,9 +24,9 @@ interface ImagePuzzleTileProps {
   tileId: number;
   pos: number;
   image: HTMLImageElement | undefined;
-  boardDimensions: Array<number | undefined>;
+  boardCoordinateXY: Array<number | undefined>;
   onTileClicked: (tileId: number) => void;
-  imagePos: number[];
+  imagePos: CoordinateXY;
   zoomLevel: number;
 }
 function ImagePuzzleTile(props: ImagePuzzleTileProps) {
@@ -34,16 +34,16 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
   
   // TODO: Clean this lad up. There's stuff in here that does not need to be.
   useEffect(() => {
-    if (!props.image || !props.boardDimensions[0] || !props.boardDimensions[1]) return;
+    if (!props.image || !props.boardCoordinateXY[0] || !props.boardCoordinateXY[1]) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const context = canvas?.getContext('2d');
     if (!context) return;
     
-    const tileDimensions = [Math.ceil(props.boardDimensions[0] / props.puzzleSize), Math.ceil(props.boardDimensions[1] / props.puzzleSize)];
-    canvas.width = tileDimensions[0];
-    canvas.height = tileDimensions[1];
-    const imageDimensions = [props.image.width, props.image.height];
+    const tileCoordinateXY = [Math.ceil(props.boardCoordinateXY[0] / props.puzzleSize), Math.ceil(props.boardCoordinateXY[1] / props.puzzleSize)];
+    canvas.width = tileCoordinateXY[0];
+    canvas.height = tileCoordinateXY[1];
+    const imageCoordinateXY = [props.image.width, props.image.height];
 
     // Coordinates of current tile on the puzzle grid (before shuffling tiles). Origin at (0, 0) in center of grid.
     const selfGridCoords = [props.tileId % props.puzzleSize - (props.puzzleSize - 1) / 2, Math.floor(props.tileId / props.puzzleSize) - (props.puzzleSize - 1) / 2];
@@ -57,7 +57,7 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
       canvas.height / props.zoomLevel
     ];
     console.log(props.tileId, [sx, sy, sw, sh]);
-    const [dx, dy, dw, dh] = [0, 0, tileDimensions[0], tileDimensions[1]]; 
+    const [dx, dy, dw, dh] = [0, 0, tileCoordinateXY[0], tileCoordinateXY[1]]; 
 
     context.drawImage(props.image, sx, sy, sw, sh, dx, dy, dw, dh);
   }, [props.image]);
@@ -90,7 +90,7 @@ interface ImagePuzzleBoardProps {
   onTileClicked: (tileId: number) => void;
   image: HTMLImageElement | undefined;
   tiles: Tile[];
-  imagePos: number[];
+  imagePos: CoordinateXY;
   zoomLevel: number;
 }
 function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
@@ -104,7 +104,7 @@ function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
             <ImagePuzzleTile
               key={tile.tileId} imageData={props.imageData} puzzleSize={props.puzzleSize}
               tileId={tile.tileId} pos={tile.pos} image={props.image} 
-              boardDimensions={[selfRef.current?.clientWidth, selfRef.current?.clientHeight]} 
+              boardCoordinateXY={[selfRef.current?.clientWidth, selfRef.current?.clientHeight]} 
               onTileClicked={(tileId: number) => props.onTileClicked(tileId)}
               imagePos={props.imagePos}
               zoomLevel={props.zoomLevel}
@@ -142,7 +142,7 @@ function ImagePuzzleSize(props: ImagePuzzleSizeProps) {
   )
 }
 
-// Sets only inner borders for the overlay grid, with box at index in a grid with dimensions side x side
+// Sets only inner borders for the overlay grid, with box at index in a grid with CoordinateXY side x side
 function getBorderStyleGrid(index: number, side: number, borderWidth: string): string {
   const top = index < side ? '0px' : borderWidth;
   const right = index % side === side - 1 ? '0px' : borderWidth;
@@ -152,15 +152,46 @@ function getBorderStyleGrid(index: number, side: number, borderWidth: string): s
   return [top, right, bottom, left].join(' ');
 }
 
+type CoordinateXY = [number, number];
+type Bounds = [CoordinateXY, CoordinateXY];
+
+// Normalize zoom such that 1.0 is the furthest you can zoom without introducing whitespace
+function normalizeZoom(zoomLevel: number, imageDims: CoordinateXY, canvasDims: CoordinateXY): number {
+  return Math.max(canvasDims[0] / imageDims[0], canvasDims[1] / imageDims[1]) * zoomLevel;
+}
+
+// Get the minimum and maximum allowable values for the image position without introducing whitespace
+function getImagePosBounds(zoom: number, imageDims: CoordinateXY, canvasDims: CoordinateXY): Bounds {
+  const xMin = -(imageDims[0] - canvasDims[0] / zoom) / 2;
+  const xMax = (imageDims[0] - canvasDims[0] / zoom) / 2;
+  const yMin = -(imageDims[1] - canvasDims[1] / zoom) / 2;
+  const yMax = (imageDims[1] - canvasDims[1] / zoom) / 2;
+
+  return [[xMin, xMax], [yMin, yMax]];
+}
+
+function addCoordinateXY(a: CoordinateXY, b: CoordinateXY): CoordinateXY {
+  return [a[0] + b[0], a[1] + b[1]];
+}
+
+function clampCoordinateXYToBounds(d: CoordinateXY, b: Bounds): CoordinateXY {
+  const x = Math.max(b[0][0], Math.min(b[0][1], d[0]));
+  const y = Math.max(b[1][0], Math.min(b[1][1], d[1]));
+  const d0: CoordinateXY = [x, y];
+  return d0;
+}
+
 // Image uploader
 interface ImagePuzzleUploadProps {
-  onImageUploaded: (value: File | null) => void;
-  setimagePos: (imagePos: number[]) => void;
-  image: File | null;
-  imagePos: number[]
+  onImageUploaded: (value: File) => void;
+  setImagePos: (imagePos: CoordinateXY) => void;
+  image: HTMLImageElement | null;
+  imagePos: CoordinateXY
   puzzleSize: number;
+  onPinchZoom: (dZoom: number, canvasDims: CoordinateXY) => void;
   zoomLevel: number;
-  setZoomLevel: (zoomLevel: number) => void;
+  onSlideZoom: (zoomLevel: number, canvasDims: CoordinateXY) => void;
+  maxZoomLevel: number
 }
 function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
   const fileInput = useRef<HTMLInputElement | null>(null);
@@ -168,60 +199,51 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
   const [prevTouchDistance, setPrevTouchDistance] = useState<number | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const divRef = useRef<HTMLDivElement | null>(null);
-  const [image, setImage] = useState<HTMLImageElement | null>(null);
 
   useEffect(() => {
-    if(!props.image) return;
-    const img = new Image();
-    img.src = URL.createObjectURL(props.image);
-    img.onload = () => {
-      setImage(img);
-    };
-  }, [props.image]);
-
-  useEffect(() => {
-    if (!image) return;
+    if (!props.image) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const context = canvas.getContext('2d');
     if (!context) return;
 
+    const zoom = normalizeZoom(props.zoomLevel, [props.image.width, props.image.height], [canvas.width, canvas.height]);
+    
     const [sx, sy, sw, sh] = [
-      props.imagePos[0] + image.width / 2 - canvas.width / 2 / props.zoomLevel,
-      props.imagePos[1] + image.height / 2 - canvas.height / 2 / props.zoomLevel,
-      canvas.width / props.zoomLevel,
-      canvas.height / props.zoomLevel
+      props.imagePos[0] + props.image.width / 2 - canvas.width / 2 / zoom,
+      props.imagePos[1] + props.image.height / 2 - canvas.height / 2 / zoom,
+      canvas.width / zoom,
+      canvas.height / zoom
     ];
     console.log([sx, sy, sw, sh]);
     const [dx, dy, dw, dh] = [0, 0, canvas.width, canvas.height];
-
+    
     context.clearRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
-  }, [props.imagePos, props.zoomLevel, image]);
+    context.drawImage(props.image, sx, sy, sw, sh, dx, dy, dw, dh);
+  }, [props.imagePos, props.zoomLevel, props.image]);
 
   function onTouchMove(e: React.TouchEvent) {
-    if (!image) return;
+    if (!props.image) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const dragCoeff = -1 / props.zoomLevel;  // Adjusts the ratio between pixels and object position coords.
+    const zoom = normalizeZoom(props.zoomLevel, [props.image.width, props.image.height], [canvas.width, canvas.height]);
+    const dragCoeff = -1 / zoom;  // Adjusts the ratio between pixels and object position coords.
     const pinchCoeff = .05;
+
     if (e.touches.length === 1) {
       const touchPos = [e.touches[0].screenX, e.touches[0].screenY]
       if (prevTouchPos[0] && prevTouchPos[1]) {
-        const dTouchPos = [touchPos[0] - prevTouchPos[0], touchPos[1] - prevTouchPos[1]];
-        const imagePos0 = [
-          Math.max(-(image.width - canvas.width / props.zoomLevel) / 2, Math.min((image.width - canvas.width / props.zoomLevel) / 2, props.imagePos[0] + dTouchPos[0] * dragCoeff)),
-          Math.max(-(image.height - canvas.height / props.zoomLevel) / 2, Math.min((image.height - canvas.height / props.zoomLevel) / 2, props.imagePos[1] + dTouchPos[1] * dragCoeff))
-        ];
-        console.log(imagePos0);
-        props.setimagePos(imagePos0);
+        const dTouchPos: CoordinateXY = [(touchPos[0] - prevTouchPos[0]) * dragCoeff, (touchPos[1] - prevTouchPos[1]) * dragCoeff];
+        const imagePosBounds = getImagePosBounds(zoom, [props.image.width, props.image.height], [canvas.width, canvas.height]);
+        const imagePos0 = clampCoordinateXYToBounds(addCoordinateXY(props.imagePos, dTouchPos), imagePosBounds);
+        props.setImagePos(imagePos0);
       }
       setPrevTouchPos([touchPos[0], touchPos[1]]);
     } else if (e.touches.length === 2) {
       const touchDistance = Math.hypot(e.touches[1].screenX - e.touches[0].screenX, e.touches[1].screenY - e.touches[0].screenY);
       if (prevTouchDistance) {
         const dTouchDistance = touchDistance - prevTouchDistance;
-        props.setZoomLevel(Math.max(0, Math.min(1, props.zoomLevel + dTouchDistance * pinchCoeff)));
+        props.onPinchZoom(dTouchDistance * pinchCoeff, [canvas.width, canvas.height]);
       }
       setPrevTouchDistance(touchDistance);
     }
@@ -233,6 +255,15 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
     } else if (e.touches.length === 0) {
       setPrevTouchPos([null, null]);
     }
+  }
+
+  function onZoomLevelChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const zoomLevel = Number(e.target.value);
+    const canvasDims: CoordinateXY = [canvas.width, canvas.height];
+    props.onSlideZoom(zoomLevel, canvasDims)
   }
 
   return (
@@ -265,14 +296,14 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
           </>
         }
       </div>
-      <input ref={fileInput} type='file' name='file' accept='image/*' onChange={e => props.onImageUploaded(e.target.files && e.target.files[0])} hidden />
-      <input type='range' min='1' max='4.0' step='0.25' value={props.zoomLevel} onChange={e => props.setZoomLevel(Number(e.target.value))} />
+      <input ref={fileInput} type='file' name='file' accept='image/*' onChange={e => e.target.files?.item(0) && props.onImageUploaded(e.target.files[0])} hidden />
+      <input type='range' min={1.0} max={props.maxZoomLevel} step='0.1' value={props.zoomLevel} onChange={onZoomLevelChange} />
     </div>
     // TODO: Remove slider; it's just to test easily without phone.
   )
 }
 
-// Public view for the block
+// Default view for the block
 interface ImagePuzzleProps {
   data: ImagePuzzleData;
 }
@@ -291,7 +322,8 @@ function ImagePuzzle(props: ImagePuzzleProps) {
     image.onload = () => {
       setImage(image);
     };
-    setTiles(Array(puzzleSize ** 2 - 1).fill(0).map((_, i): Tile => { return ({ tileId: i, pos: i }) }));
+    const tiles0 = getRandomMove(getInitPositions(), 500);
+    setTiles(tiles0);
   }, []);
 
   function tileNeighbors(tiles: Tile[], posA: number, posB: number): boolean {
@@ -370,15 +402,18 @@ interface ImagePuzzleEditProps {
   setData: (data: ImagePuzzleData) => void;
 }
 function ImagePuzzleEdit(props: ImagePuzzleEditProps) {
-  const [image, setImage] = useState<File | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [puzzleSize, setPuzzleSize] = useState<number>(3);
-  const [imagePos, setimagePos] = useState<Array<number>>([0, 0]);
+  const [imagePos, setImagePos] = useState<CoordinateXY>([0, 0]);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
+  const [image, setImage] = useState<HTMLImageElement | null>(null);
+
+  const maxZoomLevel = 8.0;
 
   function onSave() {
-    if (!image || !imagePos) return;
+    if (!imageFile || !imagePos) return;
     const reader = new FileReader();
-    reader.readAsDataURL(image);
+    reader.readAsDataURL(imageFile);
     reader.onloadend = () => {
       if (reader.result) {
         const imageData = reader.result.toString();
@@ -391,14 +426,37 @@ function ImagePuzzleEdit(props: ImagePuzzleEditProps) {
     }
   }
 
+  function onImageUploaded(value: File) {
+    const img = new Image();
+    img.src = URL.createObjectURL(value);
+    img.onload =  () => {
+      setImage(img);
+    }
+  }
+
+  function setZoomLevelAndComputeImagePos(zoomLevel: number, canvasDims: CoordinateXY): void {
+    setZoomLevel(zoomLevel);
+    if (!image) return;
+    const imageDims: CoordinateXY = [image.width, image.height];
+    const zoom = normalizeZoom(zoomLevel, imageDims, canvasDims);
+    const imagePosBounds = getImagePosBounds(zoom, imageDims, canvasDims);
+    const imagePos0 = clampCoordinateXYToBounds(imagePos, imagePosBounds)
+    setImagePos(imagePos0);
+  }
+
+  function onPinchZoom(dZoomLevel: number, canvasDims: CoordinateXY): void {
+    setZoomLevelAndComputeImagePos(Math.max(0, Math.min(maxZoomLevel, zoomLevel + dZoomLevel)), canvasDims);
+  }
+
   return (
     <>
       <div
         className='flex flex-col gap-4'
         style={{ width: props.width || '100%' }}
       >
-        <ImagePuzzleUpload image={image} puzzleSize={puzzleSize} onImageUploaded={(value: File | null) => setImage(value)}
-          imagePos={imagePos} setimagePos={setimagePos} zoomLevel={zoomLevel} setZoomLevel={setZoomLevel} />
+        <ImagePuzzleUpload image={image} puzzleSize={puzzleSize} onImageUploaded={(value: File) => onImageUploaded(value)}
+          imagePos={imagePos} setImagePos={setImagePos} zoomLevel={zoomLevel} onSlideZoom={setZoomLevelAndComputeImagePos}
+          onPinchZoom={onPinchZoom} maxZoomLevel={maxZoomLevel} />
         <ImagePuzzleSize value={puzzleSize} onSizeChanged={ (value: number) => setPuzzleSize(value) } puzzleSize={puzzleSize} />
       </div>
       <div className='absolute right-4 bottom-4 left-4'>
