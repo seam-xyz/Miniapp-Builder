@@ -685,7 +685,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
   const [canvasUndoSwitch, setCanvasUndoSwitch] = useState(false);
   const [currentBackground, setCurrentBackground] = useState<CalligraphyBackground>("lines");
   const [activeToolbarTab, setActivePaletteTab] = useState(CalligraphyToolbarView.COLOR);
-  const [currentBrush, setCurrentBrush] = useState("streak");
+  const [currentBrush, setCurrentBrush] = useState("spray");
   return (
     <div className='flex flex-col gap-3 justify-between h-[88vh]'>
       <CalligraphyCanvas 
