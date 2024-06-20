@@ -61,14 +61,20 @@ type StartProps = {
 // Default values for audio context
 const defaultAudioContext: AudioContextProps = { isRecording: false, setIsRecording: () => { }, mediaRecorder: { current: null }, canvasId: ""}
 
-// 
+// Instantiate react context
 const audioContext = createContext<AudioContextProps>(defaultAudioContext);
 
 const { Provider: AudioProvider } = audioContext;
 
+// Audio Context Component- not stored in VoiceApp COMPONENTS because it is just a context wrapper
 const AudioCtx = ({ children }: AudioProviderProps) => {
+  // Great place to define state and refs that are needed throughout the app
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorder = useRef<MediaRecorder | null>(null)
+
+  // Need a way to connect a specific canvas to specific play button
+  // By defining a canvas id in the wrapper, 
+  // the canvas can only be accessed by the play button using the corresponding id
   const canvasId = useId()
 
   return (
@@ -79,8 +85,9 @@ const AudioCtx = ({ children }: AudioProviderProps) => {
 
 }
 
-let coolCanvas: any;
-
+// This function is called twice before the user posts, 
+// once when a user clicks record and audio stream is started, 
+// and again when the audio is played back in the preview 
 const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayback, normalMatch, xsMatch, smallMatch }: StartProps) => {
 
   // Hi, I'm doing the drawing
@@ -97,18 +104,19 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayb
   analyser.getByteTimeDomainData(timeDomainData);
   analyser.getByteFrequencyData(frequencyData);
 
-  // Get a canvas defined with ID "oscilloscope"
+  // Get a canvas defined with the corresponding canvas ID 
   let canvas = document.getElementById(canvasId) as HTMLCanvasElement;
   if (!canvas) {
     console.error("The audio visualizer (canvas) is missing");
     return renderErrorState();
   }
+
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
   let canvasCtx = canvas.getContext("2d");
 
 
-  // draw an oscilloscope of the current audio source
+  // This function draws an oscilloscope of the current audio source
   const draw = () => {
     if (!canvasCtx) {
       console.error("The audio visualizer (canvas) is missing");
@@ -139,15 +147,19 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayb
       x += sliceWidth;
     }
 
-    // bars
+    // Oscilliscope bars
+
     // Affects the number of bars and their width
+    // In order for the oscilliscope to be responsive, xs, small, and normal breakpoints were defined
     let barWidth = xsMatch ? (canvas.width / bufferLength) * 25 : smallMatch ? (canvas.width / bufferLength) * 15 : normalMatch ? (canvas.width / bufferLength) * 10 : (canvas.width / bufferLength) * 10
+    
     let barHeight;
     x = 0;
     analyser.getByteFrequencyData(frequencyData);
 
     for (let i = 0; i < bufferLength; i++) {
       // Affects the amplitude of the displayed bars (height)
+      // Again in order for the oscilliscope to be responsive, xs, small, and normal breakpoints were defined
       barHeight = !isPlayback ? frequencyData[i] * 1 : xsMatch ? frequencyData[i] * 0.2 : smallMatch ? frequencyData[i] * 0.25 : normalMatch ? frequencyData[i] * 0.30 : frequencyData[i] * 0.35;
 
       canvasCtx.fillStyle = "rgb(255, 255, 255)";
@@ -158,18 +170,20 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayb
 
     
 
+    // Check if the audio is still playing/playable
     if (getPlayable(node, context)) {
+      // If so, we need to call the draw function to redraw the new oscilliscope
       requestAnimationFrame(draw);
     } else {
-      coolCanvas = canvasCtx.canvas.toDataURL()
-      console.log(coolCanvas);
-      
+      // Else, we need to clear/reset the canvas
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
   }
 
+  // Initial call to draw function
   draw();
+  
 }
 
 /*
