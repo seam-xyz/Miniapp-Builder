@@ -287,12 +287,10 @@ function Composer({ addNewPost }) {
         <Plus color="white" />
       </div>
       <IonModal
-        className={`${classes.noScrollBar} composer-modal`}
+        className={`composer-modal h-screen custom-modal-fullscreen`}
         ref={modal}
         isOpen={state.isOpen}
         canDismiss={true}
-        initialBreakpoint={1.0}
-        breakpoints={[0, 1]}
         showBackdrop={true}
         onDidDismiss={() => {
           dispatch({ type: "dismiss" });
