@@ -58,7 +58,7 @@ type StartProps = {
 
 */
 
-// Default values for audio context
+// Default context
 const defaultAudioContext: AudioContextProps = { isRecording: false, setIsRecording: () => { }, mediaRecorder: { current: null }, canvasId: ""}
 
 // Instantiate react context
@@ -70,8 +70,8 @@ const { Provider: AudioProvider } = audioContext;
 const AudioCtx = ({ children }: AudioProviderProps) => {
   // Great place to define state and refs that are needed throughout the app
   const [isRecording, setIsRecording] = useState(false);
-  const mediaRecorder = useRef<MediaRecorder | null>(null)
-
+  const mediaRecorder = useRef<MediaRecorder | null>(null);
+  
   // Need a way to connect a specific canvas to specific play button
   // By defining a canvas id in the wrapper, 
   // the canvas can only be accessed by the play button using the corresponding id
@@ -194,11 +194,19 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayb
 */
 
 
-// Componet that is rendered in the preview screen and in users feeds
+// Component that is rendered in the preview screen and in users feeds
 // We pass in the url of the saved audio data
 const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
-  // Define state for if the audio is being played back
+  // Define state for if the audio is being played back and for audio duration
   const [playing, setPlaying] = useState<boolean>(false)
+  const [duration, setDuration] = useState<{min: number, sec: number}>({min: 0,sec: 0})
+  // state to store time
+  const [time, setTime] = useState(0);
+  // Here we grab the canvas id and the audio duration from the context
+  const { canvasId } = useContext(audioContext)
+  // Each audio player needs it's own id as well
+  const audioPlayerId = useId()
+
 
   // Variables for each breakpoint
   const normalMediaMatch: MediaQueryList = window.matchMedia("(max-width: 599px )")
@@ -228,11 +236,26 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
   })
 
 
-  // Here we grab the canvas id from the context
-  const { canvasId } = useContext(audioContext)
-  
-  // Each audio player needs it's own id as well
-  const audioPlayerId = useId()
+  // Get the duration of the audio
+  useEffect(() => {
+     const audio = document.getElementById(audioPlayerId) as HTMLMediaElement
+
+     audio.addEventListener('loadedmetadata', () => {
+       if (audio.duration === Infinity || isNaN(Number(audio.duration))) {
+         audio.currentTime = 1e101
+         audio.addEventListener('timeupdate', getDuration)
+       }
+     })
+     
+     function getDuration(event: any) {
+       event.target.currentTime = 0
+       event.target.removeEventListener('timeupdate', getDuration)
+       
+      setDuration({min: Math.floor(event.target.duration / 60), sec: Math.floor(event.target.duration % 60)})
+
+     }
+     
+  },[audioPlayerId])
   
   const playback = () => {
     const context = new AudioContext()
@@ -252,6 +275,20 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
     start({ node, context, getPlayable: (node) => !(node as MediaElementAudioSourceNode).mediaElement.ended, renderErrorState, canvasId, isPlayback, normalMatch, smallMatch, xsMatch })
   }
 
+  // Keeping track of current audio time
+  useEffect(() => {
+    let intervalId: NodeJS.Timer;
+    if (playing) {
+      // setting time from 0 to 1 every 10 milisecond using javascript setInterval method
+      intervalId = setInterval(() => setTime(time + 1), 1000);
+    }
+    return () => clearInterval(intervalId);
+  }, [playing, time]);
+
+  // calculating minutes and seconds
+  const minutes = Math.floor(time / 60);
+  const seconds = Math.floor(time % 60);
+  
   return (
 
     <div style={{ backgroundColor: 'black', borderRadius: '125px', width: "100%", height: 'fit-content', aspectRatio: "5 / 1" }} >
@@ -263,7 +300,7 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
           <div style={{ padding: "8px 12px", display: 'flex', flexDirection: 'row', justifyContent: 'start', alignItems: 'center', width: "100%", height: "100%" }} >
            
             {/* Invisible audio tag */}
-            <audio id={audioPlayerId} src={url} onPlay={() => { setTimeout(playback, 100) }} onPlaying={() => setPlaying(true)} onEnded={() => setPlaying(false)} />
+            <audio id={audioPlayerId} src={url} onPlay={() => { setTimeout(playback, 100) }} onPlaying={() => setPlaying(true)} onEnded={() => {setTime(0); setPlaying(false);}} />
             
             {/* Div (button) for playing audio */}
             <div onClick={() => {
@@ -274,7 +311,7 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
             </div>
 
             {/* Current audio time */}
-            <div style={{color: 'white', padding: "18px"}}>0:00</div>
+            <div style={{color: 'white', padding: "18px"}}>{minutes.toString().padStart(1, "0")}:{seconds.toString().padStart(2, "0")}</div>
 
             {/* Canvas */}
             <div style={{ color: 'white', height: "100%", width: "100%" }}>
@@ -282,7 +319,7 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
             </div>
            
            {/* Full audio duration  */}
-            <div style={{color: "white", padding: "18px"}}>0:00</div>
+            <div style={{color: "white", padding: "18px"}}>{duration.min.toString().padStart(1, "0")}:{duration.sec.toString().padStart(2, "0")}</div>
           
           </div>
         </div>
@@ -324,6 +361,7 @@ const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
       if (mediaRecorder.current) {
         mediaRecorder.current.stop();
         setIsRecording(false);
+        
 
         mediaRecorder.current.ondataavailable = (e) => {
           const blob = new Blob([e.data], { type: "audio/webm;codecs=opus" });
@@ -338,7 +376,7 @@ const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
     if (mediaRecorder.current) {
       mediaRecorder.current.start()
       setIsRecording(true);
-
+      
       // Get media recorder
       const currentMediaRecorder = mediaRecorder.current
 
@@ -357,7 +395,6 @@ const AudioButtons = ({ onSave, renderErrorState }: AudioButtonProps) => {
       start({ node, context, getPlayable: () => currentMediaRecorder.state === "recording", renderErrorState, canvasId, isPlayback })
     }
   }
-
 
   const handleSubmit = () => {
     onSave(audio)
