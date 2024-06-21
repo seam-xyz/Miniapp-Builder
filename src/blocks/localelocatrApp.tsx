@@ -3,16 +3,14 @@ import { BlockModel } from './types'
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 import { NationDropdown } from './temp_locale_components/NationDropdown';
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GoogleMap, StreetViewPanorama } from "@react-google-maps/api";
 import { LoadScript } from "@react-google-maps/api";
 // import {APIProvider, Map, MapCameraChangedEvent} from '@vis.gl/react-google-maps';
-import Streetview from 'react-google-streetview';
-import {APIProvider, Map} from '@vis.gl/react-google-maps';
+import { OutputFormat, setDefaults } from 'react-geocode';
+import { geocode, RequestType } from "react-geocode";
 
 const api_Key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY!
-
-console.log(api_Key)
 
 type Nation = {
   id: number;
@@ -21,6 +19,13 @@ type Nation = {
   lat: number;
   lng: number;
 }
+
+setDefaults({
+  key: api_Key,
+  language: "en",
+  region: "es",
+  outputFormat: OutputFormat.XML
+});
 
 type NationDict = Record<number, Nation>;
 const nations: NationDict = {
@@ -90,61 +95,133 @@ function toRad(Value:number)
     return Value * Math.PI / 180;
 }
 
+//converts KM to miles
+function convertKmToMiles(km:number) {
+  return km * 0.621371;
+}
+
+//gets random latitude in degrees
+function getRandomLatitude(): number {
+  // Latitude ranges from -90 to 90
+  return Math.random() * 180 - 90;
+}
+
+//gets random longitude in degress
+function getRandomLongitude(): number {
+  // Longitude ranges from -180 to 180
+  return Math.random() * 360 - 180;
+}
+
+//returns random latitude and longtude
+function getRandomLatLng(): { latitude: number; longitude: number } {
+  return {
+      latitude: getRandomLatitude(),
+      longitude: getRandomLongitude(),
+  };
+}
+
+const geocodeAPI = "https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=" + api_Key
+
+async function getGeocodeResponse() {
+  try {
+    const response = await fetch(geocodeAPI);
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText);
+    }
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error('There was a problem with the fetch operation:', error);
+  }
+}
+let data;
+// document.addEventListener('DOMContentLoaded', (event) => {
+//   getGeocodeResponse()
+//     .then(response => {
+//       data = response.results
+//       console.log(data);
+//       // Process the response here
+//     })
+//     .catch(error => {
+//       console.error('Error fetching the geocode data:', error);
+//     });
+// });
+
+
 
 const containerStyle = {
   width: '100%',
-  height: '400px',
+  height: '700px',
 };
 
 const center = {
-  lat: 37.7749, // Default latitude
-  lng: -122.4194, // Default longitude
+  lat: 40.650002, 
+  lng: -73.949997, // Default longitude
 };
+
+let streetAddress;
+
 
 const StreetView: React.FC = () => {
   const mapRef = useRef<google.maps.Map | null>(null);
   const streetViewRef = useRef<google.maps.StreetViewPanorama | null>(null);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const [showMap, setShowMap] = useState(true);
+  
 
   useEffect(() => {
-    if (mapRef.current) {
+    if (isMapLoaded && mapRef.current) {
+      // Create a StreetViewPanorama instance and link it to the map
       streetViewRef.current = new google.maps.StreetViewPanorama(
         document.getElementById('street-view') as HTMLElement,
         {
           position: center,
           pov: { heading: 165, pitch: 0 },
           zoom: 1,
+          addressControl: false,
         }
       );
       mapRef.current.setStreetView(streetViewRef.current);
+
+      // Hide the map after initializing Street View
+      setShowMap(false);
+
+      getGeocodeResponse()
+    .then(response => {
+      data = response.results
+      console.log(data)
+      streetAddress = data[0].formatted_address
+      console.log(streetAddress);
+      // Process the response here
+    })
+    .catch(error => {
+      console.error('Error fetching the geocode data:', error);
+    });
     }
-  }, []);
+  }, [isMapLoaded]);
 
   return (
-    <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={center}
-        zoom={14}
-        onLoad={(map) => {
-          mapRef.current = map;
-        }}
-      >
-        <div id="street-view" style={containerStyle}></div>
-      </GoogleMap>
+    <LoadScript googleMapsApiKey={api_Key}>
+      <div id="street-view" style={containerStyle}></div>
+
+
+      {showMap && (
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={center}
+          zoom={14}
+          onLoad={(map) => {
+            mapRef.current = map;
+            setIsMapLoaded(true);  // Set the map as loaded
+          }}
+          options={{
+            streetViewControl: false,
+          }}
+        />
+      )}
     </LoadScript>
   );
 };
-
-
-
-
-
-
- 
-
-
-const lib = ["places"];
-
 
 
 export default class localelocatrBlock extends Block {
@@ -155,6 +232,11 @@ export default class localelocatrBlock extends Block {
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
+
+
+    
+
+    
     return (
       <div>
         
@@ -162,12 +244,10 @@ export default class localelocatrBlock extends Block {
         <div> and again again  </div>
         {randomNation().flag}
         <NationDropdown />
-
-        <div>{calcDist(38.9072, 77.0369, 40.712, 74.0060)}</div>
+        <div></div>
         <div>
-      <h1>Google Street View Example</h1>
-      <StreetView />
-    </div>
+          <StreetView />
+        </div>
 
         
 
@@ -175,7 +255,6 @@ export default class localelocatrBlock extends Block {
      
       </div>)}
     
-  
 
   renderErrorState() {
     return (
