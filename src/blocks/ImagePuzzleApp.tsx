@@ -5,6 +5,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import ImageIcon from '@mui/icons-material/Image';
 import SeamSaveButton from '../components/SeamSaveButton';
 
+// *** TYPES ***
+type Coordinate2D = [number, number];
+type Bounds = [Coordinate2D, Coordinate2D];
+
+// Represents a game piece
+interface Tile {
+  tileId: number;  // Unique ID that corresponds to the "correct" position on the grid.
+  pos: number;  // Current position of the tile on the grid.
+}
+
 // Block model .data
 interface ImagePuzzleData {
   imageData: string;  // Base64 image data serialized to Block.model.
@@ -12,6 +22,70 @@ interface ImagePuzzleData {
   imagePos: Coordinate2D;  // Image position, in pixels (origin at center.)
   zoomLevel: number;  // The raw zoom level from 1.0 to maxZoomLevel.
 }
+
+// An individual tile on the game board
+interface ImagePuzzleTileProps {
+  puzzleSize: number;  // Puzzle size, in tiles.
+  tile: Tile
+  image: HTMLImageElement | undefined;  // Curently-loaded image.
+  boardDims: Coordinate2D;  // Size of the puzzle grid, in pixels.
+  onTileMoved: (tile: Tile) => void;
+  imagePos: Coordinate2D;  // Image position, in pixels (origin at center).
+  zoomLevel: number;  // The raw zoom level from 1.0 to maxZoomLevel.
+  puzzleSolved: boolean;
+  onTileSwiped: (tile: Tile, dPos: Coordinate2D) => void;
+}
+
+// Game board
+interface ImagePuzzleBoardProps {
+  puzzleSize: number; // Puzzle size, in tiles.
+  onTileMoved: (tile: Tile) => void;
+  image: HTMLImageElement | undefined;  // Currently-loaded image.
+  tiles: Tile[];  // A list of all tiles and their corresponding positions.
+  imagePos: Coordinate2D;  // The image position, in pixels (origin at center.)
+  zoomLevel: number; // The raw zoom level, from 1.0 to maxZoomLevel.
+  puzzleSolved: boolean;  // Whether or not the puzzle is solved.
+  onTileSwiped: (tile: Tile, dPos: Coordinate2D) => void;
+}
+
+// Button for selecting the size of the puzzle
+interface ImagePuzzleSizeSelectorOptionProps {
+  value: number;  // The puzzle size value represented by this component.
+  onSizeChanged: (puzzleSize: number) => void;
+  puzzleSize: number;  // The current puzzle size, in tiles.
+}
+
+// Puzzle size selector; container for individual ImagePuzzleSizeSelectorOptions
+interface ImagePuzzleSizeSelectorProps {
+  onSizeChanged: (value: number) => void
+  puzzleSize: number // The current puzzle size, in tiles.
+}
+
+// Image uploader
+interface ImagePuzzleUploadProps {
+  onImageUploaded: (value: File) => void;
+  image: HTMLImageElement | null;  // Currently-loaded image.
+  imagePos: Coordinate2D;  // The image position, in pixels (origin at center.)
+  setImagePos: (imagePos: Coordinate2D) => void;
+  puzzleSize: number;  // The puzzle size, in tiles.
+  zoomLevel: number;  // The raw zoom level, from 1.0 to maxZoomLevel
+  onSlideZoom: (zoomLevel: number, canvasDims: Coordinate2D) => void;  // Called on changing the range <input>
+  maxZoomLevel: number  // The maximum value for zoomLevel
+}
+
+// Published view for the block
+interface ImagePuzzleProps {
+  data: ImagePuzzleData;
+}
+
+// Edit view for the block
+interface ImagePuzzleEditProps {
+  done: () => void;
+  width?: string;
+  setData: (data: ImagePuzzleData) => void;
+}
+
+// *** FUNCTIONS ***
 
 // Debounce hook for preventing mouse and touch from overlapping.
 const debouncer: Record<string, boolean> = {};
@@ -26,22 +100,124 @@ function useDebounce(key: string, delay: number): () => boolean {
     setTimeout(() => {debouncer[key] = false;}, delay);
     return false;
   }
-
+  
   return getDebouncedValue;
 }
 
-// Tile for the game board
-interface ImagePuzzleTileProps {
-  puzzleSize: number;  // Puzzle size, in tiles.
-  tile: Tile
-  image: HTMLImageElement | undefined;  // Curently-loaded image.
-  boardDims: Coordinate2D;  // Size of the puzzle grid, in pixels.
-  onTileMoved: (tile: Tile) => void;
-  imagePos: Coordinate2D;  // Image position, in pixels (origin at center).
-  zoomLevel: number;  // The raw zoom level from 1.0 to maxZoomLevel.
-  puzzleSolved: boolean;
-  onTileSwiped: (tile: Tile, dPos: Coordinate2D) => void;
+// Sets only inner borders for the overlay grid, with box at index in a grid with dimensions side x side
+function getBorderStyleGrid(index: number, side: number, borderWidth: string): string {
+  const top = index < side ? '0px' : borderWidth;
+  const right = index % side === side - 1 ? '0px' : borderWidth;
+  const bottom = index >= (side ** 2 - side) ? '0px' : borderWidth;
+  const left = index % side === 0 ? '0px' : borderWidth;
+
+  return [top, right, bottom, left].join(' ');
 }
+
+// Normalize zoom such that 1.0 is the furthest you can zoom without introducing whitespace
+function normalizeZoomLevel(zoomLevel: number, imageDims: Coordinate2D, canvasDims: Coordinate2D): number {
+  return Math.max(canvasDims[0] / imageDims[0], canvasDims[1] / imageDims[1]) * zoomLevel;
+}
+
+// Get the minimum and maximum allowable values for the image position without introducing whitespace
+function getImagePosBounds(zoom: number, imageDims: Coordinate2D, canvasDims: Coordinate2D): Bounds {
+  const xMin = -(imageDims[0] - canvasDims[0] / zoom) / 2;
+  const xMax = (imageDims[0] - canvasDims[0] / zoom) / 2;
+  const yMin = -(imageDims[1] - canvasDims[1] / zoom) / 2;
+  const yMax = (imageDims[1] - canvasDims[1] / zoom) / 2;
+
+  return [[xMin, xMax], [yMin, yMax]];
+}
+
+function addCoordinate2D(a: Coordinate2D, b: Coordinate2D): Coordinate2D {
+  return [a[0] + b[0], a[1] + b[1]];
+}
+
+function subtractCoordinate2D(a: Coordinate2D, b: Coordinate2D): Coordinate2D {
+  return [a[0] - b[0], a[1] - b[1]];
+}
+
+// Returns a new Coordinate2D such that the individual components are within the min and max values of the provided Bounds.
+function clampCoordinateXYToBounds(d: Coordinate2D, b: Bounds): Coordinate2D {
+  const x = Math.max(b[0][0], Math.min(b[0][1], d[0]));
+  const y = Math.max(b[1][0], Math.min(b[1][1], d[1]));
+  const d0: Coordinate2D = [x, y];
+  return d0;
+}
+
+// If two tiles are neighboring, return the direction of travel from posA to posB
+function getDirFromPos(posA: number, posB: number, puzzleSize: number): string | undefined {
+  const directions = {
+    'up': -puzzleSize,
+    'right': 1,
+    'down': puzzleSize,
+    'left': -1
+  };
+  const dPos = posB - posA;
+  const dir = Object.entries(directions).find(direction => direction[1] === dPos);
+  if (!dir) return undefined;
+  return dir[0];
+}
+
+// Returns true if two tiles neighbor one another
+function tileNeighbors(tiles: Tile[], posA: number, posB: number): boolean {
+  const puzzleSize = Math.sqrt(tiles.length + 1);
+  if (posA < 0 || posB < 0 || posA >= puzzleSize ** 2 || posB >= puzzleSize ** 2) return false;  // One of the tiles doesn't exist.
+  const dir = getDirFromPos(posA, posB, puzzleSize);
+  if (!dir) return false;  // Tiles are not in a cardinal direction from one another.
+  if ((dir === 'right' && posA % puzzleSize === puzzleSize - 1) || (dir === 'left' && posA % puzzleSize === 0)) {
+    return false;  // Direction implies a row wrap
+  }
+  return true;
+}
+
+// Returns the empty position in a given game board
+function getEmptyPos(tiles: Tile[]): number {
+  const puzzleSize = Math.sqrt(tiles.length + 1)
+  const result = Array(puzzleSize ** 2).fill(0)
+    .map((_, i) => i)
+    .filter(i => 
+      !tiles.map(tile => tile.pos).includes(i)
+    )
+    .at(0);
+  if (result === undefined) throw new Error('Could not find empty position');
+
+  return result;
+}
+
+// Returns an array of tiles that serves as an initial/solved state for the game
+function getInitPositions(puzzleSize: number) {
+  return Array(puzzleSize ** 2 - 1).fill(0).map((_, i): Tile => ({tileId: i, pos: i}));
+}
+
+// Returns the result of applying the move at posTile (sliding it into the empty space if neighboring)
+function applyMove(tiles: Tile[], posTile: number): Tile[] {
+  const posEmpty = getEmptyPos(tiles);
+  if (!tileNeighbors(tiles, posTile, posEmpty)) {
+    return tiles;
+  } else {
+    return tiles.map(tile => tile.pos === posTile ? {tileId: tile.tileId, pos: posEmpty} : tile);
+  }
+}
+
+// Recursively gets a board with one random move applied to it
+function getRandomMove(tiles: Tile[], depth: number): Tile[] {
+  if (depth <= 0) return tiles;
+  const puzzleSize = Math.sqrt(tiles.length + 1);
+  const emptyPos = getEmptyPos(tiles);
+  const neighbors = [1, -1, puzzleSize, -puzzleSize].filter(neighbor => tileNeighbors(tiles, emptyPos, emptyPos + neighbor))
+  const chosenMove = emptyPos + neighbors[Math.floor(Math.random() * neighbors.length)];
+  return getRandomMove(applyMove(tiles, chosenMove), depth - 1);
+}
+
+// Returns true if the given board is solved
+function checkSolved(tiles: Array<Tile>): boolean {
+  return tiles.every(tile => tile.pos === tile.tileId);
+}
+
+// *** COMPONENTS ***
+
+// Tile for the game board
 function ImagePuzzleTile(props: ImagePuzzleTileProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [scale, setScale] = useState<number>(100);
@@ -179,22 +355,7 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
   )
 }
 
-// Game piece (abstract)
-interface Tile {
-  tileId: number;  // Unique ID that corresponds to the "correct" position on the grid.
-  pos: number;  // Current position of the tile on the grid.
-}
 // Game board
-interface ImagePuzzleBoardProps {
-  puzzleSize: number; // Puzzle size, in tiles.
-  onTileMoved: (tile: Tile) => void;
-  image: HTMLImageElement | undefined;  // Currently-loaded image.
-  tiles: Tile[];  // A list of all tiles and their corresponding positions.
-  imagePos: Coordinate2D;  // The image position, in pixels (origin at center.)
-  zoomLevel: number; // The raw zoom level, from 1.0 to maxZoomLevel.
-  puzzleSolved: boolean;  // Whether or not the puzzle is solved.
-  onTileSwiped: (tile: Tile, dPos: Coordinate2D) => void;
-}
 function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
   const selfRef = useRef<HTMLDivElement | null>(null);
 
@@ -223,12 +384,7 @@ function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
   );
 }
 
-// Puzzle size selector option
-interface ImagePuzzleSizeSelectorOptionProps {
-  value: number;  // The puzzle size value represented by this component.
-  onSizeChanged: (puzzleSize: number) => void;
-  puzzleSize: number;  // The current puzzle size, in tiles.
-}
+// Button for selecting the size of the puzzle
 function ImagePuzzleSizeSelectorOption(props: ImagePuzzleSizeSelectorOptionProps) {
   return (
     <div 
@@ -241,11 +397,7 @@ function ImagePuzzleSizeSelectorOption(props: ImagePuzzleSizeSelectorOptionProps
   );
 }
 
-// Puzzle size selector
-interface ImagePuzzleSizeSelectorProps {
-  onSizeChanged: (value: number) => void
-  puzzleSize: number // The current puzzle size, in tiles.
-}
+// Puzzle size selector; container for individual ImagePuzzleSizeSelectorOptions
 function ImagePuzzleSizeSelector(props: ImagePuzzleSizeSelectorProps) {
   return (
     <div className='flex flex-row items-center gap-4'>
@@ -257,60 +409,7 @@ function ImagePuzzleSizeSelector(props: ImagePuzzleSizeSelectorProps) {
   )
 }
 
-// Sets only inner borders for the overlay grid, with box at index in a grid with dimensions side x side
-function getBorderStyleGrid(index: number, side: number, borderWidth: string): string {
-  const top = index < side ? '0px' : borderWidth;
-  const right = index % side === side - 1 ? '0px' : borderWidth;
-  const bottom = index >= (side ** 2 - side) ? '0px' : borderWidth;
-  const left = index % side === 0 ? '0px' : borderWidth;
-
-  return [top, right, bottom, left].join(' ');
-}
-
-type Coordinate2D = [number, number];
-type Bounds = [Coordinate2D, Coordinate2D];
-
-// Normalize zoom such that 1.0 is the furthest you can zoom without introducing whitespace
-function normalizeZoomLevel(zoomLevel: number, imageDims: Coordinate2D, canvasDims: Coordinate2D): number {
-  return Math.max(canvasDims[0] / imageDims[0], canvasDims[1] / imageDims[1]) * zoomLevel;
-}
-
-// Get the minimum and maximum allowable values for the image position without introducing whitespace
-function getImagePosBounds(zoom: number, imageDims: Coordinate2D, canvasDims: Coordinate2D): Bounds {
-  const xMin = -(imageDims[0] - canvasDims[0] / zoom) / 2;
-  const xMax = (imageDims[0] - canvasDims[0] / zoom) / 2;
-  const yMin = -(imageDims[1] - canvasDims[1] / zoom) / 2;
-  const yMax = (imageDims[1] - canvasDims[1] / zoom) / 2;
-
-  return [[xMin, xMax], [yMin, yMax]];
-}
-
-function addCoordinate2D(a: Coordinate2D, b: Coordinate2D): Coordinate2D {
-  return [a[0] + b[0], a[1] + b[1]];
-}
-
-function subtractCoordinate2D(a: Coordinate2D, b: Coordinate2D): Coordinate2D {
-  return [a[0] - b[0], a[1] - b[1]];
-}
-
-function clampCoordinateXYToBounds(d: Coordinate2D, b: Bounds): Coordinate2D {
-  const x = Math.max(b[0][0], Math.min(b[0][1], d[0]));
-  const y = Math.max(b[1][0], Math.min(b[1][1], d[1]));
-  const d0: Coordinate2D = [x, y];
-  return d0;
-}
-
 // Image uploader
-interface ImagePuzzleUploadProps {
-  onImageUploaded: (value: File) => void;
-  image: HTMLImageElement | null;  // Currently-loaded image.
-  imagePos: Coordinate2D;  // The image position, in pixels (origin at center.)
-  setImagePos: (imagePos: Coordinate2D) => void;
-  puzzleSize: number;  // The puzzle size, in tiles.
-  zoomLevel: number;  // The raw zoom level, from 1.0 to maxZoomLevel
-  onSlideZoom: (zoomLevel: number, canvasDims: Coordinate2D) => void;  // Called on changing the range <input>
-  maxZoomLevel: number  // The maximum value for zoomLevel
-}
 function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
   const fileInput = useRef<HTMLInputElement | null>(null);
   const [prevMousePos, setPrevMousePos] = useState<Coordinate2D | null>(null);
@@ -444,16 +543,13 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
           }
         </div>
         <input ref={fileInput} type='file' name='file' accept='image/*' onChange={e => e.target.files?.item(0) && props.onImageUploaded(e.target.files[0])} hidden />
-      <input type='range' min={1.0} max={props.maxZoomLevel} step='0.1' value={props.zoomLevel} onChange={onZoomLevelInputChange} />
+      <input type='range' min={1.0} max={props.maxZoomLevel} step='0.01' value={props.zoomLevel} onChange={onZoomLevelInputChange} />
       </div>
     </>
   )
 }
 
-// Default view for the block
-interface ImagePuzzleProps {
-  data: ImagePuzzleData;
-}
+// Published view for the block
 function ImagePuzzle(props: ImagePuzzleProps) {
   const [tiles, setTiles] = useState<Array<Tile>>([])
   const [image, setImage] = useState<HTMLImageElement | undefined>(undefined);
@@ -471,69 +567,9 @@ function ImagePuzzle(props: ImagePuzzleProps) {
     image.onload = () => {
       setImage(image);
     };
-    const tiles0 = getRandomMove(getInitPositions(), 500);
+    const tiles0 = getRandomMove(getInitPositions(puzzleSize), 500);
     setTiles(tiles0);
   }, []);
-
-  function getDirFromPos(posA: number, posB: number): string | undefined {
-    const directions = {
-      'up': -puzzleSize,
-      'right': 1,
-      'down': puzzleSize,
-      'left': -1
-    };
-    const dPos = posB - posA;
-    const dir = Object.entries(directions).find(direction => direction[1] === dPos);
-    if (!dir) return undefined;
-    return dir[0];
-  }
-
-  function tileNeighbors(tiles: Tile[], posA: number, posB: number): boolean {
-    if (posA < 0 || posB < 0 || posA >= puzzleSize ** 2 || posB >= puzzleSize ** 2) return false;  // One of the tiles doesn't exist.
-    const dir = getDirFromPos(posA, posB);
-    if (!dir) return false;  // Tiles are not in a cardinal direction from one another.
-    if ((dir === 'right' && posA % puzzleSize === puzzleSize - 1) || (dir === 'left' && posA % puzzleSize === 0)) {
-      return false;  // Direction implies a row wrap
-    }
-    return true;
-  }
-
-  function getEmptyPos(tiles: Tile[]): number {
-    const result = Array(puzzleSize ** 2).fill(0)
-      .map((_, i) => i)
-      .filter(i => 
-        !tiles.map(tile => tile.pos).includes(i)
-      )
-      .at(0);
-    if (result === undefined) throw new Error('Could not find empty position');
-
-    return result;
-  }
-
-  function getInitPositions() {
-    return Array(puzzleSize ** 2 - 1).fill(0).map((_, i): Tile => ({tileId: i, pos: i}));
-  }
-
-  function applyMove(tiles: Tile[], posTile: number): Tile[] {
-    const posEmpty = getEmptyPos(tiles);
-    if (!tileNeighbors(tiles, posTile, posEmpty)) {
-      return tiles;
-    } else {
-      return tiles.map(tile => tile.pos === posTile ? {tileId: tile.tileId, pos: posEmpty} : tile);
-    }
-  }
-
-  function getRandomMove(tiles: Tile[], depth: number): Tile[] {
-    if (depth <= 0) return tiles;
-    const emptyPos = getEmptyPos(tiles);
-    const neighbors = [1, -1, puzzleSize, -puzzleSize].filter(neighbor => tileNeighbors(tiles, emptyPos, emptyPos + neighbor))
-    const chosenMove = emptyPos + neighbors[Math.floor(Math.random() * neighbors.length)];
-    return getRandomMove(applyMove(tiles, chosenMove), depth - 1);
-  }
-
-  function checkSolved(tiles: Array<Tile>): boolean {
-    return tiles.every(tile => tile.pos === tile.tileId);
-  }
 
   function onTileMoved(tile: Tile): void {
     const tiles0 = applyMove(tiles, tile.pos);
@@ -542,13 +578,13 @@ function ImagePuzzle(props: ImagePuzzleProps) {
   }
 
   function onSolveClicked() {
-    const tiles0 = getInitPositions();
+    const tiles0 = getInitPositions(puzzleSize);
     setTiles(tiles0);
     setSolved(true);
   }
 
   function onRestartClicked() {
-    const tiles0 = getRandomMove(getInitPositions(), 500);
+    const tiles0 = getRandomMove(getInitPositions(puzzleSize), 500);
     setTiles(tiles0);
     setSolved(false);
   }
@@ -565,7 +601,7 @@ function ImagePuzzle(props: ImagePuzzleProps) {
       : 'left';
 
     const emptyPos = getEmptyPos(tiles);
-    const dirToEmptyPos = getDirFromPos(tile.pos, emptyPos);
+    const dirToEmptyPos = getDirFromPos(tile.pos, emptyPos, puzzleSize);
 
 
     if (dirToEmptyPos !== dirTheta) return;
@@ -585,11 +621,6 @@ function ImagePuzzle(props: ImagePuzzleProps) {
 }
 
 // Edit view for the block
-interface ImagePuzzleEditProps {
-  done: () => void;
-  width?: string;
-  setData: (data: ImagePuzzleData) => void;
-}
 function ImagePuzzleEdit(props: ImagePuzzleEditProps) {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [puzzleSize, setPuzzleSize] = useState<number>(3);
