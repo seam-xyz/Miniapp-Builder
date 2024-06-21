@@ -20,18 +20,19 @@ interface ImagePuzzleData {
 // Tile for the game board
 interface ImagePuzzleTileProps {
   puzzleSize: number;  // Puzzle size, in tiles.
-  tileId: number;  // Unique ID that corresponds to the "correct" position in the puzzle.
-  pos: number;  // The current position on the grid.
+  tile: Tile
   image: HTMLImageElement | undefined;  // Curently-loaded image.
   boardDims: Coordinate2D;  // Size of the puzzle grid, in pixels.
-  onTileClicked: (tileId: number) => void;
+  onTileMoved: (tile: Tile) => void;
   imagePos: Coordinate2D;  // Image position, in pixels (origin at center).
   zoomLevel: number;  // The raw zoom level from 1.0 to maxZoomLevel.
   puzzleSolved: boolean;
+  onTileSwiped: (tile: Tile, dPos: Coordinate2D) => void;
 }
 function ImagePuzzleTile(props: ImagePuzzleTileProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [scale, setScale] = useState<number>(100);
+  const [cursorStartPos, setCursorStartPos] = useState<Coordinate2D | null>(null);
   
   // Render image.
   useEffect(() => {
@@ -41,7 +42,8 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
     const context = canvas?.getContext('2d');
     if (!context) return;
 
-    const tileDims = [Math.floor(props.boardDims[0] / props.puzzleSize), Math.floor(props.boardDims[1] / props.puzzleSize)];
+    // .98 is used to offset the 102% translate in CSS to avoid subpixel shenanigans.
+    const tileDims = [Math.floor(props.boardDims[0] / props.puzzleSize) * .98, Math.floor(props.boardDims[1] / props.puzzleSize) * .98];
     canvas.width = tileDims[0];
     canvas.height = tileDims[1];
     
@@ -52,8 +54,8 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
     // Coordinates of current tile on the puzzle grid (before shuffling tiles). Origin at (0, 0) in center of grid.
     // For example, a 4x4 grid will have values [-1.5, -0.5, 0.5, 1.5] since canvases are measured from their top left.
     const selfGridCoords = [
-      props.tileId % props.puzzleSize - (props.puzzleSize - 1) / 2,
-      Math.floor(props.tileId / props.puzzleSize) - (props.puzzleSize - 1) / 2
+      props.tile.tileId % props.puzzleSize - (props.puzzleSize - 1) / 2,
+      Math.floor(props.tile.tileId / props.puzzleSize) - (props.puzzleSize - 1) / 2
     ];
     // Transform the global image position to a local (per-tile) one.
     const imagePos = [
@@ -89,20 +91,70 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
     }, initDelay);
   }, [props.puzzleSolved]);
 
+  // Distance, in pixels, before a gesture event is registered.
+  const moveThreshold = 14;
+
   // Returns which "diagonal" the tile sits on for win animation.
   function getDiagonal(): number {
-    const row = Math.floor(props.pos / props.puzzleSize);
-    const col = props.pos % props.puzzleSize;
+    const row = Math.floor(props.tile.pos / props.puzzleSize);
+    const col = props.tile.pos % props.puzzleSize;
     return row + col;
+  }
+
+  useEffect(() => {
+    console.log(cursorStartPos)
+  }, [cursorStartPos])
+
+  function onMouseDown(e: React.MouseEvent) {
+    setCursorStartPos([e.clientX, e.clientY]);
+  }
+
+  function onTouchStart(e: React.TouchEvent) {
+    setCursorStartPos([e.touches[0].clientX, e.touches[0].clientY]);
+  }
+
+  function onMouseUp(e: React.MouseEvent) {
+    if (!cursorStartPos) return;
+    props.onTileMoved(props.tile);
+    setCursorStartPos(null);
+  }
+
+  function onTouchEnd(e: React.TouchEvent) {
+    if (!cursorStartPos) return;
+    props.onTileMoved(props.tile);
+    setCursorStartPos(null);
+  }
+
+  function onCursorMove(pos: Coordinate2D) {
+    if (!cursorStartPos) return;
+    const dPos = subtractCoordinate2D(pos, cursorStartPos);
+    if (Math.hypot(dPos[0], dPos[1]) >= moveThreshold) {
+      setCursorStartPos(null);
+      props.onTileSwiped(props.tile, dPos);
+    }
+  }
+
+  function onTouchMove(e: React.TouchEvent) {
+    onCursorMove([e.touches[0].clientX, e.touches[0].clientY]);
+  }
+
+  function onMouseMove(e: React.MouseEvent) {
+    onCursorMove([e.clientX, e.clientY]);
   }
 
   return (
     <div
       className='basis-0 aspect-square absolute transition-transform duration-300 rounded-lg overflow-hidden'
       style={{
-        transform: `translate(calc(102% * ${props.pos % props.puzzleSize}), calc(102% * ${Math.floor(props.pos / props.puzzleSize)})) scale(${scale}%)`,
+        // Borders introduced kinda hackily to circumvent CSS subpixel shenanigans.
+        transform: `translate(calc(102% * ${props.tile.pos % props.puzzleSize}), calc(102% * ${Math.floor(props.tile.pos / props.puzzleSize)})) scale(${scale}%)`,
       }}
-      onClick={() => props.onTileClicked(props.tileId)}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+      onMouseMove={onMouseMove}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      onTouchMove={onTouchMove}
     >
       <canvas ref={canvasRef} />
     </div>
@@ -117,12 +169,13 @@ interface Tile {
 // Game board
 interface ImagePuzzleBoardProps {
   puzzleSize: number; // Puzzle size, in tiles.
-  onTileClicked: (tileId: number) => void;
+  onTileMoved: (tile: Tile) => void;
   image: HTMLImageElement | undefined;  // Currently-loaded image.
   tiles: Tile[];  // A list of all tiles and their corresponding positions.
   imagePos: Coordinate2D;  // The image position, in pixels (origin at center.)
   zoomLevel: number; // The raw zoom level, from 1.0 to maxZoomLevel.
   puzzleSolved: boolean;  // Whether or not the puzzle is solved.
+  onTileSwiped: (tile: Tile, dPos: Coordinate2D) => void;
 }
 function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
   const selfRef = useRef<HTMLDivElement | null>(null);
@@ -139,11 +192,12 @@ function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
           props.tiles.map(tile => 
             <ImagePuzzleTile
               key={tile.tileId} puzzleSize={props.puzzleSize}
-              tileId={tile.tileId} pos={tile.pos} image={props.image} 
+              tile={tile} image={props.image} 
               boardDims={getBoardDims()} 
-              onTileClicked={(tileId: number) => props.onTileClicked(tileId)}
+              onTileMoved={props.onTileMoved}
               imagePos={props.imagePos} zoomLevel={props.zoomLevel}
               puzzleSolved={props.puzzleSolved}
+              onTileSwiped={props.onTileSwiped}
             />
           )
         }
@@ -213,8 +267,12 @@ function getImagePosBounds(zoom: number, imageDims: Coordinate2D, canvasDims: Co
   return [[xMin, xMax], [yMin, yMax]];
 }
 
-function addCoordinateXY(a: Coordinate2D, b: Coordinate2D): Coordinate2D {
+function addCoordinate2D(a: Coordinate2D, b: Coordinate2D): Coordinate2D {
   return [a[0] + b[0], a[1] + b[1]];
+}
+
+function subtractCoordinate2D(a: Coordinate2D, b: Coordinate2D): Coordinate2D {
+  return [a[0] - b[0], a[1] - b[1]];
 }
 
 function clampCoordinateXYToBounds(d: Coordinate2D, b: Bounds): Coordinate2D {
@@ -281,7 +339,7 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
       if (prevTouchPos) {
         const dTouchPos: Coordinate2D = [(touchPos[0] - prevTouchPos[0]) * dragCoeff, (touchPos[1] - prevTouchPos[1]) * dragCoeff];
         const imagePosBounds = getImagePosBounds(zoom, [props.image.width, props.image.height], [canvas.width, canvas.height]);
-        const imagePos0 = clampCoordinateXYToBounds(addCoordinateXY(props.imagePos, dTouchPos), imagePosBounds);
+        const imagePos0 = clampCoordinateXYToBounds(addCoordinate2D(props.imagePos, dTouchPos), imagePosBounds);
         props.setImagePos(imagePos0);
       }
       setPrevTouchPos([touchPos[0], touchPos[1]]);
@@ -318,7 +376,7 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
     if (prevMousePos) {
       const dMousePos: Coordinate2D = [(mousePos[0] - prevMousePos[0]) * dragCoeff, (mousePos[1] - prevMousePos[1]) * dragCoeff];
       const imagePosBounds = getImagePosBounds(zoom, [props.image.width, props.image.height], [canvas.width, canvas.height]);
-      const imagePos0 = clampCoordinateXYToBounds(addCoordinateXY(props.imagePos, dMousePos), imagePosBounds);
+      const imagePos0 = clampCoordinateXYToBounds(addCoordinate2D(props.imagePos, dMousePos), imagePosBounds);
       props.setImagePos(imagePos0);
     }
     setPrevMousePos([mousePos[0], mousePos[1]]);
@@ -399,8 +457,7 @@ function ImagePuzzle(props: ImagePuzzleProps) {
     setTiles(tiles0);
   }, []);
 
-  function tileNeighbors(tiles: Tile[], posA: number, posB: number): boolean {
-    if (posA < 0 || posB < 0 || posA >= puzzleSize ** 2 || posB >= puzzleSize ** 2) return false;  // One of the tiles doesn't exist.
+  function getDirFromPos(posA: number, posB: number): string | undefined {
     const directions = {
       'up': -puzzleSize,
       'right': 1,
@@ -408,7 +465,14 @@ function ImagePuzzle(props: ImagePuzzleProps) {
       'left': -1
     };
     const dPos = posB - posA;
-    const dir = Object.entries(directions).find(direction => direction[1] === dPos)?.at(0);
+    const dir = Object.entries(directions).find(direction => direction[1] === dPos);
+    if (!dir) return undefined;
+    return dir[0];
+  }
+
+  function tileNeighbors(tiles: Tile[], posA: number, posB: number): boolean {
+    if (posA < 0 || posB < 0 || posA >= puzzleSize ** 2 || posB >= puzzleSize ** 2) return false;  // One of the tiles doesn't exist.
+    const dir = getDirFromPos(posA, posB);
     if (!dir) return false;  // Tiles are not in a cardinal direction from one another.
     if ((dir === 'right' && posA % puzzleSize === puzzleSize - 1) || (dir === 'left' && posA % puzzleSize === 0)) {
       return false;  // Direction implies a row wrap
@@ -416,7 +480,7 @@ function ImagePuzzle(props: ImagePuzzleProps) {
     return true;
   }
 
-  function findEmptyPos(tiles: Tile[]): number {
+  function getEmptyPos(tiles: Tile[]): number {
     const result = Array(puzzleSize ** 2).fill(0)
       .map((_, i) => i)
       .filter(i => 
@@ -433,7 +497,7 @@ function ImagePuzzle(props: ImagePuzzleProps) {
   }
 
   function applyMove(tiles: Tile[], posTile: number): Tile[] {
-    const posEmpty = findEmptyPos(tiles);
+    const posEmpty = getEmptyPos(tiles);
     if (!tileNeighbors(tiles, posTile, posEmpty)) {
       return tiles;
     } else {
@@ -443,7 +507,7 @@ function ImagePuzzle(props: ImagePuzzleProps) {
 
   function getRandomMove(tiles: Tile[], depth: number): Tile[] {
     if (depth <= 0) return tiles;
-    const emptyPos = findEmptyPos(tiles);
+    const emptyPos = getEmptyPos(tiles);
     const neighbors = [1, -1, puzzleSize, -puzzleSize].filter(neighbor => tileNeighbors(tiles, emptyPos, emptyPos + neighbor))
     const chosenMove = emptyPos + neighbors[Math.floor(Math.random() * neighbors.length)];
     return getRandomMove(applyMove(tiles, chosenMove), depth - 1);
@@ -453,20 +517,10 @@ function ImagePuzzle(props: ImagePuzzleProps) {
     return tiles.every(tile => tile.pos === tile.tileId);
   }
 
-  function onTileClicked(tileId: number): void {
-    if (checkSolved(tiles)) return;
-
-    const posTile = tiles.find(x => x.tileId === tileId)?.pos;
-    if (posTile === undefined) {throw new Error('Something went seriously wrong.')};
-    const tiles0 = applyMove(tiles, posTile);
-
-    if (checkSolved(tiles0)) {
-      setSolved(true);
-      return;
-    }
-    else {
-      setTiles(tiles0);
-    }
+  function onTileMoved(tile: Tile): void {
+    const tiles0 = applyMove(tiles, tile.pos);
+    setSolved(checkSolved(tiles0));
+    setTiles(tiles0);
   }
 
   function onSolveClicked() {
@@ -481,10 +535,30 @@ function ImagePuzzle(props: ImagePuzzleProps) {
     setSolved(false);
   }
 
+  function onTileSwiped(tile: Tile, dPos: Coordinate2D) {
+    const theta = Math.atan2(dPos[1], dPos[0]);
+    const dirTheta =
+      theta >= -1/4 * Math.PI && theta < 1/4 * Math.PI
+      ? 'right'
+      : theta >= 1/4 * Math.PI && theta < 3/4 * Math.PI
+      ? 'down'
+      : theta >= -3/4 * Math.PI && theta < -1/4 * Math.PI
+      ? 'up'
+      : 'left';
+
+    const emptyPos = getEmptyPos(tiles);
+    const dirToEmptyPos = getDirFromPos(tile.pos, emptyPos);
+
+    console.log(theta, dirTheta, dirToEmptyPos);
+
+    if (dirToEmptyPos !== dirTheta) return;
+    onTileMoved(tile);
+  }
+
   return (
     <div className='flex flex-1 basis-full flex-col gap-4 justify-between'>
       <ImagePuzzleBoard puzzleSize={puzzleSize} imagePos={imagePos} puzzleSolved={solved}
-        image={image} tiles={tiles} onTileClicked={(tileId) => onTileClicked(tileId)} zoomLevel={zoomLevel} />
+        image={image} tiles={tiles} onTileMoved={onTileMoved} zoomLevel={zoomLevel} onTileSwiped={onTileSwiped} />
       <div className='flex flex-row justify-around text-md p-4 gap-8'>
         <button className='flex-1 py-2 drop-shadow-md border border-solid rounded-md border-[#aaaaaa]' onClick={onSolveClicked}>Solve</button>
         <button className='flex-1 py-2 drop-shadow-md border border-solid rounded-md border-[#aaaaaa]' onClick={onRestartClicked}>Restart</button>
@@ -517,8 +591,6 @@ function ImagePuzzleEdit(props: ImagePuzzleEditProps) {
         const imageData = reader.result.toString();
         props.setData({ imageData, puzzleSize, imagePos, zoomLevel });
         props.done();
-      } else {
-        console.log('No image selected');
       }
     }
   }

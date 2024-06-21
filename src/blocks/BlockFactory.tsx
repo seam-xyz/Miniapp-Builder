@@ -1,4 +1,4 @@
-import ImageApp from './ImagePuzzleApp'
+import ImagePuzzleApp from './ImagePuzzleApp'
 import MoodApp from './MoodApp'
 import BookshelfApp from './BookshelfApp'
 import UnknownApp from './UnknownApp'
@@ -65,7 +65,7 @@ export default class BlockFactory {
       case "Wordle": return new WordleBlock(model, theme)
       case "Mood": return new MoodApp(model, theme)
       case "Whiteboard": return new WhiteboardBlock(model, theme)
-      case "Image": return new ImageApp(model, theme)
+      case "ImagePuzzle": return new ImagePuzzleApp(model, theme)
       // new blocks go here
       default: return new UnknownApp(model, theme)
     }
