@@ -138,8 +138,7 @@ function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
   }
 
   return (
-    <div className='flex flex-0 basis-full mx-auto mt-4 aspect-square mx-auto' ref={selfRef} >
-      <div className='flex w-full h-full flex-row flex-wrap relative'>
+    <div className='flex flex-0 w-full max-w-[50vh] aspect-square self-center' ref={selfRef} >
         {
           props.tiles.map(tile => 
             <ImagePuzzleTile
@@ -152,7 +151,6 @@ function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
             />
           )
         }
-      </div>
     </div>
   );
 }
@@ -237,14 +235,15 @@ interface ImagePuzzleUploadProps {
   imagePos: Coordinate2D;  // The image position, in pixels (origin at center.)
   setImagePos: (imagePos: Coordinate2D) => void;
   puzzleSize: number;  // The puzzle size, in tiles.
-  onPinchZoom: (dZoom: number, canvasDims: Coordinate2D) => void;  // Called on mobile pinch gesture.
   zoomLevel: number;  // The raw zoom level, from 1.0 to maxZoomLevel
   onSlideZoom: (zoomLevel: number, canvasDims: Coordinate2D) => void;  // Called on changing the range <input>
   maxZoomLevel: number  // The maximum value for zoomLevel
 }
 function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
   const fileInput = useRef<HTMLInputElement | null>(null);
-  const [prevTouchPos, setPrevTouchPos] = useState<Array<number | null>>([null, null]);
+  const [prevMousePos, setPrevMousePos] = useState<Coordinate2D | null>(null);
+  const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
+  const [prevTouchPos, setPrevTouchPos] = useState<Coordinate2D | null>(null);
   const [prevTouchDistance, setPrevTouchDistance] = useState<number | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const divRef = useRef<HTMLDivElement | null>(null);
@@ -280,11 +279,10 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
     const zoom = normalizeZoomLevel(props.zoomLevel, [props.image.width, props.image.height], [canvas.width, canvas.height]);
 
     const dragCoeff = -1 / zoom;
-    const pinchCoeff = .05;
     
     if (e.touches.length === 1) {
       const touchPos = [e.touches[0].screenX, e.touches[0].screenY]
-      if (prevTouchPos[0] && prevTouchPos[1]) {
+      if (prevTouchPos) {
         const dTouchPos: Coordinate2D = [(touchPos[0] - prevTouchPos[0]) * dragCoeff, (touchPos[1] - prevTouchPos[1]) * dragCoeff];
         const imagePosBounds = getImagePosBounds(zoom, [props.image.width, props.image.height], [canvas.width, canvas.height]);
         const imagePos0 = clampCoordinateXYToBounds(addCoordinateXY(props.imagePos, dTouchPos), imagePosBounds);
@@ -292,22 +290,13 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
       }
       setPrevTouchPos([touchPos[0], touchPos[1]]);
     }
-    else if (e.touches.length === 2) {
-      const touchDistance = Math.hypot(e.touches[1].screenX - e.touches[0].screenX, e.touches[1].screenY - e.touches[0].screenY);
-      if (prevTouchDistance) {
-        const dTouchDistance = touchDistance - prevTouchDistance;
-        props.onPinchZoom(dTouchDistance * pinchCoeff, [canvas.width, canvas.height]);
-      }
-      console.log(touchDistance);
-      setPrevTouchDistance(touchDistance);
-    }
   }
 
   function onTouchEnd(e: React.TouchEvent) {
     if (e.touches.length === 1) {
       setPrevTouchDistance(null);
     } else if (e.touches.length === 0) {
-      setPrevTouchPos([null, null]);
+      setPrevTouchPos(null);
     }
   }
 
@@ -320,14 +309,45 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
     props.onSlideZoom(zoomLevel, canvasDims)
   }
 
+  function onMouseMove(e: React.MouseEvent) {
+    if (!isMouseDown) return;
+    if (!props.image) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const zoom = normalizeZoomLevel(props.zoomLevel, [props.image.width, props.image.height], [canvas.width, canvas.height]);
+
+    const dragCoeff = -1 / zoom;
+    
+    const mousePos: Coordinate2D = [e.clientX, e.clientY]
+    if (prevMousePos) {
+      const dMousePos: Coordinate2D = [(mousePos[0] - prevMousePos[0]) * dragCoeff, (mousePos[1] - prevMousePos[1]) * dragCoeff];
+      const imagePosBounds = getImagePosBounds(zoom, [props.image.width, props.image.height], [canvas.width, canvas.height]);
+      const imagePos0 = clampCoordinateXYToBounds(addCoordinateXY(props.imagePos, dMousePos), imagePosBounds);
+      props.setImagePos(imagePos0);
+    }
+    setPrevMousePos([mousePos[0], mousePos[1]]);
+  }
+
+  function onMouseDown() {
+    setIsMouseDown(true);
+  }
+
+  function onMouseUp() {
+    setIsMouseDown(false);
+    setPrevMousePos(null);
+  }
+
   return (
     <>
-      <div className='flex flex-0 basis-full mt-4 aspect-square max-w-[50vh] w-full mx-auto'>
+      <div className='flex flex-col flex-0 basis-full mt-4 max-w-[50vh] w-full mx-auto gap-4'>
         <div
-          className='flex flex-col w-full h-full border-2 border-[#cccccc] rounded-lg drop-shadow-md items-center justify-center overflow:hidden relative'
+          className='flex flex-col w-full h-full aspect-square border-2 border-[#cccccc] rounded-lg drop-shadow-md items-center justify-center overflow:hidden relative'
           onClick={() => props.image || fileInput.current?.click()}
           onTouchMove={e => onTouchMove(e)}
           onTouchEnd={e => onTouchEnd(e)}
+          onMouseMove={e => onMouseMove(e)}
+          onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
           ref={divRef}
         >
           {
@@ -352,8 +372,8 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
           }
         </div>
         <input ref={fileInput} type='file' name='file' accept='image/*' onChange={e => e.target.files?.item(0) && props.onImageUploaded(e.target.files[0])} hidden />
-      </div>
       <input type='range' min={1.0} max={props.maxZoomLevel} step='0.1' value={props.zoomLevel} onChange={onZoomLevelInputChange} />
+      </div>
     </>
   )
 }
@@ -445,9 +465,6 @@ function ImagePuzzle(props: ImagePuzzleProps) {
     const tiles0 = applyMove(tiles, posTile);
 
     if (checkSolved(tiles0)) {
-      const finalTile: Tile = {tileId: puzzleSize ** 2 - 1, pos: puzzleSize ** 2 - 1};
-      const tiles1 = [...tiles0, finalTile];
-      setTiles(tiles1);
       setSolved(true);
       return;
     }
@@ -457,8 +474,7 @@ function ImagePuzzle(props: ImagePuzzleProps) {
   }
 
   function onSolveClicked() {
-    const finalTile: Tile = {tileId: puzzleSize ** 2 - 1, pos: puzzleSize ** 2 -1};
-    const tiles0 = [...getInitPositions(), finalTile];
+    const tiles0 = getInitPositions();
     setTiles(tiles0);
     setSolved(true);
   }
@@ -470,7 +486,7 @@ function ImagePuzzle(props: ImagePuzzleProps) {
   }
 
   return (
-    <div className='flex w-full flex-col gap-4 justify-between'>
+    <div className='flex flex-1 basis-full flex-col gap-4 justify-between'>
       <ImagePuzzleBoard puzzleSize={puzzleSize} imagePos={imagePos} puzzleSolved={solved}
         image={image} tiles={tiles} onTileClicked={(tileId) => onTileClicked(tileId)} zoomLevel={zoomLevel} />
       <div className='flex flex-row justify-around text-md p-4 gap-8'>
@@ -530,10 +546,6 @@ function ImagePuzzleEdit(props: ImagePuzzleEditProps) {
     setImagePos(imagePos0);
   }
 
-  function onPinchZoom(dZoomLevel: number, canvasDims: Coordinate2D): void {
-    setZoomLevelAndComputeImagePos(Math.max(0, Math.min(maxZoomLevel, zoomLevel + dZoomLevel)), canvasDims);
-  }
-
   return (
     <>
       <div
@@ -542,7 +554,7 @@ function ImagePuzzleEdit(props: ImagePuzzleEditProps) {
       >
         <ImagePuzzleUpload image={image} puzzleSize={puzzleSize} onImageUploaded={(value: File) => onImageUploaded(value)}
           imagePos={imagePos} setImagePos={setImagePos} zoomLevel={zoomLevel} onSlideZoom={setZoomLevelAndComputeImagePos}
-          onPinchZoom={onPinchZoom} maxZoomLevel={maxZoomLevel} />
+           maxZoomLevel={maxZoomLevel} />
         <ImagePuzzleSizeSelector onSizeChanged={ (value: number) => setPuzzleSize(value) } puzzleSize={puzzleSize} />
       </div>
       <div className='absolute right-4 left-4 transition-all' style={{bottom: image ? '1rem' : '-16rem'}}>
