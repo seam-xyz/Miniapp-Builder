@@ -57,8 +57,8 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
     ];
     // Transform the global image position to a local (per-tile) one.
     const imagePos = [
-      props.imagePos[0] + selfGridCoords[0] * canvas.width / zoom,
-      props.imagePos[1] + selfGridCoords[1] * canvas.height / zoom
+      props.imagePos[0] + selfGridCoords[0] * canvasDims[0] / zoom,
+      props.imagePos[1] + selfGridCoords[1] * canvasDims[1] / zoom
     ];
 
     const [sx, sy, sw, sh] = [
@@ -67,7 +67,7 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
       canvasDims[0] / zoom,
       canvasDims[1] / zoom
     ];
-    const [dx, dy, dw, dh] = [0, 0, tileDims[0], tileDims[1]]; 
+    const [dx, dy, dw, dh] = [0, 0, canvasDims[0], canvasDims[1]]; 
 
     context.drawImage(props.image, sx, sy, sw, sh, dx, dy, dw, dh);
   }, [props.image]);
@@ -99,12 +99,13 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
     return row + col;
   }
 
+  console.log(props.puzzleSolved);
+
   return (
     <div
-      className='flex-0 overflow-hidden aspect-square absolute transition-transform duration-300'
+      className='aspect-square absolute transition-transform duration-300 border border-white rounded-lg overflow-hidden'
       style={{
-        flexBasis: `calc(100%/${props.puzzleSize})`,
-        transform: `translate(calc(100% * ${props.pos % props.puzzleSize}), calc(100% * ${Math.floor(props.pos / props.puzzleSize)})) scale(${scale}%)`
+        transform: `translate(calc(100% * ${props.pos % props.puzzleSize}), calc(100% * ${Math.floor(props.pos / props.puzzleSize)})) scale(${scale}%)`,
       }}
       onClick={() => props.onTileClicked(props.tileId)}
     >
