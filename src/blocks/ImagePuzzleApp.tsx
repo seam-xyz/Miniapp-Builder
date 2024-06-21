@@ -75,7 +75,6 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
   // Trigger win animation.
   useEffect(() => {
     if (!props.puzzleSolved) return;
-    console.log('Playing anim');
     const initDelayCoeff = 100;
     const scaleSize = 75;
     const delay = 350;
@@ -84,10 +83,8 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
     const initDelay = 300 + initDelayCoeff * diagonal;
     setTimeout(() => {
       setScale(scaleSize);
-      console.log(1);
       setTimeout(() => {
         setScale(100);
-        console.log(2);
       }, delay);
     }, initDelay);
   }, [props.puzzleSolved]);
@@ -98,8 +95,6 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
     const col = props.pos % props.puzzleSize;
     return row + col;
   }
-
-  console.log(props.puzzleSolved);
 
   return (
     <div
