@@ -29,7 +29,7 @@ interface ImagePuzzleTileProps {
   puzzleSize: number;  // Puzzle size, in tiles.
   tile: Tile
   image: HTMLImageElement | undefined;  // Curently-loaded image.
-  boardDims: Coordinate2D;  // Size of the puzzle grid, in pixels.
+  boardDims: Coordinate2D | null;  // Size of the puzzle grid, in pixels.
   onTileMoved: (tile: Tile) => void;
   imagePos: Coordinate2D;  // Image position, in pixels (origin at center).
   zoomLevel: number;  // The raw zoom level from 1.0 to maxZoomLevel.
@@ -236,14 +236,15 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
   
   // Render image.
   useEffect(() => {
-    if (!props.image) return;
+    if (!props.image || !props.boardDims) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const context = canvas?.getContext('2d');
     if (!context) return;
-
+    
     // .99 is used to offset the 103% translate in CSS to avoid subpixel shenanigans.
     const tileDims = [Math.floor(props.boardDims[0] / props.puzzleSize) * .99, Math.floor(props.boardDims[1] / props.puzzleSize) * .99];
+    console.log(tileDims)
     canvas.width = tileDims[0];
     canvas.height = tileDims[1];
     
@@ -364,11 +365,21 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
 // Game board
 function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
   const selfRef = useRef<HTMLDivElement | null>(null);
+  const [boardDims, setBoardDims] = useState<Coordinate2D | null>(null);
+  const updateBoardDimsCallback = useCallback(updateBoardDims, [selfRef]);
 
-  function getBoardDims(): Coordinate2D {
+  useEffect(() => {
+    window.addEventListener('resize', updateBoardDimsCallback);
+  }, [updateBoardDimsCallback])
+
+  useEffect(() => {
+    updateBoardDimsCallback();
+  }, []);
+
+  function updateBoardDims(): void {
     const board = selfRef.current;
-    if (!board) return [0, 0];
-    else return [board.clientWidth, board.clientHeight];
+    if (!board) return;
+    setBoardDims([board.clientWidth, board.clientHeight]);
   }
 
   return (
@@ -378,7 +389,7 @@ function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
             <ImagePuzzleTile
               key={tile.tileId} puzzleSize={props.puzzleSize}
               tile={tile} image={props.image} 
-              boardDims={getBoardDims()} 
+              boardDims={boardDims} 
               onTileMoved={props.onTileMoved}
               imagePos={props.imagePos} zoomLevel={props.zoomLevel}
               puzzleSolved={props.puzzleSolved}
@@ -407,7 +418,6 @@ function ImagePuzzleSizeSelectorOption(props: ImagePuzzleSizeSelectorOptionProps
 function ImagePuzzleSizeSelector(props: ImagePuzzleSizeSelectorProps) {
   return (
     <div className='flex flex-row items-center gap-4'>
-      <p className='flex-0'>Size</p>
       <ImagePuzzleSizeSelectorOption value={3} onSizeChanged={props.onSizeChanged} puzzleSize={props.puzzleSize} />
       <ImagePuzzleSizeSelectorOption value={4} onSizeChanged={props.onSizeChanged} puzzleSize={props.puzzleSize} />
       <ImagePuzzleSizeSelectorOption value={5} onSizeChanged={props.onSizeChanged} puzzleSize={props.puzzleSize} />
