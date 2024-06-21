@@ -66,6 +66,612 @@ const nations: NationDict = {
   },
 }
 
+const cities = {
+  1: {
+    city: "Tokyo",
+    country: "Japan",
+    lat: 35.6895,
+    long: 139.6917
+  },
+  2: {
+    city: "Delhi",
+    country: "India",
+    lat: 28.7041,
+    long: 77.1025
+  },
+  3: {
+    city: "Shanghai",
+    country: "China",
+    lat: 31.2304,
+    long: 121.4737
+  },
+  4: {
+    city: "São Paulo",
+    country: "Brazil",
+    lat: -23.5505,
+    long: -46.6333
+  },
+  5: {
+    city: "Mexico City",
+    country: "Mexico",
+    lat: 19.4326,
+    long: -99.1332
+  },
+  6: {
+    city: "Cairo",
+    country: "Egypt",
+    lat: 30.0444,
+    long: 31.2357
+  },
+  7: {
+    city: "Mumbai",
+    country: "India",
+    lat: 19.0760,
+    long: 72.8777
+  },
+  8: {
+    city: "Beijing",
+    country: "China",
+    lat: 39.9042,
+    long: 116.4074
+  },
+  9: {
+    city: "Osaka",
+    country: "Japan",
+    lat: 34.6937,
+    long: 135.5022
+  },
+  10: {
+    city: "New York City",
+    country: "USA",
+    lat: 40.7128,
+    long: -74.0060
+  },
+  11: {
+    city: "Karachi",
+    country: "Pakistan",
+    lat: 24.8607,
+    long: 67.0011
+  },
+  12: {
+    city: "Buenos Aires",
+    country: "Argentina",
+    lat: -34.6037,
+    long: -58.3816
+  },
+  13: {
+    city: "Istanbul",
+    country: "Turkey",
+    lat: 41.0082,
+    long: 28.9784
+  },
+  14: {
+    city: "Kolkata",
+    country: "India",
+    lat: 22.5726,
+    long: 88.3639
+  },
+  15: {
+    city: "Lagos",
+    country: "Nigeria",
+    lat: 6.5244,
+    long: 3.3792
+  },
+  16: {
+    city: "Manila",
+    country: "Philippines",
+    lat: 14.5995,
+    long: 120.9842
+  },
+  17: {
+    city: "Moscow",
+    country: "Russia",
+    lat: 55.7558,
+    long: 37.6176
+  },
+  18: {
+    city: "Dhaka",
+    country: "Bangladesh",
+    lat: 23.8103,
+    long: 90.4125
+  },
+  19: {
+    city: "Rio de Janeiro",
+    country: "Brazil",
+    lat: -22.9068,
+    long: -43.1729
+  },
+  20: {
+    city: "Lahore",
+    country: "Pakistan",
+    lat: 31.5497,
+    long: 74.3436
+  },
+  21: {
+    city: "Jakarta",
+    country: "Indonesia",
+    lat: -6.2088,
+    long: 106.8456
+  },
+  22: {
+    city: "Seoul",
+    country: "South Korea",
+    lat: 37.5665,
+    long: 126.9780
+  },
+  23: {
+    city: "Cairo",
+    country: "Egypt",
+    lat: 30.0444,
+    long: 31.2357
+  },
+  24: {
+    city: "Dhaka",
+    country: "Bangladesh",
+    lat: 23.8103,
+    long: 90.4125
+  },
+  25: {
+    city: "Karachi",
+    country: "Pakistan",
+    lat: 24.8607,
+    long: 67.0011
+  },
+  26: {
+    city: "Kinshasa",
+    country: "Democratic Republic of the Congo",
+    lat: -4.4419,
+    long: 15.2663
+  },
+  27: {
+    city: "Mumbai",
+    country: "India",
+    lat: 19.0760,
+    long: 72.8777
+  },
+  28: {
+    city: "Mexico City",
+    country: "Mexico",
+    lat: 19.4326,
+    long: -99.1332
+  },
+  29: {
+    city: "São Paulo",
+    country: "Brazil",
+    lat: -23.5505,
+    long: -46.6333
+  },
+  30: {
+    city: "Guangzhou",
+    country: "China",
+    lat: 23.1291,
+    long: 113.2644
+  },
+  31: {
+    city: "Shenzhen",
+    country: "China",
+    lat: 22.5431,
+    long: 114.0579
+  },
+  32: {
+    city: "Lahore",
+    country: "Pakistan",
+    lat: 31.5497,
+    long: 74.3436
+  },
+  33: {
+    city: "Istanbul",
+    country: "Turkey",
+    lat: 41.0082,
+    long: 28.9784
+  },
+  34: {
+    city: "Tianjin",
+    country: "China",
+    lat: 39.0842,
+    long: 117.2007
+  },
+  35: {
+    city: "Lima",
+    country: "Peru",
+    lat: -12.0464,
+    long: -77.0428
+  },
+  36: {
+    city: "Bangkok",
+    country: "Thailand",
+    lat: 13.7563,
+    long: 100.5018
+  },
+  37: {
+    city: "Nairobi",
+    country: "Kenya",
+    lat: -1.2921,
+    long: 36.8219
+  },
+  38: {
+    city: "Bogotá",
+    country: "Colombia",
+    lat: 4.7109,
+    long: -74.0721
+  },
+  39: {
+    city: "Singapore",
+    country: "Singapore",
+    lat: 1.3521,
+    long: 103.8198
+  },
+  40: {
+    city: "London",
+    country: "United Kingdom",
+    lat: 51.5074,
+    long: -0.1278
+  },
+  41: {
+    city: "Riyadh",
+    country: "Saudi Arabia",
+    lat: 24.7136,
+    long: 46.6753
+  },
+  42: {
+    city: "Tehran",
+    country: "Iran",
+    lat: 35.6892,
+    long: 51.3890
+  },
+  43: {
+    city: "Baghdad",
+    country: "Iraq",
+    lat: 33.3152,
+    long: 44.3661
+  },
+  44: {
+    city: "Ho Chi Minh City",
+    country: "Vietnam",
+    lat: 10.8231,
+    long: 106.6297
+  },
+  45: {
+    city: "Sydney",
+    country: "Australia",
+    lat: -33.8688,
+    long: 151.2093
+  },
+  46: {
+    city: "Los Angeles",
+    country: "USA",
+    lat: 34.0522,
+    long: -118.2437
+  },
+  47: {
+    city: "Chicago",
+    country: "USA",
+    lat: 41.8781,
+    long: -87.6298
+  },
+  48: {
+    city: "Toronto",
+    country: "Canada",
+    lat: 43.6511,
+    long: -79.3470
+  },
+  49: {
+    city: "Paris",
+    country: "France",
+    lat: 48.8566,
+    long: 2.3522
+  },
+  50: {
+    city: "Berlin",
+    country: "Germany",
+    lat: 52.5200,
+    long: 13.4050
+  },
+    51: {
+      city: "Madrid",
+      country: "Spain",
+      lat: 40.4168,
+      long: -3.7038
+    },
+    52: {
+      city: "Barcelona",
+      country: "Spain",
+      lat: 41.3851,
+      long: 2.1734
+    },
+    53: {
+      city: "Rome",
+      country: "Italy",
+      lat: 41.9028,
+      long: 12.4964
+    },
+    54: {
+      city: "Milan",
+      country: "Italy",
+      lat: 45.4642,
+      long: 9.1900
+    },
+    55: {
+      city: "Sydney",
+      country: "Australia",
+      lat: -33.8688,
+      long: 151.2093
+    },
+    56: {
+      city: "Melbourne",
+      country: "Australia",
+      lat: -37.8136,
+      long: 144.9631
+    },
+    57: {
+      city: "Brisbane",
+      country: "Australia",
+      lat: -27.4698,
+      long: 153.0251
+    },
+    58: {
+      city: "Perth",
+      country: "Australia",
+      lat: -31.9505,
+      long: 115.8605
+    },
+    59: {
+      city: "Adelaide",
+      country: "Australia",
+      lat: -34.9285,
+      long: 138.6007
+    },
+    60: {
+      city: "Auckland",
+      country: "New Zealand",
+      lat: -36.8485,
+      long: 174.7633
+    },
+    61: {
+      city: "Wellington",
+      country: "New Zealand",
+      lat: -41.2865,
+      long: 174.7762
+    },
+    62: {
+      city: "Vancouver",
+      country: "Canada",
+      lat: 49.2827,
+      long: -123.1207
+    },
+    63: {
+      city: "Montreal",
+      country: "Canada",
+      lat: 45.5017,
+      long: -73.5673
+    },
+    64: {
+      city: "Ottawa",
+      country: "Canada",
+      lat: 45.4215,
+      long: -75.6972
+    },
+    65: {
+      city: "Calgary",
+      country: "Canada",
+      lat: 51.0447,
+      long: -114.0719
+    },
+    66: {
+      city: "Edmonton",
+      country: "Canada",
+      lat: 53.5444,
+      long: -113.4909
+    },
+    67: {
+      city: "Havana",
+      country: "Cuba",
+      lat: 23.1136,
+      long: -82.3666
+    },
+    68: {
+      city: "Santiago",
+      country: "Chile",
+      lat: -33.4489,
+      long: -70.6693
+    },
+    69: {
+      city: "Buenos Aires",
+      country: "Argentina",
+      lat: -34.6037,
+      long: -58.3816
+    },
+    70: {
+      city: "Lima",
+      country: "Peru",
+      lat: -12.0464,
+      long: -77.0428
+    },
+    71: {
+      city: "Brasília",
+      country: "Brazil",
+      lat: -15.7942,
+      long: -47.8825
+    },
+    72: {
+      city: "Santiago",
+      country: "Chile",
+      lat: -33.4489,
+      long: -70.6693
+    },
+    73: {
+      city: "Caracas",
+      country: "Venezuela",
+      lat: 10.4806,
+      long: -66.9036
+    },
+    74: {
+      city: "Quito",
+      country: "Ecuador",
+      lat: -0.1807,
+      long: -78.4678
+    },
+    75: {
+      city: "Guatemala City",
+      country: "Guatemala",
+      lat: 14.6349,
+      long: -90.5069
+    },
+    76: {
+      city: "San Salvador",
+      country: "El Salvador",
+      lat: 13.6929,
+      long: -89.2182
+    },
+    77: {
+      city: "Tegucigalpa",
+      country: "Honduras",
+      lat: 14.0723,
+      long: -87.1921
+    },
+    78: {
+      city: "San José",
+      country: "Costa Rica",
+      lat: 9.9281,
+      long: -84.0907
+    },
+    79: {
+      city: "Panama City",
+      country: "Panama",
+      lat: 8.9824,
+      long: -79.5199
+    },
+    80: {
+      city: "San Juan",
+      country: "Puerto Rico",
+      lat: 18.4655,
+      long: -66.1057
+    },
+    81: {
+      city: "Santo Domingo",
+      country: "Dominican Republic",
+      lat: 18.4861,
+      long: -69.9312
+    },
+    82: {
+      city: "Kingston",
+      country: "Jamaica",
+      lat: 17.9712,
+      long: -76.7928
+    },
+    83: {
+      city: "Port-au-Prince",
+      country: "Haiti",
+      lat: 18.5944,
+      long: -72.3074
+    },
+    84: {
+      city: "Nassau",
+      country: "Bahamas",
+      lat: 25.0343,
+      long: -77.3963
+    },
+    85: {
+      city: "San José",
+      country: "Costa Rica",
+      lat: 9.9281,
+      long: -84.0907
+    },
+    86: {
+      city: "Belmopan",
+      country: "Belize",
+      lat: 17.2510,
+      long: -88.7590
+    },
+    87: {
+      city: "Managua",
+      country: "Nicaragua",
+      lat: 12.1140,
+      long: -86.2362
+    },
+    88: {
+      city: "Tegucigalpa",
+      country: "Honduras",
+      lat: 14.0723,
+      long: -87.1921
+    },
+    89: {
+      city: "Guatemala City",
+      country: "Guatemala",
+      lat: 14.6349,
+      long: -90.5069
+    },
+    90: {
+      city: "San Salvador",
+      country: "El Salvador",
+      lat: 13.6929,
+      long: -89.2182
+    },
+    91: {
+      city: "San Pedro Sula",
+      country: "Honduras",
+      lat: 15.5007,
+      long: -88.0330
+    },
+    92: {
+      city: "León",
+      country: "Nicaragua",
+      lat: 12.4316,
+      long: -86.8920
+    },
+    93: {
+      city: "Malabo",
+      country: "Equatorial Guinea",
+      lat: 3.7504,
+      long: 8.7371
+    },
+    94: {
+      city: "Bata",
+      country: "Equatorial Guinea",
+      lat: 1.8643,
+      long: 9.7658
+    },
+    95: {
+      city: "Accra",
+      country: "Ghana",
+      lat: 5.6037,
+      long: -0.1870
+    },
+    96: {
+      city: "Lagos",
+      country: "Nigeria",
+      lat: 6.5244,
+      long: 3.3792
+    },
+    97: {
+      city: "Johannesburg",
+      country: "South Africa",
+      lat: -26.2041,
+      long: 28.0473
+    },
+    98: {
+      city: "Cape Town",
+      country: "South Africa",
+      lat: -33.9249,
+      long: 18.4241
+    },
+    99: {
+      city: "Durban",
+      country: "South Africa",
+      lat: -29.8587,
+      long: 31.0218
+    },
+    100: {
+      city: "Pretoria",
+      country: "South Africa",
+      lat: -25.7479,
+      long: 28.2293
+    },
+  };
+    
+
+
+
 const randomNation = (): Nation => {
   const randomSeed = Math.random() * Object.keys(nations).length
   const index = Math.floor(randomSeed) + 1
@@ -120,21 +726,8 @@ function getRandomLatLng(): { latitude: number; longitude: number } {
   };
 }
 
-const geocodeAPI = "https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=" + api_Key
 
-async function getGeocodeResponse() {
-  try {
-    const response = await fetch(geocodeAPI);
-    if (!response.ok) {
-      throw new Error('Network response was not ok ' + response.statusText);
-    }
-    const json = await response.json();
-    return json;
-  } catch (error) {
-    console.error('There was a problem with the fetch operation:', error);
-  }
-}
-let data;
+//on page load get the street address info
 // document.addEventListener('DOMContentLoaded', (event) => {
 //   getGeocodeResponse()
 //     .then(response => {
@@ -159,8 +752,25 @@ const center = {
   lng: -73.949997, // Default longitude
 };
 
-let streetAddress;
+//const geocodeAPI = "https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=" + api_Key
 
+const geocodeAPI = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + center.lat + "," + center.lng + "&key=" + api_Key
+
+async function getGeocodeResponse() {
+  try {
+    const response = await fetch(geocodeAPI);
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText);
+    }
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error('There was a problem with the fetch operation:', error);
+  }
+}
+let data;
+
+let streetAddress;
 
 const StreetView: React.FC = () => {
   const mapRef = useRef<google.maps.Map | null>(null);
