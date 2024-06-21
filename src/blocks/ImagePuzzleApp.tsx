@@ -519,8 +519,8 @@ function ImagePuzzle(props: ImagePuzzleProps) {
 
   function onTileMoved(tile: Tile): void {
     const tiles0 = applyMove(tiles, tile.pos);
-    setSolved(checkSolved(tiles0));
     setTiles(tiles0);
+    setSolved(checkSolved(tiles0));
   }
 
   function onSolveClicked() {
