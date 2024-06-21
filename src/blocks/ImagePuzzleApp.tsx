@@ -366,7 +366,7 @@ function ImagePuzzleBoard(props: ImagePuzzleBoardProps) {
   }
 
   return (
-    <div className='flex flex-0 w-full max-w-[50vh] aspect-square self-center' ref={selfRef} >
+    <div className='flex flex-0 w-full max-w-[50vh] aspect-square self-center relative' ref={selfRef} >
         {
           props.tiles.map(tile => 
             <ImagePuzzleTile
@@ -512,7 +512,7 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
     <>
       <div className='flex flex-col flex-0 basis-full mt-4 max-w-[50vh] w-full mx-auto gap-4'>
         <div
-          className='flex flex-col w-full h-full aspect-square border-2 border-[#cccccc] rounded-lg drop-shadow-md items-center justify-center overflow:hidden relative'
+          className='flex flex-col w-full h-full aspect-square border-2 border-[#cccccc] rounded-lg drop-shadow-md items-center justify-center overflow-hidden relative'
           onClick={() => props.image || fileInput.current?.click()}
           onTouchMove={e => onTouchMove(e)}
           onTouchEnd={e => onTouchEnd(e)}
@@ -613,8 +613,8 @@ function ImagePuzzle(props: ImagePuzzleProps) {
       <ImagePuzzleBoard puzzleSize={puzzleSize} imagePos={imagePos} puzzleSolved={solved}
         image={image} tiles={tiles} onTileMoved={onTileMoved} zoomLevel={zoomLevel} onTileSwiped={onTileSwiped} />
       <div className='flex flex-row justify-around text-md p-4 gap-8'>
-        <button className='flex-1 py-2 drop-shadow-md border border-solid rounded-md border-[#aaaaaa]' onClick={onSolveClicked}>Solve</button>
-        <button className='flex-1 py-2 drop-shadow-md border border-solid rounded-md border-[#aaaaaa]' onClick={onRestartClicked}>Restart</button>
+        <button className='flex-1 py-2 drop-shadow-md border border-solid rounded-md border-[#aaaaaa] bg-white' onClick={onSolveClicked}>Solve</button>
+        <button className='flex-1 py-2 drop-shadow-md border border-solid rounded-md border-[#aaaaaa] bg-white' onClick={onRestartClicked}>Restart</button>
       </div>
     </div>
   )
