@@ -486,7 +486,6 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
     setP5Instance(myP5);
     return myP5.remove;
   }, []);
-  // useEffect(() => {bufferInstance === null || bufferInstance.clear()},[props.canvasClearSwitch]) //clears the buffer when the switch is hit
   return (
     <><div className="flex justify-center touch-none"ref={canvasDivRef}></div>
     </>
@@ -552,7 +551,6 @@ const CalligraphyBackgroundSelector = (props: CalligraphyBackgroundSelectorProps
       {Object.entries(backgroundOptions).map(( [background,imgPath] )=>
           <img 
           className={`outline outline-offset-0 outline-[#d903ff] h-full object-contain rounded-lg ${props.currentBackground === background ? "outline-2" : "outline-0"} `}
-          // style={{width: `${((parseInt(props.width)/3)-20).toString()}px`}}
           src={imgPath}
           key={background}
           onClick={() => props.setCurrentBackground(background as CalligraphyBackground)}
@@ -636,7 +634,8 @@ const CalligraphyToolbar = (props: CalligraphyToolbarProps) => {
       <div className='flex gap-4 border-2 rounded-full p-4 bg-[#fbfbfb]'>
         <div onClick={props.toggleCanvasUndoSwitch} className='flex flex-1 active:bg-slate-300 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'><UndoIcon /></div>
         <div onClick={props.toggleCanvasClearSwitch}className='flex flex-1 active:bg-slate-300 w-10 h-10 rounded-full bg-[#ededed] place-items-center place-content-center'><CloseIcon /></div>
-      </div>   </div>
+      </div>   
+    </div>
   )
 }
 
