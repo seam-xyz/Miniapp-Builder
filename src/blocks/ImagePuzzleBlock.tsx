@@ -288,8 +288,8 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
 
   function playWinAnimation() {
     const initDelayCoeff = 100;
-    const scaleSize = 75;
-    const delay = 350;
+    const scaleSize = 85;
+    const delay = 300;
     const diagonal = getDiagonal(props.tile, props.puzzleSize);
 
     const initDelay = 300 + initDelayCoeff * diagonal;
@@ -344,7 +344,7 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
 
   return (
     <div
-      className='basis-0 aspect-square absolute transition-transform duration-300 rounded-lg overflow-hidden drop-shadow-md'
+      className='basis-0 aspect-square absolute transition-transform duration-300 ease-in-out rounded-lg overflow-hidden drop-shadow-md'
       style={{
         // Borders introduced kinda hackily to circumvent CSS subpixel shenanigans.
         transform: `translate(calc(103% * ${props.tile.pos % props.puzzleSize}), calc(103% * ${Math.floor(props.tile.pos / props.puzzleSize)})) scale(${scale}%)`,
@@ -579,6 +579,7 @@ function ImagePuzzle(props: ImagePuzzleProps) {
   }
 
   function onSolveClicked(): void {
+    if (checkSolved(tiles)) return;
     const tiles0 = getInitPositions(puzzleSize);
     setTiles(tiles0);
     setSolved(true);
