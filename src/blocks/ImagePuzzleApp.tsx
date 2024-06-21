@@ -41,7 +41,7 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
     const context = canvas?.getContext('2d');
     if (!context) return;
 
-    const tileDims = [Math.ceil(props.boardDims[0] / props.puzzleSize), Math.ceil(props.boardDims[1] / props.puzzleSize)];
+    const tileDims = [Math.floor(props.boardDims[0] / props.puzzleSize), Math.floor(props.boardDims[1] / props.puzzleSize)];
     canvas.width = tileDims[0];
     canvas.height = tileDims[1];
     
@@ -103,9 +103,9 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
 
   return (
     <div
-      className='aspect-square absolute transition-transform duration-300 border border-white rounded-lg overflow-hidden'
+      className='basis-0 aspect-square absolute transition-transform duration-300 rounded-lg overflow-hidden'
       style={{
-        transform: `translate(calc(100% * ${props.pos % props.puzzleSize}), calc(100% * ${Math.floor(props.pos / props.puzzleSize)})) scale(${scale}%)`,
+        transform: `translate(calc(102% * ${props.pos % props.puzzleSize}), calc(102% * ${Math.floor(props.pos / props.puzzleSize)})) scale(${scale}%)`,
       }}
       onClick={() => props.onTileClicked(props.tileId)}
     >
