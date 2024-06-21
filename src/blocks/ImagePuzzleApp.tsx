@@ -1,13 +1,9 @@
 import Block from './Block'
 import { BlockModel } from './types'
-import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 import React, { useEffect, useRef, useState } from 'react';
-
 import ImageIcon from '@mui/icons-material/Image';
 import SeamSaveButton from '../components/SeamSaveButton';
-import { propsToClassKey } from '@mui/styles';
-import { SelfImprovement } from '@mui/icons-material';
 
 // Block model .data
 interface ImagePuzzleData {
@@ -15,6 +11,23 @@ interface ImagePuzzleData {
   puzzleSize: number;  // Puzzle size, in tiles.
   imagePos: Coordinate2D;  // Image position, in pixels (origin at center.)
   zoomLevel: number;  // The raw zoom level from 1.0 to maxZoomLevel.
+}
+
+// Debounce hook for preventing mouse and touch from overlapping.
+const debouncer: Record<string, boolean> = {};
+function useDebounce(key: string, delay: number): () => boolean {
+  if (debouncer[key] === undefined) {
+    debouncer[key] = false;
+  }
+
+  function getDebouncedValue(): boolean {
+    if (debouncer[key] === true) return true;
+    debouncer[key] = true;
+    setTimeout(() => {debouncer[key] = false;}, delay);
+    return false;
+  }
+
+  return getDebouncedValue;
 }
 
 // Tile for the game board
@@ -33,6 +46,8 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [scale, setScale] = useState<number>(100);
   const [cursorStartPos, setCursorStartPos] = useState<Coordinate2D | null>(null);
+  const debounceMouseDown = useDebounce('mouseDown', 150);
+  const debounceMouseUp = useDebounce('mouseUp', 150);
   
   // Render image.
   useEffect(() => {
@@ -102,24 +117,27 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
   }
 
   useEffect(() => {
-    console.log(cursorStartPos)
   }, [cursorStartPos])
 
   function onMouseDown(e: React.MouseEvent) {
+    if (debounceMouseDown()) return;
     setCursorStartPos([e.clientX, e.clientY]);
   }
 
   function onTouchStart(e: React.TouchEvent) {
+    if (debounceMouseDown()) return;
     setCursorStartPos([e.touches[0].clientX, e.touches[0].clientY]);
   }
 
   function onMouseUp(e: React.MouseEvent) {
+    if (debounceMouseUp()) return;
     if (!cursorStartPos) return;
     props.onTileMoved(props.tile);
     setCursorStartPos(null);
   }
 
   function onTouchEnd(e: React.TouchEvent) {
+    if (debounceMouseUp()) return;
     if (!cursorStartPos) return;
     props.onTileMoved(props.tile);
     setCursorStartPos(null);
@@ -549,7 +567,6 @@ function ImagePuzzle(props: ImagePuzzleProps) {
     const emptyPos = getEmptyPos(tiles);
     const dirToEmptyPos = getDirFromPos(tile.pos, emptyPos);
 
-    console.log(theta, dirTheta, dirToEmptyPos);
 
     if (dirToEmptyPos !== dirTheta) return;
     onTileMoved(tile);
