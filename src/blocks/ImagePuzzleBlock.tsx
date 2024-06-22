@@ -248,7 +248,6 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
     
     // .99 is used to offset the 103% translate in CSS to avoid subpixel shenanigans.
     const tileDims = [Math.floor(props.boardDims[0] / props.puzzleSize) * .99, Math.floor(props.boardDims[1] / props.puzzleSize) * .99];
-    console.log(tileDims)
     canvas.width = tileDims[0];
     canvas.height = tileDims[1];
     
@@ -558,7 +557,7 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
           }
         </div>
         <input ref={fileInput} type='file' name='file' accept='image/*' onChange={e => e.target.files?.item(0) && props.onImageUploaded(e.target.files[0])} hidden />
-      <input type='range' min={1.0} max={props.maxZoomLevel} step='0.01' value={props.zoomLevel} onChange={onZoomLevelInputChange} />
+      <input type='range' min={1.0} max={props.maxZoomLevel} step='0.01' value={props.zoomLevel} onChange={onZoomLevelInputChange} disabled={props.image === null} />
       </div>
     </>
   )
