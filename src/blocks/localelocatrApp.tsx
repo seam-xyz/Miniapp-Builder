@@ -365,26 +365,26 @@ const LocaleLocatr = () => {
       const newImageUrl: string = getDistanceImageUrl(trueLocation, guess)
       setImageUrl(newImageUrl)
 
-      const fetchImage = async (url: string) => {
-        const base64Image = await imageToBase64(imageUrl)
-        setImage(base64Image)
-      }
-      fetchImage(newImageUrl)
+      // const fetchImage = async (url: string) => {
+      //   const base64Image = await imageToBase64(imageUrl)
+      //   setImage(base64Image)
+      // }
+      // fetchImage(newImageUrl)
     }
   },[image])
 
-  // Stage two: when image file is saved, process that guess
-  useEffect(()=>{
-    if (guess){
-      // Things that happen go here
-    }
-  },[guess])
+  // // Stage two: when image file is saved, process that guess
+  // useEffect(()=>{
+  //   if (guess){
+  //     // Things that happen go here
+  //   }
+  // },[guess])
 
 
   return(
     <>
       <div>
-          <NationDropdown onSelect = {setGuess} />
+        <NationDropdown onSelect = {setGuess} />
       </div>
       <div>
         <StreetView />
@@ -398,11 +398,17 @@ const LocaleLocatr = () => {
 
 }
 
-
+const PostInFeed = ({image, distance}:{image: string, distance: number}) => {
+  /// Mehul's code here
+  return()
+}
 export default class localelocatrBlock extends Block {
   render() {
     return (
+      <>
       <h1>localelocatr Block!</h1>
+      {/* <PostInFeed /> */}
+      </>
     );
   }
 
