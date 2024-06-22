@@ -11,15 +11,6 @@ const { Option } = Select;
 
 const api_Key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY!
 
-// type Nation = {
-//   id: number;
-//   name: string;
-//   flag: string;
-//   lat: number;
-//   lng: number;
-// }
-
-
 type Nation = {
   iso2: string;
   iso3: string;
@@ -138,7 +129,6 @@ function NationDropdown ({onSelect}: {onSelect: Function}) {
     else {
       console.log("Selection made! Selected country is:", selectedNation.name)
       onSelect(selectedNation)
-      /// REPLACE THIS CONSOLE.LOG WITH SOME KIND OF CHECK GUESS FUNCTION
     }
   }
 
@@ -179,69 +169,33 @@ function NationDropdown ({onSelect}: {onSelect: Function}) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const randomNation = (nations:Nation[]): Nation => {
-  const randomSeed = Math.random() * nations.length
-  const index = Math.floor(randomSeed) + 1
-  return nations[index]
+  const randomIndex = Math.floor(Math.random() * nations.length)
+  return nations[randomIndex]
 }
 
 //props -  latitude and longitude of two locations(in degrees)
 //return - distance in km between the two given locations (straight line from point a to point b)
-function calcDist(lat1:number, lon1:number, lat2:number, lon2:number) 
+function calcDist(nation1:Nation, nation2: Nation) 
 {
+  
+  function toRad( value: number ){
+    // Converts numeric degrees to radians
+    return value * Math.PI / 180
+  }
+  const lat1 = toRad(nation1.lat)
+  const lat2 = toRad(nation2.lat)
+  const lng1 = toRad(nation1.lng)
+  const lng2 = toRad(nation2.lng)
   var R = 6371; // km
-  var dLat = toRad(lat2-lat1);
-  var dLon = toRad(lon2-lon1);
-  var lat1 = toRad(lat1);
-  var lat2 = toRad(lat2);
+  var dLat = lat2-lat1
+  var dLon = lng2-lng1
 
   var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
     Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
   var d = R * c;
   return d;
-}
-
-
-// Converts numeric degrees to radians
-function toRad(Value:number) 
-{
-    return Value * Math.PI / 180;
 }
 
 
@@ -254,7 +208,6 @@ const containerStyle = {
   width: '100%',
   height: '700px',
 };
-
 
 const trueLocation: Nation = randomNation(initialWorldArray)
 
@@ -272,16 +225,13 @@ async function getGeocodeResponse() {
     console.error('There was a problem with the fetch operation:', error);
   }
 }
-let data;
 
-let streetAddress;
 
 const StreetView: React.FC = () => {
   const mapRef = useRef<google.maps.Map | null>(null);
   const streetViewRef = useRef<google.maps.StreetViewPanorama | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [showMap, setShowMap] = useState(true);
-  
 
   useEffect(() => {
     if (isMapLoaded && mapRef.current) {
@@ -302,9 +252,9 @@ const StreetView: React.FC = () => {
 
       getGeocodeResponse()
     .then(response => {
-      data = response.results
+      const data = response.results
       console.log(data)
-      streetAddress = data[0].formatted_address
+      const streetAddress = data[0].formatted_address
       console.log(streetAddress);
       // Process the response here
     })
@@ -370,6 +320,8 @@ return(
 
 const LocaleLocatr = () => {
   const [guess, setGuess] = useState<Nation>(initialWorldArray[0])
+  const [hasGuessed, setHasGuess] = useState<boolean>(false)
+
   return(
     <>
         <NationDropdown onSelect = {setGuess} />
@@ -412,3 +364,16 @@ export default class localelocatrBlock extends Block {
   }
 }
 
+
+
+// REMAINING WORK
+// 
+// Boolean in state to say whether user has guessed yet
+// Boolean to change after guess - picture to stop showing when boolean true - map to start showing when boolean true - trigger preview mode
+// Work out how final post page is handled
+// Final post page
+// Transform image to base64 string and store in data model
+// Add to Final Post - overlay with details about distance etc
+// <PostInFeed image= distance= /> component that shows in feed
+// 
+// 
