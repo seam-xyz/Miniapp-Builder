@@ -356,8 +356,8 @@ const LocaleLocatr = () => {
   // STILL TO DO - MOVE THE ANSWER INTO STATE HERE SO IT CAN BE CHOSEN FROM THE FULL LIST
   // const [answer, setAnswer] = useState
   const [guess, setGuess] = useState<Nation | null>(null)
-  const [image, setImage] = useState<string>("")
   const [imageUrl, setImageUrl] = useState<string>("")
+  const [image, setImage] = useState<string>("")
 
   // Stage one: make a guess
   useEffect(()=>{
@@ -365,24 +365,29 @@ const LocaleLocatr = () => {
       const newImageUrl: string = getDistanceImageUrl(trueLocation, guess)
       setImageUrl(newImageUrl)
 
-      // const fetchImage = async (url: string) => {
-      //   const base64Image = await imageToBase64(imageUrl)
-      //   setImage(base64Image)
-      // }
-      // fetchImage(newImageUrl)
+      const fetchImage = async (url: string) => {
+        const base64Image = await imageToBase64(imageUrl)
+        setImage(base64Image)
+      }
+      fetchImage(newImageUrl)
+    }
+  },[guess])
+
+  // Stage two: when image file is saved, process that guess
+  useEffect(()=>{
+    if (guess){
+      console.log(image)
+      // Things that happen go here
+      // The "THing" being that all the necessary data needs to get saved to this.model
+      // and then trigger the done
     }
   },[image])
-
-  // // Stage two: when image file is saved, process that guess
-  // useEffect(()=>{
-  //   if (guess){
-  //     // Things that happen go here
-  //   }
-  // },[guess])
 
 
   return(
     <>
+          {(image) ? (() =>{return(<img src={image} alt="Dynamic Image" />)} ): null}
+
       <div>
         <NationDropdown onSelect = {setGuess} />
       </div>
