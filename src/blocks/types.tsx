@@ -25,6 +25,7 @@ import bookIcon from './blockIcons/bookIcon.png'
 import WordleIcon from './blockIcons/WordleIcon.png'
 import MoodIcon from './blockIcons/MoodIcon.png'
 import WhiteboardIcon from './blockIcons/whiteboardIcon.png'
+import ImagePuzzleIcon from './blockIcons/imagePuzzleIcon.webp'
 
 export type BlockModel = {
   type: string;
@@ -470,13 +471,13 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "emilee",
     fullscreenEdit: false,
   },
-  "Image": { 
-    type: "Image",
+  "ImagePuzzle": { 
+    type: "ImagePuzzle",
     displayName: "Image Puzzle",
-    displayDescription: "Turns an image into a solveable sliding puzzle.",
+    displayDescription: "Upload an image and turn it into a sliding puzzle!",
     emptyTitle: "Empty Image Puzzle App",
     emptySubtitle: "Tap here to setup your Image Puzzle app!",
-    icon: "ImageIcon", // TODO: insert your app icon here
+    icon: ImagePuzzleIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
