@@ -311,24 +311,72 @@ const findCenter = (nation1: Nation, nation2: Nation): {lat: number, lng: number
   }
 
 
-function DisplayDistanceMap({answer, guess}:{answer: Nation, guess: Nation}){
-  const center = findCenter(answer, guess)
-return(
-<img src={"https://maps.googleapis.com/maps/api/staticmap?center=" + center.lat + "," + center.lng + "&zoom=2&size=570x800&maptype=roadmap%20&markers=color:green%7C" + answer.lat + "," + answer.lng + "&markers=color:red%7C" + guess.lat + "," + guess.lng + "&path=color:red|weight:5|" + answer.lat + "," + answer.lng + "|" + guess.lat + "," + guess.lng + "&key=" + api_Key} />
-)
+async function imageToBase64(url: string): Promise<string> {
+    // Fetch the image
+    const response = await fetch(url);
+    // Ensure the fetch was successful
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    // Read the image response as a Blob
+    const blob = await response.blob();
+    // Create a FileReader to convert the Blob to a base64 string
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            resolve(reader.result as string);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
 }
 
+
+function getDistanceImageUrl(answer: Nation, guess: Nation){
+  const center = findCenter(answer, guess)
+  const centerCoordString = `${center.lat},${center.lng}`
+  const answerCoordString = `${answer.lat},${answer.lng}`
+  const guessCoordString = `${guess.lat},${guess.lng}`
+  const imgUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${centerCoordString}&zoom=2&size=570x800&maptype=roadmap%20&markers=color:green%7C${answerCoordString}&markers=color:red%7C${guessCoordString}&path=color:red|weight:5|${answerCoordString}|${guessCoordString}&key=${api_Key}`
+return imgUrl
+}
+
+function ShowDistanceMap({imageUrl}:{imageUrl: string}){
+  if (imageUrl==="") return(
+    <div />
+  )
+
+  else return(
+    <img src={imageUrl} />
+  )
+}
+
+
 const LocaleLocatr = () => {
-  const [guess, setGuess] = useState<Nation>(initialWorldArray[0])
-  const [hasGuessed, setHasGuess] = useState<boolean>(false)
+  const [guess, setGuess] = useState<Nation | null>(null)
+  const [image, setImage] = useState<string>("")
+  const [imageUrl, setImageUrl] = useState<string>("")
+
+  useEffect(()=>{
+    // Update the imageUrl now
+    if (guess){
+      const imageUrl = getDistanceImageUrl(trueLocation, guess)
+      setImageUrl(imageUrl)
+    }
+  },[guess])
+
 
   return(
     <>
-        <NationDropdown onSelect = {setGuess} />
-        <div>
-          <StreetView />
-        </div>
-        <DisplayDistanceMap answer = {trueLocation} guess = {guess}/>
+      <div>
+          <NationDropdown onSelect = {setGuess} />
+      </div>
+      <div>
+        <StreetView />
+      </div>
+      <div>
+        <ShowDistanceMap imageUrl = {imageUrl} />
+      </div>
     </>
 
   )
