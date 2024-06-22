@@ -122,7 +122,7 @@ const searchNations = (nations: Nation[], typedInput: string, callback: Function
   console.log(`searchNations completed with: ${cleanedInput ? cleanedInput : "(blank query)"}. ${filteredNations.length} "values returned.`)
 }
 
-function NationDropdown ({callback}: {callback: Function}) {
+function NationDropdown ({onSelect}: {onSelect: Function}) {
   const [allNations, setAllNations] = useState<Nation[]>(initialWorldArray)
   const [filteredNations, setFilteredNations] = useState<Nation[]>(allNations)
 
@@ -137,7 +137,7 @@ function NationDropdown ({callback}: {callback: Function}) {
     if (!selectedNation) throw new Error("selectionHandler called with invalid ISO2 code");
     else {
       console.log("Selection made! Selected country is:", selectedNation.name)
-      callback(selectedNation)
+      onSelect(selectedNation)
       /// REPLACE THIS CONSOLE.LOG WITH SOME KIND OF CHECK GUESS FUNCTION
     }
   }
@@ -372,7 +372,7 @@ const LocaleLocatr = () => {
   const [guess, setGuess] = useState<Nation>(initialWorldArray[0])
   return(
     <>
-        <NationDropdown callback = {setGuess} />
+        <NationDropdown onSelect = {setGuess} />
         <div>
           <StreetView />
         </div>
