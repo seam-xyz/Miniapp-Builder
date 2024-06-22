@@ -24,42 +24,42 @@ const initialWorldDictionary: { [key: string]: Nation } = {
     "lat": 34.5281,
     "lng": 69.1723
   },
-  am: {
-    "iso2": "am",
-    "iso3": "arm",
-    "name": "Armenia",
-    "capital": "Yerevan",
-    "flag": "🇦🇲",
-    "lat": 40.1792,
-    "lng": 44.4991
+  al: {
+    "iso2": "al",
+    "iso3": "alb",
+    "name": "Albania",
+    "capital": "Tirana",
+    "flag": "🇦🇱",
+    "lat": 41.3275,
+    "lng": 19.8189
   },
-  az: {
-    "iso2": "az",
-    "iso3": "aze",
-    "name": "Azerbaijan",
-    "capital": "Baku",
-    "flag": "🇦🇿",
-    "lat": 40.4093,
-    "lng": 49.8671
+  dz: {
+    "iso2": "dz",
+    "iso3": "dza",
+    "name": "Algeria",
+    "capital": "Algiers",
+    "flag": "🇩🇿",
+    "lat": 36.7529,
+    "lng": 3.042
   },
-  bh: {
-    "iso2": "bh",
-    "iso3": "bhr",
-    "name": "Bahrain",
-    "capital": "Manama",
-    "flag": "🇧🇭",
-    "lat": 26.2235,
-    "lng": 50.5876
+  ad: {
+    "iso2": "ad",
+    "iso3": "and",
+    "name": "Andorra",
+    "capital": "Andorra la Vella",
+    "flag": "🇦🇩",
+    "lat": 42.5078,
+    "lng": 1.5211
   },
-  bd: {
-    "iso2": "bd",
-    "iso3": "bgd",
-    "name": "Bangladesh",
-    "capital": "Dhaka",
-    "flag": "🇧🇩",
-    "lat": 23.8103,
-    "lng": 90.4125
-  }
+  ao: {
+    "iso2": "ao",
+    "iso3": "ago",
+    "name": "Angola",
+    "capital": "Luanda",
+    "flag": "🇦🇴",
+    "lat": -8.839,
+    "lng": 13.2894
+  },
 }
 
 async function fetchNationData(sourceUrl: string): Promise<{ [key: string]: Nation }> {
@@ -67,7 +67,7 @@ async function fetchNationData(sourceUrl: string): Promise<{ [key: string]: Nati
     // Fetch the JSON data
     const response = await fetch(sourceUrl);
     if (!response.ok) {
-      throw new Error('Failed to fetch world list.');
+      throw new Error('Error during fetchNationData: Response not ok.');
     }
     const dictionary: { [key: string]: Nation } = await response.json();
     return dictionary
@@ -78,9 +78,9 @@ async function fetchNationData(sourceUrl: string): Promise<{ [key: string]: Nati
 }
 
 function createNationArray(dictionary: { [key: string]: Nation }): Nation[] {
-    const nationArray: Nation[] = Object.values(dictionary);
-    nationArray.sort((a, b) => a.name.localeCompare(b.name));
-    return nationArray;
+  const nationArray: Nation[] = Object.values(dictionary);
+  nationArray.sort((a, b) => a.name.localeCompare(b.name));
+  return nationArray;
 }
 
 const initialWorldArray = createNationArray(initialWorldDictionary)
@@ -94,43 +94,40 @@ const searchNations = (nations: Nation[], typedInput: string, callback: Function
     nation.iso3.toLowerCase().includes(cleanedInput)
   );
   callback(filteredNations);
-  console.log("searchNations completed with:", typedInput, filteredNations.length, "values returned" )
+  console.log(`searchNations completed with: ${cleanedInput ? cleanedInput : "(blank query)"}. ${filteredNations.length} "values returned.`)
 }
-
 
 export const NationDropdown = () => {
   const [allNations, setAllNations] = useState<Nation[]>(initialWorldArray)
-  const [remainingNations, setRemainingNations] = useState<Nation[]>(allNations)
-  const [guess, setGuess] = useState<Nation>(allNations[0])
+  const [filteredNations, setFilteredNations] = useState<Nation[]>(allNations)
 
+  // "input" here means user typing text into the search bar
   const inputHandler = (inputText: string) => {
-    console.log("inputHandler called")
-    searchNations(allNations, inputText, setRemainingNations)
-    console.log(inputText)
+    searchNations(allNations, inputText, setFilteredNations)
   }
 
+  // "selection" here means user clicking a country as their guess, or highlighting it and pressing Enter
+  const selectionHandler = (id: string) => {
+    let selectedNation = allNations.find(nation => nation.iso2 === id)
+    if (!selectedNation) throw new Error("selectionHandler called with invalid ISO2 code");
+    else {
+      console.log("Selection made! Selected country is:", selectedNation.name)
+      /// REPLACE THIS CONSOLE.LOG WITH SOME KIND OF CHECK GUESS FUNCTION
+    }
+  }
 
   useEffect(() => {
-    const justDoThisNow = async () => {
+    const init = async () => {
       const fullNationList = createNationArray(await fetchNationData(nationDataUrl))
-      console.log(fullNationList)
       setAllNations(fullNationList)
+      setFilteredNations(fullNationList)
     }
-    justDoThisNow()
-
+    init()
   },
-
     [])
 
-  const selectionHandler = (id: string) => {
-    console.log("selectionHandler called")
-    let selectedNation = allNations.find(nation => nation.iso2 === id)
-    selectedNation = (selectedNation) ? selectedNation : allNations[0]
-    setGuess(selectedNation)
-    console.log("Selection made:", selectedNation.name)
-    /// Trigger action that seeks result of Guess here
-  }
-  const options = remainingNations.map(
+
+  const displayFilteredNations = filteredNations.map(
     (nation) => {
       const optionLabel = nation.flag + " " + nation.name
       return (
@@ -149,54 +146,9 @@ export const NationDropdown = () => {
         placeholder="Guess where?"
         filterOption={false}
       >
-        {options}
+        {displayFilteredNations}
       </Select>
     </div>
   )
 }
 
-
-
-
-
-
-// class SearchInput extends React.Component {
-//   state = {
-//     data: [],
-//     value: undefined,
-//   };
-
-//   handleSearch = value => {
-//     if (value) {
-//       searchLocalData(value, data => this.setState({ data }));
-//     } else {
-//       this.setState({ data: [] });
-//     }
-//   };
-
-//   handleChange = value => {
-//     this.setState({ value });
-//   };
-
-//   render() {
-//     const options = this.state.data.map(d => <Option key={d.value}>{d.text}</Option>);
-//     return (
-//       <Select
-//         showSearch
-//         value={this.state.value}
-//         placeholder={this.props.placeholder}
-//         style={this.props.style}
-//         defaultActiveFirstOption={false}
-//         showArrow={false}
-//         filterOption={false}
-//         onSearch={this.handleSearch}
-//         onChange={this.handleChange}
-//         notFoundContent={null}
-//       >
-//         {options}
-//       </Select>
-//     );
-//   }
-// }
-
-// ReactDOM.render(<SearchInput placeholder="input search text" style={{ width: 200 }} />, mountNode);
