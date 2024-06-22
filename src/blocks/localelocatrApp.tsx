@@ -703,6 +703,12 @@ function toRad(Value:number)
     return Value * Math.PI / 180;
 }
 
+//takes in radians and returns degrees
+function tToDegrees(radians: number): number {
+  return radians * (180 / 360);
+}
+
+
 //converts KM to miles
 function convertKmToMiles(km:number) {
   return km * 0.621371;
@@ -754,14 +760,14 @@ function getRandomCity(cities: any[]): any {
 }
 const randomCity = getRandomCity(citiesArray);
 
-const center = {
+const truelocation = {
   lat: randomCity.lat, 
   lng: randomCity.long, // Default longitude
 };
 
 //const geocodeAPI = "https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=" + api_Key
 
-const geocodeAPI = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + center.lat + "," + center.lng + "&key=" + api_Key
+const geocodeAPI = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + truelocation.lat + "," + truelocation.lng + "&key=" + api_Key
 
 async function getGeocodeResponse() {
   try {
@@ -792,7 +798,7 @@ const StreetView: React.FC = () => {
       streetViewRef.current = new google.maps.StreetViewPanorama(
         document.getElementById('street-view') as HTMLElement,
         {
-          position: center,
+          position: truelocation,
           pov: { heading: 165, pitch: 0 },
           zoom: 1,
           addressControl: false,
@@ -825,7 +831,7 @@ const StreetView: React.FC = () => {
       {showMap && (
         <GoogleMap
           mapContainerStyle={containerStyle}
-          center={center}
+          center={truelocation}
           zoom={14}
           onLoad={(map) => {
             mapRef.current = map;
@@ -841,6 +847,22 @@ const StreetView: React.FC = () => {
 };
 
 
+//const to hold the user's guess input
+const userGuessLocation = {
+
+  lat: 48.8575,
+  long: 2.3514,
+
+}
+
+const center = {
+
+  lat: (userGuessLocation.lat + truelocation.lat)/2, 
+  long: (userGuessLocation.long + truelocation.lng)/2
+
+}
+
+
 
 export default class localelocatrBlock extends Block {
   render() {
@@ -851,9 +873,6 @@ export default class localelocatrBlock extends Block {
 
   renderEditModal(done: (data: BlockModel) => void) {
 
-
-    
-
     
     return (
       <div>
@@ -862,12 +881,12 @@ export default class localelocatrBlock extends Block {
         <div> and again again  </div>
         {randomNation().flag}
         <NationDropdown />
-        <div></div>
         <div>
           <StreetView />
         </div>
 
-        
+        <img src={"https://maps.googleapis.com/maps/api/staticmap?center=" + center.lat + "," + center.long + "&zoom=2&size=570x800&maptype=roadmap%20&markers=color:green%7C" + truelocation.lat + "," + truelocation.lng + "&markers=color:red%7C" + userGuessLocation.lat + "," + userGuessLocation.long + "&path=color:red|weight:5|" + truelocation.lat + "," + truelocation.lng + "|" + userGuessLocation.lat + "," + userGuessLocation.long + "&key=" + api_Key} />
+
 
         
      
