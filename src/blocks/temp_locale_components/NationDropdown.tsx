@@ -79,6 +79,7 @@ async function fetchNationData(sourceUrl: string): Promise<{ [key: string]: Nati
 
 function createNationArray(dictionary: { [key: string]: Nation }): Nation[] {
     const nationArray: Nation[] = Object.values(dictionary);
+    nationArray.sort((a, b) => a.name.localeCompare(b.name));
     return nationArray;
 }
 
@@ -93,7 +94,7 @@ const searchNations = (nations: Nation[], typedInput: string, callback: Function
     nation.iso3.toLowerCase().includes(cleanedInput)
   );
   callback(filteredNations);
-  console.log("searchNations completed with:", typedInput, callback)
+  console.log("searchNations completed with:", typedInput, filteredNations.length, "values returned" )
 }
 
 
