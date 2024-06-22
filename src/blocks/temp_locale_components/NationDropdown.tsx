@@ -1,13 +1,6 @@
 import { Select } from "antd";
-import React, { useEffect } from "react";
-
-import { useState } from "react";
-
-
+import { useState, useEffect } from "react";
 const { Option } = Select;
-// import querystring from "querystring";
-
-const url = 'https://raw.githubusercontent.com/yablochko8/country-lists/main/world.json';
 
 type Nation = {
   iso2: string;
@@ -19,97 +12,77 @@ type Nation = {
   lng: number;
 }
 
+const nationDataUrl = 'https://raw.githubusercontent.com/yablochko8/country-lists/main/world.json';
 
-async function fetchNationData(): Promise<{ [key: string]: Nation }> {
+const initialWorldDictionary: { [key: string]: Nation } = {
+  af: {
+    "iso2": "af",
+    "iso3": "afg",
+    "name": "Afghanistan",
+    "capital": "Kabul",
+    "flag": "🇦🇫",
+    "lat": 34.5281,
+    "lng": 69.1723
+  },
+  am: {
+    "iso2": "am",
+    "iso3": "arm",
+    "name": "Armenia",
+    "capital": "Yerevan",
+    "flag": "🇦🇲",
+    "lat": 40.1792,
+    "lng": 44.4991
+  },
+  az: {
+    "iso2": "az",
+    "iso3": "aze",
+    "name": "Azerbaijan",
+    "capital": "Baku",
+    "flag": "🇦🇿",
+    "lat": 40.4093,
+    "lng": 49.8671
+  },
+  bh: {
+    "iso2": "bh",
+    "iso3": "bhr",
+    "name": "Bahrain",
+    "capital": "Manama",
+    "flag": "🇧🇭",
+    "lat": 26.2235,
+    "lng": 50.5876
+  },
+  bd: {
+    "iso2": "bd",
+    "iso3": "bgd",
+    "name": "Bangladesh",
+    "capital": "Dhaka",
+    "flag": "🇧🇩",
+    "lat": 23.8103,
+    "lng": 90.4125
+  }
+}
+
+async function fetchNationData(sourceUrl: string): Promise<{ [key: string]: Nation }> {
   try {
     // Fetch the JSON data
-    const response = await fetch(url);
+    const response = await fetch(sourceUrl);
     if (!response.ok) {
       throw new Error('Failed to fetch world list.');
     }
-    const data: Nation[] = await response.json();
-
-    // Create a dictionary object
-    const nations: { [key: string]: Nation } = {};
-    data.forEach((nation) => {
-      nations[nation.iso2] = nation;
-    });
-
-    return nations;
+    const dictionary: { [key: string]: Nation } = await response.json();
+    return dictionary
   } catch (error) {
     console.error('Error fetching or parsing data:', error);
     throw error;
   }
 }
 
-
-async function createNationArray(): Promise<Nation[]> {
-  try {
-    // Fetch the JSON data
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error('Failed to fetch world list.');
-    }
-    const data: { [key: string]: Nation } = await response.json();
-    const nationArray: Nation[] = Object.values(data);
+function createNationArray(dictionary: { [key: string]: Nation }): Nation[] {
+    const nationArray: Nation[] = Object.values(dictionary);
     return nationArray;
-  } catch (error) {
-    console.error('Error fetching or parsing data:', error);
-    throw error;
-  }
-}
-const staticStarterWorldDictionary = {
-  cn: {
-    "iso2": "cn",
-    "iso3": "chn",
-    "name": "China",
-    "capital": "Beijing",
-    "flag": "🇨🇳",
-    "lat": 39.9042,
-    "lng": 116.4074
-  },
-  br:
-  {
-    "iso2": "br",
-    "iso3": "bra",
-    "name": "Brazil",
-    "capital": "Brasília",
-    "flag": "🇧🇷",
-    "lat": -15.7942,
-    "lng": -47.8825
-
-  }
 }
 
-
-const staticStarterWorldArray = [
-
-  {
-    "iso2": "cn",
-    "iso3": "chn",
-    "name": "China",
-    "capital": "Beijing",
-    "flag": "🇨🇳",
-    "lat": 39.9042,
-    "lng": 116.4074
-  },
-  {
-    "iso2": "br",
-    "iso3": "bra",
-    "name": "Brazil",
-    "capital": "Brasília",
-    "flag": "🇧🇷",
-    "lat": -15.7942,
-    "lng": -47.8825
-
-  }
-]
-
-
-
-////////////////////////////////////////////////////////////////////////////////////
-/////////////////////   THIS ABOVE THIS LINE IS ALL FROM THE MAIN APP FILE
-////////////////////////////////////////////////////////////////////////////////////
+const initialWorldArray = createNationArray(initialWorldDictionary)
 
 
 const searchNations = (nations: Nation[], typedInput: string, callback: Function) => {
@@ -123,7 +96,7 @@ const searchNations = (nations: Nation[], typedInput: string, callback: Function
 
 
 export const NationDropdown = () => {
-  const [allNations, setAllNations] = useState<Nation[]>(staticStarterWorldArray)
+  const [allNations, setAllNations] = useState<Nation[]>(initialWorldArray)
   const [remainingNations, setRemainingNations] = useState<Nation[]>(allNations)
   const [guess, setGuess] = useState<Nation>(allNations[0])
 
@@ -136,7 +109,7 @@ export const NationDropdown = () => {
 
   useEffect(() => {
     const justDoThisNow = async () => {
-      const fullNationList = await createNationArray()
+      const fullNationList = createNationArray(await fetchNationData(nationDataUrl))
       console.log(fullNationList)
       setAllNations(fullNationList)
     }
