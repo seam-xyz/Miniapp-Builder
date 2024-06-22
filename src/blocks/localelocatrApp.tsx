@@ -353,15 +353,30 @@ function ShowDistanceMap({imageUrl}:{imageUrl: string}){
 
 
 const LocaleLocatr = () => {
+  // STILL TO DO - MOVE THE ANSWER INTO STATE HERE SO IT CAN BE CHOSEN FROM THE FULL LIST
+  // const [answer, setAnswer] = useState
   const [guess, setGuess] = useState<Nation | null>(null)
   const [image, setImage] = useState<string>("")
   const [imageUrl, setImageUrl] = useState<string>("")
 
+  // Stage one: make a guess
   useEffect(()=>{
-    // Update the imageUrl now
     if (guess){
-      const imageUrl = getDistanceImageUrl(trueLocation, guess)
-      setImageUrl(imageUrl)
+      const newImageUrl: string = getDistanceImageUrl(trueLocation, guess)
+      setImageUrl(newImageUrl)
+
+      const fetchImage = async (url: string) => {
+        const base64Image = await imageToBase64(imageUrl)
+        setImage(base64Image)
+      }
+      fetchImage(newImageUrl)
+    }
+  },[image])
+
+  // Stage two: when image file is saved, process that guess
+  useEffect(()=>{
+    if (guess){
+      // Things that happen go here
     }
   },[guess])
 
@@ -416,11 +431,12 @@ export default class localelocatrBlock extends Block {
 
 // REMAINING WORK
 // 
-// Boolean in state to say whether user has guessed yet
-// Boolean to change after guess - picture to stop showing when boolean true - map to start showing when boolean true - trigger preview mode
+// DONE (use null on guess) Boolean in state to say whether user has guessed yet
+// DONE Boolean to change after guess - picture to stop showing when boolean true - map to start showing when boolean true - trigger preview mode
+// DONE Transform image to base64 string and store in data model
+// Trigger appearance of final post page
 // Work out how final post page is handled
 // Final post page
-// Transform image to base64 string and store in data model
 // Add to Final Post - overlay with details about distance etc
 // <PostInFeed image= distance= /> component that shows in feed
 // 
