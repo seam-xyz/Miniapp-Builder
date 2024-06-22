@@ -86,9 +86,11 @@ const initialWorldArray = createNationArray(initialWorldDictionary)
 
 
 const searchNations = (nations: Nation[], typedInput: string, callback: Function) => {
-  // Maybe this would benefit from a timeout?
+  const cleanedInput = typedInput.toLowerCase()
   const filteredNations = nations.filter(nation =>
-    nation.name.toLowerCase().includes(typedInput.toLowerCase())
+    nation.name.toLowerCase().includes(cleanedInput) ||
+    nation.iso2.toLowerCase().includes(cleanedInput) ||
+    nation.iso3.toLowerCase().includes(cleanedInput)
   );
   callback(filteredNations);
   console.log("searchNations completed with:", typedInput, callback)
