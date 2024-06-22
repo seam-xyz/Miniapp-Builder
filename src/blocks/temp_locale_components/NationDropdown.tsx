@@ -116,7 +116,7 @@ export const NationDropdown = () => {
           showSearch
           onSearch={inputText => inputHandler(inputText)}
           onChange={selectionHandler}
-          style={{ width: 400 }}
+          style={{ width: 570 }}
           placeholder = "Guess where?"
           filterOption = {false}
             >

@@ -8,7 +8,7 @@ import { GoogleMap, StreetViewPanorama } from "@react-google-maps/api";
 import { LoadScript } from "@react-google-maps/api";
 // import {APIProvider, Map, MapCameraChangedEvent} from '@vis.gl/react-google-maps';
 import { OutputFormat, setDefaults } from 'react-geocode';
-import { geocode, RequestType } from "react-geocode";
+//import { geocode, RequestType } from "react-geocode";
 
 const api_Key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY!
 
@@ -839,6 +839,7 @@ const StreetView: React.FC = () => {
     </LoadScript>
   );
 };
+
 
 
 export default class localelocatrBlock extends Block {
