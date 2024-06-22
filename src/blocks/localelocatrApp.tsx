@@ -398,10 +398,10 @@ const LocaleLocatr = () => {
 
 }
 
-const PostInFeed = ({image, distance}:{image: string, distance: number}) => {
-  /// Mehul's code here
-  return()
-}
+// const PostInFeed = ({image, distance}:{image: string, distance: number}) => {
+//   /// Mehul's code here
+//   return()
+// }
 export default class localelocatrBlock extends Block {
   render() {
     return (
