@@ -278,7 +278,7 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
 
   // Keeping track of current audio time
   useEffect(() => {
-    let intervalId: NodeJS.Timer;
+    let intervalId: ReturnType<typeof setInterval>;
     if (playing) {
       // setting time from 0 to 1 every 10 milisecond using javascript setInterval method
       intervalId = setInterval(() => setTime(time + 1), 1000);
