@@ -25,6 +25,7 @@ import bookIcon from './blockIcons/bookIcon.png'
 import WordleIcon from './blockIcons/WordleIcon.png'
 import MoodIcon from './blockIcons/MoodIcon.png'
 import WhiteboardIcon from './blockIcons/whiteboardIcon.png'
+import CameraIcon from './blockIcons/cameraIcon.png'
 
 export type BlockModel = {
   type: string;
@@ -460,14 +461,14 @@ export const BlockTypes: { [key: string]: BlockType } = {
   "Camera": { 
     type: "Camera",
     displayName: "Camera",
-    displayDescription: "open your camera to take a photo",
+    displayDescription: "Use your device's camera to take and upload a photo!",
     emptyTitle: "Empty Camera App",
     emptySubtitle: "Tap here to setup your Camera app!",
-    icon: "CameraIcon", // TODO: insert your app icon here
+    icon: CameraIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "jamesburet",
+    createdBy: "seam",
     fullscreenEdit: false,
 },
 };
