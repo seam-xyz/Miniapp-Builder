@@ -7,6 +7,7 @@ import { LoadScript } from "@react-google-maps/api";
 import { OutputFormat, setDefaults } from 'react-geocode';
 import { Select } from "antd";
 import { error } from 'console';
+import { Button } from '@mui/material';
 const { Option } = Select;
 
 const api_Key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY!
@@ -347,7 +348,15 @@ function ShowDistanceMap({imageUrl}:{imageUrl: string}){
   )
 
   else return(
-    <img src={imageUrl} />
+    <Button
+            type="submit"
+            variant="contained"
+            className="save-modal-button"
+            onClick={()=>{}}
+            sx={{ mt: 3, mb: 2 }}
+          >
+            GUESS
+          </Button>
   )
 }
 
@@ -386,7 +395,7 @@ const LocaleLocatr = () => {
 
   return(
     <>
-          {(image) ? (() =>{return(<img src={image} alt="Dynamic Image" />)} ): null}
+          
 
       <div>
         <NationDropdown onSelect = {setGuess} />
@@ -425,9 +434,8 @@ export default class localelocatrBlock extends Block {
       <div>
 
   <LocaleLocatr />
-
         
-     
+  
       </div>)}
     
 
