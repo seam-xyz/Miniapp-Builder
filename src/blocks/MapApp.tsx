@@ -37,7 +37,7 @@ export default class MapBlock extends Block {
 
   renderEditModal(done: (data: BlockModel) => void) {
     if (!isSuperApp) {
-      return <h1>Google Maps API is disabled in this browser</h1>;
+      return <h1>Google Maps API is not available.</h1>;
     }
 
     return (
