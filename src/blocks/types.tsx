@@ -26,6 +26,9 @@ import WordleIcon from './blockIcons/WordleIcon.png'
 import MoodIcon from './blockIcons/MoodIcon.png'
 import WhiteboardIcon from './blockIcons/whiteboardIcon.png'
 import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
+import localelocatrIcon from './blockIcons/localelocatrIcon.png'
+
+
 
 export type BlockModel = {
   type: string;
@@ -490,7 +493,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     displayDescription: "Get dropped anywhere in the world and guess",
     emptyTitle: "Empty localelocatr App",
     emptySubtitle: "Tap here to setup your localelocatr app!",
-    icon: "localelocatrIcon", // TODO: insert your app icon here
+    icon: localelocatrIcon, // TODO: insert your app icon here
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,

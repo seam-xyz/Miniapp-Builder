@@ -5,9 +5,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { GoogleMap } from "@react-google-maps/api";
 import { LoadScript } from "@react-google-maps/api";
 import { OutputFormat, setDefaults } from 'react-geocode';
-import { Select } from "antd";
+import { Select} from "antd";
 import { error } from 'console';
-import { Button } from '@mui/material';
+import { Box, Button, Card, CardContent, CardMedia, Typography  } from '@mui/material';
+
+import { CardActionArea } from '@mui/material';
 const { Option } = Select;
 
 const api_Key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY!
@@ -32,14 +34,284 @@ setDefaults({
 const nationDataUrl = 'https://raw.githubusercontent.com/yablochko8/country-lists/main/world.json';
 
 const initialWorldDictionary: { [key: string]: Nation } = {
-  af: {
-    "iso2": "af",
-    "iso3": "afg",
-    "name": "Afghanistan",
-    "capital": "Kabul",
-    "flag": "🇦🇫",
-    "lat": 34.5281,
-    "lng": 69.1723
+  us: {
+    "iso2": "us",
+    "iso3": "usa",
+    "name": "United States",
+    "capital": "Washington, D.C.",
+    "flag": "🇺🇸",
+    "lat": 38.9072,
+    "lng": -77.0369
+  },
+  ca: {
+    "iso2": "ca",
+    "iso3": "can",
+    "name": "Canada",
+    "capital": "Ottawa",
+    "flag": "🇨🇦",
+    "lat": 45.4215,
+    "lng": -75.6972
+  },
+  mx: {
+    "iso2": "mx",
+    "iso3": "mex",
+    "name": "Mexico",
+    "capital": "Mexico City",
+    "flag": "🇲🇽",
+    "lat": 19.4326,
+    "lng": -99.1332
+  },
+  gb: {
+    "iso2": "gb",
+    "iso3": "gbr",
+    "name": "United Kingdom",
+    "capital": "London",
+    "flag": "🇬🇧",
+    "lat": 51.5074,
+    "lng": -0.1278
+  },
+  fr: {
+    "iso2": "fr",
+    "iso3": "fra",
+    "name": "France",
+    "capital": "Paris",
+    "flag": "🇫🇷",
+    "lat": 48.8566,
+    "lng": 2.3522
+  },
+  it: {
+    "iso2": "it",
+    "iso3": "ita",
+    "name": "Italy",
+    "capital": "Rome",
+    "flag": "🇮🇹",
+    "lat": 41.9028,
+    "lng": 12.4964
+  },
+  nl: {
+    "iso2": "nl",
+    "iso3": "nld",
+    "name": "Netherlands",
+    "capital": "Amsterdam",
+    "flag": "🇳🇱",
+    "lat": 52.3676,
+    "lng": 4.9041
+  },
+  be: {
+    "iso2": "be",
+    "iso3": "bel",
+    "name": "Belgium",
+    "capital": "Brussels",
+    "flag": "🇧🇪",
+    "lat": 50.8503,
+    "lng": 4.3517
+  },
+  pl: {
+    "iso2": "pl",
+    "iso3": "pol",
+    "name": "Poland",
+    "capital": "Warsaw",
+    "flag": "🇵🇱",
+    "lat": 52.2297,
+    "lng": 21.0122
+  },
+  se: {
+    "iso2": "se",
+    "iso3": "swe",
+    "name": "Sweden",
+    "capital": "Stockholm",
+    "flag": "🇸🇪",
+    "lat": 59.3293,
+    "lng": 18.0686
+  },
+  no: {
+    "iso2": "no",
+    "iso3": "nor",
+    "name": "Norway",
+    "capital": "Oslo",
+    "flag": "🇳🇴",
+    "lat": 59.9139,
+    "lng": 10.7522
+  },
+  dk: {
+    "iso2": "dk",
+    "iso3": "dnk",
+    "name": "Denmark",
+    "capital": "Copenhagen",
+    "flag": "🇩🇰",
+    "lat": 55.6761,
+    "lng": 12.5683
+  },
+  fi: {
+    "iso2": "fi",
+    "iso3": "fin",
+    "name": "Finland",
+    "capital": "Helsinki",
+    "flag": "🇫🇮",
+    "lat": 60.1695,
+    "lng": 24.9355
+  },
+  ie: {
+    "iso2": "ie",
+    "iso3": "irl",
+    "name": "Ireland",
+    "capital": "Dublin",
+    "flag": "🇮🇪",
+    "lat": 53.3498,
+    "lng": -6.2603
+  },
+  pt: {
+    "iso2": "pt",
+    "iso3": "prt",
+    "name": "Portugal",
+    "capital": "Lisbon",
+    "flag": "🇵🇹",
+    "lat": 38.7223,
+    "lng": -9.1393
+  },
+  gr: {
+    "iso2": "gr",
+    "iso3": "grc",
+    "name": "Greece",
+    "capital": "Athens",
+    "flag": "🇬🇷",
+    "lat": 37.9838,
+    "lng": 23.7275
+  },
+  jp: {
+    "iso2": "jp",
+    "iso3": "jpn",
+    "name": "Japan",
+    "capital": "Tokyo",
+    "flag": "🇯🇵",
+    "lat": 35.6895,
+    "lng": 139.6917
+  },
+  kr: {
+    "iso2": "kr",
+    "iso3": "kor",
+    "name": "South Korea",
+    "capital": "Seoul",
+    "flag": "🇰🇷",
+    "lat": 37.5665,
+    "lng": 126.9780
+  },
+  tw: {
+    "iso2": "tw",
+    "iso3": "twn",
+    "name": "Taiwan",
+    "capital": "Taipei",
+    "flag": "🇹🇼",
+    "lat": 25.0330,
+    "lng": 121.5654
+  },
+  hk: {
+    "iso2": "hk",
+    "iso3": "hkg",
+    "name": "Hong Kong",
+    "capital": "Hong Kong",
+    "flag": "🇭🇰",
+    "lat": 22.3193,
+    "lng": 114.1694
+  },
+  th: {
+    "iso2": "th",
+    "iso3": "tha",
+    "name": "Thailand",
+    "capital": "Bangkok",
+    "flag": "🇹🇭",
+    "lat": 13.7563,
+    "lng": 100.5018
+  },
+  id: {
+    "iso2": "id",
+    "iso3": "idn",
+    "name": "Indonesia",
+    "capital": "Jakarta",
+    "flag": "🇮🇩",
+    "lat": -6.2088,
+    "lng": 106.8456
+  },
+  my: {
+    "iso2": "my",
+    "iso3": "mys",
+    "name": "Malaysia",
+    "capital": "Kuala Lumpur",
+    "flag": "🇲🇾",
+    "lat": 3.1390,
+    "lng": 101.6869
+  },
+  sg: {
+    "iso2": "sg",
+    "iso3": "sgp",
+    "name": "Singapore",
+    "capital": "Singapore",
+    "flag": "🇸🇬",
+    "lat": 1.3521,
+    "lng": 103.8198
+  },
+  au: {
+    "iso2": "au",
+    "iso3": "aus",
+    "name": "Australia",
+    "capital": "Canberra",
+    "flag": "🇦🇺",
+    "lat": -35.2809,
+    "lng": 149.1300
+  },
+  nz: {
+    "iso2": "nz",
+    "iso3": "nzl",
+    "name": "New Zealand",
+    "capital": "Wellington",
+    "flag": "🇳🇿",
+    "lat": -41.2865,
+    "lng": 174.7762
+  },
+  cl: {
+    "iso2": "cl",
+    "iso3": "chl",
+    "name": "Chile",
+    "capital": "Santiago",
+    "flag": "🇨🇱",
+    "lat": -33.4489,
+    "lng": -70.6693
+  },
+  co: {
+    "iso2": "co",
+    "iso3": "col",
+    "name": "Colombia",
+    "capital": "Bogotá",
+    "flag": "🇨🇴",
+    "lat": 4.7110,
+    "lng": -74.0721
+  },
+  pe: {
+    "iso2": "pe",
+    "iso3": "per",
+    "name": "Peru",
+    "capital": "Lima",
+    "flag": "🇵🇪",
+    "lat": -12.0464,
+    "lng": -77.0428
+  },
+  za: {
+    "iso2": "za",
+    "iso3": "zaf",
+    "name": "South Africa",
+    "capital": "Pretoria",
+    "flag": "🇿🇦",
+    "lat": -25.7479,
+    "lng": 28.2293
+  },
+  il: {
+    "iso2": "il",
+    "iso3": "isr",
+    "name": "Israel",
+    "capital": "Jerusalem",
+    "flag": "🇮🇱",
+    "lat": 31.7683,
+    "lng": 35.2137
   },
   al: {
     "iso2": "al",
@@ -50,15 +322,6 @@ const initialWorldDictionary: { [key: string]: Nation } = {
     "lat": 41.3275,
     "lng": 19.8189
   },
-  dz: {
-    "iso2": "dz",
-    "iso3": "dza",
-    "name": "Algeria",
-    "capital": "Algiers",
-    "flag": "🇩🇿",
-    "lat": 36.7529,
-    "lng": 3.042
-  },
   ad: {
     "iso2": "ad",
     "iso3": "and",
@@ -68,16 +331,8 @@ const initialWorldDictionary: { [key: string]: Nation } = {
     "lat": 42.5078,
     "lng": 1.5211
   },
-  ao: {
-    "iso2": "ao",
-    "iso3": "ago",
-    "name": "Angola",
-    "capital": "Luanda",
-    "flag": "🇦🇴",
-    "lat": -8.839,
-    "lng": 13.2894
-  },
-}
+};
+
 
 async function fetchNationData(sourceUrl: string): Promise<{ [key: string]: Nation }> {
   try {
@@ -114,7 +369,7 @@ const searchNations = (nations: Nation[], typedInput: string, callback: Function
   console.log(`searchNations completed with: ${cleanedInput ? cleanedInput : "(blank query)"}. ${filteredNations.length} "values returned.`)
 }
 
-function NationDropdown ({onSelect}: {onSelect: Function}) {
+function NationDropdown({ onSelect }: { onSelect: Function }) {
   const [allNations, setAllNations] = useState<Nation[]>(initialWorldArray)
   const [filteredNations, setFilteredNations] = useState<Nation[]>(allNations)
 
@@ -170,17 +425,16 @@ function NationDropdown ({onSelect}: {onSelect: Function}) {
 
 
 
-const randomNation = (nations:Nation[]): Nation => {
+const randomNation = (nations: Nation[]): Nation => {
   const randomIndex = Math.floor(Math.random() * nations.length)
   return nations[randomIndex]
 }
 
 //props -  latitude and longitude of two locations(in degrees)
 //return - distance in km between the two given locations (straight line from point a to point b)
-function calcDist(nation1:Nation, nation2: Nation) 
-{
-  
-  function toRad( value: number ){
+function calcDist(nation1: Nation, nation2: Nation) {
+
+  function toRad(value: number) {
     // Converts numeric degrees to radians
     return value * Math.PI / 180
   }
@@ -189,19 +443,19 @@ function calcDist(nation1:Nation, nation2: Nation)
   const lng1 = toRad(nation1.lng)
   const lng2 = toRad(nation2.lng)
   var R = 6371; // km
-  var dLat = lat2-lat1
-  var dLon = lng2-lng1
+  var dLat = lat2 - lat1
+  var dLon = lng2 - lng1
 
-  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var d = R * c;
   return d;
 }
 
 
 //converts KM to miles
-function convertKmToMiles(km:number) {
+function convertKmToMiles(km: number) {
   return km * 0.621371;
 }
 
@@ -252,16 +506,16 @@ const StreetView: React.FC = () => {
       setShowMap(false);
 
       getGeocodeResponse()
-    .then(response => {
-      const data = response.results
-      console.log(data)
-      const streetAddress = data[0].formatted_address
-      console.log(streetAddress);
-      // Process the response here
-    })
-    .catch(error => {
-      console.error('Error fetching the geocode data:', error);
-    });
+        .then(response => {
+          const data = response.results
+          console.log(data)
+          const streetAddress = data[0].formatted_address
+          console.log(streetAddress);
+          // Process the response here
+        })
+        .catch(error => {
+          console.error('Error fetching the geocode data:', error);
+        });
     }
   }, [isMapLoaded]);
 
@@ -289,79 +543,78 @@ const StreetView: React.FC = () => {
 };
 
 
-// //const to hold the user's guess input
-// const userGuessLocation = {
-
-//   lat: 48.8575,
-//   long: 2.3514,
-
-// }
-
-// const center = {
-
-//   lat: (userGuessLocation.lat + trueLocation.lat)/2, 
-//   long: (userGuessLocation.long + trueLocation.lng)/2
-
-// }
-
-const findCenter = (nation1: Nation, nation2: Nation): {lat: number, lng: number}  => {
+const findCenter = (nation1: Nation, nation2: Nation): { lat: number, lng: number } => {
   const centerLat = (nation1.lat + nation2.lat) / 2
   const centerLng = (nation1.lng + nation2.lng) / 2
-  return { lat: centerLat, lng:centerLng }
+  return { lat: centerLat, lng: centerLng }
 
-  }
-
-
-async function imageToBase64(url: string): Promise<string> {
-    // Fetch the image
-    const response = await fetch(url);
-    // Ensure the fetch was successful
-    if (!response.ok) {
-        throw new Error('Network response was not ok');
-    }
-    // Read the image response as a Blob
-    const blob = await response.blob();
-    // Create a FileReader to convert the Blob to a base64 string
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            resolve(reader.result as string);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-    });
 }
 
 
-function getDistanceImageUrl(answer: Nation, guess: Nation){
+async function imageToBase64(url: string): Promise<string> {
+  // Fetch the image
+  const response = await fetch(url);
+  // Ensure the fetch was successful
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  // Read the image response as a Blob
+  const blob = await response.blob();
+  // Create a FileReader to convert the Blob to a base64 string
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      resolve(reader.result as string);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+//Create a correct image URL
+function getDistanceImageUrl(answer: Nation, guess: Nation) {
+
+  
+
   const center = findCenter(answer, guess)
   const centerCoordString = `${center.lat},${center.lng}`
   const answerCoordString = `${answer.lat},${answer.lng}`
   const guessCoordString = `${guess.lat},${guess.lng}`
-  const imgUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${centerCoordString}&zoom=2&size=570x800&maptype=roadmap%20&markers=color:green%7C${answerCoordString}&markers=color:red%7C${guessCoordString}&path=color:red|weight:5|${answerCoordString}|${guessCoordString}&key=${api_Key}`
-return imgUrl
+
+  if(answer === guess){
+
+    const imgUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${centerCoordString}&zoom=2&size=600x670&maptype=roadmap%20&markers=color:green%7C${answerCoordString}&key=${api_Key}`
+    return imgUrl;
+
+  }
+
+  const imgUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${centerCoordString}&zoom=2&size=600x670&maptype=roadmap%20&markers=color:green%7C${answerCoordString}&markers=color:red%7C${guessCoordString}&path=color:red|weight:5|${answerCoordString}|${guessCoordString}&key=${api_Key}`
+  return imgUrl
 }
 
-function ShowDistanceMap({imageUrl}:{imageUrl: string}){
-  if (imageUrl==="") return(
+function ShowDistanceMap({ imageUrl }: { imageUrl: string }) {
+  if (imageUrl === "") return (
     <div />
   )
 
-  else return(
+  else return (
     <Button
-            type="submit"
-            variant="contained"
-            className="save-modal-button"
-            onClick={()=>{}}
-            sx={{ mt: 3, mb: 2 }}
-          >
-            GUESS
-          </Button>
+      type="submit"
+      variant="contained"
+      className="save-modal-button"
+      sx={{ mt: 3, mb: 2 }}
+    >
+      GUESS
+    </Button>
   )
 }
 
 
-const LocaleLocatr = () => {
+type LocaleLocatrProps = {
+  onSave: (url: string, answer: Nation, guess: Nation) => void;
+}
+
+const LocaleLocatr = ({ onSave }: LocaleLocatrProps) => {
   // STILL TO DO - MOVE THE ANSWER INTO STATE HERE SO IT CAN BE CHOSEN FROM THE FULL LIST
   // const [answer, setAnswer] = useState
   const [guess, setGuess] = useState<Nation | null>(null)
@@ -369,8 +622,8 @@ const LocaleLocatr = () => {
   const [image, setImage] = useState<string>("")
 
   // Stage one: make a guess
-  useEffect(()=>{
-    if (guess){
+  useEffect(() => {
+    if (guess) {
       const newImageUrl: string = getDistanceImageUrl(trueLocation, guess)
       setImageUrl(newImageUrl)
 
@@ -379,65 +632,132 @@ const LocaleLocatr = () => {
         setImage(base64Image)
       }
       fetchImage(newImageUrl)
+
+
     }
-  },[guess])
+  }, [guess])
 
   // Stage two: when image file is saved, process that guess
-  useEffect(()=>{
-    if (guess){
+  useEffect(() => {
+    if (guess) {
       console.log(image)
       // Things that happen go here
       // The "THing" being that all the necessary data needs to get saved to this.model
       // and then trigger the done
     }
-  },[image])
+  }, [image])
 
-
-  return(
+  return (
     <>
-          
+
 
       <div>
-        <NationDropdown onSelect = {setGuess} />
+        <NationDropdown onSelect={setGuess} />
       </div>
       <div>
         <StreetView />
       </div>
-      <div>
-        <ShowDistanceMap imageUrl = {imageUrl} />
-      </div>
+      <Button
+        type="submit"
+        variant="contained"
+        className="save-modal-button"
+        onClick={() => { if (imageUrl) { onSave(imageUrl, trueLocation, guess!) } }}
+        sx={{ mt: 3, mb: 2 }}
+      >
+        GUESS
+      </Button>
     </>
 
   )
 
 }
 
-// const PostInFeed = ({image, distance}:{image: string, distance: number}) => {
-//   /// Mehul's code here
-//   return()
-// }
+//<img src={this.model.data["imgUrl"]} />
+const PostInFeed = ({ image, distance, guessCountryName, correctCountryName }: { image: string, distance: number, guessCountryName: string, correctCountryName: string }) => {
+
+  if(guessCountryName === correctCountryName){
+
+    return(<>
+    <Card sx={{  maxHeight: 725 }} variant="outlined">
+      <CardActionArea>
+        <CardMedia 
+        sx={{ maxHeight: 615}}
+          component="img"
+          height="300"
+          image={image}
+          alt="distMap"
+        />
+        <CardContent sx={{ maxHeight: 300}}>
+        <Typography variant="h6" align='center' component="div" color="black">
+            Correct
+          </Typography>
+          <Typography variant="subtitle1" align='center' color="black">
+            Great Job! You picked the correct country,  <strong>{correctCountryName}!</strong>
+          </Typography>
+          
+        </CardContent>
+      </CardActionArea>
+    </Card>
+    </>)
+
+  }
+
+
+  return (<>
+    <Card sx={{  maxHeight: 725}} variant="outlined">
+      <CardActionArea >
+        <CardMedia
+        sx={{ maxHeight: 615}}
+          component="img"
+          image={image}
+          alt="distMap"
+        />
+        <CardContent sx={{ maxHeight: 300}}>
+        <Typography variant="h6" align='center' component="div" color="black">
+            Incorrect
+          </Typography>
+          <Typography variant="subtitle1" align='center' color="black">
+            The correct country was:  <strong>{correctCountryName}</strong>
+          </Typography>
+          <Typography variant="subtitle1" align='center' color="black">
+            Total distance:  <strong>{distance} km ({Math.trunc(convertKmToMiles(distance))} miles)</strong>
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+  
+  </>)
+}
 export default class localelocatrBlock extends Block {
+
   render() {
     return (
       <>
-      <h1>localelocatr Block!</h1>
-      {/* <PostInFeed /> */}
+        <PostInFeed image={this.model.data["imgUrl"]} distance={parseInt(this.model.data["distance"])} guessCountryName={this.model.data["guessCountryName"]} correctCountryName={this.model.data["correctCountryName"]} />
       </>
     );
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
 
+    const handleSave = (imgUrl: string, answer: Nation, guess: Nation) => {
+      const distance = calcDist(answer, guess);
+      this.model.data["imgUrl"] = imgUrl
+      this.model.data["guessCountryName"] = guess.name
+      this.model.data["correctCountryName"] = answer.name
+      this.model.data["distance"] = distance.toString()
+      done(this.model)
+    }
 
-    
     return (
       <div>
 
-  <LocaleLocatr />
-        
-  
-      </div>)}
-    
+        <LocaleLocatr onSave={handleSave} />
+
+
+      </div>)
+  }
+
 
   renderErrorState() {
     return (
