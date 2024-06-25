@@ -5,14 +5,17 @@ import React, { useEffect, useRef, useState } from "react";
 import { GoogleMap } from "@react-google-maps/api";
 import { LoadScript } from "@react-google-maps/api";
 import { OutputFormat, setDefaults } from 'react-geocode';
-import { Select} from "antd";
-import { error } from 'console';
-import { Box, Button, Card, CardContent, CardMedia, Typography  } from '@mui/material';
-
+import { Select } from "antd";
+import { Button, Card, CardContent, CardMedia, Typography } from '@mui/material';
 import { CardActionArea } from '@mui/material';
+
 const { Option } = Select;
 
-const api_Key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY!
+const try_api_Key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+if (!try_api_Key) {
+  throw new Error("API Key Missing");
+}
+const api_Key: string = try_api_Key ? try_api_Key : "API_KEY_MISSING"
 
 type Nation = {
   iso2: string;
@@ -27,11 +30,11 @@ type Nation = {
 setDefaults({
   key: api_Key,
   language: "en",
-  region: "es",
   outputFormat: OutputFormat.XML
 });
 
 const nationDataUrl = 'https://raw.githubusercontent.com/yablochko8/country-lists/main/world.json';
+// Seam team - feel free to replace this with a long-term home for this object
 
 const initialWorldDictionary: { [key: string]: Nation } = {
   us: {
@@ -341,6 +344,7 @@ async function fetchNationData(sourceUrl: string): Promise<{ [key: string]: Nati
     if (!response.ok) {
       throw new Error('Error during fetchNationData: Response not ok.');
     }
+    // Turn JSON data into a ts dictionary
     const dictionary: { [key: string]: Nation } = await response.json();
     return dictionary
   } catch (error) {
@@ -349,21 +353,27 @@ async function fetchNationData(sourceUrl: string): Promise<{ [key: string]: Nati
   }
 }
 
+// Convert a Dictionary of Nation objects into an Array of Nation objects
 function createNationArray(dictionary: { [key: string]: Nation }): Nation[] {
   const nationArray: Nation[] = Object.values(dictionary);
   nationArray.sort((a, b) => a.name.localeCompare(b.name));
   return nationArray;
 }
 
+// Starting data to set state before async function returns full response
+// This also has a second function - the initial set of countries only 
+// includes countries that have Streetview. Lots of countries do NOT have
+// Streetview, so we don't want them selected as trueLocation.
 const initialWorldArray = createNationArray(initialWorldDictionary)
 
-
+// Search function for checking if user's typed text input matches a nation
 const searchNations = (nations: Nation[], typedInput: string, callback: Function) => {
   const cleanedInput = typedInput.toLowerCase()
   const filteredNations = nations.filter(nation =>
     nation.name.toLowerCase().includes(cleanedInput) ||
     nation.iso2.toLowerCase().includes(cleanedInput) ||
-    nation.iso3.toLowerCase().includes(cleanedInput)
+    nation.iso3.toLowerCase().includes(cleanedInput) ||
+    nation.capital.toLowerCase().includes(cleanedInput)
   );
   callback(filteredNations);
   console.log(`searchNations completed with: ${cleanedInput ? cleanedInput : "(blank query)"}. ${filteredNations.length} "values returned.`)
@@ -388,6 +398,7 @@ function NationDropdown({ onSelect }: { onSelect: Function }) {
     }
   }
 
+  // at first render we pull in a full list of nation data
   useEffect(() => {
     const init = async () => {
       const fullNationList = createNationArray(await fetchNationData(nationDataUrl))
@@ -398,6 +409,7 @@ function NationDropdown({ onSelect }: { onSelect: Function }) {
   },
     [])
 
+  // "filtered" here means these are nations returned in search results
   const displayFilteredNations = filteredNations.map(
     (nation) => {
       const optionLabel = nation.flag + " " + nation.name
@@ -414,7 +426,7 @@ function NationDropdown({ onSelect }: { onSelect: Function }) {
         onSearch={inputText => inputHandler(inputText)}
         onChange={selectionHandler}
         style={{ width: 570 }}
-        placeholder="Guess where?"
+        placeholder="Where are you?"
         filterOption={false}
       >
         {displayFilteredNations}
@@ -422,7 +434,6 @@ function NationDropdown({ onSelect }: { onSelect: Function }) {
     </div>
   )
 }
-
 
 
 const randomNation = (nations: Nation[]): Nation => {
@@ -442,14 +453,14 @@ function calcDist(nation1: Nation, nation2: Nation) {
   const lat2 = toRad(nation2.lat)
   const lng1 = toRad(nation1.lng)
   const lng2 = toRad(nation2.lng)
-  var R = 6371; // km
-  var dLat = lat2 - lat1
-  var dLon = lng2 - lng1
+  let R = 6371; // km
+  let dLat = lat2 - lat1
+  let dLng = lng2 - lng1
 
-  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  var d = R * c;
+  let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLng / 2) * Math.sin(dLng / 2) * Math.cos(lat1) * Math.cos(lat2);
+  let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  let d = R * c;
   return d;
 }
 
@@ -460,7 +471,7 @@ function convertKmToMiles(km: number) {
 }
 
 const containerStyle = {
-  width: '100%',
+  width: '90%',
   height: '700px',
 };
 
@@ -521,7 +532,7 @@ const StreetView: React.FC = () => {
 
   return (
     <LoadScript googleMapsApiKey={api_Key}>
-      <div id="street-view" style={containerStyle}></div>
+      <div id="street-view" style={containerStyle} className='flex flex-col justify-center'></div>
 
 
       {showMap && (
@@ -574,14 +585,14 @@ async function imageToBase64(url: string): Promise<string> {
 //Create a correct image URL
 function getDistanceImageUrl(answer: Nation, guess: Nation) {
 
-  
+
 
   const center = findCenter(answer, guess)
   const centerCoordString = `${center.lat},${center.lng}`
   const answerCoordString = `${answer.lat},${answer.lng}`
   const guessCoordString = `${guess.lat},${guess.lng}`
 
-  if(answer === guess){
+  if (answer === guess) {
 
     const imgUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${centerCoordString}&zoom=2&size=600x670&maptype=roadmap%20&markers=color:green%7C${answerCoordString}&key=${api_Key}`
     return imgUrl;
@@ -649,23 +660,27 @@ const LocaleLocatr = ({ onSave }: LocaleLocatrProps) => {
 
   return (
     <>
+      <div className='flex flex-col'>
 
+        <div className='flex flex-row justify-center'>
+          <NationDropdown onSelect={setGuess} />
+        </div>
+        <div className='flex flex-row rounded-xl m-5 justify-center'>
+          <StreetView />
+        </div>
+        <div className='flex flex-row justify-center px-5 mx-5'>
+          <Button
+            type="submit"
+            variant="contained"
+            className="save-modal-button"
+            onClick={() => { if (imageUrl) { onSave(imageUrl, trueLocation, guess!) } }}
+            sx={{ mt: 3, mb: 2 }}
+          >
+            GUESS
+          </Button>
+        </div>
+      </div>
 
-      <div>
-        <NationDropdown onSelect={setGuess} />
-      </div>
-      <div>
-        <StreetView />
-      </div>
-      <Button
-        type="submit"
-        variant="contained"
-        className="save-modal-button"
-        onClick={() => { if (imageUrl) { onSave(imageUrl, trueLocation, guess!) } }}
-        sx={{ mt: 3, mb: 2 }}
-      >
-        GUESS
-      </Button>
     </>
 
   )
@@ -675,45 +690,47 @@ const LocaleLocatr = ({ onSave }: LocaleLocatrProps) => {
 //<img src={this.model.data["imgUrl"]} />
 const PostInFeed = ({ image, distance, guessCountryName, correctCountryName }: { image: string, distance: number, guessCountryName: string, correctCountryName: string }) => {
 
-  if(guessCountryName === correctCountryName){
+  if (guessCountryName === correctCountryName) {
 
-    return(<>
-    <Card sx={{  maxHeight: 725 }} variant="outlined">
-      <CardActionArea>
-        <CardMedia 
-        sx={{ maxHeight: 615}}
-          component="img"
-          height="300"
-          image={image}
-          alt="distMap"
-        />
-        <CardContent sx={{ maxHeight: 300}}>
-        <Typography variant="h6" align='center' component="div" color="black">
-            Correct
-          </Typography>
-          <Typography variant="subtitle1" align='center' color="black">
-            Great Job! You picked the correct country,  <strong>{correctCountryName}!</strong>
-          </Typography>
-          
-        </CardContent>
-      </CardActionArea>
-    </Card>
+    return (<><div className='flex flex-row justify-items-center justify-center'>
+
+      <Card sx={{ maxHeight: 725 }} variant="outlined">
+        <CardActionArea>
+          <CardMedia
+            sx={{ maxHeight: 700 }}
+            component="img"
+            height="300"
+            image={image}
+            alt="distMap"
+          />
+          <CardContent sx={{ maxHeight: 300 }}>
+            <Typography variant="h6" align='center' component="div" color="black">
+              Correct
+            </Typography>
+            <Typography variant="subtitle1" align='center' color="black">
+              Great Job! You picked the correct country,  <strong>{correctCountryName}!</strong>
+            </Typography>
+
+          </CardContent>
+        </CardActionArea>
+      </Card>
+    </div>
     </>)
 
   }
 
 
   return (<>
-    <Card sx={{  maxHeight: 725}} variant="outlined">
+    <Card sx={{ maxHeight: 725 }} variant="outlined">
       <CardActionArea >
         <CardMedia
-        sx={{ maxHeight: 615}}
+          sx={{ maxHeight: 700 }}
           component="img"
           image={image}
           alt="distMap"
         />
-        <CardContent sx={{ maxHeight: 300}}>
-        <Typography variant="h6" align='center' component="div" color="black">
+        <CardContent sx={{ maxHeight: 200 }}>
+          <Typography variant="h6" align='center' component="div" color="black">
             Incorrect
           </Typography>
           <Typography variant="subtitle1" align='center' color="black">
@@ -725,15 +742,16 @@ const PostInFeed = ({ image, distance, guessCountryName, correctCountryName }: {
         </CardContent>
       </CardActionArea>
     </Card>
-  
+
   </>)
 }
 export default class localelocatrBlock extends Block {
 
   render() {
     return (
-      <>
+      <><div className='flex flex-row justify-center'>
         <PostInFeed image={this.model.data["imgUrl"]} distance={parseInt(this.model.data["distance"])} guessCountryName={this.model.data["guessCountryName"]} correctCountryName={this.model.data["correctCountryName"]} />
+      </div>
       </>
     );
   }
@@ -766,17 +784,3 @@ export default class localelocatrBlock extends Block {
   }
 }
 
-
-
-// REMAINING WORK
-// 
-// DONE (use null on guess) Boolean in state to say whether user has guessed yet
-// DONE Boolean to change after guess - picture to stop showing when boolean true - map to start showing when boolean true - trigger preview mode
-// DONE Transform image to base64 string and store in data model
-// Trigger appearance of final post page
-// Work out how final post page is handled
-// Final post page
-// Add to Final Post - overlay with details about distance etc
-// <PostInFeed image= distance= /> component that shows in feed
-// 
-// 
