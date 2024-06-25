@@ -1,13 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search } from 'react-feather';
 import Block from './Block';
 import { BlockModel } from './types';
 import BlockFactory from './BlockFactory';
 import { Geolocation } from '@capacitor/geolocation';
 import './BlockStyles.css';
+import { Search } from 'react-feather';
 
 // Import Google Maps type declarations
-import type { LatLngLiteral, GoogleMap, Marker, LatLngBounds, SearchBox } from './types/google-maps';
+/// <reference path="./types/google-maps.d.ts" />
+
+interface LatLngLiteral {
+  lat: number;
+  lng: number;
+}
 
 const isSuperApp = process.env.REACT_APP_IS_SUPERAPP === 'true';
 
@@ -18,7 +23,7 @@ export default class MapBlock extends Block {
     }
 
     if (!isSuperApp) {
-      return <h1>Map Search is disabled in this browser</h1>;
+      return <h1>Google Maps API is disabled in this browser</h1>;
     }
 
     const location = JSON.parse(this.model.data['location']) as LatLngLiteral;
@@ -32,7 +37,7 @@ export default class MapBlock extends Block {
 
   renderEditModal(done: (data: BlockModel) => void) {
     if (!isSuperApp) {
-      return <h1>Map Search is disabled in this browser</h1>;
+      return <h1>Google Maps API is disabled in this browser</h1>;
     }
 
     return (
@@ -60,7 +65,7 @@ const Map: React.FC<MapProps> = ({ location }) => {
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isSuperApp && mapRef.current) {
+    if (mapRef.current && isSuperApp) {
       const map = new google.maps.Map(mapRef.current, {
         center: location,
         zoom: 14,
@@ -74,7 +79,7 @@ const Map: React.FC<MapProps> = ({ location }) => {
   }, [location]);
 
   if (!isSuperApp) {
-    return <h1>Map Search is disabled in this browser</h1>;
+    return <h1>Google Maps API is disabled in this browser</h1>;
   }
 
   return <div ref={mapRef} className="w-full h-full" style={{ height: '400px' }} />;
@@ -97,7 +102,7 @@ const MapEditor: React.FC<MapEditorProps> = ({ onSelect }) => {
   }, []);
 
   useEffect(() => {
-    if (isSuperApp && mapRef.current && location) {
+    if (mapRef.current && location && isSuperApp) {
       const map = new google.maps.Map(mapRef.current, {
         center: location,
         zoom: 14,
@@ -142,12 +147,12 @@ const MapEditor: React.FC<MapEditorProps> = ({ onSelect }) => {
   }, [location, onSelect]);
 
   if (!isSuperApp) {
-    return <h1>Map Search is disabled in this browser</h1>;
+    return <h1>Google Maps API is disabled in this browser</h1>;
   }
 
   return (
-    <div className="relative w-full h-full">
-      <div ref={mapRef} className="w-full h-full" />
+    <div className="relative w-full h-full mt-[72px]">
+      <div ref={mapRef} className="w-auto h-full rounded-[24px]" style={{marginLeft:'16px', marginRight: '16px',}} />
       <div className="absolute top-0 w-full h-auto pt-16 flex items-start justify-center bg-transparent">
         <div className="relative flex items-center justify-center w-11/12 h-auto">
           <div className="absolute left-0 flex items-center pl-3 mb-2">

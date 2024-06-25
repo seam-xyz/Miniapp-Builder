@@ -220,7 +220,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: "seam",
-    fullscreenEdit: false,
+    fullscreenEdit: true,
   },
   "Image Button": {
     type: "Image Button",
