@@ -1,46 +1,120 @@
-import Block from './Block'
-import { BlockModel } from './types'
+import React, { useState, useEffect } from 'react';
+import { Search } from 'react-feather';
+import Block from './Block';
+import { BlockModel } from './types';
 import BlockFactory from './BlockFactory';
-import './BlockStyles.css'
-import GifViewer from './utils/GifViewer';
-// @ts-ignore
-import ReactGiphySearchbox from 'react-giphy-searchbox'
+import { GiphyFetch, GifsResult } from '@giphy/js-fetch-api';
+
+const giphyFetch = new GiphyFetch(process.env.REACT_APP_GIPHY_KEY!);
 
 export default class GiphyBlock extends Block {
   render() {
     if (Object.keys(this.model.data).length === 0) {
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
+      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!);
     }
 
-    let gifID = this.model.data["gif"]
+    let gifID = this.model.data['gif'];
 
     return (
-      <GifViewer id={gifID} />
-    )
+      <div className="flex flex-col items-center p-4 rounded-lg bg-gray-100">
+        <GifViewer id={gifID} />
+      </div>
+    );
   }
 
   renderEditModal(done: (data: BlockModel) => void, width?: string) {
-    const w3 = (parseInt(width ?? "450") - 30) / 3
-    const w2 = (parseInt(width ?? "450") - 20) / 2
     return (
-      <ReactGiphySearchbox
-        apiKey={process.env.REACT_APP_GIPHY_KEY}
-        onSelect={(item: any) => {
-          this.model.data["gif"] = item.id as string
-          done(this.model)
-        }}
-        gifListHeight='80vh'
-        masonryConfig={[
-          { columns: 2, imageWidth: w2, gutter: 10 },
-          { mq: "700px", columns: 3, imageWidth: w3, gutter: 10 }
-        ]}
-      />
-    )
+      <div className="relative flex flex-col items-center h-full rounded-lg">
+        <CustomGifSearch
+          onSelect={(item: any) => {
+            this.model.data['gif'] = item.id as string;
+            done(this.model);
+          }}
+        />
+      </div>
+    );
   }
 
   renderErrorState() {
     return (
-      <h1>Error: Coudn't figure out the url</h1>
-    )
+      <h1 className="text-red-500">Error: Couldn't figure out the URL</h1>
+    );
   }
 }
+
+interface CustomGifSearchProps {
+  onSelect: (item: any) => void;
+}
+
+const CustomGifSearch: React.FC<CustomGifSearchProps> = ({ onSelect }) => {
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [gifs, setGifs] = useState<GifsResult['data']>([]);
+
+  useEffect(() => {
+    if (searchTerm) {
+      giphyFetch.search(searchTerm, { limit: 20 }).then((res) => {
+        setGifs(res.data);
+      });
+    } else {
+      giphyFetch.trending({ limit: 20 }).then((res) => {
+        setGifs(res.data);
+      });
+    }
+  }, [searchTerm]);
+
+  return (
+    <div className="w-full h-full relative flex flex-col justify-center items-center">
+      <div className="flex-1 overflow-y-scroll hide-scrollbar p-4 grid grid-cols-2 gap-4">
+        {gifs.map((gif) => (
+          <div key={gif.id} className="cursor-pointer" onClick={() => onSelect(gif)}>
+            <img src={gif.images.fixed_width.url} alt={gif.title} className="rounded-lg" />
+          </div>
+        ))}
+      </div>
+      <div className="absolute bottom-0 bg-transparent w-full flex justify-center items-center mb-10">
+        <div className="relative w-9/12 mr-10">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+            <Search className="text-gray-500" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search for GIFs"
+            className="rounded-full py-2 pl-10 mr-10 border border-gray-300 placeholder:ml-1 focus:outline-none focus:ring-2 focus:ring-seam-blue w-full"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+interface GifViewerProps {
+  id: string;
+}
+
+const GifViewer: React.FC<GifViewerProps> = ({ id }) => {
+  const [gifData, setGifData] = useState<any>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      giphyFetch.gif(id).then(({ data }) => {
+        setGifData(data);
+      });
+    }
+    fetchData();
+  }, [id]);
+
+  return (
+    <div className="w-full flex justify-center items-center">
+      {gifData && (
+        <img
+          src={gifData.images.original.url}
+          className="rounded-lg"
+          alt="GIF"
+          width="100%"
+        />
+      )}
+    </div>
+  );
+};
