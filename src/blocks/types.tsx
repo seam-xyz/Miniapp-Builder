@@ -483,6 +483,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: "samsam",
+    fullscreenEdit: false,
   },
   "Calligraphy": { 
     type: "Calligraphy",
