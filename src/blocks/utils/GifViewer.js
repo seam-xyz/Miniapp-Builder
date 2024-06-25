@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Gif } from "@giphy/react-components"
 import { GiphyFetch } from "@giphy/js-fetch-api";
 
 export default function GifViewer({ id }) {
   const giphyFetch = new GiphyFetch(process.env.REACT_APP_GIPHY_KEY);
-
   const [gifData, setGifData] = useState(null);
 
   useEffect(() => {
@@ -13,12 +11,19 @@ export default function GifViewer({ id }) {
         setGifData(data);
       });
     }
-    fetchData()
+    fetchData();
   }, [id]);
 
   return (
-    <div className="w-full">
-    {gifData && <img src={gifData.images.original.url} width={"100%"}/>}
+    <div className="w-full flex justify-center items-center">
+      {gifData && (
+        <img
+          src={gifData.images.original.url}
+          className="rounded-lg"
+          alt="GIF"
+          width="100%"
+        />
+      )}
     </div>
   );
 }
