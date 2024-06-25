@@ -58,6 +58,7 @@ type StartProps = {
 
 */
 
+
 // Default context
 const defaultAudioContext: AudioContextProps = { isRecording: false, setIsRecording: () => { }, mediaRecorder: { current: null }, canvasId: ""}
 
@@ -115,7 +116,6 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayb
   canvas.height = canvas.offsetHeight;
   let canvasCtx = canvas.getContext("2d");
 
-
   // This function draws an oscilloscope of the current audio source
   const draw = () => {
     if (!canvasCtx) {
@@ -166,24 +166,21 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayb
       canvasCtx.fillRect(x, (canvas.height / 2) - (barHeight / 2), barWidth, barHeight);
 
       x += barWidth + 1;
-    }
-
+    }    
     
-
     // Check if the audio is still playing/playable
     if (getPlayable(node, context)) {
       // If so, we need to call the draw function to redraw the new oscilliscope
       requestAnimationFrame(draw);
     } else {
-      // Else, we need to clear/reset the canvas
+      // Else, we need to clear/reset the canvas      
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+      return;
     }
-
   }
 
   // Initial call to draw function
   draw();
-
 }
 
 
@@ -197,9 +194,11 @@ const start = ({ node, context, getPlayable, renderErrorState, canvasId, isPlayb
 // Component that is rendered in the preview screen and in users feeds
 // We pass in the url of the saved audio data
 const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
-  // Define state for if the audio is being played back and for audio duration
+  // Define state for if the audio is being played back, for audio duration, and for the current audio node (allows us to stop the audio)
   const [playing, setPlaying] = useState<boolean>(false)
   const [duration, setDuration] = useState<{min: number, sec: number}>({min: 0,sec: 0})
+  const [statefulNode, setStatefulNode] = useState<MediaElementAudioSourceNode>()
+
   // state to store time
   const [time, setTime] = useState(0);
   // Here we grab the canvas id and the audio duration from the context
@@ -257,7 +256,7 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
      
   },[audioPlayerId])
   
-  const playback = () => {
+  const playback = (): MediaElementAudioSourceNode => {
     const context = new AudioContext()
     const audio = new Audio();
     // Set the new audio to the recorded audio url
@@ -272,7 +271,9 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
     const isPlayback = true 
 
     // Start drawing the oscilliscopes on the canvas
-    start({ node, context, getPlayable: (node) => !(node as MediaElementAudioSourceNode).mediaElement.ended, renderErrorState, canvasId, isPlayback, normalMatch, smallMatch, xsMatch })
+    start({ node, context, getPlayable: (node) => !(node as MediaElementAudioSourceNode).mediaElement.ended || !(node as MediaElementAudioSourceNode).mediaElement.paused, renderErrorState, canvasId, isPlayback, normalMatch, smallMatch, xsMatch })
+  
+    return node
   }
 
   // Keeping track of current audio time
@@ -300,10 +301,22 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
           <div style={{ padding: "8px 12px", display: 'flex', flexDirection: 'row', justifyContent: 'start', alignItems: 'center', width: "100%", height: "100%" }} >
            
             {/* Invisible audio tag */}
-            <audio id={audioPlayerId} src={url} onPlay={() => { setTimeout(playback, 100) }} onPlaying={() => setPlaying(true)} onEnded={() => {setTime(0); setPlaying(false);}} />
+            <audio id={audioPlayerId} src={url} onPlay={() => { setTimeout(() => {
+                const node = playback()
+                setStatefulNode(node)
+            }, 100) }} onPlaying={() => setPlaying(true)} onEnded={() => {setTime(0); setPlaying(false);}} />
             
             {/* Div (button) for playing audio */}
             <div onClick={() => {
+              if (playing) {
+                const audio = document.getElementById(audioPlayerId) as HTMLMediaElement
+                statefulNode?.mediaElement.pause()
+                audio.pause();
+                audio.currentTime = 0
+                setPlaying(false);
+                setTime(0);
+                return;
+              }
                 const audio = document.getElementById(audioPlayerId) as HTMLMediaElement
                 audio.play();
             }} style={{cursor: "pointer"}}>
@@ -315,7 +328,9 @@ const PostInFeed = ({ url, renderErrorState }: PostInFeedProps) => {
 
             {/* Canvas */}
             <div style={{ color: 'white', height: "100%", width: "100%" }}>
-              <canvas style={{ color: 'white', width: "100%", height: "100%", display: `${playing ? "" : "none"}` }} id={canvasId}></canvas>
+              <canvas style={{ color: 'white', width: "100%", height: "100%", 
+                // display: `${playing ? "" : "none"}` 
+                }} id={canvasId}></canvas>
             </div>
            
            {/* Full audio duration  */}
