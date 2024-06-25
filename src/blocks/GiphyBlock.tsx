@@ -4,6 +4,7 @@ import Block from './Block';
 import { BlockModel } from './types';
 import BlockFactory from './BlockFactory';
 import { GiphyFetch, GifsResult } from '@giphy/js-fetch-api';
+import { Box } from '@mui/material';
 
 const giphyFetch = new GiphyFetch(process.env.REACT_APP_GIPHY_KEY!);
 
@@ -24,7 +25,7 @@ export default class GiphyBlock extends Block {
 
   renderEditModal(done: (data: BlockModel) => void, width?: string) {
     return (
-      <div className="relative flex flex-col items-center h-full rounded-lg">
+      <div style={{height: '100%',}}className="relative flex flex-col items-center h-full rounded-lg">
         <CustomGifSearch
           onSelect={(item: any) => {
             this.model.data['gif'] = item.id as string;
@@ -64,15 +65,15 @@ const CustomGifSearch: React.FC<CustomGifSearchProps> = ({ onSelect }) => {
 
   return (
     <div className="w-full h-full relative flex flex-col justify-center items-center">
-      <div className="flex-1 overflow-y-scroll hide-scrollbar p-4 grid grid-cols-2 gap-4">
+      <div style={{height: '100%'}} className="flex-1 overflow-y-scroll hide-scrollbar p-4 grid grid-cols-2 gap-4">
         {gifs.map((gif) => (
           <div key={gif.id} className="cursor-pointer" onClick={() => onSelect(gif)}>
             <img src={gif.images.fixed_width.url} alt={gif.title} className="rounded-lg" />
           </div>
         ))}
       </div>
-      <div className="absolute bottom-0 bg-transparent w-full flex justify-center items-center mb-10">
-        <div className="relative w-9/12 mr-10">
+      <Box className="space-y-2 w-auto h-auto flex justify-center items-center" style={{ paddingBottom: `calc(env(safe-area-inset-bottom, 24px) + 24px)` }} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, p: 3, bgcolor: 'transparent', zIndex: 1301 }}>
+        <div className="relative w-9/12 mr-[50px]">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3">
             <Search className="text-gray-500" />
           </div>
@@ -84,7 +85,7 @@ const CustomGifSearch: React.FC<CustomGifSearchProps> = ({ onSelect }) => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-      </div>
+      </Box>
     </div>
   );
 };
