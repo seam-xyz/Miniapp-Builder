@@ -25,7 +25,7 @@ import bookIcon from './blockIcons/bookIcon.png'
 import WordleIcon from './blockIcons/WordleIcon.png'
 import MoodIcon from './blockIcons/MoodIcon.png'
 import WhiteboardIcon from './blockIcons/whiteboardIcon.png'
-import CameraIcon from './blockIcons/cameraIcon.png'
+import CameraIcon from './blockIcons/CameraIcon.png'
 
 export type BlockModel = {
   type: string;
