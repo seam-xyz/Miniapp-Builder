@@ -295,9 +295,6 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
     }, initDelay);
   }, [props.puzzleSolved, props.tile, props.puzzleSize]);
 
-  // Distance, in pixels, before a gesture event is registered.
-  const moveThreshold = 14;
-
   useEffect(() => {
   }, [cursorStartPos]);
 
@@ -326,6 +323,9 @@ function ImagePuzzleTile(props: ImagePuzzleTileProps) {
   }
 
   function onCursorMove(pos: Coordinate2D) {
+    // Distance, in pixels, before a gesture event is registered.
+    const moveThreshold = 14;
+    
     if (!cursorStartPos) return;
     const dPos = subtractCoordinate2D(pos, cursorStartPos);
     if (Math.hypot(dPos[0], dPos[1]) >= moveThreshold) {
