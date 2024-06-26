@@ -481,7 +481,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "ssebexen & @chevron",
+    createdBy: "chevron", // ssebexen & @chevron, TODO implement splits
     fullscreenEdit: false,
 },
 };
