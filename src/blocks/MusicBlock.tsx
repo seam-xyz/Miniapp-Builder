@@ -5,35 +5,12 @@ import { Stack, Box } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
 import SeamSaveButton from '../components/SeamSaveButton';
 import Iframely from './utils/Iframely';
+import SpotifySearchBar from './utils/SpotifySearch/SpotifySearchBar';
 
 interface Music {}
 
 const SearchScreen: React.FC<any> = ({ done, model, onFinalize }) => {
   const [url, setUrl] = useState<string>(model.data.url || '');
-  const [SpotifySearchBar, setSpotifySearchBar] = useState<any>(null);
-  const isMounted = useRef(true);
-
-  useEffect(() => {
-    if (process.env.REACT_APP_IS_SUPERAPP === 'true') {
-      const loadSpotifySearchBar = () => {
-        try {
-          const module = require('../../../../src/SpotifySearch/SpotifySearchBar').default;
-          if (isMounted.current) {
-            setSpotifySearchBar(() => module);
-          }
-        } catch (error) {
-          console.warn('SpotifySearchBar could not be loaded:', error);
-        }
-      };
-
-      loadSpotifySearchBar();
-    }
-
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
   const extractTrackUrl = (track: any) => {
     return track.external_urls.spotify;
   };
@@ -48,14 +25,10 @@ const SearchScreen: React.FC<any> = ({ done, model, onFinalize }) => {
       <div className="w-full h-full flex flex-col mt-[24px] items-center justify-center overflow-y-hidden hide-scrollbar space-y-3">
         <h3 style={{ color: 'white' }}> Music by Spotify </h3>
         <h3 className="" style={{ color: 'white', marginBottom: '44px', }}>Share the music that you love</h3>
-        {SpotifySearchBar ? (
-          <SpotifySearchBar
-            onChooseTrack={handleChooseTrack}
-            selectedTrack={url}
-          />
-        ) : (
-          <p style={{ color: 'white' }}>Spotify Search is not available</p>
-        )}
+        <SpotifySearchBar
+          onChooseTrack={handleChooseTrack}
+          selectedTrack={url}
+        />
       </div>
       <Box className="bg-seam-black" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 24px) + 24px)', paddingTop: 'calc(env(safe-area-inset-bottom, 24px) + 24px)' }} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, p: 3, bgcolor: 'background.paper', boxShadow: 3, zIndex: 1301 }}>
         <SeamSaveButton onClick={() => onFinalize(url)} />
