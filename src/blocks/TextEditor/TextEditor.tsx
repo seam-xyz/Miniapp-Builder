@@ -1,9 +1,10 @@
+// Thanks to https://codesandbox.io/s/44ln1
 import React, { useState, useEffect, useRef } from 'react';
 import { Editor, EditorState, RichUtils, convertFromRaw, convertToRaw, DraftHandleValue, Modifier } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import { Box } from '@mui/material';
 import '../BlockStyles.css';
-import { List, AlignLeft, AlignCenter, AlignRight, Code, Link } from 'react-feather';
+import { List, AlignLeft, AlignCenter, AlignRight, Code, Link, X } from 'react-feather';
 import { ReactComponent as NumberedList } from "./images/NumberedList.svg";
 import { linkDecorator } from "./Link";
 import SeamSaveButton from '../../components/SeamSaveButton';
@@ -110,6 +111,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
   };
 
   const handleAddLink = () => {
+    // Thanks to https://github.com/facebook/draft-js/blob/main/examples/draft-0-10-0/link/link.html
     const selection = editorState.getSelection();
     const contentState = editorState.getCurrentContent();
     const startKey = selection.getStartKey();
