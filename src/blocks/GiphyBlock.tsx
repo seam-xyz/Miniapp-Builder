@@ -5,6 +5,7 @@ import { BlockModel } from './types';
 import BlockFactory from './BlockFactory';
 import { GiphyFetch, GifsResult } from '@giphy/js-fetch-api';
 import { Box } from '@mui/material';
+import GifViewer from './utils/GifViewer';
 
 const giphyFetch = new GiphyFetch(process.env.REACT_APP_GIPHY_KEY!);
 
@@ -25,7 +26,7 @@ export default class GiphyBlock extends Block {
 
   renderEditModal(done: (data: BlockModel) => void, width?: string) {
     return (
-      <div style={{height: '100%',}}className="relative flex flex-col items-center h-full rounded-lg">
+      <div style={{height: '100%',}} className="relative flex flex-col items-center h-full rounded-lg">
         <CustomGifSearch
           onSelect={(item: any) => {
             this.model.data['gif'] = item.id as string;
@@ -68,7 +69,7 @@ const CustomGifSearch: React.FC<CustomGifSearchProps> = ({ onSelect }) => {
       <div style={{height: '100%'}} className="flex-1 overflow-y-scroll hide-scrollbar p-4 grid grid-cols-2 gap-4">
         {gifs.map((gif) => (
           <div key={gif.id} className="cursor-pointer" onClick={() => onSelect(gif)}>
-            <img src={gif.images.fixed_width.url} alt={gif.title} className="rounded-lg" />
+            <img src={gif.images.fixed_width_downsampled.webp || gif.images.fixed_width_downsampled.url} alt={gif.title} className="rounded-lg" />
           </div>
         ))}
       </div>
@@ -86,36 +87,6 @@ const CustomGifSearch: React.FC<CustomGifSearchProps> = ({ onSelect }) => {
           />
         </div>
       </Box>
-    </div>
-  );
-};
-
-interface GifViewerProps {
-  id: string;
-}
-
-const GifViewer: React.FC<GifViewerProps> = ({ id }) => {
-  const [gifData, setGifData] = useState<any>(null);
-
-  useEffect(() => {
-    async function fetchData() {
-      giphyFetch.gif(id).then(({ data }) => {
-        setGifData(data);
-      });
-    }
-    fetchData();
-  }, [id]);
-
-  return (
-    <div className="w-full flex justify-center items-center">
-      {gifData && (
-        <img
-          src={gifData.images.original.url}
-          className="rounded-lg"
-          alt="GIF"
-          width="100%"
-        />
-      )}
     </div>
   );
 };
