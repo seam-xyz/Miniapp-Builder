@@ -39,7 +39,6 @@ export default class IFrameBlock extends Block {
 
 const IFrameEditModal: React.FC<{ model: BlockModel; done: (data: BlockModel) => void }> = ({ model, done }) => {
   const [loading, setLoading] = useState(false);
-  const [embedHtml, setEmbedHtml] = useState<string | null>(null);
   const [url, setUrl] = useState<string>(model.data['url'] || "");
 
   const fetchEmbed = useCallback(
@@ -51,15 +50,12 @@ const IFrameEditModal: React.FC<{ model: BlockModel; done: (data: BlockModel) =>
         );
         const data = await response.json();
         if (data.html) {
-          setEmbedHtml(data.html);
           model.data['url'] = url;
         } else {
-          setEmbedHtml(null);
           console.error('Failed to fetch embed:', data.message || 'Unknown error');
         }
       } catch (error) {
         console.error('Error fetching embed:', error);
-        setEmbedHtml(null);
       } finally {
         setLoading(false);
       }
@@ -74,7 +70,7 @@ const IFrameEditModal: React.FC<{ model: BlockModel; done: (data: BlockModel) =>
   }, [url, fetchEmbed]);
 
   const handleFinalize = () => {
-    if (embedHtml) {
+    if (url) {
       done(model);
     }
   };
@@ -91,13 +87,13 @@ const IFrameEditModal: React.FC<{ model: BlockModel; done: (data: BlockModel) =>
           <CircularProgress />
         </Box>
       )}
-      {embedHtml && !loading && (
+      {!loading && url && (
         <Box mt={2}>
           <Typography>Embed Preview:</Typography>
-          <div dangerouslySetInnerHTML={{ __html: embedHtml }} />
+          <Iframely url={url} style={{ width: '100%', height: '100%' }} />
         </Box>
       )}
-      {!embedHtml && !loading && url && (
+      {!loading && !url && (
         <Box className="w-full h-full flex justify-center items-start" mt={2}>
           <Typography variant="h1">No preview available for this URL.</Typography>
         </Box>
@@ -132,7 +128,6 @@ const IFrameEditModal: React.FC<{ model: BlockModel; done: (data: BlockModel) =>
             },
             "& .MuiInputBase-input": {
               fontFamily: "Public Sans",
-              // Additional styling here if needed
             },
             "& .MuiOutlinedInput-root": {
               "& fieldset": {
@@ -154,7 +149,7 @@ const IFrameEditModal: React.FC<{ model: BlockModel; done: (data: BlockModel) =>
           }}
         />
         <Divider className="h-[2px] w-full mb-4"/>
-        <SeamSaveButton onClick={() => handleFinalize} />
+        <SeamSaveButton onClick={handleFinalize} />
       </Box>
     </Box>
   );
