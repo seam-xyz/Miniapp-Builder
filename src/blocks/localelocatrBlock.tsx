@@ -1,15 +1,14 @@
 import Block from './Block'
 import { BlockModel } from './types'
-import './BlockStyles.css'
+import './BlockStyles.css';
+import './localelocatrApp.css';
 import React, { useEffect, useRef, useState } from "react";
 import { GoogleMap } from "@react-google-maps/api";
 import { LoadScript } from "@react-google-maps/api";
 import { OutputFormat, setDefaults } from 'react-geocode';
-import { Select} from "antd";
-import { error } from 'console';
-import { Box, Button, Card, CardContent, CardMedia, Typography  } from '@mui/material';
+import { Select } from "antd";
+import { Button, Typography } from '@mui/material';
 
-import { CardActionArea } from '@mui/material';
 const { Option } = Select;
 
 const api_Key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY!
@@ -24,15 +23,18 @@ type Nation = {
   lng: number;
 }
 
+//defaults for google GeoCode API
 setDefaults({
   key: api_Key,
   language: "en",
-  region: "es",
+  region: "us-east-1",
   outputFormat: OutputFormat.XML
 });
 
 const nationDataUrl = 'https://raw.githubusercontent.com/yablochko8/country-lists/main/world.json';
 
+//dictionary of countrys - key:ISO code
+//This is the  object that the streetview gets picked from
 const initialWorldDictionary: { [key: string]: Nation } = {
   us: {
     "iso2": "us",
@@ -69,24 +71,6 @@ const initialWorldDictionary: { [key: string]: Nation } = {
     "flag": "🇬🇧",
     "lat": 51.5074,
     "lng": -0.1278
-  },
-  fr: {
-    "iso2": "fr",
-    "iso3": "fra",
-    "name": "France",
-    "capital": "Paris",
-    "flag": "🇫🇷",
-    "lat": 48.8566,
-    "lng": 2.3522
-  },
-  it: {
-    "iso2": "it",
-    "iso3": "ita",
-    "name": "Italy",
-    "capital": "Rome",
-    "flag": "🇮🇹",
-    "lat": 41.9028,
-    "lng": 12.4964
   },
   nl: {
     "iso2": "nl",
@@ -133,15 +117,6 @@ const initialWorldDictionary: { [key: string]: Nation } = {
     "lat": 59.9139,
     "lng": 10.7522
   },
-  dk: {
-    "iso2": "dk",
-    "iso3": "dnk",
-    "name": "Denmark",
-    "capital": "Copenhagen",
-    "flag": "🇩🇰",
-    "lat": 55.6761,
-    "lng": 12.5683
-  },
   fi: {
     "iso2": "fi",
     "iso3": "fin",
@@ -178,15 +153,6 @@ const initialWorldDictionary: { [key: string]: Nation } = {
     "lat": 37.9838,
     "lng": 23.7275
   },
-  jp: {
-    "iso2": "jp",
-    "iso3": "jpn",
-    "name": "Japan",
-    "capital": "Tokyo",
-    "flag": "🇯🇵",
-    "lat": 35.6895,
-    "lng": 139.6917
-  },
   kr: {
     "iso2": "kr",
     "iso3": "kor",
@@ -204,15 +170,6 @@ const initialWorldDictionary: { [key: string]: Nation } = {
     "flag": "🇹🇼",
     "lat": 25.0330,
     "lng": 121.5654
-  },
-  hk: {
-    "iso2": "hk",
-    "iso3": "hkg",
-    "name": "Hong Kong",
-    "capital": "Hong Kong",
-    "flag": "🇭🇰",
-    "lat": 22.3193,
-    "lng": 114.1694
   },
   th: {
     "iso2": "th",
@@ -249,15 +206,6 @@ const initialWorldDictionary: { [key: string]: Nation } = {
     "flag": "🇸🇬",
     "lat": 1.3521,
     "lng": 103.8198
-  },
-  au: {
-    "iso2": "au",
-    "iso3": "aus",
-    "name": "Australia",
-    "capital": "Canberra",
-    "flag": "🇦🇺",
-    "lat": -35.2809,
-    "lng": 149.1300
   },
   nz: {
     "iso2": "nz",
@@ -313,15 +261,6 @@ const initialWorldDictionary: { [key: string]: Nation } = {
     "lat": 31.7683,
     "lng": 35.2137
   },
-  al: {
-    "iso2": "al",
-    "iso3": "alb",
-    "name": "Albania",
-    "capital": "Tirana",
-    "flag": "🇦🇱",
-    "lat": 41.3275,
-    "lng": 19.8189
-  },
   ad: {
     "iso2": "ad",
     "iso3": "and",
@@ -333,102 +272,7 @@ const initialWorldDictionary: { [key: string]: Nation } = {
   },
 };
 
-
-async function fetchNationData(sourceUrl: string): Promise<{ [key: string]: Nation }> {
-  try {
-    // Fetch the JSON data
-    const response = await fetch(sourceUrl);
-    if (!response.ok) {
-      throw new Error('Error during fetchNationData: Response not ok.');
-    }
-    const dictionary: { [key: string]: Nation } = await response.json();
-    return dictionary
-  } catch (error) {
-    console.error('Error fetching or parsing data:', error);
-    throw error;
-  }
-}
-
-function createNationArray(dictionary: { [key: string]: Nation }): Nation[] {
-  const nationArray: Nation[] = Object.values(dictionary);
-  nationArray.sort((a, b) => a.name.localeCompare(b.name));
-  return nationArray;
-}
-
-const initialWorldArray = createNationArray(initialWorldDictionary)
-
-
-const searchNations = (nations: Nation[], typedInput: string, callback: Function) => {
-  const cleanedInput = typedInput.toLowerCase()
-  const filteredNations = nations.filter(nation =>
-    nation.name.toLowerCase().includes(cleanedInput) ||
-    nation.iso2.toLowerCase().includes(cleanedInput) ||
-    nation.iso3.toLowerCase().includes(cleanedInput)
-  );
-  callback(filteredNations);
-  console.log(`searchNations completed with: ${cleanedInput ? cleanedInput : "(blank query)"}. ${filteredNations.length} "values returned.`)
-}
-
-function NationDropdown({ onSelect }: { onSelect: Function }) {
-  const [allNations, setAllNations] = useState<Nation[]>(initialWorldArray)
-  const [filteredNations, setFilteredNations] = useState<Nation[]>(allNations)
-
-  // "input" here means user typing text into the search bar
-  const inputHandler = (inputText: string) => {
-    searchNations(allNations, inputText, setFilteredNations)
-  }
-
-  // "selection" here means user clicking a country as their guess, or highlighting it and pressing Enter
-  const selectionHandler = (id: string) => {
-    let selectedNation = allNations.find(nation => nation.iso2 === id)
-    if (!selectedNation) throw new Error("selectionHandler called with invalid ISO2 code");
-    else {
-      console.log("Selection made! Selected country is:", selectedNation.name)
-      onSelect(selectedNation)
-    }
-  }
-
-  useEffect(() => {
-    const init = async () => {
-      const fullNationList = createNationArray(await fetchNationData(nationDataUrl))
-      setAllNations(fullNationList)
-      setFilteredNations(fullNationList)
-    }
-    init()
-  },
-    [])
-
-  const displayFilteredNations = filteredNations.map(
-    (nation) => {
-      const optionLabel = nation.flag + " " + nation.name
-      return (
-        <Option key={nation.iso2} value={nation.iso2}> {optionLabel}  </Option>
-      )
-    }
-  )
-
-  return (
-    <div>
-      <Select
-        showSearch
-        onSearch={inputText => inputHandler(inputText)}
-        onChange={selectionHandler}
-        style={{ width: 570 }}
-        placeholder="Guess where?"
-        filterOption={false}
-      >
-        {displayFilteredNations}
-      </Select>
-    </div>
-  )
-}
-
-
-
-const randomNation = (nations: Nation[]): Nation => {
-  const randomIndex = Math.floor(Math.random() * nations.length)
-  return nations[randomIndex]
-}
+/* ************ HELPER FUNCTIONS ********** */
 
 //props -  latitude and longitude of two locations(in degrees)
 //return - distance in km between the two given locations (straight line from point a to point b)
@@ -459,97 +303,36 @@ function convertKmToMiles(km: number) {
   return km * 0.621371;
 }
 
-const containerStyle = {
-  width: '100%',
-  height: '700px',
-};
-
-const trueLocation: Nation = randomNation(initialWorldArray)
-
-
-async function getGeocodeResponse() {
-  const geocodeAPI = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + trueLocation.lat + "," + trueLocation.lng + "&key=" + api_Key
-  try {
-    const response = await fetch(geocodeAPI);
-    if (!response.ok) {
-      throw new Error('Network response was not ok ' + response.statusText);
-    }
-    const json = await response.json();
-    return json;
-  } catch (error) {
-    console.error('There was a problem with the fetch operation:', error);
-  }
+//returns a random Nation from the nation dictionary
+const randomNation = (nations: Nation[]): Nation => {
+  const randomIndex = Math.floor(Math.random() * nations.length)
+  return nations[randomIndex]
 }
 
-
-const StreetView: React.FC = () => {
-  const mapRef = useRef<google.maps.Map | null>(null);
-  const streetViewRef = useRef<google.maps.StreetViewPanorama | null>(null);
-  const [isMapLoaded, setIsMapLoaded] = useState(false);
-  const [showMap, setShowMap] = useState(true);
-
-  useEffect(() => {
-    if (isMapLoaded && mapRef.current) {
-      // Create a StreetViewPanorama instance and link it to the map
-      streetViewRef.current = new google.maps.StreetViewPanorama(
-        document.getElementById('street-view') as HTMLElement,
-        {
-          position: trueLocation,
-          pov: { heading: 165, pitch: 0 },
-          zoom: 1,
-          addressControl: false,
-        }
-      );
-      mapRef.current.setStreetView(streetViewRef.current);
-
-      // Hide the map after initializing Street View
-      setShowMap(false);
-
-      getGeocodeResponse()
-        .then(response => {
-          const data = response.results
-          console.log(data)
-          const streetAddress = data[0].formatted_address
-          console.log(streetAddress);
-          // Process the response here
-        })
-        .catch(error => {
-          console.error('Error fetching the geocode data:', error);
-        });
-    }
-  }, [isMapLoaded]);
-
-  return (
-    <LoadScript googleMapsApiKey={api_Key}>
-      <div id="street-view" style={containerStyle}></div>
-
-
-      {showMap && (
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={trueLocation}
-          zoom={14}
-          onLoad={(map) => {
-            mapRef.current = map;
-            setIsMapLoaded(true);  // Set the map as loaded
-          }}
-          options={{
-            streetViewControl: false,
-          }}
-        />
-      )}
-    </LoadScript>
-  );
-};
-
-
+//finds center between correct location and guess location (used to as center of map in image)
 const findCenter = (nation1: Nation, nation2: Nation): { lat: number, lng: number } => {
-  const centerLat = (nation1.lat + nation2.lat) / 2
+  // subtracted 30 have the path show higher on the screen
+  const centerLat = ((nation1.lat + nation2.lat) / 2) - 30
   const centerLng = (nation1.lng + nation2.lng) / 2
   return { lat: centerLat, lng: centerLng }
 
 }
 
+//returns a full list  of countries to pick from
+async function fetchNationData(sourceUrl: string): Promise<{ [key: string]: Nation }> {
+  try {
+    // Fetch the JSON data
+    const response = await fetch(sourceUrl);
+    if (!response.ok) {
+      throw new Error('Error during fetchNationData: Response not ok.');
+    }
+    const dictionary: { [key: string]: Nation } = await response.json();
+    return dictionary
+  } catch (error) {
+    console.error('Error fetching or parsing data:', error);
+    throw error;
+  }
+}
 
 async function imageToBase64(url: string): Promise<string> {
   // Fetch the image
@@ -571,43 +354,185 @@ async function imageToBase64(url: string): Promise<string> {
   });
 }
 
-//Create a correct image URL
-function getDistanceImageUrl(answer: Nation, guess: Nation) {
+/* ************ HELPER FUNCTIONS ********** */
 
-  
+function createNationArray(dictionary: { [key: string]: Nation }): Nation[] {
+  const nationArray: Nation[] = Object.values(dictionary);
+  nationArray.sort((a, b) => a.name.localeCompare(b.name));
+  return nationArray;
+}
 
-  const center = findCenter(answer, guess)
-  const centerCoordString = `${center.lat},${center.lng}`
-  const answerCoordString = `${answer.lat},${answer.lng}`
-  const guessCoordString = `${guess.lat},${guess.lng}`
+//gets a sorted list of country names to return
+const initialWorldArray = createNationArray(initialWorldDictionary)
 
-  if(answer === guess){
 
-    const imgUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${centerCoordString}&zoom=2&size=600x670&maptype=roadmap%20&markers=color:green%7C${answerCoordString}&key=${api_Key}`
-    return imgUrl;
+const searchNations = (nations: Nation[], typedInput: string, callback: Function) => {
+  const cleanedInput = typedInput.toLowerCase()
+  const filteredNations = nations.filter(nation =>
+    nation.name.toLowerCase().includes(cleanedInput) ||
+    nation.iso2.toLowerCase().includes(cleanedInput) ||
+    nation.iso3.toLowerCase().includes(cleanedInput)
+  );
+  callback(filteredNations);
+}
 
+//component for Country search bar
+function NationDropdown({ onSelect }: { onSelect: Function }) {
+  const [allNations, setAllNations] = useState<Nation[]>(initialWorldArray)
+  const [filteredNations, setFilteredNations] = useState<Nation[]>(allNations)
+
+  // "input" here means user typing text into the search bar
+  const inputHandler = (inputText: string) => {
+    searchNations(allNations, inputText, setFilteredNations)
   }
 
-  const imgUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${centerCoordString}&zoom=2&size=600x670&maptype=roadmap%20&markers=color:green%7C${answerCoordString}&markers=color:red%7C${guessCoordString}&path=color:red|weight:5|${answerCoordString}|${guessCoordString}&key=${api_Key}`
-  return imgUrl
-}
+  // "selection" here means user clicking a country as their guess, or highlighting it and pressing Enter
+  const selectionHandler = (id: string) => {
+    let selectedNation = allNations.find(nation => nation.iso2 === id)
+    if (!selectedNation) throw new Error("selectionHandler called with invalid ISO2 code");
+    else {
+      onSelect(selectedNation)
+    }
+  }
 
-function ShowDistanceMap({ imageUrl }: { imageUrl: string }) {
-  if (imageUrl === "") return (
-    <div />
+  useEffect(() => {
+    const init = async () => {
+      const fullNationList = createNationArray(await fetchNationData(nationDataUrl))
+      setAllNations(fullNationList)
+      setFilteredNations(fullNationList)
+    }
+    init()
+  },
+    [])
+
+  const displayFilteredNations = filteredNations.map(
+    (nation) => {
+      const optionLabel = nation.flag + " " + nation.name
+      return (
+        <Option key={nation.iso2} value={nation.iso2}> {optionLabel}  </Option>
+      )
+    }
   )
 
-  else return (
-    <Button
-      type="submit"
-      variant="contained"
-      className="save-modal-button"
-      sx={{ mt: 3, mb: 2 }}
-    >
-      GUESS
-    </Button>
+  //used window inner width for sizing for multiple devices
+  return (
+    <div className="" style={{ width: "75vw", maxWidth: 500 }}>
+      <Select
+
+        showSearch
+        onSearch={inputText => inputHandler(inputText)}
+        onChange={selectionHandler}
+        size="large"
+        style=
+        {{
+          borderRadius: '30px',
+          overflow: 'hidden',
+          width: "100%",
+          display: "flex"
+
+        }}
+
+
+        dropdownStyle={{ borderRadius: '20px' }}
+
+        placeholder="Guess where?"
+        filterOption={false}
+      >
+        {displayFilteredNations}
+      </Select>
+
+    </div>
   )
 }
+
+
+let trueLocation: Nation = randomNation(initialWorldArray)
+
+//gets geocode information for correct Country - Given a latitude and longitude, return a street address and country
+async function getGeocodeResponse() {
+  const geocodeAPI = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + trueLocation.lat + "," + trueLocation.lng + "&key=" + api_Key
+  try {
+    const response = await fetch(geocodeAPI);
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText);
+    }
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error('There was a problem with the fetch operation:', error);
+  }
+}
+
+/* ************ COMPONENT FUNCTIONS ********** */
+
+//container for streetview
+const containerStyle = {
+  width: '100%',
+  height: '700px',
+};
+
+//streetview react component
+const StreetView: React.FC = () => {
+  const mapRef = useRef<google.maps.Map | null>(null);
+  const streetViewRef = useRef<google.maps.StreetViewPanorama | null>(null);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const [showMap, setShowMap] = useState(true);
+
+
+  useEffect(() => {
+    if (isMapLoaded && mapRef.current) {
+      // Create a StreetViewPanorama instance and link it to the map
+      streetViewRef.current = new google.maps.StreetViewPanorama(
+        document.getElementById('street-view') as HTMLElement,
+        {
+          position: trueLocation,
+          pov: { heading: 165, pitch: 0 },
+          zoom: 1,
+          addressControl: false,
+          fullscreenControlOptions: {
+
+          }
+        }
+      );
+      mapRef.current.setStreetView(streetViewRef.current);
+
+      // Hide the map after initializing Street View
+      setShowMap(false);
+
+      getGeocodeResponse()
+        .then(response => {
+          const data = response.results
+          const streetAddress = data[0].formatted_address
+        })
+        .catch(error => {
+          console.error('Error fetching the geocode data:', error);
+        });
+    }
+  }, [isMapLoaded]);
+
+  return (
+    <LoadScript googleMapsApiKey={api_Key}>
+      <div className="rounded-3xl" id="street-view" style={containerStyle}></div>
+
+      {showMap && (
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={trueLocation}
+          zoom={14}
+          onLoad={(map) => {
+            mapRef.current = map;
+            setIsMapLoaded(true);  // Set the map as loaded
+          }}
+          options={{
+            streetViewControl: false,
+          }}
+          clickableIcons={false}
+        />
+      )}
+    </LoadScript>
+  );
+};
+
 
 
 type LocaleLocatrProps = {
@@ -615,8 +540,6 @@ type LocaleLocatrProps = {
 }
 
 const LocaleLocatr = ({ onSave }: LocaleLocatrProps) => {
-  // STILL TO DO - MOVE THE ANSWER INTO STATE HERE SO IT CAN BE CHOSEN FROM THE FULL LIST
-  // const [answer, setAnswer] = useState
   const [guess, setGuess] = useState<Nation | null>(null)
   const [imageUrl, setImageUrl] = useState<string>("")
   const [image, setImage] = useState<string>("")
@@ -637,26 +560,19 @@ const LocaleLocatr = ({ onSave }: LocaleLocatrProps) => {
     }
   }, [guess])
 
-  // Stage two: when image file is saved, process that guess
-  useEffect(() => {
-    if (guess) {
-      console.log(image)
-      // Things that happen go here
-      // The "THing" being that all the necessary data needs to get saved to this.model
-      // and then trigger the done
-    }
-  }, [image])
 
   return (
     <>
 
+      <div className="relative">
+        <div className="absolute top-1 left-1 z-10 p-2 ">
+          <NationDropdown onSelect={setGuess} />
+        </div>
+        <div className="relative z-0">
+          <StreetView />
+        </div>
+      </div>
 
-      <div>
-        <NationDropdown onSelect={setGuess} />
-      </div>
-      <div>
-        <StreetView />
-      </div>
       <Button
         type="submit"
         variant="contained"
@@ -672,62 +588,70 @@ const LocaleLocatr = ({ onSave }: LocaleLocatrProps) => {
 
 }
 
-//<img src={this.model.data["imgUrl"]} />
+
+//Create a correct image URL - Show distance between guess and correct country in an image with markers
+function getDistanceImageUrl(answer: Nation, guess: Nation) {
+
+  const center = findCenter(answer, guess)
+  const centerCoordString = `${center.lat},${center.lng}`
+  const answerCoordString = `${answer.lat},${answer.lng}`
+  const guessCoordString = `${guess.lat},${guess.lng}`
+
+  if (answer === guess) {
+
+    const imgUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${centerCoordString}&zoom=2&size=600x670&maptype=roadmap%20&markers=color:green%7C${answerCoordString}&key=${api_Key}`
+    return imgUrl;
+
+  }
+
+  const imgUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${centerCoordString}&zoom=2&size=600x670&maptype=roadmap%20&markers=color:green%7C${answerCoordString}&markers=color:red%7C${guessCoordString}&path=color:red|weight:5|${answerCoordString}|${guessCoordString}&key=${api_Key}`
+  return imgUrl
+}
+
+//final image render component. Returns a image showing distance from guess to the correct country
 const PostInFeed = ({ image, distance, guessCountryName, correctCountryName }: { image: string, distance: number, guessCountryName: string, correctCountryName: string }) => {
 
-  if(guessCountryName === correctCountryName){
+  if (guessCountryName === correctCountryName) {
 
-    return(<>
-    <Card sx={{  maxHeight: 725 }} variant="outlined">
-      <CardActionArea>
-        <CardMedia 
-        sx={{ maxHeight: 615}}
-          component="img"
-          height="300"
-          image={image}
-          alt="distMap"
-        />
-        <CardContent sx={{ maxHeight: 300}}>
-        <Typography variant="h6" align='center' component="div" color="black">
-            Correct
+    return (<>
+
+      <div className="relative flex flex-col h-3/4 justify-items-center">
+        <img className=" z-0 rounded-2xl h-3/4 inset-x-0  w-full relative" src={image} />
+        <div className=" absolute inset-x-0 bottom-0 mb-4 z-50 mx-6  p-6 bg-white border border-gray-200 rounded-2xl shadow ">
+          <Typography variant="h6" align='center' component="div" color="black">
+            Correct!
           </Typography>
           <Typography variant="subtitle1" align='center' color="black">
             Great Job! You picked the correct country,  <strong>{correctCountryName}!</strong>
           </Typography>
-          
-        </CardContent>
-      </CardActionArea>
-    </Card>
+        </div>
+      </div>
+
     </>)
 
   }
 
-
   return (<>
-    <Card sx={{  maxHeight: 725}} variant="outlined">
-      <CardActionArea >
-        <CardMedia
-        sx={{ maxHeight: 615}}
-          component="img"
-          image={image}
-          alt="distMap"
-        />
-        <CardContent sx={{ maxHeight: 300}}>
+    <div className="relative flex flex-col h-3/4 justify-items-center">
+      <img className=" z-0 rounded-2xl md:h-3/4 inset-x-0  w-full relative" src={image} />
+      <div className=" absolute inset-x-0 bottom-0 mb-4 z-50 mx-6  flex flex-col size-auto p-6 bg-white border border-gray-200 rounded-2xl shadow ">
         <Typography variant="h6" align='center' component="div" color="black">
-            Incorrect
-          </Typography>
-          <Typography variant="subtitle1" align='center' color="black">
-            The correct country was:  <strong>{correctCountryName}</strong>
-          </Typography>
-          <Typography variant="subtitle1" align='center' color="black">
-            Total distance:  <strong>{distance} km ({Math.trunc(convertKmToMiles(distance))} miles)</strong>
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
-  
+          Incorrect
+        </Typography>
+        <Typography variant="subtitle1" align='center' color="black">
+          The correct country was:  <strong>{correctCountryName}</strong>
+        </Typography>
+        <Typography variant="subtitle1" align='center' color="black">
+          Total distance:  <strong>{distance} km ({Math.trunc(convertKmToMiles(distance))} miles)</strong>
+        </Typography>
+      </div>
+    </div>
+
   </>)
 }
+
+/* ************ COMPONENT FUNCTIONS ********** */
+
 export default class localelocatrBlock extends Block {
 
   render() {
@@ -749,12 +673,12 @@ export default class localelocatrBlock extends Block {
       done(this.model)
     }
 
+    //resets truelocation on localelocatr open
+    trueLocation = randomNation(initialWorldArray);
+
     return (
       <div>
-
         <LocaleLocatr onSave={handleSave} />
-
-
       </div>)
   }
 
@@ -767,16 +691,3 @@ export default class localelocatrBlock extends Block {
 }
 
 
-
-// REMAINING WORK
-// 
-// DONE (use null on guess) Boolean in state to say whether user has guessed yet
-// DONE Boolean to change after guess - picture to stop showing when boolean true - map to start showing when boolean true - trigger preview mode
-// DONE Transform image to base64 string and store in data model
-// Trigger appearance of final post page
-// Work out how final post page is handled
-// Final post page
-// Add to Final Post - overlay with details about distance etc
-// <PostInFeed image= distance= /> component that shows in feed
-// 
-// 

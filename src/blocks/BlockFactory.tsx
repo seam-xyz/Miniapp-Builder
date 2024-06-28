@@ -1,4 +1,4 @@
-import localelocatrApp from './localelocatrApp'
+import localelocatrApp from './localelocatrBlock'
 import VoiceApp from './VoiceApp'
 import MoodApp from './MoodApp'
 import BookshelfApp from './BookshelfApp'
