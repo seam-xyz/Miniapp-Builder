@@ -335,6 +335,8 @@ async function fetchNationData(sourceUrl: string): Promise<{ [key: string]: Nati
 
 /* ************ HELPER FUNCTIONS ********** */
 
+/* ************ DROPDOWN FUNCTIONS ********** */
+
 function createNationArray(dictionary: { [key: string]: Nation }): Nation[] {
   const nationArray: Nation[] = Object.values(dictionary);
   nationArray.sort((a, b) => a.name.localeCompare(b.name));
@@ -424,6 +426,7 @@ function NationDropdown({ onSelect }: { onSelect: Function }) {
   )
 }
 
+/* ************ DROPDOWN FUNCTIONS ********** */
 
 let trueLocation: Nation = randomNation(initialWorldArray)
 
