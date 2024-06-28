@@ -335,6 +335,8 @@ async function fetchNationData(sourceUrl: string): Promise<{ [key: string]: Nati
 
 /* ************ HELPER FUNCTIONS ********** */
 
+/* ************ DROPDOWN FUNCTIONS ********** */
+
 function createNationArray(dictionary: { [key: string]: Nation }): Nation[] {
   const nationArray: Nation[] = Object.values(dictionary);
   nationArray.sort((a, b) => a.name.localeCompare(b.name));
@@ -381,7 +383,7 @@ function NationDropdown({ onSelect }: { onSelect: Function }) {
 
   //used window inner width for sizing for multiple devices
   return (
-    <div className="" style={{ width: "75vw", maxWidth: 500 }}>
+    
       <Autocomplete
         className='bg-white rounded-2xl shadow-lg'
         size='small'
@@ -420,10 +422,11 @@ function NationDropdown({ onSelect }: { onSelect: Function }) {
         )}
         renderInput={(params) => <TextField {...params}  />}
       />
-    </div>
+
   )
 }
 
+/* ************ DROPDOWN FUNCTIONS ********** */
 
 let trueLocation: Nation = randomNation(initialWorldArray)
 
