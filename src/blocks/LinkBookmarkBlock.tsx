@@ -6,6 +6,7 @@ import './BlockStyles.css'
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Iframely from './utils/Iframely';
 
 export default class LinkBookmarkBlock extends Block {
   props: any;
@@ -20,15 +21,9 @@ export default class LinkBookmarkBlock extends Block {
     }
 
     return (
-      <div style={{ backgroundColor: "white", width: "100%", height: "100%" }}>
-        <IframelyCard
-          url={url}
-          style={{
-            display: "flex",
-            height: `100%`,
-            width: `100%`
-          }} />
-      </div>
+      <Box style={{ height: '100%', width: '100%' }}>
+        <Iframely url={url} style={{ height: '100%', width: '100%' }} />
+      </Box>
     );
   }
 
