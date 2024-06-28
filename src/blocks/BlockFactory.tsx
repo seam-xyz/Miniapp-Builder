@@ -1,5 +1,6 @@
 import MapApp from './MapApp'
 import CameraApp from './CameraApp'
+import CalligraphyApp from './CalligraphyApp'
 import MoodApp from './MoodApp'
 import BookshelfApp from './BookshelfApp'
 import UnknownApp from './UnknownApp'
@@ -68,6 +69,7 @@ export default class BlockFactory {
       case "Whiteboard": return new WhiteboardBlock(model, theme)
       case "Camera": return new CameraApp(model, theme)
       case "Map": return new MapApp(model, theme)
+      case "Calligraphy": return new CalligraphyApp(model, theme)
       // new blocks go here
       default: return new UnknownApp(model, theme)
     }

@@ -58,11 +58,26 @@ const ImageWithModal: FC<ImageWithModalProps> = ({ urls, style }) => {
     setOpen(false);
   };
 
+  const downscaledURL = (urlString: string) => {
+    if (!urlString.includes('seam-social.appspot.com')) {
+      return urlString;
+    }
+
+    const url = new URL(urlString);
+    let pathname = url.pathname;
+    let filename = pathname.substring(pathname.lastIndexOf('/') + 1);
+    let newFilename = filename + '_1024x1024';
+    pathname = pathname.replace(filename, newFilename);
+    url.pathname = pathname.split('/').map(part => part === filename ? encodeURIComponent(newFilename) : part).join('/');
+  
+    return url.toString();
+  }
+
   return (
     <>
       <div className="flex cursor-pointer gap-2.5">
         {urls.map((src, index) => (
-          <img key={index} src={src} className="object-cover" style={style} alt="Thumbnail" onClick={handleOpen(index)} />
+          <img key={index} src={downscaledURL(src)} className="object-cover" style={style} alt="Thumbnail" onClick={handleOpen(index)} />
         ))}
       </div>
 
