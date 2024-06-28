@@ -31,6 +31,8 @@ setDefaults({
   outputFormat: OutputFormat.XML
 });
 
+// Currently pulling full world data from a public raw file on github
+// Probably needs a long term home on Seam server
 const nationDataUrl = 'https://raw.githubusercontent.com/yablochko8/country-lists/main/world.json';
 
 //dictionary of countrys - key:ISO code
