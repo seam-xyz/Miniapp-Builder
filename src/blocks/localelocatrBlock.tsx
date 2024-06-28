@@ -72,6 +72,15 @@ const initialWorldDictionary: { [key: string]: Nation } = {
     "lat": 51.5074,
     "lng": -0.1278
   },
+  fr: {
+    "iso2": "fr",
+    "iso3": "fra",
+    "name": "France",
+    "capital": "Paris",
+    "flag": "🇫🇷",
+    "lat": 48.8566,
+    "lng": 2.3522
+  },
   nl: {
     "iso2": "nl",
     "iso3": "nld",
