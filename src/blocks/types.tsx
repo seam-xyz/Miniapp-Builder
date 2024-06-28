@@ -471,7 +471,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockEdit: true,
     createdBy: "chevron", // ssebexen & @chevron, TODO implement splits
     fullscreenEdit: false,
-},
   },
   "Camera": { 
     type: "Camera",
@@ -485,5 +484,5 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockEdit: true,
     createdBy: "seam",
     fullscreenEdit: false,
-},
+  },
 };
