@@ -18,7 +18,7 @@ export default class GiphyBlock extends Block {
     let gifID = this.model.data['gif'];
 
     return (
-      <div className="flex flex-col items-center p-4 rounded-lg bg-gray-100">
+      <div className="flex flex-col items-center h-full w-full rounded-lg">
         <GifViewer id={gifID} />
       </div>
     );
@@ -69,7 +69,7 @@ const CustomGifSearch: React.FC<CustomGifSearchProps> = ({ onSelect }) => {
       <div style={{height: '100%'}} className="flex-1 overflow-y-scroll hide-scrollbar p-4 grid grid-cols-2 gap-4">
         {gifs.map((gif) => (
           <div key={gif.id} className="cursor-pointer" onClick={() => onSelect(gif)}>
-            <img src={gif.images.fixed_width_downsampled.webp || gif.images.fixed_width_downsampled.url} alt={gif.title} className="rounded-lg" />
+            <img src={gif.images.fixed_width_downsampled.webp || gif.images.fixed_width_downsampled.url} alt={gif.title} className="rounded-lg h-full w-full max-w-[200px] max-h-[200px]" />
           </div>
         ))}
       </div>
