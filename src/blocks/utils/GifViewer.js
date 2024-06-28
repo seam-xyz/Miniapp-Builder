@@ -16,7 +16,7 @@ export default function GifViewer({ id }) {
   }, [id]);
 
   return (
-    <div className="w-full flex justify-center items-center">
+    <div className="w-full h-full flex justify-center items-center">
       {gifData && (
         <img
           src={gifData.images.fixed_width_downsampled.webp || gifData.images.fixed_width_downsampled.url}
