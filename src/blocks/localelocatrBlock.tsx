@@ -429,7 +429,6 @@ function NationDropdown({ onSelect }: { onSelect: Function }) {
   return (
     <div className="" style={{ width: "75vw", maxWidth: 500 }}>
       <Select
-
         showSearch
         onSearch={(inputText: string) => inputHandler(inputText)}
         onChange={selectionHandler}
