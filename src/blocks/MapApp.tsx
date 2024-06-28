@@ -1,30 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Block from './Block';
 import { BlockModel } from './types';
-import BlockFactory from './BlockFactory';
 import { Geolocation } from '@capacitor/geolocation';
 import './BlockStyles.css';
 import { Search } from 'react-feather';
-
-// Import Google Maps type declarations
-/// <reference path="./types/google-maps.d.ts" />
-
-interface LatLngLiteral {
-  lat: number;
-  lng: number;
-}
+import Iframely from './utils/Iframely';
 
 export default class MapBlock extends Block {
   render() {
-    if (Object.keys(this.model.data).length === 0) {
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!);
+    const locationUrl = this.model.data['locationUrl'] || this.model.data['url'];
+
+    if (!locationUrl) {
+      return this.renderEmptyState();
     }
 
-    const location = JSON.parse(this.model.data['location']) as LatLngLiteral;
+    console.log("Rendering Map with URL:", locationUrl); // Log the URL
 
     return (
       <div className="relative w-full h-full">
-        <Map location={location} />
+        <Iframely url={locationUrl} style={{ height: '100%' }} />
       </div>
     );
   }
@@ -33,8 +27,10 @@ export default class MapBlock extends Block {
     return (
       <div className="relative flex flex-col items-center rounded-lg bg-gray-100 h-full">
         <MapEditor
-          onSelect={(location: LatLngLiteral) => {
-            this.model.data['location'] = JSON.stringify(location);
+          onSelect={(locationUrl: string) => {
+            console.log("Selected URL:", locationUrl); // Log the URL
+            this.model.data['locationUrl'] = locationUrl; // Store as URL string
+            delete this.model.data['url']; // Remove old url field if it exists
             done(this.model);
           }}
         />
@@ -42,43 +38,60 @@ export default class MapBlock extends Block {
     );
   }
 
+  renderEmptyState() {
+    return <h1>Please select a location</h1>;
+  }
+
   renderErrorState() {
-    return <h1>Error!</h1>;
+    return <h1>Error: Invalid location data!</h1>; // Provide more informative error feedback
   }
 }
 
-interface MapProps {
-  location: LatLngLiteral;
+interface LatLngLiteral {
+  lat: number;
+  lng: number;
 }
 
-const Map: React.FC<MapProps> = ({ location }) => {
-  const mapRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (mapRef.current) {
-      const map = new google.maps.Map(mapRef.current, {
-        center: location,
-        zoom: 14,
-      });
-
-      new google.maps.Marker({
-        position: location,
-        map: map,
-      });
-    }
-  }, [location]);
-
-  return <div ref={mapRef} className="w-full h-full" style={{ height: '400px' }} />;
-};
+interface PlaceResult {
+  geometry: {
+    location: any;
+  };
+  formatted_address?: string;
+  name: string;
+}
 
 interface MapEditorProps {
-  onSelect: (location: LatLngLiteral) => void;
+  onSelect: (locationUrl: string) => void;
 }
+
+const loadScript = (src: string) => {
+  return new Promise<void>((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = src;
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject();
+    document.head.appendChild(script);
+  });
+};
 
 const MapEditor: React.FC<MapEditorProps> = ({ onSelect }) => {
   const [location, setLocation] = useState<LatLngLiteral | null>(null);
   const mapRef = useRef<HTMLDivElement>(null);
   const searchBoxRef = useRef<HTMLInputElement>(null);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const apiKey = process.env.REACT_APP_GOOGLE_MAPS_KEY;
+
+    if (!window.google) {
+      loadScript(`https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`)
+        .then(() => setLoaded(true))
+        .catch((error) => console.error('Google Maps script failed to load', error));
+    } else {
+      setLoaded(true);
+    }
+  }, []);
 
   useEffect(() => {
     Geolocation.getCurrentPosition().then((position) => {
@@ -88,7 +101,7 @@ const MapEditor: React.FC<MapEditorProps> = ({ onSelect }) => {
   }, []);
 
   useEffect(() => {
-    if (mapRef.current && location) {
+    if (loaded && mapRef.current && location) {
       const map = new google.maps.Map(mapRef.current, {
         center: location,
         zoom: 14,
@@ -105,14 +118,21 @@ const MapEditor: React.FC<MapEditorProps> = ({ onSelect }) => {
         const places = searchBox.getPlaces();
 
         if (places && places.length > 0) {
-          const place = places[0];
+          const place: any = places[0];
           if (place.geometry) {
             const newLocation = {
               lat: place.geometry.location.lat(),
               lng: place.geometry.location.lng(),
             };
             setLocation(newLocation);
-            onSelect(newLocation);
+
+            // Generate a URL consistent with the working URL format
+            const locationUrl = place.formatted_address
+              ? `https://www.google.com/maps/place/${encodeURIComponent(place.formatted_address)}/@${newLocation.lat},${newLocation.lng},14z`
+              : `https://www.google.com/maps/search/?api=1&query=${newLocation.lat},${newLocation.lng}`;
+
+            console.log("Generated Location URL:", locationUrl); // Log the URL
+            onSelect(locationUrl);
             map.setCenter(newLocation);
             new google.maps.Marker({
               position: newLocation,
@@ -123,18 +143,12 @@ const MapEditor: React.FC<MapEditorProps> = ({ onSelect }) => {
           }
         }
       });
-
-      // Add custom class to PAC container
-      const pacContainer = document.querySelector('.pac-container');
-      if (pacContainer) {
-        pacContainer.classList.add('custom-pac-container');
-      }
     }
-  }, [location, onSelect]);
+  }, [loaded, location, onSelect]);
 
   return (
     <div className="relative w-full h-full mt-[72px]">
-      <div ref={mapRef} className="w-auto h-full rounded-[24px]" style={{marginLeft:'16px', marginRight: '16px',}} />
+      <div ref={mapRef} className="w-auto h-full rounded-[24px]" style={{ marginLeft: '16px', marginRight: '16px' }} />
       <div className="absolute top-0 w-full h-auto pt-16 flex items-start justify-center bg-transparent">
         <div className="relative flex items-center justify-center w-11/12 h-auto">
           <div className="absolute left-0 flex items-center pl-3 mb-2">
