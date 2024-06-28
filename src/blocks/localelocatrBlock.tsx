@@ -1,15 +1,12 @@
 import Block from './Block'
 import { BlockModel } from './types'
 import './BlockStyles.css';
-import './localelocatrApp.css';
 import React, { useEffect, useRef, useState } from "react";
 import { GoogleMap } from "@react-google-maps/api";
 import { LoadScript } from "@react-google-maps/api";
 import { OutputFormat, setDefaults } from 'react-geocode';
-import { Select } from "antd";
-import { Button, Typography } from '@mui/material';
+import { Autocomplete, Button, Paper, TextField, Typography } from '@mui/material';
 
-const { Option } = Select;
 
 const api_Key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY!
 
@@ -73,15 +70,6 @@ const initialWorldDictionary: { [key: string]: Nation } = {
     "flag": "🇬🇧",
     "lat": 51.5074,
     "lng": -0.1278
-  },
-  fr: {
-    "iso2": "fr",
-    "iso3": "fra",
-    "name": "France",
-    "capital": "Paris",
-    "flag": "🇫🇷",
-    "lat": 48.8566,
-    "lng": 2.3522
   },
   nl: {
     "iso2": "nl",
@@ -345,26 +333,6 @@ async function fetchNationData(sourceUrl: string): Promise<{ [key: string]: Nati
   }
 }
 
-async function imageToBase64(url: string): Promise<string> {
-  // Fetch the image
-  const response = await fetch(url);
-  // Ensure the fetch was successful
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  // Read the image response as a Blob
-  const blob = await response.blob();
-  // Create a FileReader to convert the Blob to a base64 string
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      resolve(reader.result as string);
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
-  });
-}
-
 /* ************ HELPER FUNCTIONS ********** */
 
 function createNationArray(dictionary: { [key: string]: Nation }): Nation[] {
@@ -376,82 +344,82 @@ function createNationArray(dictionary: { [key: string]: Nation }): Nation[] {
 //gets a sorted list of country names to return
 const initialWorldArray = createNationArray(initialWorldDictionary)
 
-
-const searchNations = (nations: Nation[], typedInput: string, callback: Function) => {
-  const cleanedInput = typedInput.toLowerCase()
-  const filteredNations = nations.filter(nation =>
-    nation.name.toLowerCase().includes(cleanedInput) ||
-    nation.iso2.toLowerCase().includes(cleanedInput) ||
-    nation.iso3.toLowerCase().includes(cleanedInput)
-  );
-  callback(filteredNations);
-}
-
 //component for Country search bar
 function NationDropdown({ onSelect }: { onSelect: Function }) {
   const [allNations, setAllNations] = useState<Nation[]>(initialWorldArray)
-  const [filteredNations, setFilteredNations] = useState<Nation[]>(allNations)
+  const [inputValue, setInputValue] = useState<string>('');
+  const [guess, setGuess] = React.useState<string>("");
 
-  // "input" here means user typing text into the search bar
-  const inputHandler = (inputText: string) => {
-    searchNations(allNations, inputText, setFilteredNations)
-  }
 
   // "selection" here means user clicking a country as their guess, or highlighting it and pressing Enter
   const selectionHandler = (id: string) => {
-    let selectedNation = allNations.find(nation => nation.iso2 === id)
-    if (!selectedNation) throw new Error("selectionHandler called with invalid ISO2 code");
-    else {
-      onSelect(selectedNation)
+    if(id !== null){
+      let selectedNation = allNations.find(nation => nation.flag + " " + nation.name === id)
+      
+      if (!selectedNation) throw new Error("selectionHandler called with invalid ISO2 code");
+      else {
+        onSelect(selectedNation)
+      }
     }
+    else{
+
+      onSelect(null)
+
+    }
+      
   }
 
   useEffect(() => {
     const init = async () => {
       const fullNationList = createNationArray(await fetchNationData(nationDataUrl))
       setAllNations(fullNationList)
-      setFilteredNations(fullNationList)
     }
     init()
-  },
-    [])
+  },[])
 
-  const displayFilteredNations = filteredNations.map(
-    (nation) => {
-      const optionLabel = nation.flag + " " + nation.name
-      return (
-        <Option key={nation.iso2} value={nation.iso2}> {optionLabel}  </Option>
-      )
-    }
-  )
+  const options = allNations.map((nation) => (nation.flag + " " + nation.name));
 
   //used window inner width for sizing for multiple devices
   return (
     <div className="" style={{ width: "75vw", maxWidth: 500 }}>
-      <Select
-
-        showSearch
-        onSearch={(inputText: string) => inputHandler(inputText)}
-        onChange={selectionHandler}
-        size="large"
-        style=
-        {{
-          borderRadius: '30px',
-          overflow: 'hidden',
-          width: "100%",
-          display: "flex"
-
+      <Autocomplete
+        className='bg-white rounded-2xl shadow-lg'
+        size='small'
+        value={guess}
+        onChange={(event: any, newValue: string | null) => {
+          
+            setGuess(newValue!);
+            selectionHandler(newValue!);
+          
+        }}
+        inputValue={inputValue}
+        onInputChange={(event, newInputValue) => {
+          setInputValue(newInputValue);
         }}
 
-
-        dropdownStyle={{ borderRadius: '20px' }}
-
-        placeholder="Guess where?"
-        filterOption={false}
-      >
-        {displayFilteredNations}
-      </Select>
-
+        options={options}
+        disablePortal
+        sx={{
+          width: "75vw", maxWidth: 500, "& .MuiOutlinedInput-root": {
+            borderRadius: "0",
+            padding: "0",
+          },
+          "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+            border: "none"
+          },
+          
+        }}
+        PaperComponent={(props) => (
+          <Paper
+            sx={{
+              borderRadius:"15px"
+              
+            }}
+            {...props}
+          />
+        )}
+        renderInput={(params) => <TextField {...params}  />}
+      />
     </div>
   )
 }
@@ -553,21 +521,18 @@ type LocaleLocatrProps = {
 const LocaleLocatr = ({ onSave }: LocaleLocatrProps) => {
   const [guess, setGuess] = useState<Nation | null>(null)
   const [imageUrl, setImageUrl] = useState<string>("")
-  const [image, setImage] = useState<string>("")
 
   // Stage one: make a guess
   useEffect(() => {
     if (guess) {
+
       const newImageUrl: string = getDistanceImageUrl(trueLocation, guess)
       setImageUrl(newImageUrl)
 
-      const fetchImage = async (url: string) => {
-        const base64Image = await imageToBase64(imageUrl)
-        setImage(base64Image)
-      }
-      fetchImage(newImageUrl)
-
-
+    }
+    else{
+      //resets image incase a user chooses a item then clears bar
+      setImageUrl("");
     }
   }, [guess])
 
@@ -588,7 +553,7 @@ const LocaleLocatr = ({ onSave }: LocaleLocatrProps) => {
         type="submit"
         variant="contained"
         className="save-modal-button"
-        onClick={() => { if (imageUrl) { onSave(imageUrl, trueLocation, guess!) } }}
+        onClick={() => { if (imageUrl) { onSave(imageUrl, trueLocation, guess!); } }}
         sx={{ mt: 3, mb: 2 }}
       >
         GUESS
