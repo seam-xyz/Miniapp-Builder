@@ -8,13 +8,11 @@ import Iframely from './utils/Iframely';
 
 export default class MapBlock extends Block {
   render() {
-    const locationUrl = this.model.data['locationUrl'] || this.model.data['url'];
+    const locationUrl = this.model.data['url'];
 
     if (!locationUrl) {
       return this.renderEmptyState();
     }
-
-    console.log("Rendering Map with URL:", locationUrl); // Log the URL
 
     return (
       <div className="relative w-full h-full">
@@ -28,9 +26,7 @@ export default class MapBlock extends Block {
       <div className="relative flex flex-col items-center rounded-lg bg-gray-100 h-full">
         <MapEditor
           onSelect={(locationUrl: string) => {
-            console.log("Selected URL:", locationUrl); // Log the URL
-            this.model.data['locationUrl'] = locationUrl; // Store as URL string
-            delete this.model.data['url']; // Remove old url field if it exists
+            this.model.data['url'] = locationUrl; // Store as URL string
             done(this.model);
           }}
         />
@@ -130,8 +126,6 @@ const MapEditor: React.FC<MapEditorProps> = ({ onSelect }) => {
             const locationUrl = place.formatted_address
               ? `https://www.google.com/maps/place/${encodeURIComponent(place.formatted_address)}/@${newLocation.lat},${newLocation.lng},14z`
               : `https://www.google.com/maps/search/?api=1&query=${newLocation.lat},${newLocation.lng}`;
-
-            console.log("Generated Location URL:", locationUrl); // Log the URL
             onSelect(locationUrl);
             map.setCenter(newLocation);
             new google.maps.Marker({
@@ -147,7 +141,7 @@ const MapEditor: React.FC<MapEditorProps> = ({ onSelect }) => {
   }, [loaded, location, onSelect]);
 
   return (
-    <div className="relative w-full h-full mt-[72px]">
+    <div className="relative w-full h-full mt-[72px] mb-[72px]">
       <div ref={mapRef} className="w-auto h-full rounded-[24px]" style={{ marginLeft: '16px', marginRight: '16px' }} />
       <div className="absolute top-0 w-full h-auto pt-16 flex items-start justify-center bg-transparent">
         <div className="relative flex items-center justify-center w-11/12 h-auto">

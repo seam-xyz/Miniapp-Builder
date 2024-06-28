@@ -113,7 +113,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     emptySubtitle: "Add a website here.",
     icon: websiteIcon,
     deprecated: false,
-    doesBlockPost: true,
+    doesBlockPost: false,
     doesBlockEdit: true,
     createdBy: "seam",
     fullscreenEdit: false,
