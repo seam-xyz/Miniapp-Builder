@@ -147,7 +147,7 @@ const MapEditor: React.FC<MapEditorProps> = ({ onSelect }) => {
   }, [loaded, location, onSelect]);
 
   return (
-    <div className="relative w-full h-full mt-[72px]">
+    <div className="relative w-full h-full mt-[72px] mb-[72px]">
       <div ref={mapRef} className="w-auto h-full rounded-[24px]" style={{ marginLeft: '16px', marginRight: '16px' }} />
       <div className="absolute top-0 w-full h-auto pt-16 flex items-start justify-center bg-transparent">
         <div className="relative flex items-center justify-center w-11/12 h-auto">
