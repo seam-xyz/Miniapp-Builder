@@ -1,5 +1,6 @@
 import { Skeleton } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import IframelyCard from './IframelyCard';
 
 const Iframely = ({ url, style }) => {
   const [error, setError] = useState(null);
@@ -34,7 +35,7 @@ const Iframely = ({ url, style }) => {
   }, [html]);
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <IframelyCard url={url} />;
   } else if (!isLoaded) {
     return <Skeleton variant="rectangular" width={"100%"} height={120} />;
   } else {
