@@ -66,7 +66,7 @@ const CustomGifSearch: React.FC<CustomGifSearchProps> = ({ onSelect }) => {
 
   return (
     <div className="w-full h-full relative flex flex-col justify-center items-center">
-      <div style={{height: '100%'}} className="flex-1 overflow-y-scroll hide-scrollbar p-4 grid grid-cols-2 gap-4">
+      <div style={{height: '100%'}} className="flex-1 overflow-y-auto hide-scrollbar p-4 grid grid-cols-2 gap-4">
         {gifs.map((gif) => (
           <div key={gif.id} className="cursor-pointer" onClick={() => onSelect(gif)}>
             <img src={gif.images.fixed_width_downsampled.webp || gif.images.fixed_width_downsampled.url} alt={gif.title} className="rounded-lg h-full w-full max-w-[200px] max-h-[200px]" />

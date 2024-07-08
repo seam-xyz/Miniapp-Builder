@@ -90,7 +90,7 @@ const MapEditor: React.FC<MapEditorProps> = ({ onSelect }) => {
   }, []);
 
   useEffect(() => {
-    Geolocation.getCurrentPosition().then((position) => {
+    Geolocation.getCurrentPosition().then((position: any) => {
       const { latitude, longitude } = position.coords;
       setLocation({ lat: latitude, lng: longitude });
     });

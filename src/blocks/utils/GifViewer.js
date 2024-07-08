@@ -19,7 +19,7 @@ export default function GifViewer({ id }) {
     <div className="w-full h-full flex justify-center items-center">
       {gifData && (
         <img
-          src={gifData.images.fixed_width_downsampled.webp || gifData.images.fixed_width_downsampled.url}
+          src={gifData.images.fixed_width.webp || gifData.images.fixed_width_downsampled.url}
           className="rounded-lg w-full h-full"
           alt="GIF"
           width="100%"
