@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { makeStyles } from '@mui/styles';
 
@@ -14,10 +14,23 @@ const useStyles = makeStyles({
 
 const TracksList = ({ onChooseTrack, tracks, selectedTrack }) => {
   const classes = useStyles();
+  const [selectedTrackId, setSelectedTrackId] = useState(null);
+
+  useEffect(() => {
+    if (selectedTrack) {
+      setSelectedTrackId(extractTrackId(selectedTrack));
+    }
+  }, [selectedTrack]);
 
   const extractTrackId = (url) => {
     const match = url.match(/(?:track\/)([a-zA-Z0-9]+)/);
     return match ? match[1] : '';
+  };
+
+  const handleTrackClick = (track) => {
+    const trackId = extractTrackId(track.external_urls.spotify);
+    setSelectedTrackId(trackId);
+    onChooseTrack(track);
   };
 
   return (
@@ -31,9 +44,13 @@ const TracksList = ({ onChooseTrack, tracks, selectedTrack }) => {
             overscan={6}
             itemContent={(index, track) => {
               const trackId = extractTrackId(track.external_urls.spotify);
-              const isSelected = trackId === selectedTrack;
+              const isSelected = trackId === selectedTrackId;
               return (
-                <div className={`flex flex-row h-auto px-4 py-2 ${isSelected ? 'border-seam-pink border-[1px]' : 'border-seam-white/40 border-b-[1px]'} items-center`} onClick={() => { onChooseTrack(track) }}>
+                <div
+                  key={trackId}
+                  className={`flex flex-row h-auto px-4 py-2 ${isSelected ? 'border-seam-pink border-[1px]' : 'border-seam-white/40 border-b-[1px]'} items-center`}
+                  onClick={() => handleTrackClick(track)}
+                >
                   <img
                     src={track.album.images[0].url}
                     className="w-[96px] h-[96px] mr-4 rounded-[6px]"
