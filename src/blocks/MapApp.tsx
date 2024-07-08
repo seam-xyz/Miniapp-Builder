@@ -26,7 +26,7 @@ export default class MapBlock extends Block {
 
   renderEditModal(done: (data: BlockModel) => void) {
     return (
-      <div className="relative flex flex-col items-center rounded-lg bg-gray-100 h-full">
+      <div className="relative flex flex-col items-center rounded-lg h-full">
         <MapEditor
           onSelect={(locationUrl: string) => {
             this.model.data['url'] = locationUrl; // Store as URL string
