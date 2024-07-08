@@ -127,13 +127,9 @@ const CameraBlock: React.FC<CameraBlockProps> = ({ onFinalize }) => {
       ) : cameraError ? (
         <p>{cameraError}</p>
       ) : selectedPhoto ? (
-        <div className="mt-4">
-          <img src={selectedPhoto} alt="Selected" className="max-w-full rounded" />
-        </div>
+        <img src={selectedPhoto} alt="Selected" className="max-w-full rounded mt-4 " />
       ) : (
-        <>
-          <video ref={videoRef} className="w-full h-full" />
-        </>
+        <video ref={videoRef} className="w-full h-full" />
       )}
       <Box
         className="bg-white"
