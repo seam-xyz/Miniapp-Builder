@@ -485,4 +485,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "seam",
     fullscreenEdit: false,
   },
+  "Unknown": {
+    type: "Unknown",
+    displayName: "Unknown",
+    displayDescription: "Unknown",
+    emptyTitle: "Empty Unknown App",
+    emptySubtitle: "Tap here to setup your Unknown app!",
+    icon: "UnknownIcon",
+    deprecated: true,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "seam",
+    fullscreenEdit: false,
+  },
 };
