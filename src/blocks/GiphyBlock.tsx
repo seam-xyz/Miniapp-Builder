@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Search } from 'react-feather';
 import Block from './Block';
 import { BlockModel } from './types';
@@ -6,6 +6,7 @@ import BlockFactory from './BlockFactory';
 import { GiphyFetch, GifsResult } from '@giphy/js-fetch-api';
 import { Box } from '@mui/material';
 import GifViewer from './utils/GifViewer';
+import debounce from 'lodash/debounce'; // Import debounce from lodash
 
 const giphyFetch = new GiphyFetch(process.env.REACT_APP_GIPHY_KEY!);
 
@@ -26,7 +27,7 @@ export default class GiphyBlock extends Block {
 
   renderEditModal(done: (data: BlockModel) => void, width?: string) {
     return (
-      <div style={{height: '100%',}} className="relative flex flex-col items-center h-full rounded-lg">
+      <div style={{ height: '100%' }} className="relative flex flex-col items-center h-full rounded-lg">
         <CustomGifSearch
           onSelect={(item: any) => {
             this.model.data['gif'] = item.id as string;
@@ -52,21 +53,28 @@ const CustomGifSearch: React.FC<CustomGifSearchProps> = ({ onSelect }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [gifs, setGifs] = useState<GifsResult['data']>([]);
 
+  const debouncedSearch = useCallback(
+    debounce((term: string) => {
+      if (term) {
+        giphyFetch.search(term, { limit: 20 }).then((res) => {
+          setGifs(res.data);
+        });
+      } else {
+        giphyFetch.trending({ limit: 20 }).then((res) => {
+          setGifs(res.data);
+        });
+      }
+    }, 500),
+    []
+  );
+
   useEffect(() => {
-    if (searchTerm) {
-      giphyFetch.search(searchTerm, { limit: 20 }).then((res) => {
-        setGifs(res.data);
-      });
-    } else {
-      giphyFetch.trending({ limit: 20 }).then((res) => {
-        setGifs(res.data);
-      });
-    }
-  }, [searchTerm]);
+    debouncedSearch(searchTerm);
+  }, [searchTerm, debouncedSearch]);
 
   return (
-    <div className="w-full h-full relative flex flex-col justify-center items-center">
-      <div style={{height: '100%'}} className="flex-1 overflow-y-auto hide-scrollbar p-4 grid grid-cols-2 gap-4">
+    <div style={{height: 'calc(100vh - 150px)'}} className="w-full relative flex flex-col justify-center items-center">
+      <div style={{ height: '500px' }} className="flex-1 overflow-y-auto hide-scrollbar p-4 grid grid-cols-2 gap-4">
         {gifs.map((gif) => (
           <div key={gif.id} className="cursor-pointer" onClick={() => onSelect(gif)}>
             <img src={gif.images.fixed_width_downsampled.webp || gif.images.fixed_width_downsampled.url} alt={gif.title} className="rounded-lg h-full w-full max-w-[200px] max-h-[200px]" />
