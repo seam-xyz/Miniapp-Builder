@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Block from './Block';
 import { BlockModel } from './types';
-import { Geolocation } from '@capacitor/geolocation';
 import './BlockStyles.css';
+import { GoogleMap, LoadScript, Autocomplete } from "@react-google-maps/api";
 import { Search } from 'react-feather';
+import { Button, TextField, Typography } from '@mui/material';
 import Iframely from './utils/Iframely';
+
+const api_Key = process.env.REACT_APP_GOOGLE_MAPS_KEY!;
 
 export default class MapBlock extends Block {
   render() {
@@ -16,7 +19,7 @@ export default class MapBlock extends Block {
 
     return (
       <div className="relative w-full h-full">
-        <Iframely url={locationUrl} style={{ height: '100%' }} />
+        <Iframely url={locationUrl} style={{ height: '100%', width: '100%' }} />
       </div>
     );
   }
@@ -39,7 +42,7 @@ export default class MapBlock extends Block {
   }
 
   renderErrorState() {
-    return <h1>Error: Invalid location data!</h1>; // Provide more informative error feedback
+    return <h1>Error: Invalid location data!</h1>; 
   }
 }
 
@@ -48,114 +51,81 @@ interface LatLngLiteral {
   lng: number;
 }
 
-interface PlaceResult {
-  geometry: {
-    location: any;
-  };
-  formatted_address?: string;
-  name: string;
-}
-
 interface MapEditorProps {
   onSelect: (locationUrl: string) => void;
 }
 
-const loadScript = (src: string) => {
-  return new Promise<void>((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = src;
-    script.async = true;
-    script.onload = () => resolve();
-    script.onerror = () => reject();
-    document.head.appendChild(script);
-  });
-};
-
 const MapEditor: React.FC<MapEditorProps> = ({ onSelect }) => {
-  const [location, setLocation] = useState<LatLngLiteral | null>(null);
-  const mapRef = useRef<HTMLDivElement>(null);
-  const searchBoxRef = useRef<HTMLInputElement>(null);
-  const [loaded, setLoaded] = useState(false);
+  const [location, setLocation] = useState<any>(null);
+  const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
+  const mapRef = useRef<GoogleMap>(null);
 
   useEffect(() => {
-    const apiKey = process.env.REACT_APP_GOOGLE_MAPS_KEY;
-
-    if (!window.google) {
-      loadScript(`https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`)
-        .then(() => setLoaded(true))
-        .catch((error) => console.error('Google Maps script failed to load', error));
-    } else {
-      setLoaded(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    Geolocation.getCurrentPosition().then((position: any) => {
+    navigator.geolocation.getCurrentPosition((position) => {
       const { latitude, longitude } = position.coords;
       setLocation({ lat: latitude, lng: longitude });
     });
   }, []);
 
-  useEffect(() => {
-    if (loaded && mapRef.current && location) {
-      const map = new google.maps.Map(mapRef.current, {
-        center: location,
-        zoom: 14,
-      });
+  const onLoadAutocomplete = (autocompleteInstance: google.maps.places.Autocomplete) => {
+    setAutocomplete(autocompleteInstance);
+  };
 
-      const input = searchBoxRef.current!;
-      const searchBox = new google.maps.places.SearchBox(input);
+  const onPlaceChanged = () => {
+    if (autocomplete !== null) {
+      const place = autocomplete.getPlace();
+      if (place.geometry && place.geometry.location) {
+        const newLocation = {
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        };
+        setLocation(newLocation);
 
-      map.addListener('bounds_changed', () => {
-        searchBox.setBounds(map.getBounds() as google.maps.LatLngBounds);
-      });
+        const locationUrl = place.formatted_address
+          ? `https://www.google.com/maps/place/${encodeURIComponent(place.formatted_address)}/@${newLocation.lat},${newLocation.lng},14z`
+          : `https://www.google.com/maps/search/?api=1&query=${newLocation.lat},${newLocation.lng}`;
+        onSelect(locationUrl);
 
-      searchBox.addListener('places_changed', () => {
-        const places = searchBox.getPlaces();
-
-        if (places && places.length > 0) {
-          const place: any = places[0];
-          if (place.geometry) {
-            const newLocation = {
-              lat: place.geometry.location.lat(),
-              lng: place.geometry.location.lng(),
-            };
-            setLocation(newLocation);
-
-            // Generate a URL consistent with the working URL format
-            const locationUrl = place.formatted_address
-              ? `https://www.google.com/maps/place/${encodeURIComponent(place.formatted_address)}/@${newLocation.lat},${newLocation.lng},14z`
-              : `https://www.google.com/maps/search/?api=1&query=${newLocation.lat},${newLocation.lng}`;
-            onSelect(locationUrl);
-            map.setCenter(newLocation);
-            new google.maps.Marker({
-              position: newLocation,
-              map: map,
-            });
-          } else {
-            console.error('Place has no geometry: ', place);
-          }
+        if (mapRef.current !== null) {
+          mapRef.current.panTo(newLocation);
         }
-      });
+      } else {
+        console.error('Place has no geometry or location: ', place);
+      }
     }
-  }, [loaded, location, onSelect]);
+  };
 
   return (
-    <div className="relative w-full h-full mt-[72px] mb-[72px]">
-      <div ref={mapRef} className="w-auto h-full rounded-[24px]" style={{ marginLeft: '16px', marginRight: '16px' }} />
-      <div className="absolute top-0 w-full h-auto pt-16 flex items-start justify-center bg-transparent">
-        <div className="relative flex items-center justify-center w-11/12 h-auto">
-          <div className="absolute left-0 flex items-center pl-3 mb-2">
-            <Search className="text-gray-500" />
+    <LoadScript googleMapsApiKey={api_Key} libraries={['places']}>
+      <div className="relative w-full h-full mt-[72px] mb-[72px]">
+        <GoogleMap
+          ref={mapRef}
+          center={location}
+          zoom={14}
+          mapContainerStyle={{ height: '100%', width: 'auto', marginLeft: '16px', marginRight: '16px', borderRadius: '24px', }}
+        >
+          <div className="w-full h-full mx-4">
+            {location && (
+              <Autocomplete onLoad={onLoadAutocomplete} onPlaceChanged={onPlaceChanged}>
+                <input
+                  type="text"
+                  placeholder="Search for a place"
+                  className="rounded-full py-2 pl-4 pr-4 mt-[64px] border border-gray-300 placeholder:ml-1 focus:outline-none focus:ring-2 focus:ring-seam-blue mb-2 bg-white shadow-lg"
+                  style={{
+                    width: 'calc(100% - 64px)', // Adjust the width of the input to fit within the map container
+                    maxWidth: '600px',
+                    position: 'absolute',
+                    top: '0',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    zIndex: 1,
+                  }}
+                />
+              </Autocomplete>
+            )}
           </div>
-          <input
-            ref={searchBoxRef}
-            type="text"
-            placeholder="Search for a place"
-            className="rounded-full py-2 pl-10 pr-4 border border-gray-300 placeholder:ml-1 focus:outline-none focus:ring-2 focus:ring-seam-blue mb-2 bg-white shadow-lg w-full"
-          />
-        </div>
+        </GoogleMap>
       </div>
-    </div>
+    </LoadScript>
   );
 };
