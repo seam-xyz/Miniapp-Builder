@@ -5,10 +5,9 @@ import { BlockModel } from './types';
 import BlockFactory from './BlockFactory';
 import { GiphyFetch, GifsResult } from '@giphy/js-fetch-api';
 import { Box } from '@mui/material';
-import GifViewer from './utils/GifViewer';
-import debounce from 'lodash/debounce'; // Import debounce from lodash
+import debounce from 'lodash/debounce';
 
-const giphyFetch = new GiphyFetch(process.env.REACT_APP_GIPHY_KEY!);
+const giphyFetch = new GiphyFetch(process.env.REACT_APP_GIPHY_KEY ?? "");
 
 export default class GiphyBlock extends Block {
   render() {
@@ -73,7 +72,7 @@ const CustomGifSearch: React.FC<CustomGifSearchProps> = ({ onSelect }) => {
   }, [searchTerm, debouncedSearch]);
 
   return (
-    <div style={{height: 'calc(100vh - 150px)'}} className="w-full relative flex flex-col justify-center items-center">
+    <div style={{ height: 'calc(100vh - 150px)' }} className="w-full relative flex flex-col justify-center items-center">
       <div style={{ height: '500px' }} className="flex-1 overflow-y-auto hide-scrollbar p-4 grid grid-cols-2 gap-4">
         {gifs.map((gif) => (
           <div key={gif.id} className="cursor-pointer" onClick={() => onSelect(gif)}>
@@ -95,6 +94,36 @@ const CustomGifSearch: React.FC<CustomGifSearchProps> = ({ onSelect }) => {
           />
         </div>
       </Box>
+    </div>
+  );
+};
+
+interface GifViewerProps {
+  id: string;
+}
+
+const GifViewer: React.FC<GifViewerProps> = ({ id }) => {
+  const [gifData, setGifData] = useState<any>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      giphyFetch.gif(id).then(({ data }) => {
+        setGifData(data);
+      });
+    }
+    fetchData();
+  }, [id]);
+
+  return (
+    <div className="w-full h-full flex justify-center items-center">
+      {gifData && (
+        <img
+          src={gifData.images.fixed_width.webp || gifData.images.fixed_width_downsampled.url}
+          className="rounded-lg w-full h-full"
+          alt="GIF"
+          width="100%"
+        />
+      )}
     </div>
   );
 };
