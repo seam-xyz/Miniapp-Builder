@@ -69,6 +69,10 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     aspectRatio: 1,
     backgroundColor: initialBackgroundColor,
     display: 'block',
+    width: '100%',
+    height: '100%',
+    boxSizing: 'border-box', // Ensure the border is included in the canvas dimensions
+    border: '4px solid #000',
   }
 
   // === Methods to Update Canvas ===
@@ -159,7 +163,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
       // Draw single point
       canvasContext.fillStyle = foregroundColor;
       canvasContext.beginPath();
-      canvasContext.roundRect(points[0].x-3, points[0].y-3, 3, 3, 1);
+      canvasContext.rect(points[0].x-3, points[0].y-3, 3, 3);
       canvasContext.fill();
       return;
     }
@@ -201,18 +205,8 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
       return;
     }
 
-    // Draw border
-    canvasContext.strokeStyle = '#000000';
-    const lineWidth = 6;
-    canvasContext.lineWidth = lineWidth;
-    canvasContext.roundRect(lineWidth / 2, lineWidth / 2, width - lineWidth, height - lineWidth, 4);
-    canvasContext.stroke();
-
-    // Add bottom "tray"
-    const bottomRectHeight = (32 / 358 * width);
-    canvasContext.beginPath();
-    canvasContext.roundRect(lineWidth / 2, height - bottomRectHeight, width - lineWidth, bottomRectHeight - lineWidth, 4);
-    canvasContext.fill();
+    // Clear any previous drawings
+    canvasContext.clearRect(0, 0, width, height);
 
     // Save initial state
     saveImageData();
@@ -229,19 +223,21 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
   // === Finally, Return ===
   return (
     <>
-      <canvas
-        ref={canvasRef}
-        width={width + 'px'}
-        height={height + 'px'}
-        style={canvasStyles}
-        onMouseDown={handleStartDrawing}
-        onMouseMove={handleDrawDrag}
-        onMouseUp={handleStopDrawing}
-        onTouchStart={handleStartDrawing}
-        onTouchMove={handleDrawDrag}
-        onTouchEnd={handleStopDrawing}
-        onContextMenu={(e) => e.preventDefault()}
-      />
+      <div style={{ width: `${width}px`, height: `${height}px`, position: 'relative' }}>
+        <canvas
+          ref={canvasRef}
+          width={width}
+          height={height}
+          style={canvasStyles}
+          onMouseDown={handleStartDrawing}
+          onMouseMove={handleDrawDrag}
+          onMouseUp={handleStopDrawing}
+          onTouchStart={handleStartDrawing}
+          onTouchMove={handleDrawDrag}
+          onTouchEnd={handleStopDrawing}
+          onContextMenu={(e) => e.preventDefault()}
+        />
+      </div>
       <div className='absolute right-0 flex flex-row'>
         <button onClick={clearCanvas}>
           Clear
@@ -319,8 +315,8 @@ interface WhiteboardEditProps {
 }
 
 const WhiteboardEdit = (props: WhiteboardEditProps) => {
-  const {width, onSave} = props
-  const height =  Math.floor(384/358 * width);
+  const { width, onSave } = props;
+  const height = Math.floor(384 / 358 * width); // Ensure the height calculation is consistent with the aspect ratio
   const initialUserState = {
     initialForegroundColor: props.initialForegroundColor,
     initialBackgroundColor: props.initialBackgroundColor,
@@ -328,8 +324,8 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
   }
   const [selectedColor, setSelectedColor] = useState<string>(initialUserState.initialForegroundColor);
 
-  return (
-    <div className='overflow-y-clip'>
+  return ( 
+    <div className='overflow-y-clip w-full h-full'>
       <DrawableCanvas
         width={width}
         height={height}
@@ -376,7 +372,9 @@ export default class WhiteboardBlock extends Block {
     const { imageData } = this.model.data;
 
     return (
-      <img src={imageData} alt='a drawing' className='w-full object-contain'></img>
+      <div className="w-full object-contain border-[4px] border-seam-black border-box">
+        <img src={imageData} alt='a drawing' className='w-full object-contain'></img>
+      </div>
     );
   }
 
