@@ -139,10 +139,4 @@ export default class ProfileBlock extends Block {
   renderEditModal(done: (data: BlockModel) => void) {
     return <ProfileEditModal model={this.model} done={done} />;
   }
-
-  renderErrorState() {
-    return (
-      <h1>Error: Couldn't render the profile header.</h1>
-    )
-  }
 }

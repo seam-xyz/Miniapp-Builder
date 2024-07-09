@@ -36,12 +36,6 @@ export default class GiphyBlock extends Block {
       </div>
     );
   }
-
-  renderErrorState() {
-    return (
-      <h1 className="text-red-500">Error: Couldn't figure out the URL</h1>
-    );
-  }
 }
 
 interface CustomGifSearchProps {
