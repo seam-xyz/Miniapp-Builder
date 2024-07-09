@@ -37,7 +37,7 @@ const SearchForm = (props) => {
   );
 
   useEffect(() => {
-    if (searchTerm.trim().length >= 3) {
+    if (searchTerm.trim().length >= 2) {
       debouncedSearch(searchTerm);
     }
   }, [searchTerm, debouncedSearch]);
