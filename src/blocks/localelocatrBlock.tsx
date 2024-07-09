@@ -8,7 +8,7 @@ import { OutputFormat, setDefaults } from 'react-geocode';
 import { Autocomplete, Button, Paper, TextField, Typography } from '@mui/material';
 
 
-const api_Key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY!
+const api_Key = process.env.REACT_APP_GOOGLE_MAPS_KEY!;
 
 type Nation = {
   iso2: string;
