@@ -25,6 +25,7 @@ import bookIcon from './blockIcons/bookIcon.png'
 import WordleIcon from './blockIcons/WordleIcon.png'
 import MoodIcon from './blockIcons/MoodIcon.png'
 import WhiteboardIcon from './blockIcons/whiteboardIcon.png'
+import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 
 export type BlockModel = {
   type: string;
@@ -470,4 +471,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "emilee",
     fullscreenEdit: false,
   },
+  "Calligraphy": { 
+    type: "Calligraphy",
+    displayName: "Calligraphy",
+    displayDescription: "Draw with expressive brushstrokes",
+    emptyTitle: "Empty calligraphy block",
+    emptySubtitle: "Empty calligraphy block",
+    icon: CalligraphyIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "chevron", // ssebexen & @chevron, TODO implement splits
+    fullscreenEdit: false,
+},
 };
