@@ -7,6 +7,7 @@ import '../BlockStyles.css'
 import { List, AlignLeft, AlignCenter, AlignRight, Code, Link } from 'react-feather'
 import { ReactComponent as NumberedList } from "./images/NumberedList.svg"
 import { linkDecorator } from "./Link";
+import SeamSaveButton from '../../components/SeamSaveButton';
 
 interface TextEditorProps {
   data: string | null;
@@ -206,9 +207,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
             <EditorButton onMouseDown={(e) => applyAlignment('right')} active={activeAlignment === 'right'} label={<AlignRight size={24} color="black" />} styleType="alignment" />
           </ButtonContainer>
         </div>
-        <Button className="mt-4 save-modal-button" type="submit" onClick={saveContent} variant="contained">
-          Preview
-        </Button>
+        <SeamSaveButton onClick={saveContent} />
       </div>
     </div>
   );

@@ -1,4 +1,9 @@
+import CalligraphyApp from './CalligraphyApp'
+import MoodApp from './MoodApp'
+import BookshelfApp from './BookshelfApp'
+import UnknownApp from './UnknownApp'
 import eyesBlock from './eyesBlock'
+import WhiteboardBlock from './WhiteboardBlock'
 import fcUserFeedBlock from './fcUserFeedBlock'
 import tokenHoldingsBlock from './tokenHoldingsBlock'
 import NFTBlock from './NFTBlock'
@@ -25,6 +30,8 @@ import FlashingTextBlock from './FlashingTextBlock';
 import CountdownBlock from './CountdownBlock'
 import LinkBookmarkBlock from './LinkBookmarkBlock'
 import VideoBlock from './VideoBlock'
+import MondrianBlock from './MondrianBlock'
+import WordleBlock from './WordleBlock'
 
 export default class BlockFactory {
   static getBlock(model: BlockModel, theme: Theme): Block {
@@ -53,8 +60,14 @@ export default class BlockFactory {
       case "countdown": return new CountdownBlock(model, theme)
       case "fcUserFeed": return new fcUserFeedBlock(model, theme)
       case "eyes": return new eyesBlock(model, theme)
+      case "Mondrian": return new MondrianBlock(model, theme)
+      case "Bookshelf": return new BookshelfApp(model, theme)
+      case "Wordle": return new WordleBlock(model, theme)
+      case "Mood": return new MoodApp(model, theme)
+      case "Whiteboard": return new WhiteboardBlock(model, theme)
+      case "Calligraphy": return new CalligraphyApp(model, theme)
       // new blocks go here
-      default: return new IFrameBlock(model, theme)
+      default: return new UnknownApp(model, theme)
     }
   }
 
@@ -67,6 +80,10 @@ export default class BlockFactory {
   static doesBlockPost(model: BlockModel): boolean {
     let type = model.type
     return BlockTypes[type].doesBlockPost
+  }
+
+  static doesBlockEditFullscreen(type: string): boolean {
+    return BlockTypes[type].fullscreenEdit
   }
 
   static renderEmptyState(model: BlockModel, onClick: (id: string) => void): React.ReactNode {

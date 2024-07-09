@@ -26,7 +26,7 @@ export default class Block implements IBlock {
     render(): React.ReactNode {
         throw new Error("Method not implemented.");
     }
-    renderEditModal(done: (data: BlockModel) => void): React.ReactNode {
+    renderEditModal(done: (data: BlockModel) => void, width?: string): React.ReactNode {
         throw new Error("Method not implemented.");
     }
 }

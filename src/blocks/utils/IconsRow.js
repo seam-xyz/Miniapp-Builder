@@ -1,3 +1,4 @@
+import React from 'react';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { makeStyles } from "@mui/styles";
@@ -7,18 +8,17 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import ErrorIcon from '@mui/icons-material/Error';
 import EmailIcon from '@mui/icons-material/Email';
 import YoutubeIcon from '@mui/icons-material/YouTube';
-import LinkedIn from "@mui/icons-material/LinkedIn";
+import LinkedIn from '@mui/icons-material/LinkedIn';
+import LinkIcon from '@mui/icons-material/Link';
+import Stack from '@mui/material/Stack';
+
 import Discord from "../blockIcons/discordLogo.png";
 import Tiktok from "../blockIcons/tiktokIcon.png";
-import LinkIcon from "@mui/icons-material/Link";
 import mediumIcon from "../blockIcons/mediumIcon.svg"
 import openseaIcon from "../blockIcons/openseaIcon.png"
 import farcasterIcon from "../blockIcons/farcasterIcon.svg"
-import Stack from '@mui/material/Stack';
 
-const { Option } = Select;
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   iconImage: {
     height: "20px",
     width: "20px",
@@ -27,9 +27,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export function IconsSelector() {
+export const IconsSelector = (props) => {
+  const { value, onChange } = props;
   return (
-    <Select style={{ width: "75px" }} variant="standard" size="small" id="icon">
+    <Select style={{ width: "75px" }} variant="standard" size="small" id="icon" value={value} onChange={(e) => onChange(e.target.value)}>
       <MenuItem value="twitter"><TwitterIcon /></MenuItem>
       <MenuItem value="instagram"><InstagramIcon /></MenuItem>
       <MenuItem value="linkedin"><LinkedIn /></MenuItem>
@@ -43,13 +44,13 @@ export function IconsSelector() {
       <MenuItem value="opensea"><img src={openseaIcon} alt={""} style={{ height: 20 }} /></MenuItem>
       <MenuItem value="farcaster"><img src={farcasterIcon} alt={""} style={{ height: 20 }} /></MenuItem>
     </Select>
-  )
+  );
 }
 
-export default function IconsRow({ icons, color }) {
+const IconsRow = ({ icons, color }) => {
   const classes = useStyles();
 
-  function getIconForName(name) {
+  const getIconForName = (name) => {
     switch (name) {
       case "twitter":
         return <TwitterIcon key={name} sx={{ color: color }} />
@@ -80,18 +81,19 @@ export default function IconsRow({ icons, color }) {
     }
   }
 
-  if (icons === undefined || icons.length === 0) {
-    return null
+  if (!icons || icons.length === 0) {
+    return null;
   }
 
   return (
     <Stack spacing={4} direction={"row"}>
       {icons.map((icon) => (
-        // react router keeps sending the link internally if it doesnt have the https
-        <a style={{ height: '24px' }} href={(icon.url.indexOf(':') === -1) ? 'http://' + icon.url : icon.url} rel="noreferrer" target="_blank" key={icon['icon']}>
-          {getIconForName(icon['icon'])}
+        <a style={{ height: '24px' }} href={(icon.url.indexOf(':') === -1) ? 'http://' + icon.url : icon.url} rel="noreferrer" target="_blank" key={icon.icon}>
+          {getIconForName(icon.icon)}
         </a>
       ))}
     </Stack>
   );
 }
+
+export default IconsRow;

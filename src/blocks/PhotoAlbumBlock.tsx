@@ -1,10 +1,10 @@
-import Block from './Block'
-import { BlockModel } from './types'
+import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import { Button, TextField, IconButton, Box } from "@mui/material";
+import { PlusCircle, MinusCircle } from "react-feather";
+import Block from './Block';
+import { BlockModel } from './types';
 import BlockFactory from './BlockFactory';
-import './BlockStyles.css'
-import { Button, Form, Input, Space } from "antd";
-import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import { useEffect, useState } from 'react';
+import './BlockStyles.css';
 
 // Handles fading images
 const ImageFader = (props: { images: { image: string }[], duration: number }) => {
@@ -14,12 +14,12 @@ const ImageFader = (props: { images: { image: string }[], duration: number }) =>
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex(prevState => (prevState+1) % images.length); // increment prevstate, remainder of array length to loop over array index
-    }, duration)
+      setCurrentImageIndex(prevState => (prevState + 1) % images.length); // increment prevstate, remainder of array length to loop over array index
+    }, duration);
 
     return () => {
-      clearInterval(interval)
-    }
+      clearInterval(interval);
+    };
   }, [images.length, duration]);
 
   return (
@@ -29,7 +29,7 @@ const ImageFader = (props: { images: { image: string }[], duration: number }) =>
         width: `100%`
       }}
     >
-      {images.map((image) => (
+      {images.map((image, index) => (
         <img
           key={image.image}
           src={image.image}
@@ -38,10 +38,10 @@ const ImageFader = (props: { images: { image: string }[], duration: number }) =>
             height: `100%`,
             width: `100%`,
             position: "absolute", // stack images
-            opacity: images.indexOf(image) == currentImageIndex ? 1 : 0, // current image has 1 opacity, rest have 0 
+            opacity: index === currentImageIndex ? 1 : 0, // current image has 1 opacity, rest have 0 
             zIndex: 0, // under edit button
             transitionDelay: duration + "ms",
-            transition: `opacity ${duration/5}ms ease-in-out` // change 5 to adjust transition speed
+            transition: `opacity ${duration / 5}ms ease-in-out` // change 5 to adjust transition speed
           }}
         />
       ))}
@@ -66,6 +66,84 @@ const convertToObjects = (imageURLString: string | undefined) => {
   })
 }
 
+interface EditModalProps {
+  model: BlockModel;
+  done: (data: BlockModel) => void;
+}
+
+const PhotoAlbumEditModal: React.FC<EditModalProps> = ({ model, done }) => {
+  const [fields, setFields] = useState<{ image: string }[]>(convertToObjects(model.data['images']));
+  const [duration, setDuration] = useState(model.data['duration'] ?? "5");
+  const [errors, setErrors] = useState<string[]>([]);
+
+  const handleAddField = () => {
+    if (fields.length < 10) {
+      setFields([...fields, { image: "" }]);
+      setErrors([]);
+    } else {
+      setErrors(["Exceeded maximum image amount. (Max is 10)"]);
+    }
+  };
+
+  const handleRemoveField = (index: number) => {
+    const newFields = fields.filter((_, i) => i !== index);
+    setFields(newFields);
+  };
+
+  const handleFieldChange = (index: number, value: string) => {
+    const newFields = [...fields];
+    newFields[index].image = value;
+    setFields(newFields);
+  };
+
+  const handleDurationChange = (value: string) => {
+    setDuration(value);
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const values = { images: fields, duration };
+    model.data['images'] = convertToImagesString(values);
+    model.data['duration'] = duration;
+    done(model);
+  };
+
+  return (
+    <Box component="form" className="flex flex-col" onSubmit={handleSubmit}>
+      {fields.map((field, index) => (
+        <Box key={index} className="flex items-center mb-4">
+          <TextField
+            value={field.image}
+            onChange={(e) => handleFieldChange(index, e.target.value)}
+            placeholder="Image URL"
+            style={{ width: "350px" }}
+            required
+          />
+          <IconButton onClick={() => handleRemoveField(index)}>
+            <MinusCircle />
+          </IconButton>
+        </Box>
+      ))}
+      {fields.length < 10 && (
+        <Button variant="outlined" onClick={handleAddField} startIcon={<PlusCircle />}>
+          Add Image
+        </Button>
+      )}
+      {errors.length > 0 && <Box className="text-red-500">{errors[0]}</Box>}
+      <TextField
+        value={duration}
+        onChange={(e) => handleDurationChange(e.target.value)}
+        placeholder="Transition Speed (Seconds)"
+        style={{ width: "100%", marginTop: "16px" }}
+        required
+      />
+      <Button type="submit" variant="contained" color="primary" className="save-modal-button" style={{ marginTop: "16px" }}>
+        Save
+      </Button>
+    </Box>
+  )
+};
+
 export default class PhotoAlbumBlock extends Block {
   render() {
     // renders tap to customize message by default
@@ -79,73 +157,8 @@ export default class PhotoAlbumBlock extends Block {
   }
 
   renderEditModal(done: (data: BlockModel) => void) {
-    const onFinish = (values: { images: { image: string }[], duration: string }) => {
-      this.model.data['images'] = convertToImagesString(values)
-      this.model.data['duration'] = values['duration'];
-      done(this.model)
-    };
-    // form code mostly taken from profile and image block
     return (
-      <Form
-        name="basic"
-        initialValues={{
-          remember: true,
-          images: convertToObjects(this.model.data['images']), // form data objects needed for inital values
-          duration: this.model.data['duration']
-        }}
-        labelCol={{
-          span: 8,
-        }}
-        onFinish={onFinish}
-        autoComplete="off"
-      >
-        <Form.List
-          name="images"
-          rules={[
-            {
-              validator: async (_, images) => {
-                if (images.length > 10) { // set max amt of images allowed in block
-                  return Promise.reject(new Error("Exceeded maximum image amount. (Max is 10)"));
-                }
-              },
-            },
-          ]}>
-          {(fields, { add, remove }, { errors }) => {
-            return (
-              <>
-                {fields.map(({ key, name, ...restField }) => (
-                  <Space key={key} align="baseline">
-                    <Form.Item
-                      {...restField}
-                      name={[name, 'image']}
-                      rules={[{ required: true, message: 'Missing image url' }]}
-                    >
-                      <Input placeholder="Image URL" style={{ width: "350px" }} />
-                    </Form.Item>
-                    <MinusCircleOutlined onClick={() => remove(name)} />
-                  </Space>
-                ))}
-                {errors.length == 0 && ( // if under max album size include add image button
-                  <Form.Item> 
-                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}> 
-                      Add Image
-                    </Button>
-                  </Form.Item>
-                )}
-                <Form.ErrorList errors={errors} />
-              </>
-            )
-          }}
-        </Form.List>
-        <Form.Item name="duration">
-          <Input placeholder="Transition Speed (Seconds)" width="100%" />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" className="save-modal-button">
-            Save
-          </Button>
-        </Form.Item>
-      </Form>
-    )
+      <PhotoAlbumEditModal model={this.model} done={done} />
+    );
   }
 }

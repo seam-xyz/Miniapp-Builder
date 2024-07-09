@@ -5,10 +5,10 @@ import './BlockStyles.css'
 
 import CSS from 'csstype';
 import React, { useEffect, useRef, useState } from 'react';
-import { SizeMe, SizeMeProps } from 'react-sizeme';
 import { Button, Stack, Grid } from '@mui/material';
+import SeamSaveButton from '../components/SeamSaveButton';
 
-interface BasePixelCanvasProps {
+interface PixelCanvasProps {
   initialNumPixelsPerSide: number;          // e.g. '5' represents a 5x5 pixel grid
   isEditMode: boolean;                      // True if edit mode, false if display mode
   initialPixels?: string[][];               // Used to render from an existing state
@@ -22,13 +22,8 @@ interface BasePixelCanvasProps {
   ) => void);
 }
 
-interface PixelCanvasProps extends BasePixelCanvasProps {
-  size: SizeMeProps['size'];
-}
-
 const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
   const {
-    size,
     initialNumPixelsPerSide,
     isEditMode,
     initialPixels,
@@ -38,7 +33,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
   } = props;
   const [backgroundColor, setBackgroundColor] = useState(initialBackgroundColor || '#f2f2f2');
   const [numPixelsPerSide, setNumPixelsPerSide] = useState<number>(initialNumPixelsPerSide);
-  
+
   const generateDefaultPixelsState = () => {
     return Array.from(
       { length: numPixelsPerSide }, _ => Array(numPixelsPerSide).fill(backgroundColor));
@@ -244,14 +239,14 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
   }
 
   const savePixelState = () => {
-    
+
     const isAnyPixelColored = pixels.some(row => row.some(pixelColor => pixelColor !== backgroundColor));
 
-    if(!isAnyPixelColored) {
+    if (!isAnyPixelColored) {
       alert("Please add at least one pixel before saving.");
       return;
     }
-    
+
     if (onSave) {
       onSave(numPixelsPerSide, pixels, showGridInViewMode, backgroundColor);
     }
@@ -268,13 +263,13 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
     backgroundColor: backgroundColor,
     display: 'block',
   }
-  const hundredPercentKey = size && size.width && size.height && size.width > size.height ? 'height' : 'width';
-  canvasStyles[hundredPercentKey] = '100%';
+
+  canvasStyles['width'] = '100%';
 
   return (
     <div>
       {isEditMode &&
-        <Grid container spacing={0} sx={{pt: 0,}} justifyContent='center'>
+        <Grid container spacing={0} sx={{ pt: 0, }} justifyContent='center'>
           <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', pt: 0, }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <input
@@ -287,7 +282,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
               <label>Pixel color</label>
             </div>
           </Grid>
-          <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', pt: 0,}}>
+          <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', pt: 0, }}>
             <div style={{ display: 'flex', alignItems: 'center', }}>
               <input
                 style={{ border: "none", backgroundColor: "white", padding: 0, margin: 0, marginRight: '12px' }}
@@ -338,7 +333,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
             </div>
           </Grid>
           <Grid item xs={6} sx={{ margin: 0, pt: 0, }}>
-            <p style={{ margin: 0}}>Tip: Right-click to undo</p>
+            <p style={{ margin: 0 }}>Tip: Right-click to undo</p>
           </Grid>
         </Grid>
       }
@@ -352,43 +347,25 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
         onMouseUp={() => setIsMouseDownOnCanvas(false)}
         onContextMenu={(e) => e.preventDefault()}
       />
-      {isEditMode &&
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '10px', }}>
-          <Button
-            type='submit'
-            variant='contained'
-            className='save-modal-button'
-            onClick={savePixelState}
-          >
-            PREVIEW
-          </Button>
-        </div>
-      }
+      {isEditMode && <SeamSaveButton onClick={savePixelState} />}
     </div>
   );
 };
 
-const PixelCanvasWithSize = (props: BasePixelCanvasProps) => {
+const PixelCanvasWithSize = (props: PixelCanvasProps) => {
   return (
-    <SizeMe monitorHeight refreshMode='debounce'>
-      {({ size }) => (
-        <div style={{
-          backgroundColor: props.initialBackgroundColor,
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+    <div style={{
+      backgroundColor: props.initialBackgroundColor,
+      height: '100%',
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'between',
 
-        }}>
-          <PixelCanvas
-            {...props}
-            size={size}
-          />
-        </div>
-      )}
-    </SizeMe>
-  )
+    }}>
+      <PixelCanvas {...props} />
+    </div>
+  );
 }
 
 export default class PixelArtBlock extends Block {

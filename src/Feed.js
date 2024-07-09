@@ -1,6 +1,9 @@
 import { makeStyles } from "@mui/styles";
 import InfiniteScroll from "react-infinite-scroll-component";
 import BlockFactory from "./blocks/BlockFactory";
+import SeamPillButton from "./components/SeamPillButton";
+import { Heart, MessageSquare } from "react-feather";
+import SeamUserItem from "./components/SeamUserItem";
 import { createTheme } from "@mui/material/styles";
 
 const useStyles = makeStyles({
@@ -15,20 +18,49 @@ const useStyles = makeStyles({
 
 const defaultTheme = createTheme({
   palette: {
-    primary: {
-      main: "#020303"
+    primary: {        // Page Background
+      main: "#FEFEFE"
     },
     secondary: {
-      main: "#1C1C1C"
+      main: "#FEFEFE"  // Block Background (Profile, ect. Buttons take on the info)
     },
     info: {
-      main: "#CCFE07" // Button Background
+      main: "#0288D1"
     }
   },
   typography: {
-    fontFamily: "monospace"
+    fontFamily: "Public Sans"
   },
-});
+})
+
+function FeedItem({ post }) {
+  return (
+    <div className="flex flex-col items-start p-2 rounded-[20px] border border-gray-200 bg-[#FCFCFC] shadow-none">
+      <SeamUserItem subtitle={BlockFactory.getPrintableBlockName(post) + " Miniapp"}/>
+      <div className="w-full h-full max-w-full overflow-clip mt-2">
+        {BlockFactory.getBlock(post, defaultTheme).render()}
+      </div>
+      <div className="w-full mt-2">
+        <div className="flex items-center">
+          {/* Comment button on the left */}
+          <SeamPillButton
+            icon={<MessageSquare size={16} className="text-gray-600" />}
+            label={"Comments"}
+            onClick={() => {}}
+          />
+          <div className="flex-grow"></div>
+          <div className="flex gap-2">
+            <SeamPillButton
+              icon={<Heart size={16} className="text-gray-600" />}
+              label={12}
+              onClick={() => {}}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function Feed({ loadedPosts }) {
   const classes = useStyles();
@@ -41,13 +73,8 @@ export default function Feed({ loadedPosts }) {
       className={classes.noScrollBar}
     >
       {loadedPosts.map((post) => (
-        <div
-          key={post?.id}
-          className="flex flex-col items-start p-2 rounded-[20px] border border-gray-200 bg-[#FCFCFC] shadow-none"
-        >
-          <div className="w-full h-full max-w-full overflow-clip">
-            {BlockFactory.getBlock(post, defaultTheme).render()}
-          </div>
+        <div key={post.id} className="w-full max-w-[720px] h-auto m-auto pt-4 px-4">
+          <FeedItem post={post} />
         </div>
       ))}
     </InfiniteScroll>

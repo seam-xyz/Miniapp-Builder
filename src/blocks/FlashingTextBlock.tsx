@@ -4,6 +4,7 @@ import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 import { FormControlLabel, Checkbox, TextField, Box, Button, Slider, InputLabel } from '@mui/material';
 import { useState, useEffect } from "react";
+import SeamSaveButton from '../components/SeamSaveButton';
 
 interface FlashingTextProps {
   content: string;
@@ -214,7 +215,7 @@ export default class FlashingTextBlock extends Block {
           className="save-modal-button"
           sx={{ mt: 3, mb: 2 }}
         >
-          Save
+          Preview
         </Button>
       </Box>
     );

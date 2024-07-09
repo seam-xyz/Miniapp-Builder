@@ -6,6 +6,7 @@ import { TextField, Box, Button, Typography } from '@mui/material';
 import { useState, useEffect } from "react";
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import SeamSaveButton from '../components/SeamSaveButton';
 
 interface CountdownBlockProps {
   title: string;
@@ -144,15 +145,7 @@ function CountdownEditModal({ onFinish }: CountdownEditModalProps){
             onChange={handleDateChange}
           />
         </LocalizationProvider>
-        <Button 
-          type='submit' 
-          variant="contained" 
-          color="primary" 
-            style={{marginTop:20}}
-          fullWidth
-        >
-          Add Countdown Timer
-        </Button>
+        <SeamSaveButton onClick={onFormSubmit} />
       </Box>
     );
 }

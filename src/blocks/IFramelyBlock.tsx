@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import TitleComponent from './utils/TitleComponent';
+import SeamSaveButton from '../components/SeamSaveButton';
 
 export default class IFramelyBlock extends Block {
   props: any;
@@ -46,7 +47,7 @@ export default class IFramelyBlock extends Block {
     } else if (blockType === 'video') {
       urlLabel = "Video URL (YouTube, TikTok, Instagram, etc.)";
     }
-    
+
     const onFinish = (event: any) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
@@ -57,15 +58,11 @@ export default class IFramelyBlock extends Block {
       done(this.model)
     };
 
-    const onFinishFailed = (errorInfo: any) => {
-      console.log('Failed:', errorInfo);
-    };
-
     return (
       <Box
         component="form"
         onSubmit={onFinish}
-        style={{}}
+        style={{ height: 'auto' }}
       >
         <TextField
           margin="normal"
@@ -90,7 +87,7 @@ export default class IFramelyBlock extends Block {
           className="save-modal-button"
           sx={{ mt: 3, mb: 2 }}
         >
-          PREVIEW
+          Preview
         </Button>
       </Box>
     )
