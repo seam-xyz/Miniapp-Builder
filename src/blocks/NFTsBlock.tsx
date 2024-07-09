@@ -42,10 +42,7 @@ interface NftGridProps {
 
   contract?: string;
 
-  theme: Theme
-
-  // if the NFT block has data, we want to display a 'see all' label when the Seam page is embedded into a game
-  setExpandable: (expandable: boolean) => void
+  theme: Theme;
 }
 
 function NFTGrid(props: NftGridProps) {
@@ -73,7 +70,6 @@ function NFTGrid(props: NftGridProps) {
         if (!error) {
           // Cast rawAssets to AlchemyAsset[]
           setAssets(rawAssets as OwnedNft[]);
-          props.setExpandable(rawAssets.length > 0);
         } else {
           setLoadingError(error);
         }
@@ -84,17 +80,7 @@ function NFTGrid(props: NftGridProps) {
     loadAssetsPage(props.ownerAddress);
   }, [props.ownerAddress, props.contract]);
 
-  function inIframe() {
-    try {
-      return window.self !== window.top;
-    } catch (e) {
-      return true;
-    }
-  }
-
-  // for pixels and embedded usecases, do not scroll and have a see more link back into Seam
-  const shouldScroll = !inIframe()
-  const scrollAttribute = shouldScroll ? "scroll" : "hidden"
+  const scrollAttribute = "scroll"
 
   let primaryColor = props.theme.palette.primary.main
   let secondaryColor = props.theme.palette.secondary.main
@@ -194,8 +180,6 @@ export default class NFTsBlock extends Block {
     const imageViewMode = this.model.data['imageViewMode']
     const title = this.model.data['title']
 
-    this.canBlockExpand = true;
-
     return (
       <>
         {title && TitleComponent(this.theme, title)}
@@ -203,10 +187,7 @@ export default class NFTsBlock extends Block {
           imageViewMode={imageViewMode}
           contract={contract}
           theme={this.theme}
-          setExpandable={(expandable: boolean) => {
-            // if the NFT block has data, we want to display a 'see all' label when the Seam page is embedded into a game
-            this.canBlockExpand = expandable;
-          }} />
+          />
       </>
     );
   }
@@ -293,12 +274,6 @@ export default class NFTsBlock extends Block {
           Save
         </Button>
       </Box>
-    )
-  }
-
-  renderErrorState() {
-    return (
-      <h1>Error loading NFT Block</h1>
     )
   }
 }
