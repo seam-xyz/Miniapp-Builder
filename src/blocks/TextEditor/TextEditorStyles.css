@@ -1,76 +1,30 @@
 h1 {
-
-    font-size: 32px;
-    margin: 0;
-    font-weight: bold;
+  font-size: 32px;
+  margin: 0;
+  font-weight: bold;
 }
 
 h2 {
-
-    font-weight: bold;
-    font-size: 24px;
-    margin: 0;
+  font-weight: bold;
+  font-size: 24px;
+  margin: 0;
 }
 
 h3 {
-
-    font-weight: 600;
-    font-size: 20px;
-    margin: 0;
+  font-weight: 600;
+  font-size: 20px;
+  margin: 0;
 }
 
 h4 {
-
-    font-size: 16px;
-    margin: 0;
+  font-size: 16px;
+  margin: 0;
 }
 
-.Editor {
-    text-align: center;
-    display: flex;
-    align-items: center;
-    height: 500;
-    width: 500;
+.editor-alignment-center div {
+  text-align: center;
 }
 
-.editorBar {
-    display: flex;
-    flex-direction: row;
-    align-items: left;
-    background-color: rgba(255, 255, 255, 0.74);
-    box-shadow: 1;
-}
-
-button {
-    border: 1px solid var(--black);
-    border-color: black;
-    background-color: white;
-    margin: 0.1rem 0.1rem;
-}
-
-.texteditor {
-    width: 40rem;
-}
-
-.DraftEditor-root {
-    font-family: "Public Sans";
-    background-color: white;
-    height: 100%;
-    width: 100%;
-    overflow-y: auto;
-    z-index: 0;
-    display: flex;
-    flex-direction: column;
-    flex-grow: inherit;
-}
-
-.DraftEditor-editorContainer {
-    padding: 1.0rem;
-}
-
-.editor-alignment-center div{
-    text-align: center;
-}
-.editor-alignment-right div{
-    text-align: right;
+.editor-alignment-right div {
+  text-align: right;
 }
