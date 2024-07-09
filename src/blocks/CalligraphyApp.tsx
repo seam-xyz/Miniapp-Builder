@@ -4,6 +4,7 @@ import './BlockStyles.css'
 import SeamSaveButton from '../components/SeamSaveButton';
 import { useEffect, useRef, useState } from 'react';
 
+import { Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import BorderOuterIcon from '@mui/icons-material/BorderOuter';
 import UndoIcon from '@mui/icons-material/Undo';
@@ -487,7 +488,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
     return myP5.remove;
   }, []);
   return (
-    <><div className="flex justify-center touch-none"ref={canvasDivRef}></div>
+    <><div className="flex justify-center touch-none w-full h-full"ref={canvasDivRef}></div>
     </>
   )
 }
@@ -547,7 +548,7 @@ const CalligraphyBackgroundSelector = (props: CalligraphyBackgroundSelectorProps
     "dots":dots
   }
   return (
-    <div className='flex flex-1 flex-row gap-3 justify-start overflow-x-auto border-2 p-2 rounded-md bg-[#fbfbfb] overflow-x-auto'>
+    <div className='flex flex-1 flex-row gap-3 justify-start overflow-x-auto border-2 p-2 rounded-md bg-[#fbfbfb]'>
       {Object.entries(backgroundOptions).map(( [background,imgPath] )=>
           <img 
           className={`outline outline-offset-0 outline-[#d903ff] h-full object-contain rounded-lg ${props.currentBackground === background ? "outline-2" : "outline-0"} `}
@@ -651,7 +652,7 @@ interface CalligraphyToolbarTabProps {
 }
 const CalligraphyToolbarTab = (props: CalligraphyToolbarTabProps) => {
   return (
-    <div className='flex flex-1 max-h-[18vh] min-h-[18vh]'>
+    <div className='flex flex-1 h-full max-h-[160px]'>
       { props.activeToolbarTab === CalligraphyToolbarView.COLOR
           && <CalligraphyColorSelector
             colors={COLORS_DEFAULT}
@@ -685,7 +686,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
   const [activeToolbarTab, setActivePaletteTab] = useState(CalligraphyToolbarView.COLOR);
   const [currentBrush, setCurrentBrush] = useState("spray");
   return (
-    <div className='flex flex-col gap-3 justify-between h-[88vh]'>
+    <div className='flex flex-col h-auto w-full'>
       <CalligraphyCanvas 
         width={props.width} 
         canvasClearSwitch={canvasClearSwitch}
@@ -695,26 +696,26 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
         currentBrush={currentBrush}
         setImageDataURL={props.setImageDataURL}
       />
-      <div className='flex flex-0 flex-col'>
-        <div className='flex flex-col gap-4'>
-          <CalligraphyToolbarTab
-            activeToolbarTab={activeToolbarTab}
-            activeColor={activeColor}
-            setActiveColor={setActiveColor}
-            currentBackground={currentBackground}
-            setCurrentBackground={setCurrentBackground}
-            currentBrush={currentBrush}
-            setCurrentBrush={setCurrentBrush}
-          />
-          <CalligraphyToolbar
-            activeColor={activeColor}
-            setActiveToolbarTab={setActivePaletteTab}
-            toggleCanvasUndoSwitch={() => setCanvasUndoSwitch(!canvasUndoSwitch)}
-            toggleCanvasClearSwitch={() => setCanvasClearSwitch(!canvasClearSwitch)}
-            activeToolbarTab={activeToolbarTab} />
-        </div>
-        <SeamSaveButton onClick={props.onSave}/>
+      <div className='my-4 mb-[150px] w-full h-auto flex flex-col flex-1 overflow-y-scroll space-y-4 hide-scrollbar'>
+        <CalligraphyToolbarTab
+          activeToolbarTab={activeToolbarTab}
+          activeColor={activeColor}
+          setActiveColor={setActiveColor}
+          currentBackground={currentBackground}
+          setCurrentBackground={setCurrentBackground}
+          currentBrush={currentBrush}
+          setCurrentBrush={setCurrentBrush}
+        />
+        <CalligraphyToolbar
+          activeColor={activeColor}
+          setActiveToolbarTab={setActivePaletteTab}
+          toggleCanvasUndoSwitch={() => setCanvasUndoSwitch(!canvasUndoSwitch)}
+          toggleCanvasClearSwitch={() => setCanvasClearSwitch(!canvasClearSwitch)}
+          activeToolbarTab={activeToolbarTab} />
       </div>
+      <Box style={{ paddingBottom: `calc(env(safe-area-inset-bottom, 24px) + 24px)` }} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, p: 3, bgcolor: 'background.paper', zIndex: 1301 }}>
+        <SeamSaveButton onClick={props.onSave}/>
+      </Box>
     </div>
   );
 }
