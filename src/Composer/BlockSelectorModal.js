@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
 import BlockFactory from '../blocks/BlockFactory';
 import { createTheme } from "@mui/material/styles";
@@ -21,30 +21,29 @@ const defaultTheme = createTheme({
 });
 
 const BlockSelectorModal = ({ selectedBlockType, initialBlockData, setSelectedBlockData }) => {
-  const [selectedBlockInstance, setSelectedBlockInstance] = useState(null);
-  const [width, setWidth] = useState(0);
+  const [width, setWidth] = useState(undefined);
   const divRef = useRef(null);
   const isFullscreenEdit = BlockFactory.doesBlockEditFullscreen(selectedBlockType);
 
   useEffect(() => {
-    if (divRef.current) {
+    if (divRef.current && divRef.current.offsetWidth > 0) {
       setWidth(divRef.current.offsetWidth);
     }
-  }, []);
+  }, [divRef.current]);
 
-  useEffect(() => {
+  const blockInstance = useMemo(() => {
     const model = {
       type: selectedBlockType,
       data: initialBlockData || {},
       uuid: nanoid()  // Generate a new unique ID
     };
 
-    const blockInstance = BlockFactory.getBlock(model, defaultTheme);
-    if (blockInstance) {
-      setSelectedBlockInstance(blockInstance);
-    } else {
+    const instance = BlockFactory.getBlock(model, defaultTheme);
+    if (!instance) {
       console.error(`Failed to load block of type ${selectedBlockType}`);
     }
+
+    return instance;
   }, [selectedBlockType]);
 
   const handleDone = (data) => {
@@ -52,8 +51,8 @@ const BlockSelectorModal = ({ selectedBlockType, initialBlockData, setSelectedBl
   };
 
   return (
-    <div ref={divRef} className={isFullscreenEdit ? "h-full" : "mx-4 h-auto"} style={{ maxWidth: '100vw', overflow: 'visible' }}>
-      {selectedBlockInstance && selectedBlockInstance.renderEditModal(handleDone, width)}
+    <div ref={divRef} className={isFullscreenEdit ? "h-full" : "mx-4 h-auto"} style={{ overflow: 'visible' }}>
+      {selectedBlockType && blockInstance.renderEditModal(handleDone, width)}
     </div>
   );
 };

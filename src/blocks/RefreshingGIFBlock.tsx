@@ -38,8 +38,4 @@ export default class RefreshingGIFBlock extends Block {
       />
     );
   }
-
-  renderErrorState() {
-    return <h1>Error: Coudn't figure out the url</h1>;
-  }
 }
