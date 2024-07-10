@@ -434,6 +434,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "seam",
     fullscreenEdit: false,
   },
+  "JustAThought": { 
+    type: "JustAThought",
+    displayName: "JustAThought",
+    displayDescription: "Just a thought in 120 characters or less",
+    icon: "JustAThoughtIcon", // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "emilee",
+    fullscreenEdit: false,
+  },
   "Unknown": {
     type: "Unknown",
     displayName: "Unknown",
