@@ -685,8 +685,9 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
   const [currentBackground, setCurrentBackground] = useState<CalligraphyBackground>("lines");
   const [activeToolbarTab, setActivePaletteTab] = useState(CalligraphyToolbarView.COLOR);
   const [currentBrush, setCurrentBrush] = useState("spray");
+
   return (
-    <div className='flex flex-col h-auto w-full'>
+    <div className='flex flex-col h-full w-auto overflow-y-scroll'>
       <CalligraphyCanvas 
         width={props.width} 
         canvasClearSwitch={canvasClearSwitch}
@@ -696,7 +697,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
         currentBrush={currentBrush}
         setImageDataURL={props.setImageDataURL}
       />
-      <div className='my-4 mb-[150px] w-full h-auto flex flex-col flex-1 overflow-y-scroll space-y-4 hide-scrollbar'>
+      <Box style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} className='my-4 w-full h-[200px] flex flex-col overflow-y-scroll space-y-4'>
         <CalligraphyToolbarTab
           activeToolbarTab={activeToolbarTab}
           activeColor={activeColor}
@@ -711,10 +712,11 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
           setActiveToolbarTab={setActivePaletteTab}
           toggleCanvasUndoSwitch={() => setCanvasUndoSwitch(!canvasUndoSwitch)}
           toggleCanvasClearSwitch={() => setCanvasClearSwitch(!canvasClearSwitch)}
-          activeToolbarTab={activeToolbarTab} />
-      </div>
-      <Box style={{ paddingBottom: `calc(env(safe-area-inset-bottom, 24px) + 24px)` }} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, p: 3, bgcolor: 'background.paper', zIndex: 1301 }}>
-        <SeamSaveButton onClick={props.onSave}/>
+          activeToolbarTab={activeToolbarTab}
+        />
+        <div className="p-3">
+          <SeamSaveButton onClick={props.onSave} />
+        </div>
       </Box>
     </div>
   );
