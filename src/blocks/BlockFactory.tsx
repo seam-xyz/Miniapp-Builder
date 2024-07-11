@@ -1,3 +1,4 @@
+import localelocatrApp from './localelocatrBlock'
 import MapApp from './MapApp'
 import CameraApp from './CameraApp'
 import CalligraphyApp from './CalligraphyApp'
@@ -70,6 +71,7 @@ export default class BlockFactory {
       case "Camera": return new CameraApp(model, theme)
       case "Map": return new MapApp(model, theme)
       case "Calligraphy": return new CalligraphyApp(model, theme)
+      case "localelocatr": return new localelocatrApp(model, theme)
       // new blocks go here
       default: return new UnknownApp(model, theme)
     }

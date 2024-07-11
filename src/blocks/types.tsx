@@ -27,6 +27,7 @@ import MoodIcon from './blockIcons/MoodIcon.png'
 import WhiteboardIcon from './blockIcons/whiteboardIcon.png'
 import CameraIcon from './blockIcons/CameraIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
+import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 
 export type BlockModel = {
   type: string;
@@ -420,7 +421,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "nick",
     fullscreenEdit: true,
   },
-  "Wordle": { 
+  "Wordle": {
     type: "Wordle",
     displayName: "Wordle",
     displayDescription: "Seam's take on the hot NYT daily game, Wordle!",
@@ -433,7 +434,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "jamesburet",
     fullscreenEdit: false,
   },
-  "Mood": { 
+  "Mood": {
     type: "Mood",
     displayName: "Mood Visualizer",
     displayDescription: "Express your emotions, open up and tell the world how you're feeling!",
@@ -446,7 +447,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "jamesburet",
     fullscreenEdit: true,
   },
-  "Whiteboard": { 
+  "Whiteboard": {
     type: "Whiteboard",
     displayName: "Whiteboard",
     displayDescription: "Draw on a whiteboard!",
@@ -459,7 +460,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "emilee",
     fullscreenEdit: false,
   },
-  "Calligraphy": { 
+  "Calligraphy": {
     type: "Calligraphy",
     displayName: "Calligraphy",
     displayDescription: "Draw with expressive brushstrokes",
@@ -472,7 +473,20 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "chevron", // ssebexen & @chevron, TODO implement splits
     fullscreenEdit: false,
   },
-  "Camera": { 
+  "localelocatr": {
+    type: "localelocatr",
+    displayName: "localelocatr",
+    displayDescription: "A GeoGuesser game that allows users to guess different locations based on a streetview panorama",
+    emptyTitle: "Empty localelocatr App",
+    emptySubtitle: "Tap here to setup your localelocatr app!",
+    icon: localelocatrIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "mbehera",
+    fullscreenEdit: false,
+  },
+  "Camera": {
     type: "Camera",
     displayName: "Camera",
     displayDescription: "Use your device's camera to take and upload a photo!",
