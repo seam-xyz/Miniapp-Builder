@@ -14,7 +14,6 @@ import PhotoAlbumBlock from './PhotoAlbumBlock'
 import MarqueeBlock from './MarqueeBlock'
 import PokemonBlock from './PokemonBlock'
 import NFTsBlock from './NFTsBlock'
-import RefreshingGIFBlock from './RefreshingGIFBlock'
 import PixelArtBlock from './PixelArtBlock'
 import MusicBlock from './MusicBlock'
 import Block from './Block'
@@ -51,7 +50,6 @@ export default class BlockFactory {
       case "video": return new VideoBlock(model, theme)
       case "profile": return new ProfileBlock(model, theme)
       case "giphy": return new GiphyBlock(model, theme)
-      case "RefreshingGIF": return new RefreshingGIFBlock(model, theme)
       case "PixelArt": return new PixelArtBlock(model, theme)
       case "NFTs": return new NFTsBlock(model, theme)
       case "Pokemon": return new PokemonBlock(model, theme)
