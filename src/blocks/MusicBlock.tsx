@@ -46,8 +46,8 @@ export default class MusicBlock extends Block {
     }
 
     return (
-      <div style={{ backgroundColor: this.theme.palette.secondary.main, width: "100%", height: "100%" }}>
-        {data.title && <h2 className="text-white text-center p-2">{data.title}</h2>}
+      <div style={{ color: this.theme.palette.info.main,backgroundColor: this.theme.palette.secondary.main, width: "100%", height: "100%" }}>
+        {data.title && <h2 style={{ color: this.theme.palette.info.main}} className="text-start p-2">{data.title}</h2>}
         <Iframely
           url={data.url}
           style={{
