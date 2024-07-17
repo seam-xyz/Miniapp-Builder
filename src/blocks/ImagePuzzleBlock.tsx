@@ -109,11 +109,11 @@ function useDebounce(key: string, delay: number): () => boolean {
 // Sets only inner borders for the overlay grid, with box at index in a grid with dimensions side x side
 function getBorderStyleGrid(index: number, side: number, borderWidth: string): string {
   const top = index < side ? '0px' : borderWidth;
-  const right = index % side === side - 1 ? '0px' : borderWidth;
+  const right = (index + 1) % side === 0 ? '0px' : borderWidth;
   const bottom = index >= (side ** 2 - side) ? '0px' : borderWidth;
   const left = index % side === 0 ? '0px' : borderWidth;
 
-  return [top, right, bottom, left].join(' ');
+  return `${top} ${right} ${bottom} ${left}`;
 }
 
 // Normalize the zoomLevel such that 1.0 is the furthest you can zoom without introducing whitespace.
@@ -543,7 +543,12 @@ function ImagePuzzleUpload(props: ImagePuzzleUploadProps) {
                   Array(props.puzzleSize ** 2).fill(0).map((_, i) =>
                     <div key={i}
                       className='border-[#ffffff99]'
-                      style={{ borderWidth: getBorderStyleGrid(i, props.puzzleSize, '1px'), flexBasis: `calc(100% / ${props.puzzleSize})` }}
+                      style={{ 
+                        borderWidth: getBorderStyleGrid(i, props.puzzleSize, '1px'), 
+                        flexBasis: `calc(100% / ${props.puzzleSize})`,
+                        height: `calc(100% / ${props.puzzleSize})`,
+                        boxSizing: 'border-box'
+                      }}
                     />
                   )
                 }
