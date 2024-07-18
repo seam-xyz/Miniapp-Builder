@@ -25,6 +25,7 @@ import bookIcon from './blockIcons/bookIcon.png'
 import WordleIcon from './blockIcons/WordleIcon.png'
 import MoodIcon from './blockIcons/MoodIcon.png'
 import WhiteboardIcon from './blockIcons/whiteboardIcon.png'
+import ImagePuzzleIcon from './blockIcons/imagePuzzleIcon.webp'
 import CameraIcon from './blockIcons/CameraIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
@@ -458,6 +459,19 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: "emilee",
+    fullscreenEdit: false,
+  },
+  "ImagePuzzle": {
+    type: "ImagePuzzle",
+    displayName: "Image Puzzle",
+    displayDescription: "Upload an image and turn it into a sliding puzzle!",
+    emptyTitle: "Empty Image Puzzle App",
+    emptySubtitle: "Tap here to setup your Image Puzzle app!",
+    icon: ImagePuzzleIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "ssebexen",
     fullscreenEdit: false,
   },
   "Calligraphy": {

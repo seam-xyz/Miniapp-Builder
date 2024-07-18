@@ -1,3 +1,4 @@
+import ImagePuzzleBlock from './ImagePuzzleBlock'
 import localelocatrApp from './localelocatrBlock'
 import MapApp from './MapApp'
 import CameraApp from './CameraApp'
@@ -68,6 +69,7 @@ export default class BlockFactory {
       case "Wordle": return new WordleBlock(model, theme)
       case "Mood": return new MoodApp(model, theme)
       case "Whiteboard": return new WhiteboardBlock(model, theme)
+      case "ImagePuzzle": return new ImagePuzzleBlock(model, theme)
       case "Camera": return new CameraApp(model, theme)
       case "Map": return new MapApp(model, theme)
       case "Calligraphy": return new CalligraphyApp(model, theme)
