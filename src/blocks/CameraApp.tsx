@@ -103,7 +103,7 @@ const CameraBlock: React.FC<CameraBlockProps> = ({ onFinalize }) => {
         }
 
         if (event && event.completed) {
-          const { downloadUrl } = await FirebaseStorage.getDownloadUrl({ path });
+          const { downloadUrl } = await FirebaseStorage.getDownloadUrl({ path: path });
           onFinalize(downloadUrl);
           setUploading(false);
         }
