@@ -9,7 +9,6 @@ import mapIcon from "./blockIcons/Map.png";
 import giphyIcon from "./blockIcons/GIPHY.png";
 import profileIcon from "./blockIcons/profileHeaderIcon.png";
 import musicIcon from "./blockIcons/Music.png";
-import randomGiphyIcon from "./blockIcons/randomGiphyIcon.png";
 import pixelArtIcon from "./blockIcons/pixelArtIcon.png";
 import nftIcon from "./blockIcons/nftIcon.png"
 import pokemonIcon from "./blockIcons/pokeball.png"
@@ -250,20 +249,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: false,
     doesBlockEdit: true,
     createdBy: "seam",
-    fullscreenEdit: false,
-  },
-  RefreshingGIF: {
-    type: "RefreshingGIF",
-    displayName: "RefreshingGIF",
-    displayDescription:
-      "Get a new random GIF based on your search string every load of your page",
-    emptyTitle: "Empty RefreshingGIF Block",
-    emptySubtitle: "Tap here to setup your RefreshingGIF block!",
-    icon: randomGiphyIcon,
-    deprecated: false,
-    doesBlockPost: false,
-    doesBlockEdit: true,
-    createdBy: "andrew",
     fullscreenEdit: false,
   },
   "NFTs": {

@@ -449,8 +449,8 @@ async function getGeocodeResponse() {
 
 //container for streetview
 const containerStyle = {
-  width: '100%',
-  height: '700px',
+  //width: '100%',
+  height: '500px',
 };
 
 //streetview react component
