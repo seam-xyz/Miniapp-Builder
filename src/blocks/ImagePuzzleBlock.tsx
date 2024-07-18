@@ -184,8 +184,7 @@ function getEmptyPos(tiles: Tile[]): number {
     .map((_, i) => i)
     .filter(i => 
       !tiles.map(tile => tile.pos).includes(i)
-    )
-    .at(0);
+    )[0];
   if (result === undefined) throw new Error('Could not find empty position');
 
   return result;
