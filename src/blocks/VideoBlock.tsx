@@ -22,14 +22,12 @@ export default class VideoBlock extends Block {
     }
 
     return (
-      <div style={{ backgroundColor: this.theme.palette.secondary.main }}>
-        <div className="flex grow relative w-full h-full min-h-[300px]" style={{ position: 'relative', width: "100%", height: "100%" }}>
-          <ReactPlayer
-            controls={true}
-            url={url}
-            style={{ height: '100%', width: '100%', flexGrow: 1 }}
-          />
-        </div>
+      <div className="flex relative w-full h-auto" style={{ backgroundColor: this.theme.palette.secondary.main }}>
+        <ReactPlayer
+          controls={true}
+          url={url}
+          className="w-full h-auto"
+        />
       </div>
     );
   }

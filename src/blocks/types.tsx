@@ -28,6 +28,7 @@ import WhiteboardIcon from './blockIcons/whiteboardIcon.png'
 import ImagePuzzleIcon from './blockIcons/imagePuzzleIcon.webp'
 import CameraIcon from './blockIcons/CameraIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
+import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 
 export type BlockModel = {
   type: string;
@@ -484,6 +485,19 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: "chevron", // ssebexen & @chevron, TODO implement splits
+    fullscreenEdit: false,
+  },
+  "localelocatr": {
+    type: "localelocatr",
+    displayName: "localelocatr",
+    displayDescription: "A GeoGuesser game that allows users to guess different locations based on a streetview panorama",
+    emptyTitle: "Empty localelocatr App",
+    emptySubtitle: "Tap here to setup your localelocatr app!",
+    icon: localelocatrIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "mbehera",
     fullscreenEdit: false,
   },
   "Camera": {

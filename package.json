@@ -40,6 +40,7 @@
     "react-color": "^2.19.3",
     "react-dom": "^18.2.0",
     "react-feather": "^2.0.10",
+    "react-geocode": "^1.0.0-alpha.1",
     "react-giphy-searchbox": "^1.5.4",
     "react-infinite-scroll-component": "^6.1.0",
     "react-player": "^2.15.0",

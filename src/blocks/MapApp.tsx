@@ -3,20 +3,38 @@ import Block from './Block';
 import { BlockModel } from './types';
 import './BlockStyles.css';
 import { GoogleMap, LoadScript, Autocomplete } from "@react-google-maps/api";
-import { Search } from 'react-feather';
-import { Button, TextField, Typography } from '@mui/material';
 import Iframely from './utils/Iframely';
+import TitleComponent from './utils/TitleComponent';
 
 const api_Key = process.env.REACT_APP_GOOGLE_MAPS_KEY!;
 
 export default class MapBlock extends Block {
   render() {
-    const locationUrl = this.model.data['url'];
+    const { data } = this.model;
+    const locationUrl = data.url;
 
     if (!locationUrl) {
       return this.renderEmptyState();
     }
 
+    // Check if the post has a title and render it using the same logic as IFramelyBlock
+    if (data.title) {
+      return (
+        <div style={{ backgroundColor: this.theme.palette.secondary.main, width: "100%", height: "100%" }}>
+          {TitleComponent(this.theme, data.title)}
+          <Iframely
+            url={locationUrl}
+            style={{
+              display: "flex",
+              height: `100%`,
+              width: `100%`
+            }} 
+          />
+        </div>
+      );
+    }
+
+    // Default rendering for newer posts
     return (
       <div className="relative w-full h-full">
         <Iframely url={locationUrl} style={{ height: '100%', width: '100%' }} />
@@ -29,7 +47,7 @@ export default class MapBlock extends Block {
       <div className="relative flex flex-col items-center rounded-lg h-full">
         <MapEditor
           onSelect={(locationUrl: string) => {
-            this.model.data['url'] = locationUrl; // Store as URL string
+            this.model.data.url = locationUrl; // Store as URL string
             done(this.model);
           }}
         />
@@ -38,7 +56,9 @@ export default class MapBlock extends Block {
   }
 
   renderEmptyState() {
-    return <h1>Please select a location</h1>;
+    return <div className="relative w-auto h-full mx-4 flex items-center justify-center bg-gray-200 rounded-lg">
+      <h3 className="text-[#86868A]">Map loading...</h3>
+    </div>;
   }
 
   renderErrorState() {
@@ -57,14 +77,26 @@ interface MapEditorProps {
 
 const MapEditor: React.FC<MapEditorProps> = ({ onSelect }) => {
   const [location, setLocation] = useState<any>(null);
+  const [loading, setLoading] = useState(true); // Track loading state
+  const [blocked, setBlocked] = useState(false); // Track blocked state
   const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
   const mapRef = useRef<GoogleMap>(null);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const { latitude, longitude } = position.coords;
-      setLocation({ lat: latitude, lng: longitude });
-    });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setLocation({ lat: latitude, lng: longitude });
+        setLoading(false); // Set loading to false once location is obtained
+      },
+      (error) => {
+        if (error.code === error.PERMISSION_DENIED) {
+          setBlocked(true); // Set blocked state if location permissions are denied
+        }
+        setLoading(false); // Set loading to false if there's an error obtaining location
+        console.error('Error getting location:', error);
+      }
+    );
   }, []);
 
   const onLoadAutocomplete = (autocompleteInstance: google.maps.places.Autocomplete) => {
@@ -98,33 +130,47 @@ const MapEditor: React.FC<MapEditorProps> = ({ onSelect }) => {
   return (
     <LoadScript googleMapsApiKey={api_Key} libraries={['places']}>
       <div className="relative w-full h-full mt-[72px] mb-[72px]">
-        <GoogleMap
-          ref={mapRef}
-          center={location}
-          zoom={14}
-          mapContainerStyle={{ height: '100%', width: 'auto', marginLeft: '16px', marginRight: '16px', borderRadius: '24px', }}
-        >
-          <div className="w-full h-full mx-4">
-            {location && (
-              <Autocomplete onLoad={onLoadAutocomplete} onPlaceChanged={onPlaceChanged}>
-                <input
-                  type="text"
-                  placeholder="Search for a place"
-                  className="rounded-full py-2 pl-4 pr-4 mt-[64px] border border-gray-300 placeholder:ml-1 focus:outline-none focus:ring-2 focus:ring-seam-blue mb-2 bg-white shadow-lg"
-                  style={{
-                    width: 'calc(100% - 64px)', // Adjust the width of the input to fit within the map container
-                    maxWidth: '600px',
-                    position: 'absolute',
-                    top: '0',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    zIndex: 1,
-                  }}
-                />
-              </Autocomplete>
-            )}
+        {loading ? (
+          <div className="flex items-center mx-4 justify-center w-auto h-full bg-gray-200 rounded-lg">
+            <h3 className="text-[#86868A]">Map Loading ...</h3>
           </div>
-        </GoogleMap>
+        ) : blocked ? (
+          <div className="flex items-center mx-4 justify-center w-auto h-full bg-gray-200 rounded-lg">
+            <h3 className="text-[#86868A]">Location permissions blocked</h3>
+          </div>
+        ) : (
+          <GoogleMap
+            ref={mapRef}
+            center={location}
+            zoom={14}
+            options={{
+              streetViewControl: false, // Disable Street View
+              disableDefaultUI: true // Disable all default UI
+            }}
+            mapContainerStyle={{ height: '100%', width: 'auto', marginLeft: '16px', marginRight: '16px', borderRadius: '24px' }}
+          >
+            <div className="w-full h-full mx-4">
+              {location && (
+                <Autocomplete onLoad={onLoadAutocomplete} onPlaceChanged={onPlaceChanged}>
+                  <input
+                    type="text"
+                    placeholder="Search for a place"
+                    className="rounded-full py-2 pl-4 pr-4 mt- border border-gray-300 placeholder:ml-1 focus:outline-none focus:ring-2 focus:ring-seam-blue mb-2 bg-white shadow-lg"
+                    style={{
+                      width: 'calc(100% - 64px)', // Adjust the width of the input to fit within the map container
+                      maxWidth: '600px',
+                      position: 'absolute',
+                      top: '0',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      zIndex: 1,
+                    }}
+                  />
+                </Autocomplete>
+              )}
+            </div>
+          </GoogleMap>
+        )}
       </div>
     </LoadScript>
   );
