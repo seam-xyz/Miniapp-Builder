@@ -25,14 +25,16 @@ export default function SeamHeaderBar({
         <div className="absolute left-[50%] translate-x-[-50%] cursor-pointer">
           {centerComponent}
         </div>
-        <div
-          onClick={() => {
-            rightAction();
-          }}
-          className="flex justify-center items-center gap-2 py-2 px-2 text-white rounded-full bg-[#efefef]"
-        >
-          {rightComponent}
-        </div>
+        {rightComponent ?
+          (<div
+            onClick={() => {
+              rightAction();
+            }}
+            className="flex justify-center items-center gap-2 py-2 px-2 text-white rounded-full bg-[#efefef]"
+          >
+            {rightComponent}
+          </div>) : (<div className="w-[40px] h-[40px]"></div>)
+        }
       </div>
     </IonHeader>
   );
