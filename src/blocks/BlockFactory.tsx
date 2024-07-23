@@ -1,3 +1,7 @@
+import ImagePuzzleBlock from './ImagePuzzleBlock'
+import localelocatrApp from './localelocatrBlock'
+import MapApp from './MapApp'
+import CameraApp from './CameraApp'
 import CalligraphyApp from './CalligraphyApp'
 import MoodApp from './MoodApp'
 import BookshelfApp from './BookshelfApp'
@@ -11,7 +15,6 @@ import PhotoAlbumBlock from './PhotoAlbumBlock'
 import MarqueeBlock from './MarqueeBlock'
 import PokemonBlock from './PokemonBlock'
 import NFTsBlock from './NFTsBlock'
-import RefreshingGIFBlock from './RefreshingGIFBlock'
 import PixelArtBlock from './PixelArtBlock'
 import MusicBlock from './MusicBlock'
 import Block from './Block'
@@ -44,12 +47,10 @@ export default class BlockFactory {
       case "text": return new TextEditBlock(model, theme)
       case "tweet": return new TweetBlock(model, theme)
       case "Link Bookmark": return new LinkBookmarkBlock(model, theme)
-      case "Map": return new IFramelyBlock(model, theme)
       case "Music": return new MusicBlock(model, theme)
       case "video": return new VideoBlock(model, theme)
       case "profile": return new ProfileBlock(model, theme)
       case "giphy": return new GiphyBlock(model, theme)
-      case "RefreshingGIF": return new RefreshingGIFBlock(model, theme)
       case "PixelArt": return new PixelArtBlock(model, theme)
       case "NFTs": return new NFTsBlock(model, theme)
       case "Pokemon": return new PokemonBlock(model, theme)
@@ -66,14 +67,18 @@ export default class BlockFactory {
       case "Wordle": return new WordleBlock(model, theme)
       case "Mood": return new MoodApp(model, theme)
       case "Whiteboard": return new WhiteboardBlock(model, theme)
+      case "ImagePuzzle": return new ImagePuzzleBlock(model, theme)
+      case "Camera": return new CameraApp(model, theme)
+      case "Map": return new MapApp(model, theme)
       case "Calligraphy": return new CalligraphyApp(model, theme)
+      case "localelocatr": return new localelocatrApp(model, theme)
       // new blocks go here
       default: return new UnknownApp(model, theme)
     }
   }
 
   static getPrintableBlockName(model: BlockModel): string {
-    let type = model.type
+    let type = model?.type
     let blockType = BlockTypes[type]
     return blockType != undefined ? BlockTypes[type].displayName : "Unknown"
   }

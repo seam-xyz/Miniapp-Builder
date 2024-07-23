@@ -45,10 +45,4 @@ export default class PokemonBlock extends Block {
   renderEditModal(done: (data: BlockModel) => void) {
     return (<h1>Nothing to edit here - the Pokemon is chosen randomly.</h1>);
   }
-
-  renderErrorState() {
-    return (
-      <h1>Error!</h1>
-    )
-  }
 }

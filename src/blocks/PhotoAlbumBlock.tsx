@@ -161,10 +161,4 @@ export default class PhotoAlbumBlock extends Block {
       <PhotoAlbumEditModal model={this.model} done={done} />
     );
   }
-
-  renderErrorState() {
-    return (
-      <h1>Error!</h1>
-    )
-  }
 }

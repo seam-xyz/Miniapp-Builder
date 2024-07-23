@@ -65,12 +65,6 @@ export default class MarqueeBlock extends Block {
       <h1>Edit Marquee Block!</h1>
     )
   }
-
-  renderErrorState() {
-    return (
-      <h1>Error!</h1>
-    )
-  }
 }
 ```
 

@@ -109,10 +109,4 @@ export default class fcUserFeedBlock extends Block {
       </Box>
     )
   }
-
-  renderErrorState() {
-    return (
-      <h1>Error!</h1>
-    )
-  }
 }

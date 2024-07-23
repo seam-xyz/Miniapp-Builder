@@ -5,7 +5,7 @@ import './BlockStyles.css'
 
 import CSS from 'csstype';
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Stack, Grid } from '@mui/material';
+import { Button, Stack, Grid, Box } from '@mui/material';
 import SeamSaveButton from '../components/SeamSaveButton';
 
 interface PixelCanvasProps {
@@ -347,7 +347,11 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
         onMouseUp={() => setIsMouseDownOnCanvas(false)}
         onContextMenu={(e) => e.preventDefault()}
       />
-      {isEditMode && <SeamSaveButton onClick={savePixelState} />}
+      {isEditMode && 
+        <Box className="space-y-2" style={{ paddingBottom: `calc(env(safe-area-inset-bottom, 24px) + 24px)` }} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, p: 3, bgcolor: 'background.paper', boxShadow: 3, zIndex: 1301 }}>
+          <SeamSaveButton onClick={savePixelState} />
+        </Box>
+      }
     </div>
   );
 };
@@ -437,12 +441,6 @@ export default class PixelArtBlock extends Block {
         initialBackgroundColor={backgroundColor}
         onSave={onSave}
       />
-    )
-  }
-
-  renderErrorState() {
-    return (
-      <h1>An unexpected error has occurred</h1>
     )
   }
 }

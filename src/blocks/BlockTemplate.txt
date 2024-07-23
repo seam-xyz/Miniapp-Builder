@@ -15,10 +15,4 @@ export default class %NAME%Block extends Block {
       <h1>Edit %NAME% Block!</h1>
     )
   }
-
-  renderErrorState() {
-    return (
-      <h1>Error!</h1>
-    )
-  }
 }

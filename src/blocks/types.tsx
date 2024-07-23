@@ -9,7 +9,6 @@ import mapIcon from "./blockIcons/Map.png";
 import giphyIcon from "./blockIcons/GIPHY.png";
 import profileIcon from "./blockIcons/profileHeaderIcon.png";
 import musicIcon from "./blockIcons/Music.png";
-import randomGiphyIcon from "./blockIcons/randomGiphyIcon.png";
 import pixelArtIcon from "./blockIcons/pixelArtIcon.png";
 import nftIcon from "./blockIcons/nftIcon.png"
 import pokemonIcon from "./blockIcons/pokeball.png"
@@ -25,7 +24,10 @@ import bookIcon from './blockIcons/bookIcon.png'
 import WordleIcon from './blockIcons/WordleIcon.png'
 import MoodIcon from './blockIcons/MoodIcon.png'
 import WhiteboardIcon from './blockIcons/whiteboardIcon.png'
+import ImagePuzzleIcon from './blockIcons/imagePuzzleIcon.webp'
+import CameraIcon from './blockIcons/CameraIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
+import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 
 export type BlockModel = {
   type: string;
@@ -221,7 +223,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: "seam",
-    fullscreenEdit: false,
+    fullscreenEdit: true,
   },
   "Image Button": {
     type: "Image Button",
@@ -247,20 +249,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: false,
     doesBlockEdit: true,
     createdBy: "seam",
-    fullscreenEdit: false,
-  },
-  RefreshingGIF: {
-    type: "RefreshingGIF",
-    displayName: "RefreshingGIF",
-    displayDescription:
-      "Get a new random GIF based on your search string every load of your page",
-    emptyTitle: "Empty RefreshingGIF Block",
-    emptySubtitle: "Tap here to setup your RefreshingGIF block!",
-    icon: randomGiphyIcon,
-    deprecated: false,
-    doesBlockPost: false,
-    doesBlockEdit: true,
-    createdBy: "andrew",
     fullscreenEdit: false,
   },
   "NFTs": {
@@ -419,7 +407,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "nick",
     fullscreenEdit: true,
   },
-  "Wordle": { 
+  "Wordle": {
     type: "Wordle",
     displayName: "Wordle",
     displayDescription: "Seam's take on the hot NYT daily game, Wordle!",
@@ -430,6 +418,84 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: "jamesburet",
+    fullscreenEdit: false,
+  },
+  "Mood": {
+    type: "Mood",
+    displayName: "Mood Visualizer",
+    displayDescription: "Express your emotions, open up and tell the world how you're feeling!",
+    emptyTitle: "Empty Mood Visualizer App",
+    emptySubtitle: "Tap here to setup your Mood Visualizer app!",
+    icon: MoodIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "jamesburet",
+    fullscreenEdit: true,
+  },
+  "Whiteboard": {
+    type: "Whiteboard",
+    displayName: "Whiteboard",
+    displayDescription: "Draw on a whiteboard!",
+    emptyTitle: "Empty Whiteboard Block",
+    emptySubtitle: "Tap here to setup your Whiteboard block!",
+    icon: WhiteboardIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "emilee",
+    fullscreenEdit: false,
+  },
+  "ImagePuzzle": {
+    type: "ImagePuzzle",
+    displayName: "Image Puzzle",
+    displayDescription: "Upload an image and turn it into a sliding puzzle!",
+    emptyTitle: "Empty Image Puzzle App",
+    emptySubtitle: "Tap here to setup your Image Puzzle app!",
+    icon: ImagePuzzleIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "ssebexen",
+    fullscreenEdit: false,
+  },
+  "Calligraphy": {
+    type: "Calligraphy",
+    displayName: "Calligraphy",
+    displayDescription: "Draw with expressive brushstrokes",
+    emptyTitle: "Empty calligraphy block",
+    emptySubtitle: "Empty calligraphy block",
+    icon: CalligraphyIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "chevron", // ssebexen & @chevron, TODO implement splits
+    fullscreenEdit: false,
+  },
+  "localelocatr": {
+    type: "localelocatr",
+    displayName: "localelocatr",
+    displayDescription: "A GeoGuesser game that allows users to guess different locations based on a streetview panorama",
+    emptyTitle: "Empty localelocatr App",
+    emptySubtitle: "Tap here to setup your localelocatr app!",
+    icon: localelocatrIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "mbehera",
+    fullscreenEdit: false,
+  },
+  "Camera": {
+    type: "Camera",
+    displayName: "Camera",
+    displayDescription: "Use your device's camera to take and upload a photo!",
+    emptyTitle: "Empty Camera App",
+    emptySubtitle: "Tap here to setup your Camera app!",
+    icon: CameraIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "seam",
     fullscreenEdit: false,
   },
   "Unknown": {
@@ -445,43 +511,4 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "seam",
     fullscreenEdit: false,
   },
-  "Mood": { 
-    type: "Mood",
-    displayName: "Mood Visualizer",
-    displayDescription: "Express your emotions, open up and tell the world how you're feeling!",
-    emptyTitle: "Empty Mood Visualizer App",
-    emptySubtitle: "Tap here to setup your Mood Visualizer app!",
-    icon: MoodIcon,
-    deprecated: false,
-    doesBlockPost: true,
-    doesBlockEdit: true,
-    createdBy: "jamesburet",
-    fullscreenEdit: true,
-  },
-  "Whiteboard": { 
-    type: "Whiteboard",
-    displayName: "Whiteboard",
-    displayDescription: "Draw on a whiteboard!",
-    emptyTitle: "Empty Whiteboard Block",
-    emptySubtitle: "Tap here to setup your Whiteboard block!",
-    icon: WhiteboardIcon,
-    deprecated: false,
-    doesBlockPost: true,
-    doesBlockEdit: true,
-    createdBy: "emilee",
-    fullscreenEdit: false,
-  },
-  "Calligraphy": { 
-    type: "Calligraphy",
-    displayName: "Calligraphy",
-    displayDescription: "Draw with expressive brushstrokes",
-    emptyTitle: "Empty calligraphy block",
-    emptySubtitle: "Empty calligraphy block",
-    icon: CalligraphyIcon,
-    deprecated: false,
-    doesBlockPost: true,
-    doesBlockEdit: true,
-    createdBy: "chevron", // ssebexen & @chevron, TODO implement splits
-    fullscreenEdit: false,
-},
 };
