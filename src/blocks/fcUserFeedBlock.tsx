@@ -1,5 +1,4 @@
 import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
-import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 import { useEffect, useState } from 'react';
 import { Box, Button, Card, Stack, TextField } from '@mui/material';
