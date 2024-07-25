@@ -1,7 +1,6 @@
-import Block from './Block'
-import { BlockModel } from './types'
+import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
 import './BlockStyles.css'
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ChevronRight, Search } from 'react-feather';
 import { loadFont } from './utils/Fonts';
@@ -145,16 +144,14 @@ const Bookshelf: React.FC<BookshelfProps> = ({ done, model }) => {
   );
 };
 
-export default class BookshelfBlock extends Block {
-  render() {
-    return (
-     <BookDetail title={this.model.data['title']} author={this.model.data['author']} coverImage={this.model.data['coverImage']} />
-    );
-  }
+export const BookshelfFeedComponent = ({ model }: FeedComponentProps) => {
+  return (
+    <BookDetail title={model.data['title']} author={model.data['author']} coverImage={model.data['coverImage']} />
+   );
+}
 
-  renderEditModal(done: (data: BlockModel) => void) {
-    return (
-      <Bookshelf done={done} model={this.model}/>
-    )
-  }
+export const BookshelfComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  return (
+    <Bookshelf done={done} model={model}/>
+  )
 }

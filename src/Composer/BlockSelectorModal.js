@@ -31,28 +31,20 @@ const BlockSelectorModal = ({ selectedBlockType, initialBlockData, setSelectedBl
     }
   }, [divRef.current]);
 
-  const blockInstance = useMemo(() => {
-    const model = {
-      type: selectedBlockType,
-      data: initialBlockData || {},
-      uuid: nanoid()  // Generate a new unique ID
-    };
-
-    const instance = BlockFactory.getBlock(model, defaultTheme);
-    if (!instance) {
-      console.error(`Failed to load block of type ${selectedBlockType}`);
-    }
-
-    return instance;
-  }, [selectedBlockType]);
-
   const handleDone = (data) => {
     setSelectedBlockData(data);  // Update the block data in parent component
   };
 
+  const initialModel = {
+    type: selectedBlockType,
+    data: initialBlockData || {},
+    uuid: nanoid()  // Generate a new unique ID
+  };
+  const instance = BlockFactory.getComposerComponent(initialModel, handleDone);
+
   return (
     <div ref={divRef} className={isFullscreenEdit ? "h-full" : "mx-4 h-auto"} style={{ overflow: 'visible' }}>
-      {selectedBlockType && blockInstance.renderEditModal(handleDone, width)}
+      {selectedBlockType && instance}
     </div>
   );
 };
