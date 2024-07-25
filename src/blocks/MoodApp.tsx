@@ -1,9 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import Block from './Block';
-import { BlockModel } from './types';
+import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
 import './BlockStyles.css';
 import './utils/Dial.css';
-import { Button } from '@mui/material';
 import SeamSaveButton from '../components/SeamSaveButton';
 
 const emojis = [
@@ -42,20 +40,16 @@ const darkenColor = (color: string, percent: number): string => {
   ).toString(16).slice(1)}`;
 };
 
-export default class MoodBlock extends Block {
-  render() {
-    return (
-      <MoodDisplay mood={this.model.data.mood} emoji={this.model.data.emoji} />
-    );
-  }
+export const MoodFeedComponent = ({ model }: FeedComponentProps) => {
+  return (
+    <MoodDisplay mood={model.data.mood} emoji={model.data.emoji} />
+  );
+}
 
-  renderEditModal(done: (data: BlockModel) => void) {
-    return <MoodVisualizer model={this.model} done={done} />;
-  }
-
-  renderErrorState() {
-    return <h1>Error!</h1>;
-  }
+export const MoodComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  return (
+    <MoodVisualizer model={model} done={done} />
+  );
 }
 
 interface MoodVisualizerProps {
