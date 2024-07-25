@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Block from './Block';
-import { BlockModel } from './types';
+import { ComposerComponentProps, FeedComponentProps } from './types';
 import './BlockStyles.css';
 import { GoogleMap, LoadScript, Autocomplete } from "@react-google-maps/api";
 import Iframely from './utils/Iframely';
@@ -8,66 +7,54 @@ import TitleComponent from './utils/TitleComponent';
 
 const api_Key = process.env.REACT_APP_GOOGLE_MAPS_KEY!;
 
-export default class MapBlock extends Block {
-  render() {
-    const { data } = this.model;
-    const locationUrl = data.url;
+export const MapFeedComponent = ({ model }: FeedComponentProps) => {
+  const locationUrl = model.data.url;
 
-    if (!locationUrl) {
-      return this.renderEmptyState();
-    }
-
-    if (data.title) {
-      return (
-        <div style={{ backgroundColor: this.theme.palette.secondary.main, width: "100%", height: "100%" }}>
-          {TitleComponent(this.theme, data.title)}
-          <Iframely
-            url={locationUrl}
-            style={{
-              display: "flex",
-              height: `100%`,
-              width: `100%`
-            }} 
-          />
-        </div>
-      );
-    }
-
-    // Default rendering for newer posts
-    return (
-      <div className="relative w-full h-full">
-        <Iframely url={locationUrl} style={{ height: '100%', width: '100%' }} />
-      </div>
-    );
+  if (!locationUrl) {
+    return renderEmptyState();
   }
 
-  renderEditModal(done: (data: BlockModel) => void) {
+  if (model.data.title) {
     return (
-      <div className="relative flex flex-col items-center rounded-lg h-full">
-        <MapEditor
-          onSelect={(locationUrl: string) => {
-            this.model.data.url = locationUrl; // Store as URL string
-            done(this.model);
-          }}
+      <div style={{ backgroundColor: "white", width: "100%", height: "100%" }}>
+        {TitleComponent(undefined, model.data.title)}
+        <Iframely
+          url={locationUrl}
+          style={{
+            display: "flex",
+            height: `100%`,
+            width: `100%`
+          }} 
         />
       </div>
     );
   }
 
-  renderEmptyState() {
-    return <div className="relative w-auto h-full mx-4 flex items-center justify-center bg-gray-200 rounded-lg">
-      <h3 className="text-[#86868A]">Map loading...</h3>
-    </div>;
-  }
-
-  renderErrorState() {
-    return <h1>Error: Invalid location data!</h1>; 
-  }
+  // Default rendering for newer posts
+  return (
+    <div className="relative w-full h-full">
+      <Iframely url={locationUrl} style={{ height: '100%', width: '100%' }} />
+    </div>
+  );
 }
 
-interface LatLngLiteral {
-  lat: number;
-  lng: number;
+export const MapComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  return (
+    <div className="relative flex flex-col items-center rounded-lg h-full">
+      <MapEditor
+        onSelect={(locationUrl: string) => {
+          model.data.url = locationUrl; // Store as URL string
+          done(model);
+        }}
+      />
+    </div>
+  );
+}
+
+const renderEmptyState = () => {
+  return <div className="relative w-auto h-full mx-4 flex items-center justify-center bg-gray-200 rounded-lg">
+    <h3 className="text-[#86868A]">Map loading...</h3>
+  </div>;
 }
 
 interface MapEditorProps {
