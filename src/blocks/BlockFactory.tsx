@@ -1,79 +1,117 @@
-import ImagePuzzleBlock from './ImagePuzzleBlock'
-import localelocatrApp from './localelocatrBlock'
-import MapApp from './MapApp'
-import CameraApp from './CameraApp'
-import CalligraphyApp from './CalligraphyApp'
-import MoodApp from './MoodApp'
-import BookshelfApp from './BookshelfApp'
-import UnknownApp from './UnknownApp'
-import eyesBlock from './eyesBlock'
-import WhiteboardBlock from './WhiteboardBlock'
-import fcUserFeedBlock from './fcUserFeedBlock'
-import tokenHoldingsBlock from './tokenHoldingsBlock'
-import NFTBlock from './NFTBlock'
-import PhotoAlbumBlock from './PhotoAlbumBlock'
-import MarqueeBlock from './MarqueeBlock'
-import PokemonBlock from './PokemonBlock'
-import NFTsBlock from './NFTsBlock'
-import PixelArtBlock from './PixelArtBlock'
-import MusicBlock from './MusicBlock'
-import Block from './Block'
-import { Theme } from "@mui/material"
+import { ImagePuzzleFeedComponent, ImagePuzzleComposerComponent } from './ImagePuzzleBlock'
+import { LocalelocatrFeedComponent, LocalelocatrComposerComponent } from './LocalelocatrBlock'
+import { MapFeedComponent, MapComposerComponent } from './MapBlock'
+import { CameraFeedComponent, CameraComposerComponent } from './CameraBlock'
+import { CalligraphyFeedComponent, CalligraphyComposerComponent } from './CalligraphyBlock'
+import { MoodFeedComponent, MoodComposerComponent } from './MoodBlock'
+import { BookshelfFeedComponent, BookshelfComposerComponent } from './BookshelfBlock'
+import { UnknownFeedComponent, UnknownComposerComponent } from './UnknownBlock'
+import { EyesFeedComponent, EyesComposerComponent } from './EyesBlock'
+import { WhiteboardFeedComponent, WhiteboardComposerComponent } from './WhiteboardBlock'
+import { FcUserFeedComponent, FcUserComposerComponent } from './FcUserFeedBlock'
+import { TokenHoldingsFeedComponent, TokenHoldingsComposerComponent } from './TokenHoldingsBlock'
+import { NFTFeedComponent, NFTComposerComponent } from './NFTBlock'
+import { PhotoAlbumFeedComponent, PhotoAlbumComposerComponent } from './PhotoAlbumBlock'
+import { MarqueeFeedComponent, MarqueeComposerComponent } from './MarqueeBlock'
+import { PokemonFeedComponent, PokemonComposerComponent } from './PokemonBlock'
+import { NFTsFeedComponent, NFTsComposerComponent } from './NFTsBlock'
+import { PixelArtFeedComponent, PixelArtComposerComponent } from './PixelArtBlock'
+import { MusicFeedComponent, MusicComposerComponent } from './MusicBlock'
+import { IFrameFeedComponent, IFrameComposerComponent } from './IFrameBlock'
+import { TextEditFeedComponent, TextEditComposerComponent } from './TextEditBlock'
+import { LinkFeedComponent, LinkComposerComponent } from './LinkBlock'
+import { ImageFeedComponent, ImageComposerComponent } from './ImageBlock'
+import { TwitterFeedComponent, TwitterComposerComponent } from './TwitterBlock'
+import { TweetFeedComponent, TweetComposerComponent } from './TweetBlock'
+import { IFramelyFeedComponent, IFramelyComposerComponent } from './IFramelyBlock'
+import { EmptyFeedComponent, EmptyComposerComponent } from './EmptyBlock'
+import { ProfileFeedComponent, ProfileComposerComponent } from './ProfileBlock'
+import { GiphyFeedComponent, GiphyComposerComponent } from './GiphyBlock'
+import { FlashingTextFeedComponent, FlashingTextComposerComponent } from './FlashingTextBlock'
+import { CountdownFeedComponent, CountdownComposerComponent } from './CountdownBlock'
+import { LinkBookmarkFeedComponent, LinkBookmarkComposerComponent } from './LinkBookmarkBlock'
+import { VideoFeedComponent, VideoComposerComponent } from './VideoBlock'
+import { MondrianFeedComponent, MondrianComposerComponent } from './MondrianBlock'
+import { WordleFeedComponent, WordleComposerComponent } from './WordleBlock'
 import { BlockModel, BlockTypes } from './types'
-import IFrameBlock from './IFrameBlock'
-import TextEditBlock from './TextEditBlock'
-import LinkBlock from './LinkBlock'
-import ImageBlock from './ImageBlock'
-import TwitterBlock from './TwitterBlock'
-import TweetBlock from './TweetBlock'
-import IFramelyBlock from './IFramelyBlock'
-import EmptyBlock from './EmptyBlock'
-import ProfileBlock from './ProfileBlock'
-import GiphyBlock from './GiphyBlock'
-import FlashingTextBlock from './FlashingTextBlock';
-import CountdownBlock from './CountdownBlock'
-import LinkBookmarkBlock from './LinkBookmarkBlock'
-import VideoBlock from './VideoBlock'
-import MondrianBlock from './MondrianBlock'
-import WordleBlock from './WordleBlock'
+import { Theme } from '@mui/material'
 
 export default class BlockFactory {
-  static getBlock(model: BlockModel, theme: Theme): Block {
+  static getFeedComponent(model: BlockModel, theme: Theme): React.Component {
     switch (model.type) {
-      case "iframe": return new IFrameBlock(model, theme)
-      case "link": return new LinkBlock(model, theme)
-      case "image": return new ImageBlock(model, theme)
-      case "twitter": return new TwitterBlock(model, theme)
-      case "text": return new TextEditBlock(model, theme)
-      case "tweet": return new TweetBlock(model, theme)
-      case "Link Bookmark": return new LinkBookmarkBlock(model, theme)
-      case "Music": return new MusicBlock(model, theme)
-      case "video": return new VideoBlock(model, theme)
-      case "profile": return new ProfileBlock(model, theme)
-      case "giphy": return new GiphyBlock(model, theme)
-      case "PixelArt": return new PixelArtBlock(model, theme)
-      case "NFTs": return new NFTsBlock(model, theme)
-      case "Pokemon": return new PokemonBlock(model, theme)
-      case "Marquee": return new MarqueeBlock(model, theme)
-      case "PhotoAlbum": return new PhotoAlbumBlock(model, theme)
-      case "FlashingText": return new FlashingTextBlock(model, theme)
-      case "tokenHoldings": return new tokenHoldingsBlock(model, theme)
-      case "NFT": return new NFTBlock(model, theme)
-      case "countdown": return new CountdownBlock(model, theme)
-      case "fcUserFeed": return new fcUserFeedBlock(model, theme)
-      case "eyes": return new eyesBlock(model, theme)
-      case "Mondrian": return new MondrianBlock(model, theme)
-      case "Bookshelf": return new BookshelfApp(model, theme)
-      case "Wordle": return new WordleBlock(model, theme)
-      case "Mood": return new MoodApp(model, theme)
-      case "Whiteboard": return new WhiteboardBlock(model, theme)
-      case "ImagePuzzle": return new ImagePuzzleBlock(model, theme)
-      case "Camera": return new CameraApp(model, theme)
-      case "Map": return new MapApp(model, theme)
-      case "Calligraphy": return new CalligraphyApp(model, theme)
-      case "localelocatr": return new localelocatrApp(model, theme)
-      // new blocks go here
-      default: return new UnknownApp(model, theme)
+      case "iframe": return IFrameFeedComponent;
+      case "link": return LinkFeedComponent;
+      case "image": return ImageFeedComponent;
+      case "twitter": return TwitterFeedComponent;
+      case "text": return TextFeedComponent;
+      case "tweet": return TweetFeedComponent;
+      case "Link Bookmark": return LinkBookmarkFeedComponent;
+      case "Music": return MusicFeedComponent;
+      case "video": return VideoFeedComponent;
+      case "profile": return ProfileFeedComponent;
+      case "giphy": return GiphyFeedComponent;
+      case "PixelArt": return PixelArtFeedComponent;
+      case "NFTs": return NFTsFeedComponent;
+      case "Pokemon": return PokemonFeedComponent;
+      case "Marquee": return MarqueeFeedComponent;
+      case "PhotoAlbum": return PhotoAlbumFeedComponent;
+      case "FlashingText": return FlashingTextFeedComponent;
+      case "tokenHoldings": return tokenHoldingsFeedComponent;
+      case "NFT": return NFTFeedComponent;
+      case "countdown": return CountdownFeedComponent;
+      case "fcUserFeed": return fcUserFeedFeedComponent;
+      case "eyes": return eyesFeedComponent;
+      case "Mondrian": return MondrianFeedComponent;
+      case "Bookshelf": return BookshelfFeedComponent;
+      case "Wordle": return WordleFeedComponent;
+      case "Mood": return MoodFeedComponent;
+      case "Whiteboard": return WhiteboardFeedComponent;
+      case "ImagePuzzle": return ImagePuzzleFeedComponent;
+      case "Camera": return CameraFeedComponent;
+      case "Map": return MapFeedComponent;
+      case "Calligraphy": return CalligraphyFeedComponent;
+      case "localelocatr": return localelocatrFeedComponent;
+      // new feed components go here
+      default: return UnknownFeedComponent;
+    }
+  }
+
+  static getComposerComponent(model: BlockModel, theme: Theme): React.Component {
+    switch (model.type) {
+      case "iframe": return IFrameComposerComponent;
+      case "link": return LinkComposerComponent;
+      case "image": return ImageComposerComponent;
+      case "twitter": return TwitterComposerComponent;
+      case "text": return TextComposerComponent;
+      case "tweet": return TweetComposerComponent;
+      case "Link Bookmark": return LinkBookmarkComposerComponent;
+      case "Music": return MusicComposerComponent;
+      case "video": return VideoComposerComponent;
+      case "profile": return ProfileComposerComponent;
+      case "giphy": return GiphyComposerComponent;
+      case "PixelArt": return PixelArtComposerComponent;
+      case "NFTs": return NFTsComposerComponent;
+      case "Pokemon": return PokemonComposerComponent;
+      case "Marquee": return MarqueeComposerComponent;
+      case "PhotoAlbum": return PhotoAlbumComposerComponent;
+      case "FlashingText": return FlashingTextComposerComponent;
+      case "tokenHoldings": return tokenHoldingsComposerComponent;
+      case "NFT": return NFTComposerComponent;
+      case "countdown": return CountdownComposerComponent;
+      case "fcUserFeed": return fcUserFeedComposerComponent;
+      case "eyes": return eyesComposerComponent;
+      case "Mondrian": return MondrianComposerComponent;
+      case "Bookshelf": return BookshelfComposerComponent;
+      case "Wordle": return WordleComposerComponent;
+      case "Mood": return MoodComposerComponent;
+      case "Whiteboard": return WhiteboardComposerComponent;
+      case "ImagePuzzle": return ImagePuzzleComposerComponent;
+      case "Camera": return CameraComposerComponent;
+      case "Map": return MapComposerComponent;
+      case "Calligraphy": return CalligraphyComposerComponent;
+      case "localelocatr": return localelocatrComposerComponent;
+      // new composer components go here
+      default: return UnknownComposerComponent;
     }
   }
 
