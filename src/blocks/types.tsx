@@ -42,6 +42,8 @@ export interface FeedComponentProps {
 export interface ComposerComponentProps {
   done: (data: BlockModel) => void;
   model: BlockModel;
+  width?: number;
+  height?: number;
 }
 
 export type BlockType = {
