@@ -17,7 +17,6 @@ export default class MapBlock extends Block {
       return this.renderEmptyState();
     }
 
-    // Check if the post has a title and render it using the same logic as IFramelyBlock
     if (data.title) {
       return (
         <div style={{ backgroundColor: this.theme.palette.secondary.main, width: "100%", height: "100%" }}>
