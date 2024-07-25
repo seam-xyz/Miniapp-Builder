@@ -1,11 +1,8 @@
-import Block from './Block'
-import { BlockModel } from './types'
-import BlockFactory from './BlockFactory';
+import { ComposerComponentProps, FeedComponentProps } from './types'
 import './BlockStyles.css'
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import SeamSaveButton from '../components/SeamSaveButton';
 
 type MarqueeProps = React.HTMLAttributes<HTMLElement>
 
@@ -14,76 +11,70 @@ function TypescriptMarquee(props: MarqueeProps) {
   return <marquee scrollamount="15" direction="left" {...props} />
 }
 
-export default class MarqueeBlock extends Block {
-  render() {
-    if (Object.keys(this.model.data).length === 0) {
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
-    }
+export const MarqueeFeedComponent = ({ model }: FeedComponentProps) => {
 
-    let text = this.model.data['text']
-    if (text === undefined) {
-      return this.renderErrorState()
-    }
+  let text = model.data['text'];
+  if (text === undefined) {
+    return renderErrorState();
+  }
 
-    return (
-      <div style={{
-        backgroundColor: this.theme.palette.info.main,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        height: "100%",
-        width: "100%"
+  return (
+    <div style={{
+      backgroundColor: "white",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      height: "100%",
+      width: "100%"
+    }}>
+      <TypescriptMarquee style={{
+        color: "black",
+        fontFamily: "Public Sans",
+        fontSize: "64px",
       }}>
-        <TypescriptMarquee style={{
-          color: this.theme.palette.secondary.main,
-          fontFamily: this.theme.typography.fontFamily,
-          fontSize: "64px",
-        }}>
-          {text}
-        </TypescriptMarquee>
-      </div>
-    );
-  }
+        {text}
+      </TypescriptMarquee>
+    </div>
+  );
+}
 
-  renderEditModal(done: (data: BlockModel) => void) {
-    const onFinish = (event: any) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      let text = data.get('text') as string
-      this.model.data['text'] = text
-      done(this.model)
-    };
+export const MarqueeComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  const onFinish = (event: any) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    let text = data.get('text') as string;
+    model.data['text'] = text;
+    done(model);
+  };
 
-    return (
-      <Box
-        component="form"
-        onSubmit={onFinish}
-        style={{}}
+  return (
+    <Box
+      component="form"
+      onSubmit={onFinish}
+    >
+      <TextField
+        margin="normal"
+        required
+        defaultValue={model.data['text']}
+        fullWidth
+        id="text"
+        label="Text"
+        name="text"
+      />
+      <Button
+        type="submit"
+        variant="contained"
+        className="save-modal-button"
+        sx={{ mt: 3, mb: 2 }}
       >
-        <TextField
-          margin="normal"
-          required
-          defaultValue={this.model.data['text']}
-          fullWidth
-          id="text"
-          label="Text"
-          name="text"
-        />
-        <Button
-          type="submit"
-          variant="contained"
-          className="save-modal-button"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          Save
-        </Button>
-      </Box>
-    )
-  }
+        Save
+      </Button>
+    </Box>
+  );
+}
 
-  renderErrorState() {
-    return (
-      <h1>Error!</h1>
-    )
-  }
+const renderErrorState = () => {
+  return (
+    <h1>Error!</h1>
+  );
 }
