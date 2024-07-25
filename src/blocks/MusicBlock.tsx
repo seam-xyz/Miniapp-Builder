@@ -1,13 +1,10 @@
-import Block from './Block';
-import { BlockModel } from './types';
+import { ComposerComponentProps, FeedComponentProps } from './types';
 import './BlockStyles.css';
-import { Stack, Box } from '@mui/material';
-import { useState, useEffect, useRef } from 'react';
+import { Box } from '@mui/material';
+import { useState } from 'react';
 import SeamSaveButton from '../components/SeamSaveButton';
 import Iframely from './utils/Iframely';
 import SpotifySearchBar from './utils/SpotifySearch/SpotifySearchBar';
-
-interface Music {}
 
 const SearchScreen: React.FC<any> = ({ done, model, onFinalize }) => {
   const [url, setUrl] = useState<string>(model.data.url || '');
@@ -37,43 +34,33 @@ const SearchScreen: React.FC<any> = ({ done, model, onFinalize }) => {
   );
 };
 
-export default class MusicBlock extends Block {
-  render() {
-    const { data } = this.model;
-
-    if (!data.url) {
-      return <h1>No song selected</h1>;
-    }
-
-    return (
-      <div style={{ color: this.theme.palette.info.main,backgroundColor: this.theme.palette.secondary.main, width: "100%", height: "100%" }}>
-        {data.title && <h2 style={{ color: this.theme.palette.info.main}} className="text-start p-2">{data.title}</h2>}
-        <Iframely
-          url={data.url}
-          style={{
-            display: "flex",
-            height: `100%`,
-            width: `100%`
-          }}
-        />
-      </div>
-    );
+export const MusicFeedComponent = ({ model }: FeedComponentProps) => {
+  if (!model.data.url) {
+    return <h1>No song selected</h1>;
   }
 
-  renderEditModal(done: (data: BlockModel) => void): React.ReactNode {
-    const onFinalize = (url: string) => {
-      this.model.data.url = url; // store selected URL in model
-      done(this.model); // go to preview step
-    };
+  return (
+    <div style={{ color: "black", backgroundColor: "white", width: "100%", height: "100%" }}>
+      {model.data.title && <h2 style={{ color: "black" }} className="text-start p-2">{model.data.title}</h2>}
+      <Iframely
+        url={model.data.url}
+        style={{
+          display: "flex",
+          height: `100%`,
+          width: `100%`
+        }}
+      />
+    </div>
+  );
+}
 
-    return (
-      <SearchScreen done={done} model={this.model} onFinalize={onFinalize} />
-    );
-  }
+export const MusicComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  const onFinalize = (url: string) => {
+    model.data.url = url; // store selected URL in model
+    done(model); // go to preview step
+  };
 
-  renderErrorState() {
-    return (
-      <h1>Error!</h1>
-    );
-  }
+  return (
+    <SearchScreen done={done} model={model} onFinalize={onFinalize} />
+  );
 }
