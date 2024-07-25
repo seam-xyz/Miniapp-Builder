@@ -37,6 +37,8 @@ export type BlockModel = {
 
 export interface FeedComponentProps {
   model: BlockModel;
+  width?: number;
+  height?: number;
 }
 
 export interface ComposerComponentProps {

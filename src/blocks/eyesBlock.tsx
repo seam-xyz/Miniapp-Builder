@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import Block from "./Block";
-import { BlockModel } from "./types";
-import BlockFactory from "./BlockFactory";
+import { BlockModel, ComposerComponentProps, FeedComponentProps } from "./types";
 import "./BlockStyles.css";
 
 const containerStyle = {
@@ -85,27 +83,26 @@ function Eyes() {
   );
 }
 
-export default class eyesBlock extends Block {
-  render() {
-    return (
-      <div style={{ width: '100%', height: '100%', backgroundColor: 'pink', display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-        <style >
-          {`
-          .eye {
-            background-color: white;
-            width: 15px;
-            height: 20px;
-            border-radius: 15px;
-            animation: blink 5s infinite;
-            transition: transform 0.2s ease;
-          }
-        `}
-        </style>
-        <Eyes />
-      </div>);
-  }
+export const EyesFeedComponent = ({ model }: FeedComponentProps) => {
+  return (
+    <div style={{ width: '100%', height: '100%', backgroundColor: 'pink', display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+      <style >
+        {`
+        .eye {
+          background-color: white;
+          width: 15px;
+          height: 20px;
+          border-radius: 15px;
+          animation: blink 5s infinite;
+          transition: transform 0.2s ease;
+        }
+      `}
+      </style>
+      <Eyes />
+    </div>
+  );
+}
 
-  renderEditModal(done: (data: BlockModel) => void) {
-    return <h1>no edit, only eyes 👀</h1>;
-  }
+export const EyesComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  return <h1>no edit, only eyes 👀</h1>;
 }
