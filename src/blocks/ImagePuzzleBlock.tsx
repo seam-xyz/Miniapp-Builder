@@ -1,5 +1,4 @@
-import Block from './Block'
-import { BlockModel } from './types'
+import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
 import './BlockStyles.css'
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ImageIcon from '@mui/icons-material/Image';
@@ -699,28 +698,19 @@ function ImagePuzzleEdit(props: ImagePuzzleEditProps) {
   )
 }
 
-// Top-level component for the block; wraps the functional component views
-export default class ImageBlock extends Block {
-  setData(data: ImagePuzzleData) {
-    Object.assign(this.model.data, data);
+export const ImagePuzzleFeedComponent = ({ model }: FeedComponentProps) => {
+  const data = model.data as any;
+  return (
+    <ImagePuzzle data={data} />
+  );
+}
+
+export const ImagePuzzleComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  const setData = (data: any) => {
+    Object.assign(model.data, data);
   }
 
-  render() {
-    const data = this.model.data as any;
-    return (
-      <ImagePuzzle data={data} />
-    );
-  }
-
-  renderEditModal(done: (data: BlockModel) => void) {
-    return (
-      <ImagePuzzleEdit done={ () => done(this.model) } setData={ (data: ImagePuzzleData) => this.setData(data) } />
-    )
-  }
-
-  renderErrorState() {
-    return (
-      <h1>Error!</h1>
-    )
-  }
+  return (
+    <ImagePuzzleEdit done={() => done(model)} setData={setData} />
+  );
 }
