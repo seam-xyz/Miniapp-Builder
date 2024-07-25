@@ -150,8 +150,7 @@ export const BookshelfFeedComponent = ({ model }: FeedComponentProps) => {
    );
 }
 
-export const BookshelfComposerComponent = (props: ComposerComponentProps) => {
-  const { model, done } = props;
+export const BookshelfComposerComponent = ({ model, done }: ComposerComponentProps) => {
   return (
     <Bookshelf done={done} model={model}/>
   )

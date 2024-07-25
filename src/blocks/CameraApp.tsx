@@ -5,8 +5,7 @@ import { Box, CircularProgress, Button } from '@mui/material';
 import { FirebaseStorage } from '@capacitor-firebase/storage';
 import { nanoid } from 'nanoid';
 import SeamSaveButton from '../components/SeamSaveButton';
-import Block from './Block';
-import { BlockModel } from './types';
+import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
 import './BlockStyles.css';
 
 interface CameraBlockProps {
@@ -151,40 +150,34 @@ const CameraBlock: React.FC<CameraBlockProps> = ({ onFinalize }) => {
   );
 };
 
-export default class CameraBlockWrapper extends Block {
-  constructor(model: BlockModel, theme: any) {
-    super(model, theme);
+const errorState = () => {
+  return (
+    <img
+      src="https://www.shutterstock.com/image-illustration/no-picture-available-placeholder-thumbnail-600nw-2179364083.jpg"
+      title="Image"
+      style={{ height: '100%', width: '100%' }}
+    />
+  );
+}
+
+export const CameraFeedComponent = ({ model }: FeedComponentProps) => {
+  const url = model.data.photoUrl;
+  if (!url) {
+    return errorState()
   }
 
-  render() {
-    const url = this.model.data.photoUrl;
-    if (!url) {
-      return this.renderErrorState();
-    }
+  return (
+    <div style={{ display: 'block', width: '100%' }}>
+      <img src={url} style={{ width: '100%', height: 'auto' }} />
+    </div>
+  );
+}
 
-    return (
-      <div style={{ display: 'block', width: '100%' }}>
-        <img src={url} style={{ width: '100%', height: 'auto' }} />
-      </div>
-    );
-  }
+export const CameraComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  const onFinalize = (photoUrl: string) => {
+    model.data.photoUrl = photoUrl;
+    done(model);
+  };
 
-  renderEditModal(done: (data: BlockModel) => void) {
-    const onFinalize = (photoUrl: string) => {
-      this.model.data.photoUrl = photoUrl;
-      done(this.model);
-    };
-
-    return <CameraBlock onFinalize={onFinalize} />;
-  }
-
-  renderErrorState() {
-    return (
-      <img
-        src="https://www.shutterstock.com/image-illustration/no-picture-available-placeholder-thumbnail-600nw-2179364083.jpg"
-        title="Image"
-        style={{ height: '100%', width: '100%' }}
-      />
-    );
-  }
+  return <CameraBlock onFinalize={onFinalize} />;
 }
