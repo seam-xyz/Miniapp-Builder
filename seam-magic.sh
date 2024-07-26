@@ -67,8 +67,6 @@ echo "  \"$shortName\": {
     type: \"$shortName\",
     displayName: \"$name\",
     displayDescription: \"$description\",
-    emptyTitle: \"Empty $name App\",
-    emptySubtitle: \"Tap here to setup your $name app!\",
     icon: \"${shortName}Icon\", // TODO: insert your app icon here
     deprecated: false,
     doesBlockPost: true,
@@ -83,7 +81,6 @@ echo "✅ Added $name to types.tsx"
 newBlock="src/blocks/${shortName}App.tsx"
 cp "src/blocks/BlockTemplate.txt" $newBlock
 
-
 if [[ "$OSTYPE" == "darwin"* ]]; then
         sed -i '' "s/%NAME%/${shortName}/g" $newBlock
         echo "✅ Created ${shortName}App.tsx for your new block"
@@ -93,18 +90,22 @@ else
 fi
 
 # Add the new block to the block factory
-placeholder="\/\/ new blocks go here"
-importBlock="import ${shortName}App from \'./${shortName}App\'
+feedPlaceholder="\/\/ new feed components go here"
+composerPlaceholder="\/\/ new composer components go here"
+importBlock="import { ${shortName}FeedComponent, ${shortName}ComposerComponent } from \'./${shortName}App\'
 "
-newBlockCase="case \"$shortName\": return new ${shortName}App(model, theme)\\n      $placeholder"
+newFeedComponentCase="case \"$shortName\": return <${shortName}FeedComponent model={model} />;\\n      $placeholder"
+newComposerComponentCase="case \"$shortName\": return ${shortName}ComposerComponent(props);\\n      $placeholder"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
-        sed -i '' "s/${placeholder}/${newBlockCase}/g" "src/blocks/BlockFactory.tsx"
+        sed -i '' "s/${feedPlaceholder}/${newFeedComponentCase}/g" "src/blocks/BlockFactory.tsx"
+        sed -i '' "s/${composerPlaceholder}/${newComposerComponentCase}/g" "src/blocks/BlockFactory.tsx"
         sed -i '' '1i\
 '"$importBlock"'
 ' "src/blocks/BlockFactory.tsx"
 else
-        sed -i "s/${placeholder}/${newBlockCase}/g" "src/blocks/BlockFactory.tsx"
+        sed -i "s/${feedPlaceholder}/${newFeedComponentCase}/g" "src/blocks/BlockFactory.tsx"
+        sed -i "s/${composerPlaceholder}/${newComposerComponentCase}/g" "src/blocks/BlockFactory.tsx"
         sed -i '1i\
 '"$importBlock"'
 ' "src/blocks/BlockFactory.tsx"
