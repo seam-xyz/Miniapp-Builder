@@ -17,7 +17,7 @@ export const MapFeedComponent = ({ model }: FeedComponentProps) => {
   if (model.data.title) {
     return (
       <div style={{ backgroundColor: "white", width: "100%", height: "100%" }}>
-        {TitleComponent(undefined, model.data.title)}
+        {TitleComponent(model.data.title)}
         <Iframely
           url={locationUrl}
           style={{
