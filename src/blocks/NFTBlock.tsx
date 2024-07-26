@@ -1,6 +1,4 @@
-import Block from './Block'
-import { BlockModel } from './types'
-import BlockFactory from './BlockFactory';
+import { ComposerComponentProps, FeedComponentProps } from './types'
 import './BlockStyles.css'
 import { Box, Button, Checkbox, FormControlLabel, FormGroup, TextField } from '@mui/material';
 import { NFTE } from '@nfte/react';
@@ -8,12 +6,10 @@ import { getNFTMetadata } from './utils/AlchemyAPI';
 import { useEffect, useState } from 'react';
 import { Nft } from 'alchemy-sdk'
 import './BlockStyles.css'
-import { Theme } from '@mui/material';
 
 interface NftCardProps {
   tokenAddress: string;
   tokenId: string;
-  theme: Theme
 }
 
 function NFTCard(props: NftCardProps) {
@@ -86,117 +82,95 @@ function NFTCard(props: NftCardProps) {
   )
 }
 
-export default class NFTBlock extends Block {
-  render() {
-    if (this.model.data['error'] != undefined) {
-      return this.renderErrorState()
-    }
+export const NFTFeedComponent = ({ model }: FeedComponentProps) => {
+  if (model.data['error'] !== undefined) {
+    return renderErrorState();
+  }
 
-    if (Object.keys(this.model.data).length === 0 || !this.model.data['tokenAddress']) {
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
-    }
+  const tokenAddress = model.data["tokenAddress"];
+  const tokenId = model.data["tokenId"];
+  const includeOwner = model.data["includeOwner"] === 'on';
 
-    const tokenAddress = this.model.data["tokenAddress"]
-    const tokenId = this.model.data["tokenId"]
-    const includeOwner = this.model.data["includeOwner"] === 'on'
-
-    if (includeOwner) {
-      return (
-        <div style={{ width: "100%", height: "100%" }}>
-          <NFTE contract={tokenAddress} tokenId={tokenId} />
-        </div>
-      )
-    }
-
+  if (includeOwner) {
     return (
-      <NFTCard tokenAddress={tokenAddress}
-        tokenId={tokenId}
-        theme={this.theme}
-      />
+      <div style={{ width: "100%", height: "100%" }}>
+        <NFTE contract={tokenAddress} tokenId={tokenId} />
+      </div>
     );
   }
 
-  renderEditModal(done: (data: BlockModel) => void) {
-    const onFinish = (event: any) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      let url = data.get('url') as string
-      // parse the url for the contract address and token id
-      const { tokenAddress, tokenId, error } = parseOpenSeaURL(url)
-      this.model.data['url'] = url
-      this.model.data['tokenId'] = tokenId ?? ""
-      this.model.data['tokenAddress'] = tokenAddress ?? ""
-      if (error != undefined) { this.model.data['error'] = error };
+  return (
+    <NFTCard tokenAddress={tokenAddress} tokenId={tokenId} />
+  );
+}
 
-      done(this.model)
-    };
+export const NFTComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  const onFinish = (event: any) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    let url = data.get('url') as string;
+    const { tokenAddress, tokenId, error } = parseOpenSeaURL(url);
+    model.data['url'] = url;
+    model.data['tokenId'] = tokenId ?? "";
+    model.data['tokenAddress'] = tokenAddress ?? "";
+    if (error !== undefined) { model.data['error'] = error; }
+    done(model);
+  };
 
-    function parseOpenSeaURL(url: string) {
-      const parts = url.split('/');
-      // Check if the URL has at least 7 parts and the contract address starts with '0x'
-      if (parts.length < 7 || !parts[5].startsWith('0x')) {
-        return { error: "Malformed URL" };
-      }
+  const [includeOwner, setIncludeOwner] = useState<string>(model.data['includeOwner']);
+  const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const val = event.target.checked ? 'on' : 'off';
+    model.data['includeOwner'] = val;
+    setIncludeOwner(val);
+  };
 
-      const tokenAddress = parts[5];
-      const tokenId = parts[6];
-
-      return { tokenAddress, tokenId };
-    }
-
-    const OwnerToggle = () => {
-      const [includeOwner, setIncludeOwner] = useState<string>(this.model.data['includeOwner']);
-      const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const val = event.target.checked ? 'on' : 'off'
-        this.model.data['includeOwner'] = val
-        setIncludeOwner(val)
-      };
-
-      return (
-        <FormGroup>
-          <FormControlLabel control={<Checkbox
-            title='includeOwner'
-            value={includeOwner}
-            onChange={handleToggleChange}
-          />} label="Include owner information" />
-        </FormGroup>
-      );
-    }
-
-    return (
-      <Box
-        component="form"
-        onSubmit={onFinish}
-        style={{}}
+  return (
+    <Box component="form" onSubmit={onFinish}>
+      <TextField
+        autoFocus
+        margin="dense"
+        id="nft-link"
+        label="Paste an OpenSea link:"
+        type="url"
+        fullWidth
+        variant="outlined"
+        required
+        defaultValue={model.data['url']}
+        name="url"
+      />
+      <FormGroup>
+        <FormControlLabel control={<Checkbox
+          title='includeOwner'
+          value={includeOwner}
+          onChange={handleToggleChange}
+        />} label="Include owner information" />
+      </FormGroup>
+      <Button
+        type="submit"
+        variant="contained"
+        className="save-modal-button"
+        sx={{ mt: 3, mb: 2 }}
       >
-        <TextField
-          autoFocus
-          margin="dense"
-          id="nft-link"
-          label="Paste an OpenSea link:"
-          type="url"
-          fullWidth
-          variant="outlined"
-          required
-          defaultValue={this.model.data['url']}
-          name="url"
-        />
-        <OwnerToggle />
-        <Button
-          type="submit"
-          variant="contained"
-          className="save-modal-button"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          Save
-        </Button>
-      </Box>
-    )
+        Save
+      </Button>
+    </Box>
+  );
+}
+
+function parseOpenSeaURL(url: string) {
+  const parts = url.split('/');
+  if (parts.length < 7 || !parts[5].startsWith('0x')) {
+    return { error: "Malformed URL" };
   }
 
-  renderErrorState() {
-    return (
-      <h1>Invalid Opensea URL.</h1>
-    )
-  }
+  const tokenAddress = parts[5];
+  const tokenId = parts[6];
+
+  return { tokenAddress, tokenId };
+}
+
+function renderErrorState() {
+  return (
+    <h1>Invalid Opensea URL.</h1>
+  );
 }
