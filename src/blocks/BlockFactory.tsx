@@ -74,7 +74,10 @@ export default class BlockFactory {
     }
   }
 
-  static getComposerComponent({model, done}: ComposerComponentProps) {
+  static getComposerComponent(props: ComposerComponentProps) {
+    console.log(props)
+    const { model } = props;
+    console.log(model)
     switch (model.type) {
       // case "iframe": return IFrameComposerComponent;
       // case "link": return LinkComposerComponent;
@@ -99,7 +102,7 @@ export default class BlockFactory {
       // case "fcUserFeed": return fcUserFeedComposerComponent;
       // case "eyes": return eyesComposerComponent;
       // case "Mondrian": return MondrianComposerComponent;
-      case "Bookshelf": return <BookshelfComposerComponent model={model} done={done} />;
+      case "Bookshelf": return BookshelfComposerComponent(props);
       // case "Wordle": return WordleComposerComponent;
       // case "Mood": return MoodComposerComponent;
       // case "Whiteboard": return WhiteboardComposerComponent;
@@ -109,7 +112,7 @@ export default class BlockFactory {
       // case "Calligraphy": return CalligraphyComposerComponent;
       // case "localelocatr": return localelocatrComposerComponent;
       // new composer components go here
-      default: return <UnknownComposerComponent model={model} done={done} />;
+      default: return UnknownComposerComponent(props);
     }
   }
 

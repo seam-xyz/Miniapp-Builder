@@ -59,9 +59,9 @@ function CastFeed({ fid }: { fid: any }) {
   );
 }
 
-export const FcUserFeedComponent = ({ model, width, height }: FeedComponentProps) => {
+export const FcUserFeedComponent = ({ model, width }: FeedComponentProps) => {
   return (
-    <div style={{ position: 'absolute', height: height, width: width, overflow: 'scroll' }}>
+    <div style={{ position: 'absolute', height: 500, width: width, overflow: 'scroll' }}>
       <h1>Top Casts</h1>
       <CastFeed fid={model.data["fid"]} />
     </div>
