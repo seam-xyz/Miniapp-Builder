@@ -45,7 +45,7 @@ echo "[2/3] What should your app be called?"
 read -r name
 
 # Extract the first word from the input
-shortName=$(echo $name | awk '{print $1}')
+shortName=$(echo $name | awk '{print toupper(substr($1,1,1)) tolower(substr($1,2))}')
 
 echo "[3/3] What's the description of your app?"
 read -r description
@@ -94,8 +94,8 @@ feedPlaceholder="\/\/ new feed components go here"
 composerPlaceholder="\/\/ new composer components go here"
 importBlock="import { ${shortName}FeedComponent, ${shortName}ComposerComponent } from \'./${shortName}App\'
 "
-newFeedComponentCase="case \"$shortName\": return <${shortName}FeedComponent model={model} />;\\n      $placeholder"
-newComposerComponentCase="case \"$shortName\": return ${shortName}ComposerComponent(props);\\n      $placeholder"
+newFeedComponentCase="case \"$shortName\": return \<${shortName}FeedComponent model={model} \/\>;\\n      $feedPlaceholder"
+newComposerComponentCase="case \"$shortName\": return ${shortName}ComposerComponent(props);\\n      $composerPlaceholder"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
         sed -i '' "s/${feedPlaceholder}/${newFeedComponentCase}/g" "src/blocks/BlockFactory.tsx"

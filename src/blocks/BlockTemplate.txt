@@ -5,5 +5,10 @@ export const %NAME%FeedComponent = ({ model }: FeedComponentProps) => {
 }
 
 export const %NAME%ComposerComponent = ({ model, done }: ComposerComponentProps) => {
-  return <h1>Hi, I'm in the composer!</h1>
+  return (
+    <div>
+      <h1>Hi, I'm in the composer!</h1>
+      <button onClick={() => { done(model) }}> Post </button>
+    </div>
+  );
 }
