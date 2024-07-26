@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Button, TextField, IconButton, Box, Avatar } from "@mui/material";
 import { PlusCircle, MinusCircle } from 'react-feather';
-import Block from './Block';
-import { BlockModel } from './types';
+import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
 import './BlockStyles.css';
-import BlockFactory from './BlockFactory';
 import IconsRow from './utils/IconsRow';
 import { IconsSelector } from './utils/IconsRow'
 import UploadFormComponent from './utils/UploadFormComponent';
@@ -108,35 +106,28 @@ const ProfileEditModal: React.FC<EditModalProps> = ({ model, done }) => {
   );
 };
 
-export default class ProfileBlock extends Block {
-  render() {
-    if (Object.keys(this.model.data).length === 0) {
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
-    }
+export const ProfileFeedComponent = ({ model }: FeedComponentProps) => {
+  const { title, bio, imageURL, icons } = model.data;
 
-    const title = this.model.data["title"];
-    const bio = this.model.data["bio"];
-    const imageURL = this.model.data["imageURL"];
-    const icons = this.model.data['icons'];
+  return (
+    <div style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      padding: "40px",
+      paddingLeft: "24px",
+      paddingRight: "24px",
+    }}>
+      {imageURL && <Avatar src={imageURL} style={{ maxWidth: "160px", maxHeight: "160px", width: "160px", height: "160px", marginTop: "10px", borderRadius: '50%' }}/>}
+      <h2 style={{ textAlign: "center", marginTop: "16px" }}> {title} </h2>
+      <h4 style={{ textAlign: "center", marginBottom: "16px" }}> {bio} </h4>
+      <IconsRow icons={icons} color={"black"}/>
+    </div>
+  );
+}
 
-    return (
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: "40px",
-        paddingLeft: "24px",
-        paddingRight: "24px",
-      }}>
-        {imageURL && <Avatar src={imageURL} style={{ maxWidth: "160px", maxHeight: "160px", width: "160px", height: "160px", marginTop: "10px", borderRadius: '50%' }}/>}
-        <h2 style={{ textAlign: "center", marginTop: "16px" }}> {title} </h2>
-        <h4 style={{ textAlign: "center", marginBottom: "16px" }}> {bio} </h4>
-        <IconsRow icons={icons} color={"black"}/>
-      </div>
-    );
-  }
-
-  renderEditModal(done: (data: BlockModel) => void) {
-    return <ProfileEditModal model={this.model} done={done} />;
-  }
+export const ProfileComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  return (
+    <ProfileEditModal model={model} done={done} />
+  );
 }
