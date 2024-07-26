@@ -1,51 +1,40 @@
-import Block from './Block';
-import { BlockModel } from './types';
+import { ComposerComponentProps, FeedComponentProps } from './types';
 import React, { useState } from 'react';
-import { Button, Box, TextField, Typography, Divider, IconButton } from '@mui/material';
+import { Box, TextField, Typography, Divider, IconButton } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import BlockFactory from './BlockFactory';
 import SeamSaveButton from '../components/SeamSaveButton';
 
-export default class WordleBlock extends Block {
-  render() {
-    const { results, wordleDay } = this.model.data;
+export const WordleFeedComponent = ({ model }: FeedComponentProps) => {
+  const { results, wordleDay } = model.data;
 
-    // Convert wordleDay to a number if it exists
-    const wordleDayNumber = wordleDay !== undefined ? Number(wordleDay) : undefined;
+  // Convert wordleDay to a number if it exists
+  const wordleDayNumber = wordleDay !== undefined ? Number(wordleDay) : undefined;
+  const displayWordleDay = wordleDayNumber !== undefined && wordleDayNumber >= 16 ? `#${wordleDayNumber}` : '';
 
-    // Determine if the post is from today (#16 onward)
-    const todayWordleDay = getWordleDay();
-    const displayWordleDay = wordleDayNumber !== undefined && wordleDayNumber >= 16 ? `#${wordleDayNumber}` : '';
-
-    return (
-      <Box className="flex flex-col h-auto justify-between items-center w-full">
-        <Box className="mt-1 w-full flex items-center justify-center flex-col">
-          <Typography variant="h4" component="h2">
-            SEAMDLE {displayWordleDay}
-          </Typography>
-          <Divider className="w-full mt-1" />
-        </Box>
-        <Box className="flex flex-1 items-center justify-center w-full">
-          <WordleResults results={results} />
-        </Box>
+  return (
+    <Box className="flex flex-col h-auto justify-between items-center w-full">
+      <Box className="mt-1 w-full flex items-center justify-center flex-col">
+        <Typography variant="h4" component="h2">
+          SEAMDLE {displayWordleDay}
+        </Typography>
+        <Divider className="w-full mt-1" />
       </Box>
-    );
-  }
+      <Box className="flex flex-1 items-center justify-center w-full">
+        <WordleResults results={results} />
+      </Box>
+    </Box>
+  );
+}
 
-  renderEditModal(done: (data: BlockModel) => any) {
-    const handleSave = (results: any, wordleDay: any) => {
-      this.model.data.results = results;
-      this.model.data.wordleDay = wordleDay;
-      done(this.model);
-    };
+export const WordleComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  const handleSave = (results: any, wordleDay: any) => {
+    model.data.results = results;
+    model.data.wordleDay = wordleDay;
+    done(model);
+  };
 
-    // Reset the miniapp state each time renderEditModal is run
-    return <WordleEditor initialResults={[]} onSave={handleSave} />;
-  }
-
-  renderErrorState() {
-    return <h1>An unexpected error has occurred</h1>;
-  }
+  // Reset the miniapp state each time renderEditModal is run
+  return <WordleEditor initialResults={[]} onSave={handleSave} />;
 }
 
 const WORDS = [
