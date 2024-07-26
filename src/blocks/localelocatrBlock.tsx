@@ -1,11 +1,10 @@
 import { ComposerComponentProps, FeedComponentProps } from './types'
-import './BlockStyles.css';
 import React, { useEffect, useRef, useState } from "react";
 import { GoogleMap } from "@react-google-maps/api";
 import { LoadScript } from "@react-google-maps/api";
 import { OutputFormat, setDefaults } from 'react-geocode';
 import { Autocomplete, Button, Paper, TextField, Typography } from '@mui/material';
-
+import SeamSaveButton from '../components/SeamSaveButton';
 
 const api_Key = process.env.REACT_APP_GOOGLE_MAPS_KEY!;
 
@@ -541,8 +540,7 @@ const LocaleLocatr = ({ onSave }: LocaleLocatrProps) => {
 
   return (
     <>
-
-      <div className="relative">
+      <div className="relative pb-4">
         <div className="absolute top-1 left-1 z-10 p-2 ">
           <NationDropdown onSelect={setGuess} />
         </div>
@@ -551,21 +549,12 @@ const LocaleLocatr = ({ onSave }: LocaleLocatrProps) => {
         </div>
       </div>
 
-      <Button
-        type="submit"
-        variant="contained"
-        className="save-modal-button"
-        onClick={() => { if (imageUrl) { onSave(imageUrl, trueLocation, guess!); } }}
-        sx={{ mt: 3, mb: 2 }}
-      >
-        GUESS
-      </Button>
+      <SeamSaveButton onClick={() => { if (imageUrl) { onSave(imageUrl, trueLocation, guess!); } }} title={"GUESS"} />
     </>
 
   )
 
 }
-
 
 //Create a correct image URL - Show distance between guess and correct country in an image with markers
 function getDistanceImageUrl(answer: Nation, guess: Nation) {
