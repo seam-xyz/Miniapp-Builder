@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Block from './Block';
-import { BlockModel } from './types';
-import BlockFactory from './BlockFactory';
-import './BlockStyles.css';
+import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
 import ReactPlayer from 'react-player/lazy';
 import { Box, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -10,37 +7,25 @@ import FileUploadComponent from './utils/FileUploadComponent';
 import SeamSaveButton from '../components/SeamSaveButton';
 import EmptyVideoIcon from '../blocks/blockIcons/EmptyVideoIcon.png';
 
-export default class VideoBlock extends Block {
-  render() {
-    if (Object.keys(this.model.data).length === 0) {
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!);
-    }
-
-    const url = this.model.data["url"];
-    if (!url) {
-      return this.renderErrorState();
-    }
-
-    return (
-      <div className="flex relative w-full h-auto" style={{ backgroundColor: this.theme.palette.secondary.main }}>
-        <ReactPlayer
-          controls={true}
-          url={url}
-          className="w-full h-auto"
-        />
-      </div>
-    );
+export const VideoFeedComponent = ({ model }: FeedComponentProps) => {
+  const url = model.data["url"];
+  if (!url) {
+    return <h1>Error: Couldn't load the video</h1>;
   }
 
-  renderEditModal(done: (data: BlockModel) => void): React.ReactNode {
-    return <VideoBlockEditor model={this.model} done={done} />;
-  }
+  return (
+    <div className="flex relative w-full h-auto">
+      <ReactPlayer
+        controls={true}
+        url={url}
+        className="w-full h-auto"
+      />
+    </div>
+  );
+}
 
-  renderErrorState() {
-    return (
-      <h1>Error: Couldn't load the video</h1>
-    );
-  }
+export const VideoComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  return <VideoBlockEditor model={model} done={done} />;
 }
 
 const VideoBlockEditor: React.FC<{ model: BlockModel, done: (data: BlockModel) => void }> = ({ model, done }) => {
