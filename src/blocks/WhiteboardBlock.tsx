@@ -1,7 +1,4 @@
-import Block from './Block'
-import { BlockModel } from './types'
-import BlockFactory from './BlockFactory';
-import './BlockStyles.css'
+import { ComposerComponentProps, FeedComponentProps } from './types'
 
 import CSS from 'csstype';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -94,7 +91,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     const canvasBoundingRect = canvas.getBoundingClientRect();
     var pageObj: any = e;
     if ('touches' in e) {
-      if(e.touches.length > 0) {
+      if (e.touches.length > 0) {
         pageObj = e.touches[0]
       }
     }
@@ -102,7 +99,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
     const relativeX = Math.floor(pageObj.pageX - canvasBoundingRect.left);
     const relativeY = Math.floor(pageObj.pageY - canvasBoundingRect.top);
 
-    return {x: relativeX, y: relativeY}
+    return { x: relativeX, y: relativeY }
   }
 
   const handleDrawDrag = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent> | React.TouchEvent<HTMLCanvasElement>) => {
@@ -126,7 +123,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
   const handleStartDrawing = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent> | React.TouchEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef?.current;
     if (!canvas) return;
-    
+
     setIsDrawing(true);
     setPoints([getRelativePosition(canvas, e)]); // Reset points at the start of drawing
     handleDrawDrag(e);
@@ -163,7 +160,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = (props: DrawableCanvasProp
       // Draw single point
       canvasContext.fillStyle = foregroundColor;
       canvasContext.beginPath();
-      canvasContext.rect(points[0].x-3, points[0].y-3, 3, 3);
+      canvasContext.rect(points[0].x - 3, points[0].y - 3, 3, 3);
       canvasContext.fill();
       return;
     }
@@ -324,7 +321,7 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
   }
   const [selectedColor, setSelectedColor] = useState<string>(initialUserState.initialForegroundColor);
 
-  return ( 
+  return (
     <div className='overflow-y-clip w-full h-full'>
       <DrawableCanvas
         width={width}
@@ -363,62 +360,49 @@ function stringSizeToNumber(size: string | undefined): number {
   return parseInt(regexMatch[0])
 }
 
-export default class WhiteboardBlock extends Block {
-  render(width?: string, height?: string) {
-    if (Object.keys(this.model.data).length === 0) {
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
-    }
+export const WhiteboardFeedComponent = ({ model }: FeedComponentProps) => {
+  const { imageData } = model.data;
 
-    const { imageData } = this.model.data;
+  return (
+    <div className="w-full object-contain border-[4px] border-seam-black border-box">
+      <img src={imageData} alt='a drawing' className='w-full object-contain'></img>
+    </div>
+  );
+}
 
-    return (
-      <div className="w-full object-contain border-[4px] border-seam-black border-box">
-        <img src={imageData} alt='a drawing' className='w-full object-contain'></img>
-      </div>
-    );
+export const WhiteboardComposerComponent = ({ model, done, width }: ComposerComponentProps) => {
+  const defaultBackgroundColor = '#ffffff';
+  const defaultForegroundColor = '#373737';
+
+  const {
+    backgroundColor,
+    imageData,
+  } = model.data;
+
+  const updateState = (
+    height: number,
+    width: number,
+    backgroundColor: string,
+    imageData: string
+  ) => {
+    model.data['height'] = height.toString();
+    model.data['width'] = width.toString();
+    model.data['backgroundColor'] = backgroundColor;
+    model.data['imageData'] = imageData;
   }
 
-  renderEditModal(done: (data: BlockModel) => void, width?: string) {
-    const widthInt = width !== undefined ? stringSizeToNumber(width) : 450;
-    const defaultBackgroundColor = '#ffffff';
-    const defaultForegroundColor = '#373737';
-
-    const {
-      backgroundColor,
-      imageData,
-    } = this.model.data;
-
-    const updateState = (
-      height: number,
-      width: number,
-      backgroundColor: string,
-      imageData: string
-    ) => {
-      this.model.data['height'] = height.toString();
-      this.model.data['width'] = width.toString();
-      this.model.data['backgroundColor'] = backgroundColor;
-      this.model.data['imageData'] = imageData;
-    }
-
-    const onSave = () => {
-      done(this.model);
-    }
-    
-    return (
-      <WhiteboardEdit
-        width={widthInt}
-        initialBackgroundColor={backgroundColor || defaultBackgroundColor}
-        initialForegroundColor={defaultForegroundColor}
-        initialImageData={imageData}
-        onSave={onSave}
-        updateState={updateState}
-      />
-    )
+  const onSave = () => {
+    done(model);
   }
 
-  renderErrorState() {
-    return (
-      <h1>Sry something went wrong with the whiteboard block</h1>
-    )
-  }
+  return (
+    <WhiteboardEdit
+      width={width ?? 400}
+      initialBackgroundColor={backgroundColor || defaultBackgroundColor}
+      initialForegroundColor={defaultForegroundColor}
+      initialImageData={imageData}
+      onSave={onSave}
+      updateState={updateState}
+    />
+  )
 }
