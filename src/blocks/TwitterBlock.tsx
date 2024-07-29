@@ -1,91 +1,70 @@
 import { TwitterTimelineEmbed } from 'react-twitter-embed';
-import Block from './Block'
-import { BlockModel } from './types'
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
+import { ComposerComponentProps, FeedComponentProps } from './types';
 
-export default class TwitterBlock extends Block {
-  render() {
-    if (Object.keys(this.model.data).length === 0) {
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
-    }
+export const TwitterFeedComponent = ({ model }: FeedComponentProps) => {
+  let name = model.data["name"];
+  if (name === undefined) {
+    return <h1>Error: Couldn't figure out the url</h1>;
+  }
 
-    let name = this.model.data["name"]
-    if (name === undefined) {
-      return this.renderErrorState()
-    }
+  return (
+    <TwitterTimelineEmbed
+      sourceType="profile"
+      screenName={name}
+      options={{
+        height: "1200",
+      }}
+      noScrollbar={true}
+      noBorders={true}
+    />
+  );
+}
 
-    return (
-      <TwitterTimelineEmbed
-        sourceType="profile"
-        screenName={name}
-        options={{
-          height: "1200",
-        }}
-        noScrollbar={true}
-        noBorders={true}
+export const TwitterComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  const onFinish = (event: any) => {
+    const data = new FormData(event.currentTarget);
+    var name = data.get("name") as string;
+
+    // data sanitization to help with proper inputs
+    var name1 = name.replace(/@/g, "");
+
+    // remove the twitter url if someone accidentally pasted it in
+    const regex = /(http(s)?(:))?(\/\/)?(\/\/)?(www\.)?twitter.com\//g;
+    var name2 = name1.replace(regex, "");
+
+    model.data = { "name": name2 };
+    done(model);
+  };
+
+  return (
+    <Box
+      component="form"
+      onSubmit={onFinish}
+      style={{}}
+    >
+      <TextField
+        margin="normal"
+        required
+        defaultValue={model.data['name']}
+        fullWidth
+        id="name"
+        label="Twitter Handle"
+        name="name"
+        autoFocus
       />
-    );
-  }
-
-  getValidTwitterName(name: string) {
-    return true
-  }
-
-  renderEditModal(done: (data: BlockModel) => void) {
-    const onFinish = (event: any) => {
-      const data = new FormData(event.currentTarget);
-      var name = data.get("name") as string
-
-      // data sanitization to help with proper inputs
-      var name1 = name.replace(/@/g, "")
-
-      // remove the twitter url if someone accidentally pasted it in
-      const regex = /(http(s)?(:))?(\/\/)?(\/\/)?(www\.)?twitter.com\//g;
-      var name2 = name1.replace(regex, "")
-
-      this.model.data = { "name": name2 }
-      done(this.model)
-    };
-
-    const onFinishFailed = (errorInfo: any) => {
-      console.log('Failed:', errorInfo);
-    };
-
-    return (
-      <Box
-        component="form"
-        onSubmit={onFinish}
-        style={{}}
+      <Button
+        type="submit"
+        variant="contained"
+        className="save-modal-button"
+        sx={{ mt: 3, mb: 2 }}
       >
-        <TextField
-          margin="normal"
-          required
-          defaultValue={this.model.data['name']}
-          fullWidth
-          id="name"
-          label="Twitter Handle"
-          name="name"
-          autoFocus
-        />
-        <Button
-          type="submit"
-          variant="contained"
-          className="save-modal-button"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          Save
-        </Button>
-      </Box>
-    )
-  }
-
-  renderErrorState() {
-    return (
-      <h1>Error: Coudn't figure out the url</h1>
-    )
-  }
+        Save
+      </Button>
+    </Box>
+  );
 }

@@ -1,12 +1,10 @@
-import Block from './Block'
-import { BlockModel } from './types'
-import './BlockStyles.css';
+import { ComposerComponentProps, FeedComponentProps } from './types'
 import React, { useEffect, useRef, useState } from "react";
 import { GoogleMap } from "@react-google-maps/api";
 import { LoadScript } from "@react-google-maps/api";
 import { OutputFormat, setDefaults } from 'react-geocode';
 import { Autocomplete, Button, Paper, TextField, Typography } from '@mui/material';
-
+import SeamSaveButton from '../components/SeamSaveButton';
 
 const api_Key = process.env.REACT_APP_GOOGLE_MAPS_KEY!;
 
@@ -542,8 +540,7 @@ const LocaleLocatr = ({ onSave }: LocaleLocatrProps) => {
 
   return (
     <>
-
-      <div className="relative">
+      <div className="relative pb-4">
         <div className="absolute top-1 left-1 z-10 p-2 ">
           <NationDropdown onSelect={setGuess} />
         </div>
@@ -552,21 +549,12 @@ const LocaleLocatr = ({ onSave }: LocaleLocatrProps) => {
         </div>
       </div>
 
-      <Button
-        type="submit"
-        variant="contained"
-        className="save-modal-button"
-        onClick={() => { if (imageUrl) { onSave(imageUrl, trueLocation, guess!); } }}
-        sx={{ mt: 3, mb: 2 }}
-      >
-        GUESS
-      </Button>
+      <SeamSaveButton onClick={() => { if (imageUrl) { onSave(imageUrl, trueLocation, guess!); } }} title={"GUESS"} />
     </>
 
   )
 
 }
-
 
 //Create a correct image URL - Show distance between guess and correct country in an image with markers
 function getDistanceImageUrl(answer: Nation, guess: Nation) {
@@ -631,42 +619,31 @@ const PostInFeed = ({ image, distance, guessCountryName, correctCountryName }: {
 
 /* ************ COMPONENT FUNCTIONS ********** */
 
-export default class localelocatrBlock extends Block {
-
-  render() {
-    return (
-      <>
-        <PostInFeed image={this.model.data["imgUrl"]} distance={parseInt(this.model.data["distance"])} guessCountryName={this.model.data["guessCountryName"]} correctCountryName={this.model.data["correctCountryName"]} />
-      </>
-    );
-  }
-
-  renderEditModal(done: (data: BlockModel) => void) {
-
-    const handleSave = (imgUrl: string, answer: Nation, guess: Nation) => {
-      const distance = calcDist(answer, guess);
-      this.model.data["imgUrl"] = imgUrl
-      this.model.data["guessCountryName"] = guess.name
-      this.model.data["correctCountryName"] = answer.name
-      this.model.data["distance"] = distance.toString()
-      done(this.model)
-    }
-
-    //resets truelocation on localelocatr open
-    trueLocation = randomNation(initialWorldArray);
-
-    return (
-      <div>
-        <LocaleLocatr onSave={handleSave} />
-      </div>)
-  }
-
-
-  renderErrorState() {
-    return (
-      <h1>Error!</h1>
-    )
-  }
+export const LocalelocatrFeedComponent = ({ model }: FeedComponentProps) => {
+  return (
+    <PostInFeed 
+      image={model.data["imgUrl"]} 
+      distance={parseInt(model.data["distance"])} 
+      guessCountryName={model.data["guessCountryName"]} 
+      correctCountryName={model.data["correctCountryName"]} 
+    />
+  );
 }
 
+export const LocalelocatrComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  const handleSave = (imgUrl: string, answer: Nation, guess: Nation) => {
+    const distance = calcDist(answer, guess);
+    model.data["imgUrl"] = imgUrl;
+    model.data["guessCountryName"] = guess.name;
+    model.data["correctCountryName"] = answer.name;
+    model.data["distance"] = distance.toString();
+    done(model);
+  }
 
+  //resets truelocation on localelocatr open
+  trueLocation = randomNation(initialWorldArray);
+
+  return (
+    <LocaleLocatr onSave={handleSave} />
+  );
+}

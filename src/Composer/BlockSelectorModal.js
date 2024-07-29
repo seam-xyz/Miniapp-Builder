@@ -1,24 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
 import BlockFactory from '../blocks/BlockFactory';
-import { createTheme } from "@mui/material/styles";
-
-const defaultTheme = createTheme({
-  palette: {
-    primary: {
-      main: "#020303"
-    },
-    secondary: {
-      main: "#1C1C1C"
-    },
-    info: {
-      main: "#CCFE07" // Button Background
-    }
-  },
-  typography: {
-    fontFamily: "monospace"
-  },
-});
 
 const BlockSelectorModal = ({ selectedBlockType, initialBlockData, setSelectedBlockData }) => {
   const [width, setWidth] = useState(undefined);
@@ -31,28 +13,20 @@ const BlockSelectorModal = ({ selectedBlockType, initialBlockData, setSelectedBl
     }
   }, [divRef.current]);
 
-  const blockInstance = useMemo(() => {
-    const model = {
-      type: selectedBlockType,
-      data: initialBlockData || {},
-      uuid: nanoid()  // Generate a new unique ID
-    };
-
-    const instance = BlockFactory.getBlock(model, defaultTheme);
-    if (!instance) {
-      console.error(`Failed to load block of type ${selectedBlockType}`);
-    }
-
-    return instance;
-  }, [selectedBlockType]);
-
-  const handleDone = (data) => {
+  const done = (data) => {
     setSelectedBlockData(data);  // Update the block data in parent component
   };
 
+  const model = {
+    type: selectedBlockType,
+    data: initialBlockData || {},
+    uuid: nanoid()  // Generate a new unique ID
+  };
+  const instance = BlockFactory.getComposerComponent({model, done, width});
+
   return (
     <div ref={divRef} className={isFullscreenEdit ? "h-full" : "mx-4 h-auto"} style={{ overflow: 'visible' }}>
-      {selectedBlockType && blockInstance.renderEditModal(handleDone, width)}
+      {selectedBlockType && instance}
     </div>
   );
 };

@@ -1,41 +1,33 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Search } from 'react-feather';
-import Block from './Block';
-import { BlockModel } from './types';
-import BlockFactory from './BlockFactory';
+import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
 import { GiphyFetch, GifsResult } from '@giphy/js-fetch-api';
 import { Box } from '@mui/material';
 import debounce from 'lodash/debounce';
 
 const giphyFetch = new GiphyFetch(process.env.REACT_APP_GIPHY_KEY ?? "");
 
-export default class GiphyBlock extends Block {
-  render() {
-    if (Object.keys(this.model.data).length === 0) {
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!);
-    }
+export const GiphyFeedComponent = ({ model }: FeedComponentProps) => {
+  let gifID = model.data['gif'];
 
-    let gifID = this.model.data['gif'];
+  return (
+    <div className="flex flex-col items-center h-full w-full rounded-lg">
+      <GifViewer id={gifID} />
+    </div>
+  );
+}
 
-    return (
-      <div className="flex flex-col items-center h-full w-full rounded-lg">
-        <GifViewer id={gifID} />
-      </div>
-    );
-  }
-
-  renderEditModal(done: (data: BlockModel) => void, width?: string) {
-    return (
-      <div style={{ height: '100%' }} className="relative flex flex-col items-center h-full rounded-lg">
-        <CustomGifSearch
-          onSelect={(item: any) => {
-            this.model.data['gif'] = item.id as string;
-            done(this.model);
-          }}
-        />
-      </div>
-    );
-  }
+export const GiphyComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  return (
+    <div style={{ height: '100%' }} className="relative flex flex-col items-center h-full rounded-lg">
+      <CustomGifSearch
+        onSelect={(item: any) => {
+          model.data['gif'] = item.id as string;
+          done(model);
+        }}
+      />
+    </div>
+  );
 }
 
 interface CustomGifSearchProps {

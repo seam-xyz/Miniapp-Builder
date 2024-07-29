@@ -1,9 +1,8 @@
-import Block from './Block';
-import { BlockModel } from './types';
+import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
 import React, { useState } from 'react';
-import { Button, Tabs, Tab, Box, Grid, IconButton, Divider } from '@mui/material';
+import { Tabs, Tab, Box, Grid, IconButton, Divider } from '@mui/material';
 import BlockFactory from './BlockFactory';
-import { ArrowUp, ArrowRight, RotateCw, XCircle, X } from 'react-feather';
+import { X } from 'react-feather';
 import SeamSaveButton from '../components/SeamSaveButton';
 import { ReactComponent as BorderHoriz } from './blockIcons/border_horizontal.svg';
 import { ReactComponent as BorderVert } from './blockIcons/border_vertical.svg';
@@ -16,31 +15,21 @@ const colors = [
   '#CBF0FF', '#F9D4E0', '#BA4D2A', '#FEF2D5', '#416222', '#DEEFD4'
 ];
 
-export default class MondrianBlock extends Block {
-  render() {
-    if (!this.model.data.squares) {
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!);
-    }
+export const MondrianFeedComponent = ({ model }: FeedComponentProps) => {
+  return <MondrianCanvas squares={model.data.squares} onSquareClick={() => {}} />;
+}
 
-    return <MondrianCanvas squares={this.model.data.squares} onSquareClick={() => {}} />;
-  }
+export const MondrianComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  const initialSquares = model.data.squares || [
+    { id: model.data.uuid, x: 0, y: 0, width: 100, height: 100, horizontalCuts: 0, verticalCuts: 0 },
+  ];
 
-  renderEditModal(done: (data: BlockModel) => void) {
-    const initialSquares = this.model.data.squares || [
-      { id: this.model.data.uuid, x: 0, y: 0, width: 100, height: 100, horizontalCuts: 0, verticalCuts: 0 },
-    ];
+  const handleSave = (squares: any) => {
+    model.data.squares = squares;
+    done(model);
+  };
 
-    const handleSave = (squares: any) => {
-      this.model.data.squares = squares;
-      done(this.model);
-    };
-
-    return <MondrianEditor initialSquares={initialSquares} onSave={handleSave} />;
-  }
-
-  renderErrorState() {
-    return <h1>An unexpected error has occurred</h1>;
-  }
+  return <MondrianEditor initialSquares={initialSquares} onSave={handleSave} />;
 }
 
 const MondrianCanvas = ({ squares, onSquareClick }: { squares: any, onSquareClick: (id: string) => void }) => {

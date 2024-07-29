@@ -1,11 +1,10 @@
-import Block from './Block'
-import { BlockModel } from './types'
+import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 
 import CSS from 'csstype';
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Stack, Grid, Box } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 import SeamSaveButton from '../components/SeamSaveButton';
 
 interface PixelCanvasProps {
@@ -372,75 +371,68 @@ const PixelCanvasWithSize = (props: PixelCanvasProps) => {
   );
 }
 
-export default class PixelArtBlock extends Block {
-  render() {
-    if (Object.keys(this.model.data).length === 0) {
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
-    }
+export const PixelArtFeedComponent = ({ model }: FeedComponentProps) => {
+  const {
+    numPixelsPerSide,
+    pixelsArrStringified,
+    shouldShowGridInViewMode,
+    backgroundColor,
+  } = model.data;
+  const pixels = JSON.parse(pixelsArrStringified);
+  const showGridInViewMode = shouldShowGridInViewMode
+    ? Boolean(parseInt(shouldShowGridInViewMode))
+    : false;
 
-    const {
-      numPixelsPerSide,
-      pixelsArrStringified,
-      shouldShowGridInViewMode,
-      backgroundColor,
-    } = this.model.data;
-    const pixels = JSON.parse(pixelsArrStringified);
-    const showGridInViewMode = shouldShowGridInViewMode
-      ? Boolean(parseInt(shouldShowGridInViewMode))
-      : false;
-
-    return (
-      <div style={{
-        backgroundColor: backgroundColor,
-        height: '100%',
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-
-      }}>
-        <PixelCanvasWithSize
-          initialNumPixelsPerSide={parseInt(numPixelsPerSide)}
-          isEditMode={false}
-          initialPixels={pixels}
-          shouldShowGridInViewMode={showGridInViewMode}
-          initialBackgroundColor={backgroundColor}
-        />
-      </div>
-    );
-  }
-
-  renderEditModal(done: (data: BlockModel) => void) {
-    const defaultNumPixels = 5;
-    const {
-      numPixelsPerSide,
-      pixelsArrStringified,
-      shouldShowGridInViewMode,
-      backgroundColor,
-    } = this.model.data;
-
-    const onSave = (
-      numPixelsPerSide: number,
-      pixels: string[][],
-      showGridInViewMode: boolean,
-      backgroundColor: string
-    ) => {
-      this.model.data['numPixelsPerSide'] = numPixelsPerSide.toString();
-      this.model.data['pixelsArrStringified'] = JSON.stringify(pixels);
-      this.model.data['shouldShowGridInViewMode'] = Number(showGridInViewMode).toString();
-      this.model.data['backgroundColor'] = backgroundColor;
-      done(this.model);
-    }
-
-    return (
+  return (
+    <div style={{
+      backgroundColor: backgroundColor,
+      height: '100%',
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}>
       <PixelCanvasWithSize
-        initialNumPixelsPerSide={(numPixelsPerSide && parseInt(numPixelsPerSide)) || defaultNumPixels}
-        initialPixels={pixelsArrStringified && JSON.parse(pixelsArrStringified)}
-        isEditMode={true}
-        shouldShowGridInViewMode={Boolean(parseInt(shouldShowGridInViewMode))}
+        initialNumPixelsPerSide={parseInt(numPixelsPerSide)}
+        isEditMode={false}
+        initialPixels={pixels}
+        shouldShowGridInViewMode={showGridInViewMode}
         initialBackgroundColor={backgroundColor}
-        onSave={onSave}
       />
-    )
+    </div>
+  );
+}
+
+export const PixelArtComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  const defaultNumPixels = 5;
+  const {
+    numPixelsPerSide,
+    pixelsArrStringified,
+    shouldShowGridInViewMode,
+    backgroundColor,
+  } = model.data;
+
+  const onSave = (
+    numPixelsPerSide: number,
+    pixels: string[][],
+    showGridInViewMode: boolean,
+    backgroundColor: string
+  ) => {
+    model.data['numPixelsPerSide'] = numPixelsPerSide.toString();
+    model.data['pixelsArrStringified'] = JSON.stringify(pixels);
+    model.data['shouldShowGridInViewMode'] = Number(showGridInViewMode).toString();
+    model.data['backgroundColor'] = backgroundColor;
+    done(model);
   }
+
+  return (
+    <PixelCanvasWithSize
+      initialNumPixelsPerSide={(numPixelsPerSide && parseInt(numPixelsPerSide)) || defaultNumPixels}
+      initialPixels={pixelsArrStringified && JSON.parse(pixelsArrStringified)}
+      isEditMode={true}
+      shouldShowGridInViewMode={Boolean(parseInt(shouldShowGridInViewMode))}
+      initialBackgroundColor={backgroundColor}
+      onSave={onSave}
+    />
+  )
 }

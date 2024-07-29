@@ -12,13 +12,10 @@ import Button from "@mui/material/Button";
 import ViewListIcon from '@mui/icons-material/ViewList';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 
-import Block from './Block'
-import { BlockModel } from './types'
+import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
 import TitleComponent from './utils/TitleComponent';
-
-import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
-import { ImageList, ImageListItem, Theme, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { ImageList, ImageListItem, ToggleButton, ToggleButtonGroup } from '@mui/material';
 
 interface NftGridProps {
   /**
@@ -41,8 +38,6 @@ interface NftGridProps {
   */
 
   contract?: string;
-
-  theme: Theme;
 }
 
 function NFTGrid(props: NftGridProps) {
@@ -82,11 +77,7 @@ function NFTGrid(props: NftGridProps) {
 
   const scrollAttribute = "scroll"
 
-  let primaryColor = props.theme.palette.primary.main
-  let secondaryColor = props.theme.palette.secondary.main
-  let teritaryColor = props.theme.palette.info.main
   let isEmpty = assets.length === 0 && !isLoading
-  let bg = isEmpty ? secondaryColor + 'e6' : teritaryColor
 
   const getImageUrl = (asset: OwnedNft) => {
     let imageUrl = '';
@@ -126,20 +117,19 @@ function NFTGrid(props: NftGridProps) {
     return (
       <div id="scroll" style={{ display: 'flex', flexDirection: 'column', maxHeight: '100%', position: 'absolute', width: '100%', overflowY: scrollAttribute }}>
         {assets.length === 0 && isLoading ? <h1>Loading...</h1> : assets.map((asset, index) =>
-          <div style={{ height: '80px', display: 'flex', flexDirection: 'row', backgroundColor: teritaryColor }}>
+          <div style={{ height: '80px', display: 'flex', flexDirection: 'row' }}>
             <img src={getImageUrl(asset)} key={index} style={{ aspectRatio: 1, height: '60px', margin: '10px' }} alt="NFT" loading="lazy" />
             <div style={{ width: '100%', height: '60px', margin: '10px', alignItems: 'center', display: 'flex' }}>#{asset.tokenId}</div>
           </div>
         )}
       </div>
     );
-
   };
 
   const EmptyState = () => {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", width: "100%", height: 'calc(100% - 40px)' }}>
-        <h3 style={{ color: teritaryColor }}>No NFTs to display</h3>
+        <h3>No NFTs to display</h3>
       </div>
     )
   }
@@ -157,7 +147,7 @@ function NFTGrid(props: NftGridProps) {
   }
 
   return (
-    <div style={{ position: "relative", height: 'calc(100% - 40px)', width: "100%", backgroundColor: bg }}>
+    <div style={{ position: "relative", height: 'calc(100% - 40px)', width: "100%" }}>
       {isEmpty && <EmptyState />}
       {props.imageViewMode === "grid" ? <GridMode /> : null}
       {props.imageViewMode === "list" ? <ListMode /> : null}
@@ -165,115 +155,107 @@ function NFTGrid(props: NftGridProps) {
   )
 }
 
-export default class NFTsBlock extends Block {
+export const NFTsFeedComponent = ({ model }: FeedComponentProps) => {
+  if (!model.data['imageViewMode']) {
+    model.data['imageViewMode'] = 'grid'
+  }
 
-  render() {
-    if (!this.model.data['imageViewMode']) {
-      this.model.data['imageViewMode'] = 'grid'
-    }
-    if (Object.keys(this.model.data).length === 0 || !this.model.data['ownerAddress']) {
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
-    }
+  const ownerAddress = model.data["ownerAddress"]
+  const contract = model.data["contractAddress"]
+  const imageViewMode = model.data['imageViewMode']
+  const title = model.data['title']
 
-    const ownerAddress = this.model.data["ownerAddress"]
-    const contract = this.model.data["contractAddress"]
-    const imageViewMode = this.model.data['imageViewMode']
-    const title = this.model.data['title']
+  return (
+    <>
+      {title && TitleComponent(title)}
+      <NFTGrid ownerAddress={ownerAddress}
+        imageViewMode={imageViewMode}
+        contract={contract}
+      />
+    </>
+  );
+}
+
+export const NFTsComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  const onFinish = (event: any) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    model.data['ownerAddress'] = (data.get('ownerAddress') as string).toLowerCase()
+    model.data['contractAddress'] = data.get('contractAddress') as string
+    model.data['title'] = data.get('title') as string
+    done(model)
+  };
+
+  const ImageViewModeToggle = () => {
+    const [imageViewMode, setImageViewMode] = useState<string | null>(model.data['imageViewMode']);
+    const handleToggleChange = (
+      event: React.MouseEvent<HTMLElement>,
+      value: string,
+    ) => {
+      const val = value ?? model.data['imageViewMode']
+      model.data['imageViewMode'] = val
+      setImageViewMode(val)
+    };
 
     return (
-      <>
-        {title && TitleComponent(this.theme, title)}
-        <NFTGrid ownerAddress={ownerAddress}
-          imageViewMode={imageViewMode}
-          contract={contract}
-          theme={this.theme}
-          />
-      </>
+      <div style={{ marginTop: '10px' }}>
+        <div style={{ marginBottom: '5px' }}>Image Layout:</div>
+        <ToggleButtonGroup
+          exclusive
+          value={imageViewMode}
+          onChange={handleToggleChange}
+          id="imageViewMode"
+        >
+          <ToggleButton value="grid" key="grid" aria-label="grid">
+            <ViewModuleIcon />
+          </ToggleButton>
+          <ToggleButton value="list" key="list" aria-label="list">
+            <ViewListIcon />
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </div>
     );
   }
 
-  renderEditModal(done: (data: BlockModel) => void) {
-    const onFinish = (event: any) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      this.model.data['ownerAddress'] = (data.get('ownerAddress') as string).toLowerCase()
-      this.model.data['contractAddress'] = data.get('contractAddress') as string
-      this.model.data['title'] = data.get('title') as string
-      done(this.model)
-    };
-
-    const ImageViewModeToggle = () => {
-      const [imageViewMode, setImageViewMode] = useState<string | null>(this.model.data['imageViewMode']);
-      const handleToggleChange = (
-        event: React.MouseEvent<HTMLElement>,
-        value: string,
-      ) => {
-        const val = value ?? this.model.data['imageViewMode']
-        this.model.data['imageViewMode'] = val
-        setImageViewMode(val)
-      };
-
-      return (
-        <div style={{ marginTop: '10px' }}>
-          <div style={{ marginBottom: '5px' }}>Image Layout:</div>
-          <ToggleButtonGroup
-            exclusive
-            value={imageViewMode}
-            onChange={handleToggleChange}
-            id="imageViewMode"
-          >
-            <ToggleButton value="grid" key="grid" aria-label="grid">
-              <ViewModuleIcon />
-            </ToggleButton>
-            <ToggleButton value="list" key="list" aria-label="list">
-              <ViewListIcon />
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </div>
-      );
-    }
-
-    return (
-      <Box
-        component="form"
-        onSubmit={onFinish}
-        style={{}}
+  return (
+    <Box
+      component="form"
+      onSubmit={onFinish}
+    >
+      <TextField
+        margin="normal"
+        required
+        defaultValue={model.data['ownerAddress']}
+        fullWidth
+        id="ownerAddress"
+        label="NFT Wallet Address or ENS"
+        name="ownerAddress"
+      />
+      <TextField
+        margin="normal"
+        defaultValue={model.data['contractAddress']}
+        fullWidth
+        id="contractAddress"
+        label="NFT contract address (optional)"
+        name="contractAddress"
+      />
+      <TextField
+        margin="normal"
+        defaultValue={model.data['title'] ?? "My NFTs"}
+        fullWidth
+        id="title"
+        label="Title"
+        name="title"
+      />
+      <ImageViewModeToggle />
+      <Button
+        type="submit"
+        variant="contained"
+        className="save-modal-button"
+        sx={{ mt: 3, mb: 1 }}
       >
-        <TextField
-          margin="normal"
-          required
-          defaultValue={this.model.data['ownerAddress']}
-          fullWidth
-          id="ownerAddress"
-          label="NFT Wallet Address or ENS"
-          name="ownerAddress"
-        />
-        <TextField
-          margin="normal"
-          defaultValue={this.model.data['contractAddress']}
-          fullWidth
-          id="contractAddress"
-          label="NFT contract address (optional)"
-          name="contractAddress"
-        />
-        <TextField
-          margin="normal"
-          defaultValue={this.model.data['title'] ?? "My NFTs"}
-          fullWidth
-          id="title"
-          label="Title"
-          name="title"
-        />
-        <ImageViewModeToggle />
-        <Button
-          type="submit"
-          variant="contained"
-          className="save-modal-button"
-          sx={{ mt: 3, mb: 1 }}
-        >
-          Save
-        </Button>
-      </Box>
-    )
-  }
+        Save
+      </Button>
+    </Box>
+  )
 }

@@ -1,6 +1,4 @@
-import Block from './Block'
-import { BlockModel } from './types'
-import BlockFactory from './BlockFactory';
+import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
 import './BlockStyles.css'
 import { TextField, Box, Button, Typography } from '@mui/material';
 import { useState, useEffect } from "react";
@@ -150,36 +148,28 @@ function CountdownEditModal({ onFinish }: CountdownEditModalProps){
     );
 }
 
-export default class CountdownBlock extends Block {
+export const CountdownFeedComponent = ({ model }: FeedComponentProps) => {
+  let title = model.data['title'];
+  let date = model.data['date'];
+  let finishMessage = model.data['finishMessage'];
 
-  render() {
-    
-    if (Object.keys(this.model.data).length === 0) {
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!);
-    }
+  return (
+    <Countdown
+      title={title}
+      date={date}
+      finishMessage={finishMessage}
+    />
+  );
+}
 
-    let title = this.model.data['title'];
-    let date = this.model.data['date'];
-    let finishMessage = this.model.data['finishMessage'];
+export const CountdownComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  const handleUpdateAndFinish = (title: string, date: string, finishMessage: string) => {
+    model.data['title'] = title;
+    model.data['date'] = date;
+    model.data['finishMessage'] = finishMessage;
+    // Then call the done function with the updated model
+    done(model);
+  };
 
-    return (
-        <Countdown
-        title={title}
-        date={date}
-        finishMessage={finishMessage}
-        />
-    );
-  }
-
-  renderEditModal(done: (data: BlockModel) => void) {
-    const handleUpdateAndFinish = (title: string, date: string, finishMessage: string) => {
-      this.model.data['title'] = title;
-      this.model.data['date'] = date;
-      this.model.data['finishMessage'] = finishMessage;
-      // Then call the done function with the updated model
-      done(this.model);
-    };
-
-    return <CountdownEditModal onFinish={handleUpdateAndFinish} />;
-  }
+  return <CountdownEditModal onFinish={handleUpdateAndFinish} />;
 }

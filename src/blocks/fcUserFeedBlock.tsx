@@ -1,6 +1,4 @@
-import Block from './Block'
-import { BlockModel } from './types'
-import BlockFactory from './BlockFactory';
+import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
 import './BlockStyles.css'
 import { useEffect, useState } from 'react';
 import { Box, Button, Card, Stack, TextField } from '@mui/material';
@@ -61,52 +59,46 @@ function CastFeed({ fid }: { fid: any }) {
   );
 }
 
-export default class fcUserFeedBlock extends Block {
-  render(width?: string, height?: string) {
-    if (Object.keys(this.model.data).length === 0) {
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
-    }
+export const FcUserFeedComponent = ({ model, width }: FeedComponentProps) => {
+  return (
+    <div style={{ position: 'absolute', height: 500, width: width, overflow: 'scroll' }}>
+      <h1>Top Casts</h1>
+      <CastFeed fid={model.data["fid"]} />
+    </div>
+  );
+}
 
-    return (
-      <div style={{ position: 'absolute', height: height, width: width, overflow: 'scroll' }}>
-        <h1>Top Casts</h1>
-        <CastFeed fid={this.model.data["fid"]} />
-      </div>
-    );
-  }
+export const FcUserComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  const onFinish = (event: any) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    let fid = data.get('fid') as string
+    model.data['fid'] = fid
+    done(model)
+  };
 
-  renderEditModal(done: (data: BlockModel) => void) {
-    const onFinish = (event: any) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      let fid = data.get('fid') as string
-      this.model.data['fid'] = fid
-      done(this.model)
-    };
-
-    return (
-      <Box
-        component="form"
-        onSubmit={onFinish}
+  return (
+    <Box
+      component="form"
+      onSubmit={onFinish}
+    >
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        id="fid"
+        label={"Farcaster User ID"}
+        name="fid"
+        defaultValue={model.data['fid']}
+      />
+      <Button
+        type="submit"
+        variant="contained"
+        className="save-modal-button"
+        sx={{ mt: 3, mb: 2 }}
       >
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="fid"
-          label={"Farcaster User ID"}
-          name="fid"
-          defaultValue={this.model.data['fid']}
-        />
-        <Button
-          type="submit"
-          variant="contained"
-          className="save-modal-button"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          PREVIEW
-        </Button>
-      </Box>
-    )
-  }
+        PREVIEW
+      </Button>
+    </Box>
+  )
 }

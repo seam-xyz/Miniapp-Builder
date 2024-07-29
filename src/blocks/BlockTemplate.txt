@@ -1,18 +1,14 @@
-import Block from './Block'
-import { BlockModel } from './types'
-import BlockFactory from './BlockFactory';
-import './BlockStyles.css'
+import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
 
-export default class %NAME%Block extends Block {
-  render() {
-    return (
-      <h1>%NAME% Block!</h1>
-    );
-  }
+export const %NAME%FeedComponent = ({ model }: FeedComponentProps) => {
+  return <h1>Hi, I'm in the feed!</h1>;
+}
 
-  renderEditModal(done: (data: BlockModel) => void) {
-    return (
-      <h1>Edit %NAME% Block!</h1>
-    )
-  }
+export const %NAME%ComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  return (
+    <div>
+      <h1>Hi, I'm in the composer!</h1>
+      <button onClick={() => { done(model) }}> Post </button>
+    </div>
+  );
 }
