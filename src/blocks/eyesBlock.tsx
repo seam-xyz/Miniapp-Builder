@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { BlockModel, ComposerComponentProps, FeedComponentProps } from "./types";
+import { ComposerComponentProps, FeedComponentProps } from "./types";
 import "./BlockStyles.css";
 
 const containerStyle = {
@@ -10,15 +10,6 @@ const containerStyle = {
   justifyContent: 'center',
   alignItems: 'center',
   gap: '10px',
-};
-
-const eyeStyle = {
-  backgroundColor: 'white',
-  width: '15px',
-  height: '20px',
-  borderRadius: '15px',
-  animation: 'blink 5s infinite',
-  transition: 'transform 0.2s ease',
 };
 
 function Eyes() {

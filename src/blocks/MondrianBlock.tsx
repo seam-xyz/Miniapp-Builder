@@ -1,7 +1,6 @@
-import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
+import { ComposerComponentProps, FeedComponentProps } from './types';
 import React, { useState } from 'react';
 import { Tabs, Tab, Box, Grid, IconButton, Divider } from '@mui/material';
-import BlockFactory from './BlockFactory';
 import { X } from 'react-feather';
 import SeamSaveButton from '../components/SeamSaveButton';
 import { ReactComponent as BorderHoriz } from './blockIcons/border_horizontal.svg';

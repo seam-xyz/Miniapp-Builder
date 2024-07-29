@@ -2,7 +2,6 @@ import { TwitterTimelineEmbed } from 'react-twitter-embed';
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 import { ComposerComponentProps, FeedComponentProps } from './types';
 

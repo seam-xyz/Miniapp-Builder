@@ -1,4 +1,4 @@
-import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
+import { ComposerComponentProps, FeedComponentProps } from './types'
 import './BlockStyles.css'
 import SeamSaveButton from '../components/SeamSaveButton';
 import { useEffect, useRef, useState } from 'react';
@@ -17,7 +17,6 @@ import sprayBrush from "./assets/Calligraphy/brushes/spray.png";
 import linesBrush from "./assets/Calligraphy/brushes/lines.png";
 import streakBrush from "./assets/Calligraphy/brushes/streak.png";
 import inkBrush from "./assets/Calligraphy/brushes/ink.png";
-import BlockFactory from './BlockFactory';
 
 const COLORS_DEFAULT = [
   '#000000', '#333333',
@@ -35,8 +34,6 @@ interface CalligraphyCanvasProps {
   setImageDataURL: (imgDataURL: string) => void
 }
 const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
-  const [p5Instance, setP5Instance] = useState<p5 | null>(null)
-  const [bufferInstance, setBufferInstance] = useState<p5.Graphics | null>(null)
   const canvasDivRef = useRef<HTMLDivElement>(null)
 
   /**A reference object accessible inside the p5 sketch */
@@ -171,7 +168,6 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
             brush1.v *= .8
             brush1.oldR = brush1.r;
             brush1.r = brush1.brushSize - brush1.v * brush1.vScale;
-            var num = s.random(0.1, 1)
             for (let i = 0; i < brush1.splitNum; ++i) {
               brush1.oldX = brush1.x;
               brush1.oldY = brush1.y;
@@ -202,15 +198,9 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
           const vel = s.sqrt(dx ** 2 + dy ** 2);
           ink.currentStrokeTotalLength += vel;
           const velocityStrokeScaling = vel / ink.velocityScaling;
-          const velocityShadeScaling = ink.VEL_DEPENDENT_SHADE ? vel / 2 : 0;
           const strokeSize = Math.min(
             maxBRUSH_SIZE,
             s.max(ink.BRUSH_SIZE / (1 + velocityStrokeScaling), 1)
-          );
-          //To lighten depending on velocity
-          const scaledStrokeShade = s.min(
-            BACKGROUND_COLOR * 0.75,
-            (s.brightness(state.current.activeColor) * 2.55) + velocityShadeScaling
           );
           if (s.mouseIsPressed && inStroke) {
             //   s.fill(127 * (1 + 0.5 * s.sin(s.frameCount * 3)));
@@ -300,7 +290,6 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
             const d = Math.sqrt(dx ** 2 + dy ** 2);
             const vx = dx * lines.spring;
             const vy = dy * lines.spring;
-            const v = Math.sqrt(vx ** 2 + vy ** 2);
             const prevX = lines.brushX;
             const prevY = lines.brushY;
             lines.brushX += vx;
@@ -335,7 +324,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
 
       s.image(buffer, 0, 0)
       //if the clear switch has been toggled by the toolbar, we save an undo frame, clear, and align the local tracking variable to match it so we cathc the next flip
-      if (state.current.canvasClearSwitch != localBufferClearSwitch) {
+      if (state.current.canvasClearSwitch !== localBufferClearSwitch) {
         saveUndoFrame();
         buffer.clear();
         s.clear();
@@ -344,7 +333,7 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
         localBufferClearSwitch = state.current.canvasClearSwitch
       }
       //If the undo switch is tripped, clear the buffer, image the undo buffer (should be one stroke behind) and remove that undo frame from the stack
-      if (state.current.canvasUndoSwitch != localUndoSwitch) {
+      if (state.current.canvasUndoSwitch !== localUndoSwitch) {
         undo();
         localUndoSwitch = state.current.canvasUndoSwitch
       }
@@ -483,7 +472,6 @@ const CalligraphyCanvas = (props: CalligraphyCanvasProps) => {
   /**Creates the p5 canvas instance */
   useEffect(() => {
     const myP5: p5 = new p5(sketch, canvasDivRef.current!);
-    setP5Instance(myP5);
     return myP5.remove;
   }, []);
   return (

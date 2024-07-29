@@ -1,6 +1,6 @@
-import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
+import { ComposerComponentProps, FeedComponentProps } from './types'
 import './BlockStyles.css'
-import { TextField, Box, Button, Typography } from '@mui/material';
+import { TextField, Box, Typography } from '@mui/material';
 import { useState, useEffect } from "react";
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';

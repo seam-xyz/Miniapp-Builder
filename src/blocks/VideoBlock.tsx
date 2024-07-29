@@ -50,7 +50,7 @@ const VideoBlockEditor: React.FC<{ model: BlockModel, done: (data: BlockModel) =
   useEffect(() => {
     // Reset the state when component is mounted or updated
     setUploadedUrl(model.data['url'] || "");
-  }, [model.data['url']]);
+  }, [uploadedUrl]);
 
   return (
     <div className="w-full h-full">

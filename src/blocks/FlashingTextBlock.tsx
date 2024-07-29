@@ -1,9 +1,7 @@
-import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
-import BlockFactory from './BlockFactory';
+import { ComposerComponentProps, FeedComponentProps } from './types'
 import './BlockStyles.css'
 import { FormControlLabel, Checkbox, TextField, Box, Button, Slider, InputLabel } from '@mui/material';
 import { useState, useEffect } from "react";
-import SeamSaveButton from '../components/SeamSaveButton';
 
 interface FlashingTextProps {
   content: string;

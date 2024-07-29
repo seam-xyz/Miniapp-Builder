@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import { makeStyles } from "@mui/styles";
-import { Search, Send } from 'react-feather';
+import { Search } from 'react-feather';
 import { debounce } from '@mui/material';
 
 const useStyles = makeStyles({
@@ -24,12 +24,10 @@ const useStyles = makeStyles({
 const SearchForm = (props) => {
   const classes = useStyles();
   const [searchTerm, setSearchTerm] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
 
   const debouncedSearch = useCallback(
     debounce((term) => {
       if (term.trim().length >= 3) {
-        setErrorMsg('');
         props.handleSearch(term);
       }
     }, 500),
@@ -45,11 +43,6 @@ const SearchForm = (props) => {
   const handleInputChange = (event) => {
     const newSearchTerm = event.target.value;
     setSearchTerm(newSearchTerm);
-    if (newSearchTerm.trim().length < 3) {
-      setErrorMsg('Please enter at least 3 characters.');
-    } else {
-      setErrorMsg('');
-    }
   };
 
   return (

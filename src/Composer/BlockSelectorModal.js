@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
 import BlockFactory from '../blocks/BlockFactory';
 
@@ -11,7 +11,7 @@ const BlockSelectorModal = ({ selectedBlockType, initialBlockData, setSelectedBl
     if (divRef.current && divRef.current.offsetWidth > 0) {
       setWidth(divRef.current.offsetWidth);
     }
-  }, [divRef.current]);
+  }, []);
 
   const done = (data) => {
     setSelectedBlockData(data);  // Update the block data in parent component

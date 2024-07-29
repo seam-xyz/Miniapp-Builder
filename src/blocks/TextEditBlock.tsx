@@ -1,7 +1,6 @@
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import TextEditor from './TextEditor/TextEditor';
 import './TextEditor/TextEditorStyles.css';
-import BlockFactory from './BlockFactory';
 import { linkDecorator } from "./TextEditor/Link";
 import { ComposerComponentProps, FeedComponentProps } from './types';
 

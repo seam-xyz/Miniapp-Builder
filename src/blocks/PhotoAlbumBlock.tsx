@@ -30,6 +30,7 @@ const ImageFader = (props: { images: { image: string }[], duration: number }) =>
         <img
           key={image.image}
           src={image.image}
+          alt="User post"
           title="image"
           style={{
             height: `100%`,

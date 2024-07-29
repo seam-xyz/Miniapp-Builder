@@ -1,5 +1,4 @@
-import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
-import BlockFactory from './BlockFactory';
+import { ComposerComponentProps, FeedComponentProps } from './types'
 import './BlockStyles.css'
 
 import CSS from 'csstype';
@@ -72,16 +71,6 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
     initialPixels && setPixels(initialPixels);
     setShowGrid(shouldShowGridInViewMode || isEditMode);
   }, [props])
-
-  const clearCanvas = () => {
-    const canvasContext = canvasRef?.current?.getContext('2d');
-    if (!canvasContext) {
-      return;
-    }
-
-    setPixels(generateDefaultPixelsState());
-    drawPixelArt(showGrid);
-  }
 
   const ensureValidPixelsArray = () => {
     if (pixels.length === numPixelsPerSide) {
@@ -249,11 +238,6 @@ const PixelCanvas: React.FC<PixelCanvasProps> = (props: PixelCanvasProps) => {
     if (onSave) {
       onSave(numPixelsPerSide, pixels, showGridInViewMode, backgroundColor);
     }
-  }
-
-  const handleCanvasMouseUp = () => {
-    setIsMouseDownOnCanvas(false);
-    setButtonClicked(null);
   }
 
   const canvasStyles: CSS.Properties = {

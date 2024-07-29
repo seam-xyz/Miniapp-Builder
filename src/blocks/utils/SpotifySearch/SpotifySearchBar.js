@@ -16,7 +16,7 @@ const SpotifySearchBar = ({ onChooseTrack, selectedTrack }) => {
 
     initiateGetResult(searchTerm)().then((tracks) => {
       setIsLoading(false);
-      if (tracks == undefined) {
+      if (tracks === undefined) {
         Sentry.captureException("Song step broken")
         setError(true)
       } else {

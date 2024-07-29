@@ -1,4 +1,3 @@
-import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 import Iframely from './utils/Iframely';
 import Box from "@mui/material/Box";

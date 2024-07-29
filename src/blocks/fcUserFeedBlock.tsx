@@ -1,4 +1,4 @@
-import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
+import { ComposerComponentProps, FeedComponentProps } from './types'
 import './BlockStyles.css'
 import { useEffect, useState } from 'react';
 import { Box, Button, Card, Stack, TextField } from '@mui/material';
@@ -42,11 +42,11 @@ function CastFeed({ fid }: { fid: any }) {
       {castData.casts.map((cast: any) => (
         <Card style={{ margin: 5, padding: 12 }}>
           <Stack direction="row" spacing={2}>
-            <img src={cast.author.pfp_url} style={{ height: "36px", width: "36px" }} />
+            <img src={cast.author.pfp_url} alt="Farcaster user profile" style={{ height: "36px", width: "36px" }} />
             <Stack direction="column" spacing={2}>
               <h4>{cast.author.username}</h4>
               <p>{cast.text}</p>
-              {cast.embeds.length > 0 && <img src={cast.embeds[0].url} style={{ maxWidth: 300 }} />}
+              {cast.embeds.length > 0 && <img src={cast.embeds[0].url} alt="Farcaster post embed" style={{ maxWidth: 300 }} />}
               <Stack direction="row" spacing={2}>
                 <p>{cast.reactions.likes.length} likes</p>
                 <p>{cast.replies.count} replies</p>

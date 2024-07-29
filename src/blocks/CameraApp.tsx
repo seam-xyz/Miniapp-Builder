@@ -5,7 +5,7 @@ import { Box, CircularProgress, Button } from '@mui/material';
 import { FirebaseStorage } from '@capacitor-firebase/storage';
 import { nanoid } from 'nanoid';
 import SeamSaveButton from '../components/SeamSaveButton';
-import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
+import { ComposerComponentProps, FeedComponentProps } from './types';
 import './BlockStyles.css';
 
 interface CameraBlockProps {
@@ -154,6 +154,7 @@ const errorState = () => {
   return (
     <img
       src="https://www.shutterstock.com/image-illustration/no-picture-available-placeholder-thumbnail-600nw-2179364083.jpg"
+      alt="Placeholder for post error state"
       title="Image"
       style={{ height: '100%', width: '100%' }}
     />
@@ -168,7 +169,7 @@ export const CameraFeedComponent = ({ model }: FeedComponentProps) => {
 
   return (
     <div style={{ display: 'block', width: '100%' }}>
-      <img src={url} style={{ width: '100%', height: 'auto' }} />
+      <img src={url} alt="Camera Feed" style={{ width: '100%', height: 'auto' }} />
     </div>
   );
 }

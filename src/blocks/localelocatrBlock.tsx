@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { GoogleMap } from "@react-google-maps/api";
 import { LoadScript } from "@react-google-maps/api";
 import { OutputFormat, setDefaults } from 'react-geocode';
-import { Autocomplete, Button, Paper, TextField, Typography } from '@mui/material';
+import { Autocomplete, Paper, TextField, Typography } from '@mui/material';
 import SeamSaveButton from '../components/SeamSaveButton';
 
 const api_Key = process.env.REACT_APP_GOOGLE_MAPS_KEY!;
@@ -480,13 +480,6 @@ const StreetView: React.FC = () => {
       setShowMap(false);
 
       getGeocodeResponse()
-        .then(response => {
-          const data = response.results
-          const streetAddress = data[0].formatted_address
-        })
-        .catch(error => {
-          console.error('Error fetching the geocode data:', error);
-        });
     }
   }, [isMapLoaded]);
 
@@ -583,7 +576,7 @@ const PostInFeed = ({ image, distance, guessCountryName, correctCountryName }: {
     return (<>
 
       <div className="relative flex flex-col h-3/4 justify-items-center">
-        <img className=" z-0 rounded-2xl h-3/4 inset-x-0  w-full relative" src={image} />
+        <img className=" z-0 rounded-2xl h-3/4 inset-x-0  w-full relative" src={image} alt="Google Map showing the original location prompted for the user to guess" />
         <div className=" absolute inset-x-0 bottom-0 mb-4 z-50 mx-6  p-6 bg-white border border-gray-200 rounded-2xl shadow ">
           <Typography variant="h6" align='center' component="div" color="black">
             Correct!
@@ -600,7 +593,7 @@ const PostInFeed = ({ image, distance, guessCountryName, correctCountryName }: {
 
   return (<>
     <div className="relative flex flex-col h-3/4 justify-items-center">
-      <img className=" z-0 rounded-2xl md:h-3/4 inset-x-0  w-full relative" src={image} />
+      <img className=" z-0 rounded-2xl md:h-3/4 inset-x-0  w-full relative" src={image} alt="Google Map showing the location for the user to guess" />
       <div className=" absolute inset-x-0 bottom-0 mb-4 z-50 mx-6  flex flex-col size-auto p-6 bg-white border border-gray-200 rounded-2xl shadow ">
         <Typography variant="h6" align='center' component="div" color="black">
           Incorrect

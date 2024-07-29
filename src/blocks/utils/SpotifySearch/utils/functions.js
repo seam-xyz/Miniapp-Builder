@@ -13,7 +13,7 @@ export const getParamValues = (url) => {
 
 const getAuth = async () => {
   var currentURL = window.location.protocol + '//' + window.location.host; // use this to avoid cors on dev and preview deployments
-  if (currentURL == "capacitor://localhost") { currentURL = "https://www.seam.so" };
+  if (currentURL === "capacitor://localhost") { currentURL = "https://www.seam.so" };
   const apiURL = currentURL + "/api/spotifySearch?id=" + process.env.REACT_APP_SPOTIFY_CLIENT_ID
   var tokenResponse = ''
   try {

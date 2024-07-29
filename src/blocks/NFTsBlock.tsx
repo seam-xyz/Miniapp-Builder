@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import ViewListIcon from '@mui/icons-material/ViewList';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 
-import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
+import { ComposerComponentProps, FeedComponentProps } from './types'
 import TitleComponent from './utils/TitleComponent';
 import './BlockStyles.css'
 import { ImageList, ImageListItem, ToggleButton, ToggleButtonGroup } from '@mui/material';

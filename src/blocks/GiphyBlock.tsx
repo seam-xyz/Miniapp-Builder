@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Search } from 'react-feather';
-import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
+import { ComposerComponentProps, FeedComponentProps } from './types';
 import { GiphyFetch, GifsResult } from '@giphy/js-fetch-api';
 import { Box } from '@mui/material';
 import debounce from 'lodash/debounce';

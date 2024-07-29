@@ -1,4 +1,4 @@
-import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
+import { ComposerComponentProps, FeedComponentProps } from './types'
 import './BlockStyles.css'
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ImageIcon from '@mui/icons-material/Image';

@@ -57,6 +57,7 @@ const renderErrorState = () => {
   return (
     <img
       src="https://www.shutterstock.com/image-illustration/no-picture-available-placeholder-thumbnail-600nw-2179364083.jpg"
+      alt="User post"
       title="Image"
       style={{ height: '100%', width: '100%' }}
     />

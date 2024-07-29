@@ -1,4 +1,4 @@
-import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
+import { ComposerComponentProps, FeedComponentProps } from './types'
 
 export const UnknownFeedComponent = ({ model }: FeedComponentProps) => {
   return (

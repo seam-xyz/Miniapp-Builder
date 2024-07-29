@@ -342,24 +342,6 @@ const WhiteboardEdit = (props: WhiteboardEditProps) => {
   )
 }
 
-// stringSizeToNumber takes an input size string like '400px' and returns 400
-function stringSizeToNumber(size: string | undefined): number {
-  if (size === undefined) {
-    return 400
-  }
-
-  const num = parseInt(size)
-  if (!isNaN(num)) {
-    return num
-  }
-
-  const regexMatch = size.match(/\d+/)
-  if (!regexMatch) {
-    return 0
-  }
-  return parseInt(regexMatch[0])
-}
-
 export const WhiteboardFeedComponent = ({ model }: FeedComponentProps) => {
   const { imageData } = model.data;
 
