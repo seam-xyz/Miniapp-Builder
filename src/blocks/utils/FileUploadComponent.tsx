@@ -77,12 +77,32 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({ fileTypes, la
       }
   
       if (result.files.length > 0) {
-        handleFilesUpload(result.files);
+        const validFiles = result.files.filter(file => {
+          const isImage = file.name.match(/\.(jpeg|jpg|gif|png)$/);
+          const isVideo = file.name.match(/\.(mp4|mkv|mov)$/);
+          const sizeInMB = file.size / (1024 * 1024);
+          
+          if (isImage && sizeInMB <= 100) {
+            return true;
+          } else if (isVideo && sizeInMB <= 500) {
+            return true;
+          } else {
+            alert("File size exceeds the upload limit (100MB for images, 500MB for videos)")
+            console.error("File size exceeds the limit or invalid file type");
+            return false;
+          }
+        });
+  
+        if (validFiles.length > 0) {
+          handleFilesUpload(validFiles);
+        } else {
+          setUploading(false);
+        }
       }
     } catch (error) {
       console.error("File selection cancelled by user or failed", error);
     }
-  };
+  };  
 
   return (
     <div>
