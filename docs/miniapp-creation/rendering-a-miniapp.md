@@ -1,6 +1,17 @@
-# Rendering a Miniapp
+---
+description: >-
+  Taking user data and displaying it in the feed when people post with your
+  miniapp
+---
 
-After creating your new miniapp using our magic script, there are only 2 functions you need to write to make your miniapp.
+# Feed Component
 
-* The `render()` function renders the miniapp based on the data it has in its `BlockModel` as a post in the feed.
-* The `renderEditModal` function renders the creation experience, which is typically a form for the user to add their customization options into. It also has a `done` function, which automatically saves the model to the Seam server.
+After running the `./seam-magic.sh` script from the quickstart, you'll have created a feed component like this:
+
+```
+export const BookshelfFeedComponent = ({ model }: FeedComponentProps) => {
+  return (
+    <BookDetail title={model.data['title']} author={model.data['author']} coverImage={model.data['coverImage']} />
+   );
+}
+```

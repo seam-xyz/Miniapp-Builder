@@ -1,15 +1,17 @@
 # Table of contents
 
-* [Seam Miniapp Maker](../README.md)
+* [Introduction](README.md)
+* [Seam Miniapp Maker](untitled.md)
 
-## Overview
+## Get Started
 
-* [Quickstart](overview/quickstart.md)
-* [Manual Creation](overview/manual-creation.md)
+* [Quickstart](get-started/quickstart.md)
+* [Local Environment Setup](get-started/local-environment-setup.md)
 
 ## Miniapp Creation
 
-* [Rendering a Miniapp](miniapp-creation/rendering-a-miniapp.md)
+* [Composer Component](miniapp-creation/composer-component.md)
+* [Feed Component](miniapp-creation/rendering-a-miniapp.md)
 * [Saving User Data](miniapp-creation/saving-user-data.md)
 * [Uploading Images, Videos, and Files](miniapp-creation/uploading-images-videos-and-files.md)
 * [Miniapp Icons](miniapp-creation/miniapp-icons.md)
