@@ -1,5 +1,6 @@
 # Table of contents
 
+* [README](README.md)
 * [Seam Miniapp Maker](../README.md)
 
 ## Overview
