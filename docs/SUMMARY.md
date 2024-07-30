@@ -1,11 +1,11 @@
-# Overview
+# Creating Miniapps on Seam
 
-* [Overview](README.md)
+* [Creating Miniapps on Seam](README.md)
 
 ## Get Started
 
-* [Quickstart](getting-started/quickstart.md)
-* [Local Environment Setup](getting-started/local-environment-setup.md)
+* [Quickstart](get-started/quickstart.md)
+* [Local Environment Setup](get-started/local-environment-setup.md)
 
 ## Miniapp Creation
 
