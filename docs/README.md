@@ -1,4 +1,4 @@
-# Seam Miniapp Maker
+# Creating Miniapps on Seam
 
 <div align="center">
 
@@ -11,7 +11,8 @@
 </div>
 
 <figure><img src="https://github.com/seam-xyz/Miniapp-Builder/assets/7350670/1929270a-3b8e-46b2-ab60-824b248b9bcb" alt=""><figcaption><p>Miniapps are the future of sharing on social media</p></figcaption></figure>
-# Create apps & games for a gen-z social network!
+
+## Create apps & games for a gen-z social network!
 
 [Seam](https://www.seam.so) is a social network that allows users to build and sell open-source miniapps. It provides a platform for online creatives to showcase their work, curate inspiration, and collaborate with peers.
 
