@@ -11,14 +11,11 @@
 </div>
 
 <figure><img src="https://github.com/seam-xyz/Miniapp-Builder/assets/7350670/1929270a-3b8e-46b2-ab60-824b248b9bcb" alt=""><figcaption><p>Miniapps are the future of sharing on social media</p></figcaption></figure>
+# Create apps & games for a gen-z social network!
 
 [Seam](https://www.seam.so) is a social network that allows users to build and sell open-source miniapps. It provides a platform for online creatives to showcase their work, curate inspiration, and collaborate with peers.
 
 We've made it easy in [this repository](https://github.com/seam-xyz/Miniapp-Builder) to make a new miniapp, and then publish it live so that anyone else in the world can use your new creation, too. We're all building this together!
-
-Read the full documentation at [https://docs.getseam.xyz/](https://docs.getseam.xyz/).
-
-🚧 Note: The Seam platform is under constant development, and occasionally the miniapp builder might lag behind the functionality on the Seam platform. If there currently isn't a way to build what you're dreaming up, feel free to file a github issue as a feature request. 🚧
 
 #### What are miniapps?
 
