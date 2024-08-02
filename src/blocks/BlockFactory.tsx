@@ -69,6 +69,7 @@ export default class BlockFactory {
       case "Map": return <MapFeedComponent model={model} />;
       case "Calligraphy": return <CalligraphyFeedComponent model={model} />;
       case "localelocatr": return <LocalelocatrFeedComponent model={model} />;
+      case "JustAThought": return <JustAThoughtFeedComponent model={model} />;
       // new feed components go here
       default: return UnknownFeedComponent({ model });
     }
