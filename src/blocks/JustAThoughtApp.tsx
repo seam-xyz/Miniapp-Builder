@@ -46,23 +46,25 @@ const ThoughtEditor: React.FC<ThoughtEditorProps> = ({ model, done }) => {
         className="w-full p-2 mb-4 border rounded"
         placeholder="Enter your thought (max 120 characters)"
       />
-      <div className="mb-4">
-        <label className="block mb-2">Background Color:</label>
-        <input
-          type="color"
-          value={bgColor}
-          onChange={(e) => setBgColor(e.target.value)}
-          className="w-full"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block mb-2">Text Color:</label>
-        <input
-          type="color"
-          value={textColor}
-          onChange={(e) => setTextColor(e.target.value)}
-          className="w-full"
-        />
+      <div className="grid grid-cols-2 mb-4">
+        <div className="mb-4">
+          <label className="block mb-2">Background Color:</label>
+          <input
+            type="color"
+            value={bgColor}
+            onChange={(e) => setBgColor(e.target.value)}
+            className="w-full"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block mb-2">Text Color:</label>
+          <input
+            type="color"
+            value={textColor}
+            onChange={(e) => setTextColor(e.target.value)}
+            className="w-full"
+          />
+        </div>
       </div>
       <div className="mb-4">
         <p>Preview:<br/></p>
