@@ -696,7 +696,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
         currentBrush={currentBrush}
         setImageDataURL={props.setImageDataURL}
       />
-      <Box style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} className='my-4 w-full h-[200px] flex flex-col overflow-y-scroll space-y-4'>
+      <Box style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} className={`my-4 w-[${props.width}] h-[${props.width}] flex flex-col overflow-y-scroll space-y-4`}>
         <CalligraphyToolbarTab
           activeToolbarTab={activeToolbarTab}
           activeColor={activeColor}
@@ -732,6 +732,6 @@ export const CalligraphyComposerComponent = ({ model, done, width }: ComposerCom
   //function to be called inside p5 sketch to save current canvas contents using HTMLCanvas.toDataURL()
   const setImageDataURL = (imageDataURL: string) => model.data["imageData"] = imageDataURL
   return (
-    <CalligraphyEdit onSave={onSave} setImageDataURL={setImageDataURL} width={width ?? 500} />
+    <CalligraphyEdit onSave={onSave} setImageDataURL={setImageDataURL} width={width ?? 300} />
   )
 }
