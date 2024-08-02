@@ -2,8 +2,6 @@ import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
 import './BlockStyles.css'
 import { TextField, Box, Button, Typography } from '@mui/material';
 import { useState, useEffect } from "react";
-import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import SeamSaveButton from '../components/SeamSaveButton';
 
 interface CountdownBlockProps {
@@ -135,14 +133,12 @@ function CountdownEditModal({ onFinish }: CountdownEditModalProps){
           onChange={(e) => setFinishMessage(e.target.value)}
           style={{ marginBottom: '20px' }} 
         />
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DateTimePicker
+          {/* <DateTimePicker
             label="End Time"
             value={selectedDate}
             slotProps={{ textField: { fullWidth: true } }}
             onChange={handleDateChange}
-          />
-        </LocalizationProvider>
+          /> */}
         <SeamSaveButton onClick={onFormSubmit} />
       </Box>
     );

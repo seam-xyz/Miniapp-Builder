@@ -1,14 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ComposerComponentProps, BlockModel, FeedComponentProps } from './types';
-import { FirebaseStorage } from '@capacitor-firebase/storage';
-import { nanoid } from 'nanoid';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import MicIcon from '@mui/icons-material/Mic';
 import { CircularProgress } from '@mui/material';
-import { Capacitor } from '@capacitor/core';
 import { StopCircleRounded, PlayCircleRounded } from '@mui/icons-material';
 import { useRecordAudio } from './utils/RecordAudio';
+import unmuteIosAudio from './utils/unmuteIosAudio';
 
 export const VoiceComposerComponent = ({ model, done }: ComposerComponentProps) => {
   const [uploading, setUploading] = useState(false);
@@ -205,6 +203,8 @@ export const VoiceFeedComponent = ({ model }: FeedComponentProps) => {
 
   const playAudio = () => {
     if (audioContextRef.current && audioBufferRef.current && analyserRef.current) {
+      unmuteIosAudio();
+
       sourceNodeRef.current = audioContextRef.current.createBufferSource();
       sourceNodeRef.current.buffer = audioBufferRef.current;
       sourceNodeRef.current.connect(analyserRef.current);
