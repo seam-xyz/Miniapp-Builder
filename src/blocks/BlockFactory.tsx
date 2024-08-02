@@ -31,6 +31,7 @@ import { LinkBookmarkFeedComponent, LinkBookmarkComposerComponent } from './Link
 import { VideoFeedComponent, VideoComposerComponent } from './VideoBlock'
 import { MondrianFeedComponent, MondrianComposerComponent } from './MondrianBlock'
 import { WordleFeedComponent, WordleComposerComponent } from './WordleBlock'
+import { VoiceFeedComponent, VoiceComposerComponent } from './VoiceApp'
 import { BlockModel, BlockTypes, ComposerComponentProps } from './types'
 
 export default class BlockFactory {
@@ -68,6 +69,7 @@ export default class BlockFactory {
       case "Map": return <MapFeedComponent model={model} />;
       case "Calligraphy": return <CalligraphyFeedComponent model={model} />;
       case "localelocatr": return <LocalelocatrFeedComponent model={model} />;
+      case "Voice": return <VoiceFeedComponent model={model} />;
       // new feed components go here
       default: return UnknownFeedComponent({ model });
     }
@@ -108,6 +110,7 @@ export default class BlockFactory {
       case "Map": return MapComposerComponent(props);
       case "Calligraphy": return CalligraphyComposerComponent(props);
       case "localelocatr": return LocalelocatrComposerComponent(props);
+      case "Voice": return VoiceComposerComponent(props);
       // new composer components go here
       default: return UnknownComposerComponent(props);
     }
