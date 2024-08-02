@@ -188,21 +188,13 @@ function Composer({ addNewPost }) {
 
   const renderBlockPreview = (blockData) => {
     if (!blockData) return <div>No Block Data</div>;
-    const blockPreview = BlockFactory.getBlock(
-      blockData,
-      defaultTheme
-    )?.render?.();
-
-    if (!blockPreview) {
-      return <div>Preview not available</div>;
-    }
 
     return (
       <div
         className="flex flex-row justify-center min-w-full min-h-full"
         ref={blockPreviewRef}
       >
-        {blockPreview}
+        {BlockFactory.getFeedComponent(blockData)}
         <div className="flex grow"></div>
       </div>
     );

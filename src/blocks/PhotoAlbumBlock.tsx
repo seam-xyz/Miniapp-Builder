@@ -1,10 +1,7 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import { Button, TextField, IconButton, Box } from "@mui/material";
 import { PlusCircle, MinusCircle } from "react-feather";
-import Block from './Block';
-import { BlockModel } from './types';
-import BlockFactory from './BlockFactory';
-import './BlockStyles.css';
+import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
 
 // Handles fading images
 const ImageFader = (props: { images: { image: string }[], duration: number }) => {
@@ -144,27 +141,15 @@ const PhotoAlbumEditModal: React.FC<EditModalProps> = ({ model, done }) => {
   )
 };
 
-export default class PhotoAlbumBlock extends Block {
-  render() {
-    // renders tap to customize message by default
-    if (Object.keys(this.model.data).length === 0 || this.model.data['images'].length === 0) { // default empty block if image array is empty
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
-    }
-    let images = convertToObjects(this.model.data['images']) // stores form data object in "images"
-    let duration = parseFloat(this.model.data['duration'] ?? "5") * 1000; // turns duration string from form into float, 5000ms by default, converts to seconds
+export const PhotoAlbumFeedComponent = ({ model }: FeedComponentProps) => {
+  let images = convertToObjects(model.data['images']);
+  let duration = parseFloat(model.data['duration'] ?? "5") * 1000;
 
-    return <ImageFader images={images} duration={duration}></ImageFader>
-  }
+  return <ImageFader images={images} duration={duration} />;
+}
 
-  renderEditModal(done: (data: BlockModel) => void) {
-    return (
-      <PhotoAlbumEditModal model={this.model} done={done} />
-    );
-  }
-
-  renderErrorState() {
-    return (
-      <h1>Error!</h1>
-    )
-  }
+export const PhotoAlbumComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  return (
+    <PhotoAlbumEditModal model={model} done={done} />
+  );
 }

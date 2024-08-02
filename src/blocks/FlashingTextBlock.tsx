@@ -1,5 +1,4 @@
-import Block from './Block'
-import { BlockModel } from './types'
+import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 import { FormControlLabel, Checkbox, TextField, Box, Button, Slider, InputLabel } from '@mui/material';
@@ -124,106 +123,85 @@ function AsciiArtControls({ checked, lineHeight } : AsciiArtControlsProps) {
   )
 }
 
-export default class FlashingTextBlock extends Block {
+export const FlashingTextFeedComponent = ({ model }: FeedComponentProps) => {
+  let text = model.data['text'];
+  let isAscii = model.data['isAscii'];
+  let lineHeight = model.data['lineHeight'];
+  let transitionDuration = model.data['transitionDuration'];
 
-  render() {
-    
-    if (Object.keys(this.model.data).length === 0) {
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!);
-    }
-
-    let text = this.model.data['text'];
-    let isAscii = this.model.data['isAscii'];
-    let lineHeight = this.model.data['lineHeight'];
-    let transitionDuration = this.model.data['transitionDuration'];
-
-    if (text === undefined) {
-      return this.renderErrorState();
-    }
-
-    return (
-        <FlashingText
-           content={text}
-           contentColor={this.theme.palette.info.main}
-           backgroundColor={this.theme.palette.secondary.main}
-           isAscii={isAscii}
-           lineHeight={lineHeight}
-           transitionDuration={transitionDuration}/>
-    );
+  if (text === undefined) {
+    return <h1>Text not found</h1>;
   }
 
-  renderEditModal(done: (data: BlockModel) => void) {
+  return (
+    <FlashingText
+      content={text}
+      contentColor={"black"}
+      backgroundColor={"white"}
+      isAscii={isAscii}
+      lineHeight={lineHeight}
+      transitionDuration={transitionDuration}
+    />
+  );
+}
 
-    const onFinish = (event: any) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      let text = data.get('text') as string;
-      let transitionDuration = data.get('transitionDuration') as string;
-      // if the checkbox was checked, ascii="yes" so data.get('ascii') returns yes
-      // if the checkbox wasn't checked, ascii won't be a key and so data.get('ascii') will return null
-      let isAscii = data.get('ascii');
+export const FlashingTextComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  const onFinish = (event: any) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    let text = data.get('text') as string;
+    let transitionDuration = data.get('transitionDuration') as string;
+    let isAscii = data.get('ascii');
 
-      // if isAscii is truthy, then we update the isAscii value and lineHeight value
-      // if isAscii is falsy, then we update the isAscii value. we can leave the lineHeight value
-      // alone since it doesn't affect the text when it isn't ascii art. this also
-      // has the benefit of saving the last used value for ascii art
-      if (isAscii) {
-        this.model.data['isAscii'] = "true";
-        this.model.data['lineHeight'] = data.get('lineHeight') as string;
-      }
-      else {
-        this.model.data['isAscii'] = "false";
-      }
+    if (isAscii) {
+      model.data['isAscii'] = "true";
+      model.data['lineHeight'] = data.get('lineHeight') as string;
+    }
+    else {
+      model.data['isAscii'] = "false";
+    }
 
-      this.model.data['text'] = text;
-      this.model.data['transitionDuration'] = transitionDuration;
-      done(this.model);
-    };
+    model.data['text'] = text;
+    model.data['transitionDuration'] = transitionDuration;
+    done(model);
+  };
 
-    return (
-      <Box
-        component="form"
-        onSubmit={onFinish}
-        style={{}}
+  return (
+    <Box
+      component="form"
+      onSubmit={onFinish}
+    >
+      <TextField
+        margin="normal"
+        required
+        defaultValue={model.data['text']}
+        fullWidth
+        multiline
+        id="text"
+        label="Text"
+        name="text"
+      />
+      <InputLabel>Transition Duration (seconds): </InputLabel>
+      <Slider
+        name="transitionDuration"
+        aria-label="Transition Duration"
+        defaultValue={parseFloat(model.data['transitionDuration']) || 1.0}
+        valueLabelDisplay="auto"
+        step={0.1}
+        min={0.3}
+        max={3}
+      />
+      {model.data['isAscii'] === "true" 
+        ? <AsciiArtControls checked={true} lineHeight={model.data['lineHeight'] || "1.0"} />
+        : <AsciiArtControls checked={false} lineHeight={model.data['lineHeight'] || "1.0"} />}
+      <Button
+        type="submit"
+        variant="contained"
+        className="save-modal-button"
+        sx={{ mt: 3, mb: 2 }}
       >
-        <TextField
-          margin="normal"
-          required
-          defaultValue={this.model.data['text']}
-          fullWidth
-          multiline
-          id="text"
-          label="Text"
-          name="text"
-        />
-        <InputLabel>Transition Duration (seconds): </InputLabel>
-        <Slider
-          name="transitionDuration"
-          aria-label="Transition Duration"
-          defaultValue={parseFloat(this.model.data['transitionDuration']) || 1.0}
-          valueLabelDisplay="auto"
-          step={0.1}
-          min={0.3}
-          max={3}>
-          </Slider>
-        {this.model.data['isAscii'] === "true" 
-          ? <AsciiArtControls checked={true} lineHeight={this.model.data['lineHeight'] || "1.0"}></AsciiArtControls>
-          : <AsciiArtControls checked={false} lineHeight={this.model.data['lineHeight'] || "1.0"}></AsciiArtControls>}
-        <Button
-          type="submit"
-          variant="contained"
-          className="save-modal-button"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          Preview
-        </Button>
-      </Box>
-    );
-  }
-
-  renderErrorState() {
-    return (
-      <h1>Error!</h1>
-    );
-  }
+        Preview
+      </Button>
+    </Box>
+  );
 }

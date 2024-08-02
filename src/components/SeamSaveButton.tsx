@@ -3,18 +3,20 @@ import { Button } from '@mui/material';
 
 interface SeamSaveButtonProps {
   onClick: any;
+  title?: string
 }
 
-const SeamSaveButton: React.FC<SeamSaveButtonProps> = ({ onClick }) => {
+const SeamSaveButton: React.FC<SeamSaveButtonProps> = ({ onClick, title }) => {
+  title = title || "Preview";
   return (
-    <div className="flex justify-between items-center w-full h-[60px] mt-4">
+    <div className="flex justify-between items-center w-full h-[60px]">
       <Button
         variant="contained"
         fullWidth
         onClick={onClick}
         className="save-modal-button"
       >
-        Preview
+        {title}
       </Button>
     </div>
   );

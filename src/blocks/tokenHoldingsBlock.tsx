@@ -4,13 +4,9 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
-import Block from './Block'
-import { BlockModel } from './types'
+import { ComposerComponentProps, FeedComponentProps } from './types'
 import TitleComponent from './utils/TitleComponent';
-
-import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
-import { Theme } from '@mui/material';
 
 interface TokenGridProps {
   /**
@@ -18,7 +14,6 @@ interface TokenGridProps {
    * Required.
    */
   ownerAddress: string;
-  theme: Theme
 }
 
 function LookupTokens(props: TokenGridProps) {
@@ -54,70 +49,58 @@ function LookupTokens(props: TokenGridProps) {
   );
 }
 
-export default class tokenHoldingsBlock extends Block {
-  render(width?: string, height?: string) {
-    if (Object.keys(this.model.data).length === 0 || !this.model.data['ownerAddress']) {
-      return BlockFactory.renderEmptyState(this.model, this.onEditCallback!)
-    }
-    const ownerAddress = this.model.data["ownerAddress"]
-    const title = this.model.data['title']
-    return (
-      <div style={{ position: 'absolute', height: height, overflow: 'scroll' }}>
-        {title && TitleComponent(this.theme, title)}
-        <LookupTokens ownerAddress={ownerAddress}
-          theme={this.theme}
-           />
-      </div>
-    );
-  }
+export const TokenHoldingsFeedComponent = ({ model }: FeedComponentProps) => {
+  const ownerAddress = model.data["ownerAddress"];
+  const title = model.data['title'];
 
-  renderEditModal(done: (data: BlockModel) => void) {
-    const onFinish = (event: any) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      this.model.data['ownerAddress'] = (data.get('ownerAddress') as string).toLowerCase()  
-      this.model.data['title'] = data.get('title') as string
-      done(this.model)
-    };
+  return (
+    <div style={{ position: 'absolute', overflow: 'scroll' }}>
+      {title && TitleComponent(title)}
+      <LookupTokens ownerAddress={ownerAddress} />
+    </div>
+  );
+}
 
-    return (
-      <Box
-        component="form"
-        onSubmit={onFinish}
-        style={{}}
+export const TokenHoldingsComposerComponent = ({ model, done }: ComposerComponentProps) => {
+  const onFinish = (event: any) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    model.data['ownerAddress'] = (data.get('ownerAddress') as string).toLowerCase();
+    model.data['title'] = data.get('title') as string;
+    done(model);
+  };
+
+  return (
+    <Box
+      component="form"
+      onSubmit={onFinish}
+      style={{}}
+    >
+      <TextField
+        margin="normal"
+        required
+        defaultValue={model.data['ownerAddress']}
+        fullWidth
+        id="ownerAddress"
+        label="Wallet Address or ENS"
+        name="ownerAddress"
+      />
+      <TextField
+        margin="normal"
+        defaultValue={model.data['title'] ?? "My Tokens"}
+        fullWidth
+        id="title"
+        label="Title"
+        name="title"
+      />
+      <Button
+        type="submit"
+        variant="contained"
+        className="save-modal-button"
+        sx={{ mt: 3, mb: 1 }}
       >
-        <TextField
-          margin="normal"
-          required
-          defaultValue={this.model.data['ownerAddress']}
-          fullWidth
-          id="ownerAddress"
-          label="Wallet Address or ENS"
-          name="ownerAddress"
-        />
-        <TextField
-          margin="normal"
-          defaultValue={this.model.data['title'] ?? "My Tokens"}
-          fullWidth
-          id="title"
-          label="Title"
-          name="title"
-        />
-        <Button
-          type="submit"
-          variant="contained"
-          className="save-modal-button"
-          sx={{ mt: 3, mb: 1 }}
-        >
-          Save
-        </Button>
-      </Box>
-    )
-  }
-
-  renderErrorState() {
-    return (
-      <h1>Error loading Token Block</h1>
-    )
-  }
+        Save
+      </Button>
+    </Box>
+  );
 }

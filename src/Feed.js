@@ -38,7 +38,7 @@ function FeedItem({ post }) {
     <div className="flex flex-col items-start p-2 rounded-[20px] border border-gray-200 bg-[#FCFCFC] shadow-none">
       <SeamUserItem subtitle={BlockFactory.getPrintableBlockName(post) + " Miniapp"}/>
       <div className="w-full h-full max-w-full overflow-clip mt-2">
-        {BlockFactory.getBlock(post, defaultTheme).render()}
+        {BlockFactory.getFeedComponent(post)}
       </div>
       <div className="w-full mt-2">
         <div className="flex items-center">

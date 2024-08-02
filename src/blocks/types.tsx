@@ -9,7 +9,6 @@ import mapIcon from "./blockIcons/Map.png";
 import giphyIcon from "./blockIcons/GIPHY.png";
 import profileIcon from "./blockIcons/profileHeaderIcon.png";
 import musicIcon from "./blockIcons/Music.png";
-import randomGiphyIcon from "./blockIcons/randomGiphyIcon.png";
 import pixelArtIcon from "./blockIcons/pixelArtIcon.png";
 import nftIcon from "./blockIcons/nftIcon.png"
 import pokemonIcon from "./blockIcons/pokeball.png"
@@ -25,8 +24,11 @@ import bookIcon from './blockIcons/bookIcon.png'
 import WordleIcon from './blockIcons/WordleIcon.png'
 import MoodIcon from './blockIcons/MoodIcon.png'
 import WhiteboardIcon from './blockIcons/whiteboardIcon.png'
+import ImagePuzzleIcon from './blockIcons/imagePuzzleIcon.webp'
+import CameraIcon from './blockIcons/CameraIcon.png'
 import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
+import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 
 export type BlockModel = {
   type: string;
@@ -34,15 +36,22 @@ export type BlockModel = {
   uuid: string; // must be unique to avoid layout issues
 };
 
+export interface FeedComponentProps {
+  model: BlockModel;
+  width?: number;
+}
+
+export interface ComposerComponentProps {
+  done: (data: BlockModel) => void;
+  model: BlockModel;
+  width?: number;
+}
+
 export type BlockType = {
   type: string;
   displayName: string; // in add block menu
   displayDescription: string; // in add block menu
-  emptyTitle: string; // before configuration in card
-  emptySubtitle: string; // before configuration in card
   icon: string; // in add block menu
-  minHeight?: number, // in rows, each row being 5px
-  minWidth?: number, // in column units
   deprecated: boolean; // if users can continue to add the block
   doesBlockPost: boolean; // do updates of this block show up in the feed?
   doesBlockEdit: boolean; // does the user need to edit this block?
@@ -56,8 +65,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "profile",
     displayName: "Profile Header ",
     displayDescription: "Display a profile picture, title, and bio.",
-    emptyTitle: "This is an empty profile header!",
-    emptySubtitle: "Configure your profile header.",
     icon: profileIcon,
     deprecated: false,
     doesBlockPost: false,
@@ -69,10 +76,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "PixelArt",
     displayName: "Pixel Art",
     displayDescription: "A block to make then display pixel art",
-    emptyTitle: "Empty Pixel Art Block",
-    emptySubtitle: "Tap here to setup your Pixel Art block!",
     icon: pixelArtIcon,
-    minWidth: 2,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
@@ -83,8 +87,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "giphy",
     displayName: "GIPHY ",
     displayDescription: "Choose a gif.",
-    emptyTitle: "This is an empty gif!",
-    emptySubtitle: "Choose your gif.",
     icon: giphyIcon,
     deprecated: false,
     doesBlockPost: true,
@@ -96,8 +98,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "text",
     displayName: "Text ",
     displayDescription: "Add text with formatting and links.",
-    emptyTitle: "This is an empty Text block!",
-    emptySubtitle: "Add some text here.",
     icon: textIcon,
     deprecated: false,
     doesBlockPost: true,
@@ -109,8 +109,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "iframe",
     displayName: "Website ",
     displayDescription: "Embed a clickable website.",
-    emptyTitle: "This is an empty IFrame block!",
-    emptySubtitle: "Add a website here.",
     icon: websiteIcon,
     deprecated: false,
     doesBlockPost: false,
@@ -122,8 +120,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "video",
     displayName: "Video",
     displayDescription: "Add a video from Youtube, Loom, or Vimeo using a URL.",
-    emptyTitle: "This is an empty video block!",
-    emptySubtitle: "Add a video link here.",
     icon: videoIcon,
     deprecated: false,
     doesBlockPost: true,
@@ -135,8 +131,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "image",
     displayName: "Image ",
     displayDescription: "Add an image using a URL.",
-    emptyTitle: "This is an empty Image block!",
-    emptySubtitle: "Add an image here.",
     icon: imageIcon,
     deprecated: false,
     doesBlockPost: true,
@@ -148,10 +142,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "link",
     displayName: "Button ",
     displayDescription: "Create a button.",
-    emptyTitle: "This is an empty button block!",
-    emptySubtitle: "Add a url for the button.",
     icon: linkIcon,
-    minHeight: 5,
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
@@ -162,8 +153,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "Link Bookmark",
     displayName: "Link ",
     displayDescription: "Add a link using a URL.",
-    emptyTitle: "This is an empty link block!",
-    emptySubtitle: "Add a url for a link.",
     icon: bookmarkIcon,
     deprecated: false,
     doesBlockPost: false,
@@ -174,10 +163,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
   twitter: {
     type: "twitter",
     displayName: "Twitter Profile ",
-    displayDescription:
-      "Automatically display latest tweets from a twitter profile.",
-    emptyTitle: "This is an empty Twitter feed block.",
-    emptySubtitle: "Add a twitter screen name.",
+    displayDescription: "Automatically display latest tweets from a twitter profile.",
     icon: twitterIcon,
     deprecated: true,
     doesBlockPost: false,
@@ -189,8 +175,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "tweet",
     displayName: "Single Tweet ",
     displayDescription: "Display a single tweet.",
-    emptyTitle: "This is an empty tweet block!",
-    emptySubtitle: "Add a tweet ID here.",
     icon: twitterIcon,
     deprecated: true,
     doesBlockPost: false,
@@ -202,34 +186,28 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "Music",
     displayName: "Music ",
     displayDescription: "Embed a song or playlist from Spotify or Soundcloud.",
-    emptyTitle: "This is an empty music block!",
-    emptySubtitle: "Add a music link.",
     icon: musicIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: "seam",
-    fullscreenEdit: false,
+    fullscreenEdit: true,
   },
   Map: {
     type: "Map",
     displayName: "Map ",
     displayDescription: "Display an interactive Google map.",
-    emptyTitle: "This is an empty map block!",
-    emptySubtitle: "Add a Google maps link.",
     icon: mapIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: "seam",
-    fullscreenEdit: false,
+    fullscreenEdit: true,
   },
   "Image Button": {
     type: "Image Button",
     displayName: "Image Button ",
     displayDescription: "Create a button with an image background.",
-    emptyTitle: "This is an empty Image button block!",
-    emptySubtitle: "Add an image and url to link to.",
     icon: twitterIcon,
     deprecated: true,
     doesBlockPost: false,
@@ -241,8 +219,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "instagram",
     displayName: "Instagram ",
     displayDescription: "Embed your Instagram.",
-    emptyTitle: "No Instagram here yet!",
-    emptySubtitle: "Choose your Instagram.",
     icon: giphyIcon,
     deprecated: true,
     doesBlockPost: false,
@@ -250,26 +226,10 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "seam",
     fullscreenEdit: false,
   },
-  RefreshingGIF: {
-    type: "RefreshingGIF",
-    displayName: "RefreshingGIF",
-    displayDescription:
-      "Get a new random GIF based on your search string every load of your page",
-    emptyTitle: "Empty RefreshingGIF Block",
-    emptySubtitle: "Tap here to setup your RefreshingGIF block!",
-    icon: randomGiphyIcon,
-    deprecated: false,
-    doesBlockPost: false,
-    doesBlockEdit: true,
-    createdBy: "andrew",
-    fullscreenEdit: false,
-  },
   "NFTs": {
     type: "NFTs",
     displayName: "NFTs",
     displayDescription: "View the first twenty NFTs in your ethereum wallet.",
-    emptyTitle: "Empty NFTs Block",
-    emptySubtitle: "Tap here to setup your NFTs block!",
     icon: nftIcon,
     deprecated: false,
     doesBlockPost: false,
@@ -281,8 +241,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "Pokemon",
     displayName: "Random Pokemon",
     displayDescription: "Displays a random Pokemon!",
-    emptyTitle: "Empty PokemonBlock Block",
-    emptySubtitle: "Tap here to setup your PokemonBlock block!",
     icon: pokemonIcon,
     deprecated: false,
     doesBlockPost: false,
@@ -294,8 +252,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "Marquee",
     displayName: "Marquee",
     displayDescription: "Displays a scrolling banner of text",
-    emptyTitle: "Empty Marquee Block",
-    emptySubtitle: "Tap here to setup your Marquee block!",
     icon: marqueeIcon,
     deprecated: false,
     doesBlockPost: true,
@@ -307,8 +263,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "PhotoAlbum",
     displayName: "Photo Album Block",
     displayDescription: "Fading photo viewer block that accepts up to 10 image URLs.",
-    emptyTitle: "Empty Photo Album Block",
-    emptySubtitle: "Tap here to setup your Photo Album block!",
     icon: photoAlbumIcon,
     deprecated: false,
     doesBlockPost: false,
@@ -320,8 +274,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "FlashingText",
     displayName: "Flashing Text",
     displayDescription: "Text and background swap colors, creating a flashing effect.",
-    emptyTitle: "Empty Flashing Text Block",
-    emptySubtitle: "Tap here to setup your Flashing Text block!",
     icon: flashingTextIcon,
     deprecated: false,
     doesBlockPost: true,
@@ -333,8 +285,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "countdown",
     displayName: "Countdown Timer",
     displayDescription: "A Countdown Timer",
-    emptyTitle: "Setup Countdown Timer",
-    emptySubtitle: "Tap here to setup your countdown Timer!",
     icon: clockIcon,
     deprecated: true,
     doesBlockPost: true,
@@ -346,8 +296,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "tokenHoldings",
     displayName: "Token Holdings",
     displayDescription: "a block for displaying your ERC20 token holdings",
-    emptyTitle: "Empty tokenHoldings Block",
-    emptySubtitle: "Tap here to setup your tokenHoldings block!",
     icon: tokenIcon,
     deprecated: false,
     doesBlockPost: false,
@@ -359,8 +307,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "NFT",
     displayName: "NFT",
     displayDescription: "Display a single NFT",
-    emptyTitle: "Empty NFT Block",
-    emptySubtitle: "Tap here to setup your NFT block!",
     icon: nftIcon,
     deprecated: false,
     doesBlockPost: false,
@@ -372,8 +318,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "fcUserFeed",
     displayName: "Farcaster User Feed",
     displayDescription: "Top 10 most popular Farcaster casts",
-    emptyTitle: "Empty Farcaster User Feed Block",
-    emptySubtitle: "Tap here to setup your Farcaster User Feed block!",
     icon: farcasterIcon,
     deprecated: false,
     doesBlockPost: false,
@@ -385,9 +329,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "eyes",
     displayName: "eyes",
     displayDescription: "cute eyes, watching ur every move",
-    emptyTitle: "Empty eyes Block",
-    emptySubtitle: "Tap here to setup your eyes block!",
-    icon: eyesIcon, // TODO: insert your block icon here
+    icon: eyesIcon,
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: false,
@@ -398,8 +340,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "Mondrian",
     displayName: "Mondrian",
     displayDescription: "Create works of art in the style of Piet Mondrian",
-    emptyTitle: "Empty Mondrian App",
-    emptySubtitle: "Tap here to setup your Mondrian inspired artwork!",
     icon: MondrianIcon,
     deprecated: false,
     doesBlockPost: true,
@@ -411,8 +351,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "Bookshelf",
     displayName: "Bookshelf",
     displayDescription: "Post a book you've read",
-    emptyTitle: "Empty Bookshelf App",
-    emptySubtitle: "Tap here to setup your Bookshelf app!",
     icon: bookIcon,
     deprecated: false,
     doesBlockPost: true,
@@ -420,12 +358,10 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "nick",
     fullscreenEdit: true,
   },
-  "Wordle": { 
+  "Wordle": {
     type: "Wordle",
     displayName: "Wordle",
     displayDescription: "Seam's take on the hot NYT daily game, Wordle!",
-    emptyTitle: "Empty Wordle App",
-    emptySubtitle: "Tap here to setup your Wordle app!",
     icon: WordleIcon,
     deprecated: false,
     doesBlockPost: true,
@@ -433,25 +369,10 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "jamesburet",
     fullscreenEdit: false,
   },
-  "Unknown": {
-    type: "Unknown",
-    displayName: "Unknown",
-    displayDescription: "Unknown",
-    emptyTitle: "Empty Unknown App",
-    emptySubtitle: "Tap here to setup your Unknown app!",
-    icon: "UnknownIcon",
-    deprecated: true,
-    doesBlockPost: true,
-    doesBlockEdit: true,
-    createdBy: "seam",
-    fullscreenEdit: false,
-  },
-  "Mood": { 
+  "Mood": {
     type: "Mood",
     displayName: "Mood Visualizer",
     displayDescription: "Express your emotions, open up and tell the world how you're feeling!",
-    emptyTitle: "Empty Mood Visualizer App",
-    emptySubtitle: "Tap here to setup your Mood Visualizer app!",
     icon: MoodIcon,
     deprecated: false,
     doesBlockPost: true,
@@ -459,12 +380,10 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "jamesburet",
     fullscreenEdit: true,
   },
-  "Whiteboard": { 
+  "Whiteboard": {
     type: "Whiteboard",
     displayName: "Whiteboard",
     displayDescription: "Draw on a whiteboard!",
-    emptyTitle: "Empty Whiteboard Block",
-    emptySubtitle: "Tap here to setup your Whiteboard block!",
     icon: WhiteboardIcon,
     deprecated: false,
     doesBlockPost: true,
@@ -472,12 +391,54 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "emilee",
     fullscreenEdit: false,
   },
+  "ImagePuzzle": {
+    type: "ImagePuzzle",
+    displayName: "Image Puzzle",
+    displayDescription: "Upload an image and turn it into a sliding puzzle!",
+    icon: ImagePuzzleIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "ssebexen",
+    fullscreenEdit: false,
+  },
+  "Calligraphy": {
+    type: "Calligraphy",
+    displayName: "Calligraphy",
+    displayDescription: "Draw with expressive brushstrokes",
+    icon: CalligraphyIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "chevron", // ssebexen & @chevron, TODO implement splits
+    fullscreenEdit: false,
+  },
+  "localelocatr": {
+    type: "localelocatr",
+    displayName: "localelocatr",
+    displayDescription: "A GeoGuesser game that allows users to guess different locations based on a streetview panorama",
+    icon: localelocatrIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "mbehera",
+    fullscreenEdit: false,
+  },
+  "Camera": {
+    type: "Camera",
+    displayName: "Camera",
+    displayDescription: "Use your device's camera to take and upload a photo!",
+    icon: CameraIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "seam",
+    fullscreenEdit: false,
+  },
   "Voice": { 
     type: "Voice",
     displayName: "Voice Note",
     displayDescription: "Use the microphone to record a voice note. The post then allows users to play it back.",
-    emptyTitle: "Empty Voice Note App",
-    emptySubtitle: "Tap here to setup your Voice Note app!",
     icon: voiceNoteIcon, 
     deprecated: false,
     doesBlockPost: true,
@@ -485,17 +446,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "samsam",
     fullscreenEdit: false,
   },
-  "Calligraphy": { 
-    type: "Calligraphy",
-    displayName: "Calligraphy",
-    displayDescription: "Draw with expressive brushstrokes",
-    emptyTitle: "Empty calligraphy block",
-    emptySubtitle: "Empty calligraphy block",
-    icon: CalligraphyIcon,
-    deprecated: false,
+  "Unknown": {
+    type: "Unknown",
+    displayName: "Unknown",
+    displayDescription: "Unknown",
+    icon: "UnknownIcon",
+    deprecated: true,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "ssebexen & @chevron",
+    createdBy: "seam",
     fullscreenEdit: false,
-},
+  },
 };

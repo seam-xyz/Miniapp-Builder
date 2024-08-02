@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from "react";
-import Block from './Block';
-import './BlockStyles.css';
-import { BlockModel } from './types';
+import { ComposerComponentProps, FeedComponentProps } from './types';
 
 function Pokemon() {
   const TOTAL_POKEMONS = 600;
@@ -35,20 +33,14 @@ function Pokemon() {
   );
 }
 
-export default class PokemonBlock extends Block {
-  render() {
-    return (
-      <Pokemon />
-    );
-  }
+export const PokemonFeedComponent = ({ model }: FeedComponentProps) => {
+  return (
+    <Pokemon />
+  );
+}
 
-  renderEditModal(done: (data: BlockModel) => void) {
-    return (<h1>Nothing to edit here - the Pokemon is chosen randomly.</h1>);
-  }
-
-  renderErrorState() {
-    return (
-      <h1>Error!</h1>
-    )
-  }
+export const PokemonComposerComponent = ({ done }: ComposerComponentProps) => {
+  return (
+    <h1>Nothing to edit here - the Pokemon is chosen randomly.</h1>
+  );
 }

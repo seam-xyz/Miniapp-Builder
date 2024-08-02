@@ -1,11 +1,7 @@
-export default function TitleComponent(theme, title) {
-
-  let secondaryColor = theme.palette.secondary.main
-  let teritaryColor = theme.palette.info.main
-
+export default function TitleComponent(title) {
   return (
-    <div style={{ backgroundColor: secondaryColor }}>
-      <h2 style={{ color: teritaryColor, paddingLeft: 8 }}>{title}</h2>
+    <div style={{ backgroundColor: "white" }}>
+      <h2 style={{ color: "black", paddingLeft: 8 }}>{title}</h2>
     </div>
   )
 }
