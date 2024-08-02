@@ -436,7 +436,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
   },
   "JustAThought": { 
     type: "JustAThought",
-    displayName: "JustAThought",
+    displayName: "Just a Thought",
     displayDescription: "Just a thought in 120 characters or less",
     icon: "JustAThoughtIcon", // TODO: insert your app icon here
     deprecated: false,
