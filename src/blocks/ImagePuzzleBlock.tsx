@@ -691,7 +691,7 @@ function ImagePuzzleEdit(props: ImagePuzzleEditProps) {
            maxZoomLevel={maxZoomLevel} />
         <ImagePuzzleSizeSelector onSizeChanged={ (value: number) => setPuzzleSize(value) } puzzleSize={puzzleSize} />
       </div>
-      <div className='absolute right-4 left-4 transition-all' style={{bottom: image ? '1rem' : '-16rem'}}>
+      <div className='absolute right-4 left-4 transition-all' style={{bottom: '2rem'}}>
         <SeamSaveButton onClick={() => onSave()} />
       </div>
     </>
