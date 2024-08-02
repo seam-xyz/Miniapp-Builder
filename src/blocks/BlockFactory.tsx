@@ -110,6 +110,7 @@ export default class BlockFactory {
       case "Map": return MapComposerComponent(props);
       case "Calligraphy": return CalligraphyComposerComponent(props);
       case "localelocatr": return LocalelocatrComposerComponent(props);
+      case "Voice": return VoiceComposerComponent(props);
       // new composer components go here
       default: return UnknownComposerComponent(props);
     }
