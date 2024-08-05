@@ -37,19 +37,19 @@ export const useRecordAudio = () => {
         setIsRecording(true);
       } catch (error) {
         console.error('Error accessing microphone:', error);
-        alert('Microphone access is required for recording.');
+        alert('Microphone could not be accessed. Check to see if your microphone is enabled in your browser.');
       }
     } else {
       try {
         const permissionStatus = await Microphone.requestPermissions();
         if (permissionStatus.microphone !== 'granted') {
-          throw new Error('Microphone permission is required');
+          throw new Error('Microphone could not be accessed. To enable, go to Settings > Seam > Microphone and then try again.');
         }
         await Microphone.startRecording();
         setIsRecording(true);
       } catch (error) {
         console.error('Error starting mobile recording:', error);
-        alert('Microphone access is required for recording.');
+        alert('Microphone could not be accessed. To enable, go to Settings > Seam > Microphone and then try again.');
       }
     }
   };
