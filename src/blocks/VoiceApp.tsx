@@ -6,7 +6,6 @@ import MicIcon from '@mui/icons-material/Mic';
 import { CircularProgress } from '@mui/material';
 import { StopCircleRounded, PlayCircleRounded } from '@mui/icons-material';
 import { useRecordAudio } from './utils/RecordAudio';
-import unmuteIosAudio from './utils/unmuteIosAudio';
 
 export const VoiceComposerComponent = ({ model, done }: ComposerComponentProps) => {
   const [uploading, setUploading] = useState(false);
@@ -48,7 +47,7 @@ export const VoiceComposerComponent = ({ model, done }: ComposerComponentProps) 
         <Fab
           onClick={toggleRecord}
           sx={{ width: '150px', height: '150px' }}
-          style={isRecording ? { backgroundColor: 'white', border: '5px solid black' } : { backgroundColor: 'black' }}
+          style={isRecording ? { backgroundColor: 'red', border: '5px solid black' } : { backgroundColor: 'black' }}
           disabled={uploading}
         >
           <MicIcon style={isRecording ? { color: 'black' } : { color: 'white' }} />
@@ -63,7 +62,6 @@ export const VoiceFeedComponent = ({ model }: FeedComponentProps) => {
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [isActionInProgress, setIsActionInProgress] = useState(false);
   const [isAudioLoaded, setIsAudioLoaded] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>();
@@ -84,7 +82,6 @@ export const VoiceFeedComponent = ({ model }: FeedComponentProps) => {
   }, [model.data]);
 
   const setupAudio = async (audioUrl: string) => {
-    setIsActionInProgress(true);
     try {
       const response = await fetch(audioUrl);
       const arrayBuffer = await response.arrayBuffer();
@@ -102,8 +99,6 @@ export const VoiceFeedComponent = ({ model }: FeedComponentProps) => {
       setIsAudioLoaded(true);
     } catch (error) {
       console.error('Error setting up audio:', error);
-    } finally {
-      setIsActionInProgress(false);
     }
   };
 
@@ -122,7 +117,6 @@ export const VoiceFeedComponent = ({ model }: FeedComponentProps) => {
     setDuration(0);
     startTimeRef.current = null;
     setIsAudioLoaded(false);
-    setIsActionInProgress(false);
   };
 
   const drawOscilloscope = () => {
@@ -188,9 +182,7 @@ export const VoiceFeedComponent = ({ model }: FeedComponentProps) => {
   };
 
   const togglePlayPause = async () => {
-    if (isActionInProgress || !isAudioLoaded) return;
-
-    setIsActionInProgress(true);
+    if (!isAudioLoaded) return;
 
     if (playing) {
       stopAudio();
@@ -198,13 +190,10 @@ export const VoiceFeedComponent = ({ model }: FeedComponentProps) => {
       playAudio();
     }
 
-    setIsActionInProgress(false);
   };
 
   const playAudio = () => {
     if (audioContextRef.current && audioBufferRef.current && analyserRef.current) {
-      unmuteIosAudio();
-
       sourceNodeRef.current = audioContextRef.current.createBufferSource();
       sourceNodeRef.current.buffer = audioBufferRef.current;
       sourceNodeRef.current.connect(analyserRef.current);
@@ -268,9 +257,9 @@ export const VoiceFeedComponent = ({ model }: FeedComponentProps) => {
         <div
           onClick={togglePlayPause}
           style={{
-            cursor: isActionInProgress || !isAudioLoaded ? 'not-allowed' : 'pointer',
+            cursor: !isAudioLoaded ? 'not-allowed' : 'pointer',
             marginRight: '16px',
-            opacity: isActionInProgress || !isAudioLoaded ? 0.5 : 1,
+            opacity: !isAudioLoaded ? 0.5 : 1,
           }}
         >
           {playing ? (
