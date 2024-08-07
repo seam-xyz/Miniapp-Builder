@@ -2848,6 +2848,11 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
+"@mozartec/capacitor-microphone@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@mozartec/capacitor-microphone/-/capacitor-microphone-6.0.0.tgz#4fbf2972f676d0b614b426812b0033ab5df95b4c"
+  integrity sha512-bx2Dcp84C9/crmBc3yRAg4tDAJYUIzjnRTZX2CluNBNrFRpPrXkRuwNGPNBy3pXP8fjhGM8NqSZ/7eMYfKRuNg==
+
 "@mui/base@5.0.0-beta.13":
   version "5.0.0-beta.13"
   resolved "https://registry.yarnpkg.com/@mui/base/-/base-5.0.0-beta.13.tgz#3bae94c39752546d84a67d4ca73486b7c4923a89"

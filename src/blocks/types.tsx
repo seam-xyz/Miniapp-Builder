@@ -26,6 +26,7 @@ import MoodIcon from './blockIcons/MoodIcon.png'
 import WhiteboardIcon from './blockIcons/whiteboardIcon.png'
 import ImagePuzzleIcon from './blockIcons/imagePuzzleIcon.webp'
 import CameraIcon from './blockIcons/CameraIcon.png'
+import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 
@@ -432,6 +433,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: "seam",
+    fullscreenEdit: false,
+  },
+  "Voice": { 
+    type: "Voice",
+    displayName: "Voice Note",
+    displayDescription: "Use the microphone to record a voice note. The post then allows users to play it back.",
+    icon: voiceNoteIcon, 
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "samsam",
     fullscreenEdit: false,
   },
   "Unknown": {
