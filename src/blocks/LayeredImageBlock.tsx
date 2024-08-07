@@ -374,33 +374,6 @@ export default class ImageBlock extends Block {
         const [isSubtract, setIsSubtract] = useState(form.getFieldValue('isSubtract'));
 
         const [imgs,setImgs] = useState(convertToObjects("https://jakeaicher.com/wp-content/uploads/2023/07/Research-Stats.png,https://jakeaicher.com/wp-content/uploads/2023/07/InsightCard.png,https://jakeaicher.com/wp-content/uploads/2023/07/Paper-Prototypes-Image.png, https://jakeaicher.com/wp-content/uploads/2024/07/Seam_Test_image.png"));
-        const [firstImgSize, setFirstImgSize] = useState<number[]>();
-
-
-        const CompareRatio = (_sizeOne: number[], _sizeTwo: number[]) => {
-          const ratioOne = _sizeOne[0]/_sizeOne[1];
-          const ratioTwo = _sizeTwo[0]/_sizeTwo[1];
-
-          return {
-            isGreater: ratioOne > ratioTwo,
-            isLess: ratioOne < ratioTwo,
-            isEqual: ratioOne === ratioTwo
-          }
-
-        }
-
-        const setWarningText = (_sizeOne: number[], _sizeTwo: number[]) => {
-          const compareResult = CompareRatio(_sizeOne, _sizeTwo);
-
-          if(compareResult.isEqual){
-            return ""
-          } else if (compareResult.isGreater) {
-            return "Image will be cropped. Does not match first images aspect ratio"
-          } else if (compareResult.isLess) {
-            return "Image will not fill frame. Does not match first images aspect ratio"
-          }
-
-        } 
 
         const handleDragStart = (index: number) => {
           setDragItemIndex(index);
@@ -680,20 +653,10 @@ export default class ImageBlock extends Block {
                     />
                     </div>
                     
-                    <div style={{width: "100%", height: "100%",padding:"0px 16px", display:'flex', flexDirection:"column", textAlign: 'left', }}>
-                      <p style={{userSelect:"none", wordBreak:"break-word", whiteSpace:"normal", overflowWrap:"break-word"}}>{extractFilename(form.getFieldValue(['images', name, 'image']))}</p>
-                      <p style={{
-                        display: `${CompareRatio([1920,1080],[1910,1080]).isEqual ? "none" : "block"}`,
-                        padding: "4px 8px",
-                        fontSize: "0.65rem",
-                        backgroundColor: 'black',
-                        color:"white",
-                        borderRadius:"4px",
-                      }}
-                      >
-                        {setWarningText([1920,1080],[1910,1080])}
-                      </p>
-                    </div>
+                    
+                    <p style={{userSelect:"none",padding:"0px 16px", flexGrow: 1, wordBreak:"break-word", whiteSpace:"normal", overflowWrap:"break-word"}}>{extractFilename(form.getFieldValue(['images', name, 'image']))}</p>
+                      
+                    
                   </div> 
                   <MinusCircleOutlined onClick={()=> remove(name)} />
                   </div>
