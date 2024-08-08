@@ -3,16 +3,12 @@ import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 import { Box, Key } from 'react-feather';
-import { Button, Form, Space, Progress} from 'antd';
-import { PlusOutlined, MinusCircleOutlined, HolderOutlined } from '@ant-design/icons';
 import React, { useState, useEffect, SetStateAction, useRef } from 'react';
-import Paragraph from 'antd/es/skeleton/Paragraph';
 import FileUploadComponent from './utils/FileUploadComponent';
 import { type } from 'os';
 import { Mode, Padding, Scale } from '@mui/icons-material';
 import { EventType } from '@testing-library/react';
 import { first, round } from 'lodash';
-import FormItem from 'antd/es/form/FormItem';
 import { text } from 'stream/consumers';
 
 
@@ -412,7 +408,6 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
         )
 
         const layerOrderingMenu = 
-        
         <>  
         
           <h3 style={{fontSize: "1rem", color:"#cfcfcf"}}>Step 2</h3>
