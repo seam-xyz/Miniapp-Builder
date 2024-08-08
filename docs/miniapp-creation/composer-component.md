@@ -30,6 +30,18 @@ model.data['text'] = "New User Text Here!"
 ```
 Make sure not to store any data in here that is too large, for performance reasons. If you want to store images, videos, or other large files, you can use our [FileUploader]() component, and store the URL as a string in the model.
 
+### Accessing User Data
+
+All account data gets stored in the `AccountModel` which is a key-value store which holds strings, not unlike the `BlockModel`. 
+
+Accessing a seam user's account information can be done via the model's `account` property:
+```
+model.account.id  // Returns the unique account object ID of the miniapp user.
+model.account.username  // Returns the unique Seam username of the miniapp user.
+model.account.profilePhoto  // Returns the URL for the Seam profile picture of the miniapp user.
+model.account.badges  // Returns an array of badge names the miniapp user has earned.
+```
+
 ### Posting
 
 Once the user is done in your miniapp, call the done function with the updated model. This will automatically advance the composer to the preview step. For example from the Camera miniapp:
