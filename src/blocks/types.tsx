@@ -334,6 +334,18 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: false,
-    createdBy: "razberry"
+    createdBy: "razberry",
+    fullscreenEdit: false,
+  },
+  "LayeredImage": { 
+    type: "LayeredImage",
+    displayName: "Layered Image",
+    displayDescription: "Tell stories through sequential images",
+    icon: LayeredImageIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "jakeaicher",
+    fullscreenEdit: false,
   },
 };

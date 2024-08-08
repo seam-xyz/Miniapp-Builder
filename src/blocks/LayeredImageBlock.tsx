@@ -288,7 +288,7 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
 }
 
 
-  export const UnknownFeedComponent = ({model}:FeedComponentProps) => {
+  export const LayeredImageFeedComponent = ({model}:FeedComponentProps) => {
     let images = convertToObjects(model.data['images'])
     let isSubtract = (model.data["mode"] === "true");
     let count = images.length;
@@ -304,7 +304,7 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
     )
   }
 
-  export const UnknownComposerComponent = ({ model, done }: ComposerComponentProps) =>
+  export const LayeredImageComposerComponent = ({ model, done }: ComposerComponentProps) =>
    {
     
     const onFinish = (values: { images: { image: string; }[]; isSubtract: boolean}) => {
@@ -318,13 +318,13 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
 
       const Menu = () => {
 
-        const [form] = Form.useForm();
+        //const [form] = Form.useForm();
         
         const [isImagesUploaded, setIsImagesUploaded] = useState(false);
 
         const [dragItemIndex, setDragItemIndex] = useState<number | undefined>(undefined);
         const [dragOverItemIndex, setDragOverItemIndex] = useState<number | undefined>(undefined);
-        const [isSubtract, setIsSubtract] = useState(form.getFieldValue('isSubtract'));
+        const [isSubtract, setIsSubtract] = useState(false);
 
         const [imgs,setImgs] = useState(convertToObjects("https://jakeaicher.com/wp-content/uploads/2023/07/Research-Stats.png,https://jakeaicher.com/wp-content/uploads/2023/07/InsightCard.png,https://jakeaicher.com/wp-content/uploads/2023/07/Paper-Prototypes-Image.png, https://jakeaicher.com/wp-content/uploads/2024/07/Seam_Test_image.png"));
 
@@ -367,8 +367,8 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
         }
 
         useEffect(() => {
-          form.setFieldsValue({images: imgs});
-        }, [form, imgs]);
+          //form.setFieldsValue({images: imgs});
+        }, [imgs]);
 
         const extractFilename = (url: string) => {
           return url.split('/').pop();
@@ -399,7 +399,7 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
             <h2 style={{margin: "0px 0px 16px 0px"}}>Add Images</h2>
             <p style={{fontSize: "0.8rem", margin: "16px 0px 16px 0px", padding: "0px 16px"}}>
             <span style={{fontWeight: "bold"}}>Tip:</span> Use images that are the same size or aspect ratio for best results.
-        </p>
+            </p>
             {uploaderComponent}
 
             <button style={{width:"100%", height: "20px", backgroundColor: "black"}} type='button' onClick={() => setIsImagesUploaded(true)}></button>
@@ -413,7 +413,7 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
           <h3 style={{fontSize: "1rem", color:"#cfcfcf"}}>Step 2</h3>
           <h2 style={{margin: "0px 0px 16px 0px"}}>Order Images</h2>
 
-          <Form form={form} initialValues={{images: imgs, isSubtract: false}}
+          {/* <Form form={form} initialValues={{images: imgs, isSubtract: false}}
           style={{width: "100%", display:"block"}}
           onValuesChange={handleValueChange}
           onFinish={onFinish}
@@ -594,7 +594,7 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
             <Button type="primary" htmlType="submit" className="save-modal-button">preview</Button>
           </Form.Item>
           
-          </Form>
+          </Form> */}
       </> 
         return(
           <>
