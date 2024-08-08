@@ -45,7 +45,7 @@ export default function App() {
   const [loadedPosts, setLoadedPosts] = useState<BlockModel[]>([
     {
       type: 'FlashingText',
-      account: {id: "", username: ""},
+      account: {},
       data: {
         text: 'Welcome to the Seam Miniapp Builder!',
       },
