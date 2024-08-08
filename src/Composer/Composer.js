@@ -176,6 +176,7 @@ function Composer({ addNewPost }) {
         />
       </div>
       <BlockSelectorModal
+        account={{spotifyAccount: "YOUR_AUTHORIZED_SPOTIFY_ACCOUNT_DETAILS"}}
         selectedBlockType={state.selectedBlockType.type}
         initialBlockData={state.selectedBlockData?.data ?? {}}
         setSelectedBlockData={(data) => {

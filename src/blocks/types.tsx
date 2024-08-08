@@ -32,9 +32,18 @@ import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 
 export type BlockModel = {
   type: string;
+  account: AccountModel;
   data: { [key: string]: string };
   uuid: string; // must be unique to avoid layout issues
 };
+
+export interface AccountModel {
+  readonly spotifyAccount?: any;
+}
+
+export interface Badge {
+  type: string; // Badge name
+}
 
 export interface FeedComponentProps {
   model: BlockModel;
