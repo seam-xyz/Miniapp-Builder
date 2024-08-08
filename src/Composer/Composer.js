@@ -176,7 +176,7 @@ function Composer({ addNewPost }) {
         />
       </div>
       <BlockSelectorModal
-        account={{id: "4CKMNhPiZu", username: "FrankieTheStar", badges: [{type: "og"}], profilePhoto: "https://upcdn.io/W142hWW/raw/uploads/2024/02/23/start-4skb.png" }}
+        account={{spotifyAccount: "YOUR_AUTHORIZED_SPOTIFY_ACCOUNT_DETAILS"}}
         selectedBlockType={state.selectedBlockType.type}
         initialBlockData={state.selectedBlockData?.data ?? {}}
         setSelectedBlockData={(data) => {

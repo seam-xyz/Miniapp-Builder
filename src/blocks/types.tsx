@@ -38,10 +38,7 @@ export type BlockModel = {
 };
 
 export interface AccountModel {
-  readonly id: string;
-  readonly username: string;
-  readonly badges?: Badge[];
-  readonly profilePhoto?: string;
+  readonly spotifyAccount?: any;
 }
 
 export interface Badge {
