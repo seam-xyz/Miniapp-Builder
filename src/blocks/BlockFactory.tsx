@@ -1,3 +1,4 @@
+import { JustAThoughtFeedComponent, JustAThoughtComposerComponent } from './JustAThoughtApp'
 import { ImagePuzzleFeedComponent, ImagePuzzleComposerComponent } from './ImagePuzzleBlock'
 import { LocalelocatrFeedComponent, LocalelocatrComposerComponent } from './localelocatrBlock'
 import { MapFeedComponent, MapComposerComponent } from './MapApp'
@@ -69,6 +70,7 @@ export default class BlockFactory {
       case "Map": return <MapFeedComponent model={model} />;
       case "Calligraphy": return <CalligraphyFeedComponent model={model} />;
       case "localelocatr": return <LocalelocatrFeedComponent model={model} />;
+      case "JustAThought": return <JustAThoughtFeedComponent model={model} />;
       case "Voice": return <VoiceFeedComponent model={model} />;
       // new feed components go here
       default: return UnknownFeedComponent({ model });
@@ -110,6 +112,7 @@ export default class BlockFactory {
       case "Map": return MapComposerComponent(props);
       case "Calligraphy": return CalligraphyComposerComponent(props);
       case "localelocatr": return LocalelocatrComposerComponent(props);
+      case "JustAThought": return JustAThoughtComposerComponent(props);
       case "Voice": return VoiceComposerComponent(props);
       // new composer components go here
       default: return UnknownComposerComponent(props);
