@@ -32,9 +32,23 @@ import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 
 export type BlockModel = {
   type: string;
+  account: ReadOnlyAccountModel;
   data: { [key: string]: string };
   uuid: string; // must be unique to avoid layout issues
 };
+
+export interface ReadOnlyAccountModel {
+  readonly id: string;
+  readonly username: string;
+  readonly badges?: Badge[];
+  readonly profilePhoto?: string;
+  readonly SpotifyAccount?: {};
+}
+
+export interface Badge {
+  date: string; // Badge earn date
+  type: string; // Badge name
+}
 
 export interface FeedComponentProps {
   model: BlockModel;
@@ -457,4 +471,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "seam",
     fullscreenEdit: false,
   },
+  "Testing": { 
+    type: "Testing",
+    displayName: "testing",
+    displayDescription: "testing 123",
+    icon: voiceNoteIcon, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "jamesburet",
+    fullscreenEdit: false,
+},
 };
