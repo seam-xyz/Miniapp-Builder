@@ -29,6 +29,7 @@ import CameraIcon from './blockIcons/CameraIcon.png'
 import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
+import justAThoughtIcon from "./blockIcons/justAThoughtIcon.png";
 
 export type BlockModel = {
   type: string;
@@ -439,7 +440,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "JustAThought",
     displayName: "Just a Thought",
     displayDescription: "Just a thought in 120 characters or less",
-    icon: "JustAThoughtIcon", // TODO: insert your app icon here
+    icon: justAThoughtIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
