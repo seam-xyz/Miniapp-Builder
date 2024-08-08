@@ -8,18 +8,22 @@ description: Step-by-step guide on how to create your own Seam miniapp
 
 Before creating a miniapp, you should join Seam! Creating a Seam account allows you to claim a username and profile that will be used as the author of the miniapp. More importantly though, it allows you to join a community of other builders, designers, and curators all building the future of social networking together.
 
-Either join on web at [seam.so](https://www.seam.so), or [download our iOS app from the Apple appstore](https://apps.apple.com/us/app/seam-social/id6473547569).&#x20;
+Either join on web at [seam.so](https://www.seam.so), or [download our iOS app from the Apple appstore](https://apps.apple.com/us/app/seam-social/id6473547569).
 
 ### Setup your development environment
 
 If you're new to programming in general and want to get setup for the first time, head to the [Local Environment Setup](local-environment-setup.md) section to learn more. Otherwise, if you have a favorite code editor and a local Node environment, you're good to go.
 
-### Clone the Miniapp Builder Repository
+### Fork the Miniapp Builder Repository
 
-The next step is to get the miniapp testing code running. All Seam miniapp code is open source and can be found in our [GitHub repository here](https://github.com/seam-xyz/Miniapp-Builder). Clone the repository with the GitHub CLI tool:
+The next step is to get the miniapp testing code running on your machine. All Seam miniapp code is open source and can be found in our [GitHub repository here](https://github.com/seam-xyz/Miniapp-Builder).&#x20;
+
+First, [fork the Seam Miniapp github repository](https://github.com/seam-xyz/Miniapp-Builder/fork) to your own account, so that you'll be able to make a Pull Request later.
+
+Then, clone your fork with the GitHub CLI tool:
 
 ```
-gh repo clone seam-xyz/Miniapp-Builder
+gh repo clone [[your github username here]]/Miniapp-Builder
 ```
 
 Next, in your terminal, install all the dependencies with:
@@ -39,7 +43,7 @@ The Seam miniapp testing harness will show up in your browser at [http://localho
 
 Now it's time to make some Seam Magic! Starting a new Seam miniapp is simple. In your Miniapp Builder repository terminal window, run the Seam Magic script and it will handle the rest:
 
-<pre><code><strong>$ ./seam-magic.sh
+<pre><code><strong>$ sh ./seam-magic.sh
 </strong></code></pre>
 
 You'll get asked three questions:

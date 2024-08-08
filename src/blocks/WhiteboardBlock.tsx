@@ -397,7 +397,7 @@ export const WhiteboardComposerComponent = ({ model, done, width }: ComposerComp
 
   return (
     <WhiteboardEdit
-      width={width ?? 400}
+      width={width ?? 300}
       initialBackgroundColor={backgroundColor || defaultBackgroundColor}
       initialForegroundColor={defaultForegroundColor}
       initialImageData={imageData}

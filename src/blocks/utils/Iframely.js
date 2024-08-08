@@ -16,8 +16,10 @@ const Iframely = ({ url, style }) => {
         const data = await response.json();
         if (data.html) {
           setHtml({ __html: data.html });
-          setError(null);
+        } else if (data.meta.medium === 'image') {
+          setHtml({ __html: `<img src="${data.meta.canonical}" alt="${data.meta.title}" style="width: 100%; height: 100%;" />` });
         } else {
+          console.log(data)
           setError(data.message || 'Failed to fetch embed.');
         }
       } catch (error) {
