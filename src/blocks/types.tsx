@@ -42,7 +42,6 @@ export interface AccountModel {
   readonly username: string;
   readonly badges?: Badge[];
   readonly profilePhoto?: string;
-  readonly SpotifyAccount?: {};
 }
 
 export interface Badge {
