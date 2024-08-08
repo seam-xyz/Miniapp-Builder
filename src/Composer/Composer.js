@@ -176,6 +176,7 @@ function Composer({ addNewPost }) {
         />
       </div>
       <BlockSelectorModal
+        account={{id: "abcd", username: "FrankieTheStar", badges: [{type: "og"}], profilePhoto: "https://upcdn.io/W142hWW/raw/uploads/2024/02/23/start-4skb.png" }}
         selectedBlockType={state.selectedBlockType.type}
         initialBlockData={state.selectedBlockData?.data ?? {}}
         setSelectedBlockData={(data) => {
