@@ -581,11 +581,6 @@ export default class ImageBlock extends Block {
                         draggable="false" 
                       />
                       </div>
-                      
-                      
-                      <p style={{userSelect:"none",padding:"0px 16px", flexGrow: 1, wordBreak:"break-word", whiteSpace:"normal", overflowWrap:"break-word"}}>{extractFilename(form.getFieldValue(['images', name, 'image']))}</p>
-                        
-                      
                     </div> 
                     <MinusCircleOutlined onClick={()=> remove(name)} />
                     </div>
