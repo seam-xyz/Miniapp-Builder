@@ -15,20 +15,18 @@ import { first, round } from 'lodash';
 import FormItem from 'antd/es/form/FormItem';
 import { text } from 'stream/consumers';
 
-// Converts form data object into joined URL string with commas
 const convertToImagesString = (images: { image: string }[]) => {
   const imgs = images;
-  const encodedUrls = imgs.map((image) => encodeURIComponent(image.image)); // converts urls to include character codes
+  const encodedUrls = imgs.map((image) => encodeURIComponent(image.image));
   const imageString = encodedUrls.join(",");
   return imageString;
 }
 
-// takes joined URL string with commas and converts it into form data object
 const convertToObjects = (imageURLString: string | undefined) => {
   if (imageURLString === undefined) return []
   const imageURLS = imageURLString.split(",")
   return imageURLS.map(url => {
-    return { image: decodeURIComponent(url) }
+    return {image: decodeURIComponent(url)}
   })
 }
 
@@ -42,7 +40,6 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
   const images = props.images;
   const ImgCount = images.length;
   
-  console.log("image count", ImgCount);
   const snapStep = sliderMax/ImgCount;
   const currentImage = Math.floor(sliderValue/snapStep);
 
@@ -54,21 +51,15 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
   const [maxheight, setMaxHeight] = useState<number>();
   
   const currentSnapPoint = (_index: number, _imgMax: number, _sliderMax: number) => {
-    // console.log(_index)
-    // console.log(_imgMax)
     switch(_index){
-
       case 0:
         return 0
       case _imgMax - 1:
-        
         return _sliderMax-1;
       default:
         return Math.floor((_index + 1) * (snapStep) - (snapStep/2));
     }
   }
-  console.log("current Image", currentImage);
-  console.log("current Snap Point", currentSnapPoint(currentImage,ImgCount, sliderMax));
 
   const sliderChange = (event: any) => {
     setSliderValue(parseInt(event.target.value));
@@ -76,7 +67,6 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
 
   const snapValue = (event: any) => {
     setSliderValue(currentSnapPoint(currentImage,ImgCount, sliderMax))
-    console.log("drag ended");
   }
 
   const modeOpacity = (_image: any, currentImage: number, totalImg: number) => {
@@ -105,12 +95,8 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
 
   const isBiggerThanRatio = (_imgSize: number[], _ratio: number) => {
     if(_imgSize[0] < _imgSize[1]){
-      //true if the img ratio is bigger than specified ration
-      console.log(`the image ratio is ${_imgSize[0]/(_ratio)} compared with the images width ${_imgSize[1]} ${(_imgSize[0]/(_ratio)) < _imgSize[1]}`)
       return (_imgSize[0]/(_ratio)) < _imgSize[1];
     } else {
-      //img is horizontal
-      console.log("the image is not verticle")
       return false;
     }
   }
@@ -120,7 +106,6 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
   }
   
   const findScaleFactor = (_imgSize: number[], _maxHeight: number) => {
-    console.log(_maxHeight);
     return _maxHeight/_imgSize[1]
   }
 
@@ -149,16 +134,9 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
   }
 
   useEffect(() => {
-    // const img = new Image();
-    // img.src = images[0].image;
-    // console.log("image src",img.src);
-    // img.onload = () => {
-    //   setFirstImgSize([img.width,img.height]);
-    // }
     if(imgRef.current){
       imgRef.current.onload = () => {
         updateImageSize();
-        
       }
     }
 
@@ -172,9 +150,6 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
   useEffect(() => {
     updateContainerSize();
     
-    console.log(`is Verticle ${isVerticleImg(firstImgSize)} ${firstImgSize} ${imgContainerSize}`);
-    console.log(`max height ${findScaleFactor(firstImgSize, findMaxheight(maxRatio, imgContainerSize[0]))}`);
-
     window.addEventListener("resize", updateContainerSize);
 
     return() => {
@@ -182,12 +157,6 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
     }
 
   },[firstImgSize])
-
-  useEffect(() => {
-
-    console.log("container size", imgContainerSize);
-
-  }, [imgContainerRef,imgRef])
 
   useEffect(() => {
     const sliderProgress = (sliderValue/sliderMax) * 100;
@@ -205,10 +174,10 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
       <style>
       {`
         .LayeredImageBlock-slider {  
-          -webkit-appearance: none;  /* Chrome, Safari, and other WebKit-based browsers */
-          -moz-appearance: none;     /* Firefox */
-          -ms-appearance: none;      /* Internet Explorer and Edge */
-          appearance: none;          /* Standard appearance */
+          -webkit-appearance: none;  
+          -moz-appearance: none;    
+          -ms-appearance: none;      
+          appearance: none;          
           padding: 0px;
           margin: 0px;
           width: 100%;
@@ -220,7 +189,7 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
         }
  
         .LayeredImageBlock-slider::-webkit-slider-thumb {
-          -webkit-appearance: none;  /* Override default CSS styles */
+          -webkit-appearance: none;  
           width: 20px;
           height: 20px;
           border-radius: 10px;
@@ -278,7 +247,6 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
             opacity: modeOpacity(images.indexOf(image), currentImage, ImgCount),
             zIndex: 0,
             top: 0,
-            // display: images.indexOf(image) > currentImage && images.indexOf(image) !== 0 ? "none" : "block"
           }}  
           />
       ))}
@@ -315,7 +283,6 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
           <p style={{whiteSpace: 'nowrap', width: "7%", textAlign: "end"}}>{currentImage + 1} / {ImgCount}</p>
         </div>
 
-        {/* <p>Slide for more {">>>"}</p> */}
       </div>
           
     </div>
@@ -326,23 +293,17 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
 export default class ImageBlock extends Block {
   render() {
     
-    let tempStr = "https%3A%2F%2Fjakeaicher.com%2Fwp-content%2Fuploads%2F2024%2F05%2FSeam_1.png,https%3A%2F%2Fjakeaicher.com%2Fwp-content%2Fuploads%2F2024%2F05%2FSeam_2.png,https%3A%2F%2Fjakeaicher.com%2Fwp-content%2Fuploads%2F2024%2F05%2FSeam_3.png,https%3A%2F%2Fjakeaicher.com%2Fwp-content%2Fuploads%2F2024%2F05%2FSeam_4-1.png,https%3A%2F%2Fjakeaicher.com%2Fwp-content%2Fuploads%2F2024%2F05%2FSeam_5.png,https%3A%2F%2Fjakeaicher.com%2Fwp-content%2Fuploads%2F2024%2F05%2FSeam_6.png,https%3A%2F%2Fjakeaicher.com%2Fwp-content%2Fuploads%2F2024%2F05%2F401_Viewport.png,https%3A%2F%2Fjakeaicher.com%2Fwp-content%2Fuploads%2F2024%2F05%2F0401.png,https%3A%2F%2Fjakeaicher.com%2Fwp-content%2Fuploads%2F2024%2F05%2F401_full.png"
-    let tempLastThree = "https%3A%2F%2Fjakeaicher.com%2Fwp-content%2Fuploads%2F2024%2F05%2F401_Viewport.png,https%3A%2F%2Fjakeaicher.com%2Fwp-content%2Fuploads%2F2024%2F05%2F0401.png,https%3A%2F%2Fjakeaicher.com%2Fwp-content%2Fuploads%2F2024%2F05%2F401_full.png"
-    
-    let images = convertToObjects(this.model.data['images']) // should be this.model.data['images']. changed for test purposes
-    //console.log("What", images);
+    let images = convertToObjects(this.model.data['images'])
     let isSubtract = (this.model.data["mode"] === "true");
     let count = images.length;
 
     return (
-      <div
-      style={{width: "100%"}}
-      >
-      <SliderCounter 
-      images={images} 
-      count={count} 
-      mode={isSubtract}
-      />
+      <div style={{width: "100%"}}>
+        <SliderCounter 
+        images={images} 
+        count={count} 
+        mode={isSubtract}
+        />
       </div>
     );
   }
@@ -352,12 +313,8 @@ export default class ImageBlock extends Block {
     const onFinish = (values: { images: { image: string; }[]; isSubtract: boolean}) => {
       
       values.images = values.isSubtract === true ? values.images.reverse() :  values.images;
-      this.model.data["images"] = convertToImagesString(values.images) //should be values
-      console.log(this.model.data["images"]);
-      console.log(values.isSubtract);
+      this.model.data["images"] = convertToImagesString(values.images)
       this.model.data["mode"] = (values.isSubtract).toString();
-      console.log(this.model.data["mode"]);
-      
       done(this.model);
 
     }
@@ -368,7 +325,6 @@ export default class ImageBlock extends Block {
         
         const [isImagesUploaded, setIsImagesUploaded] = useState(false);
 
-        //for drag and drop
         const [dragItemIndex, setDragItemIndex] = useState<number | undefined>(undefined);
         const [dragOverItemIndex, setDragOverItemIndex] = useState<number | undefined>(undefined);
         const [isSubtract, setIsSubtract] = useState(form.getFieldValue('isSubtract'));
@@ -383,7 +339,6 @@ export default class ImageBlock extends Block {
         const handleDragOver = (event: React.DragEvent) => {
           event.preventDefault();
           event.dataTransfer.effectAllowed="move";
-          console.log(`item ${dragItemIndex} to position ${dragOverItemIndex}`);
         }
 
         const handleDrop = () => {
@@ -396,7 +351,6 @@ export default class ImageBlock extends Block {
           }
           setDragItemIndex(undefined);
           setDragOverItemIndex(undefined);
-          console.log(dragItemIndex + " " + dragOverItemIndex);
         }
 
         const handleDragEnd = () => {
@@ -460,223 +414,198 @@ export default class ImageBlock extends Block {
 
         const layerOrderingMenu = 
         
-       <>  
+        <>  
         
-        <h3 style={{fontSize: "1rem", color:"#cfcfcf"}}>Step 2</h3>
-        <h2 style={{margin: "0px 0px 16px 0px"}}>Order Images</h2>
+          <h3 style={{fontSize: "1rem", color:"#cfcfcf"}}>Step 2</h3>
+          <h2 style={{margin: "0px 0px 16px 0px"}}>Order Images</h2>
 
-        <Form form={form} initialValues={{images: imgs, isSubtract: false}}
-        style={{width: "100%", display:"block"}}
-        onValuesChange={handleValueChange}
-        onFinish={onFinish}
-        autoComplete="off"
-
-        >
-        {/* <div style={{display: "flex", margin: "32px 32px 32px 0px", flexDirection: "row", gap: "4%", boxSizing: "border-box"}}>
-        
-        <Form.Item
-        //name="isSubtract"
-        valuePropName='checked'
-        >
-        <Switch/> 
-        </Form.Item>
-        
-        <div style={{display: "flex", flexDirection: "column", }}>
+          <Form form={form} initialValues={{images: imgs, isSubtract: false}}
+          style={{width: "100%", display:"block"}}
+          onValuesChange={handleValueChange}
+          onFinish={onFinish}
+          autoComplete="off"
+          >
           
-          <div style={{display:"flex", flexDirection: "row", alignItems: "baseline", gap: "2%"}}>
-            <h3 style={{fontSize: "1rem"}}>{isSubtract ? "Subtract" : "Add"}</h3>
-            <span style={{color:"#cfcfcf", fontSize: "1rem"}}>{isSubtract ? "" : "Default"}</span>
-          </div>
-        
-          <p style={{height: "3rem", fontSize: "0.75rem",boxSizing: "border-box"}}>{isSubtract ? "Images are subtracted revealing the next image underneath (e.g. the 1st image will be removed to reveal 2nd image)" : "Images are added on top of previous images (e.g. the 1st image will be covered by the 2nd image)"} </p>
-        </div>
-
-        </div> */}
-
-        <p style={{fontSize: "1rem", margin: "8px 0px 16px 0px"}}>
+          <p style={{fontSize: "1rem", margin: "8px 0px 16px 0px"}}>
             Choose Layering Mode:
-        </p>
-        <FormItem
-        name="isSubtract"
-        >
+          </p>
+          
+          <FormItem
+          name="isSubtract"
+          >
 
-        <div style={{display:"flex", flexDirection:"column", gap:" 4px"}}>
-          <Button type={!isSubtract ? "primary" : "default"} onClick={() => {setIsSubtract(false); form.setFieldValue("isSubtract", false);}}
-          style={{flex:1, height:"auto", padding:"12px 16px 12px 16px", textAlign:"left", overflowWrap:"break-word", whiteSpace:"normal", borderRadius:"8px"}}
-          block>
-            <div style={{display: "flex", flexDirection: "column",}}>
+          <div style={{display:"flex", flexDirection:"column", gap:" 4px"}}>
+            <Button type={!isSubtract ? "primary" : "default"} onClick={() => {setIsSubtract(false); form.setFieldValue("isSubtract", false);}}
+            style={{flex:1, height:"auto", padding:"12px 16px 12px 16px", textAlign:"left", overflowWrap:"break-word", whiteSpace:"normal", borderRadius:"8px"}}
+            block>
+              <div style={{display: "flex", flexDirection: "column",}}>
+              
+              <div style={{display:"flex", flexDirection: "row", alignItems: "baseline"}}>
+                <h3 style={{fontSize: "1rem", marginTop:"-4px"}}>Add</h3>
+              </div>
             
-            <div style={{display:"flex", flexDirection: "row", alignItems: "baseline"}}>
-              <h3 style={{fontSize: "1rem", marginTop:"-4px"}}>Add</h3>
+              <p style={{height: "auto", fontSize: "0.75rem",boxSizing: "border-box", flexWrap:"wrap"}}>
+                Images are added on top of previous images. <br/> (e.g. the 1st image will be covered by the 2nd image) 
+              </p>
             </div>
-          
-            <p style={{height: "auto", fontSize: "0.75rem",boxSizing: "border-box", flexWrap:"wrap"}}>
-              Images are added on top of previous images. <br/> (e.g. the 1st image will be covered by the 2nd image) 
-            </p>
-          </div>
-          </Button>
-          
-          <Button type={isSubtract ? "primary" : "default"} onClick={() => {setIsSubtract(true); form.setFieldValue("isSubtract", true);}} 
-          style={{flex:1, height:"auto", padding:"12px 16px 12px 16px", textAlign:"left", overflowWrap:"break-word", whiteSpace:"normal", borderRadius:"8px"}}
-          block>
-          <div style={{display: "flex", flexDirection: "column", gap: "5%"}}>
+            </Button>
             
-            <div style={{display:"flex", flexDirection: "row", alignItems: "baseline"}}>
-              <h3 style={{fontSize: "1rem", marginTop:"-4px"}}>Subtract</h3>
+            <Button type={isSubtract ? "primary" : "default"} onClick={() => {setIsSubtract(true); form.setFieldValue("isSubtract", true);}} 
+            style={{flex:1, height:"auto", padding:"12px 16px 12px 16px", textAlign:"left", overflowWrap:"break-word", whiteSpace:"normal", borderRadius:"8px"}}
+            block>
+            <div style={{display: "flex", flexDirection: "column", gap: "5%"}}>
               
-            </div>
-          
-            <p style={{height: "auto", fontSize: "0.75rem",boxSizing: "border-box", flexWrap:"wrap"}}>
-              Images are subtracted revealing the next image underneath. <br/>(e.g. the 1st image will be removed to reveal 2nd image) 
-            </p>
-
-          </div>
-          </Button>
-        </div>
-        
-        
-        </FormItem>
-        
-        
-        <p style={{fontSize: "1rem", margin: "16px 0px 8px 0px"}}>
-            Drag and drop to reorder
-        </p>
-
-        <p style={{fontSize: "0.8rem", margin: "16px 0px 16px 0px", padding: "0px 16px"}}>
-            <span style={{fontWeight: "bold"}}>Tip:</span> First image determines post dimensions. If an image does not have the same aspect ratio, it will be cropped.
-        </p>
-
-        <div 
-        className='form-list' 
-        style={{
-          padding:"16px 8px", 
-          margin:"8px 0px 16px 0px", 
-          // height: "300px", 
-          // maxHeight:"500px",  
-          // overflowY: "scroll",
-        }}
-        >
-          
-        <Form.List 
-        name="images"
-        rules={[
-          {
-            validator: async (_, images) => {
-              if (images.length > 10) {
-                return Promise.reject(new Error("Exceeded Maximum image amount. (max is ?)"));
-              }
-            },   
-          },
-          {
-            validator: async (_, images) => {
-              if (images.length < 2) {
-                return Promise.reject(new Error("Minimum image amount not met. (min is 2)"));
-              }
-            },
-          },
-        ]}
-        
-      >
-  
-        {(fields, {remove}, { errors }) => {
-          return (
-            <>
-              {fields.map(({ key, name, ...restField }) => {
-              
-              const imageUrl = form.getFieldValue(['images', name, 'image']);
-              console.log(`Image URL for field ${name}:`, imageUrl);
-              
-              return (
-              <div
-              key={key} 
-              style={dragOverItemIndex === key ? { width:"100%", outline:"2px solid #2050DF", backgroundColor:"#e4e6eb", padding:"8px 16px", borderRadius:"8px", margin:"7px 0px 16px 0px", opacity:"0.999"} : {width:"100%", backgroundColor:"#e4e6eb", padding:"8px 16px", borderRadius:"8px", margin:"7px 0px 16px 0px", opacity:"0.999"}} 
-              draggable="true" 
-              onDragStart={() => handleDragStart(key)}
-              onDragOver={handleDragOver}
-              onDrop={handleDrop}
-              onDragEnter={() => handleDragEnter(key)}
-              onDragEnd={handleDragEnd}
-              >
+              <div style={{display:"flex", flexDirection: "row", alignItems: "baseline"}}>
+                <h3 style={{fontSize: "1rem", marginTop:"-4px"}}>Subtract</h3>
                 
-                  <div 
-                  style={{display:"flex", justifyContent:"space-between", margin: "0px"}}
-                  >
-                  
-                  <Form.Item
-                    style={{display:"none", justifyContent:"center", margin: "0px"}}
-                    {...restField}
-                    name={[name, 'image']}
-                    rules={[{ required: true, message: 'Missing image url' }]}
-                  >
+              </div>
+            
+              <p style={{height: "auto", fontSize: "0.75rem",boxSizing: "border-box", flexWrap:"wrap"}}>
+                Images are subtracted revealing the next image underneath. <br/>(e.g. the 1st image will be removed to reveal 2nd image) 
+              </p>
 
-                  </Form.Item>
+            </div>
+            </Button>
+          </div>
+          
+          
+          </FormItem>
+          
+          
+          <p style={{fontSize: "1rem", margin: "16px 0px 8px 0px"}}>
+              Drag and drop to reorder
+          </p>
 
-                  <HolderOutlined/>
+          <p style={{fontSize: "0.8rem", margin: "16px 0px 16px 0px", padding: "0px 16px"}}>
+              <span style={{fontWeight: "bold"}}>Tip:</span> First image determines post dimensions. If an image does not have the same aspect ratio, it will be cropped.
+          </p>
+
+          <div 
+          className='form-list' 
+          style={{
+            padding:"16px 8px", 
+            margin:"8px 0px 16px 0px", 
+            
+          }}
+          >
+            
+          <Form.List 
+          name="images"
+          rules={[
+            {
+              validator: async (_, images) => {
+                if (images.length > 10) {
+                  return Promise.reject(new Error("Exceeded Maximum image amount. (max is ?)"));
+                }
+              },   
+            },
+            {
+              validator: async (_, images) => {
+                if (images.length < 2) {
+                  return Promise.reject(new Error("Minimum image amount not met. (min is 2)"));
+                }
+              },
+            },
+          ]}
+          
+        >
+    
+          {(fields, {remove}, { errors }) => {
+            return (
+              <>
+                {fields.map(({ key, name, ...restField }) => {
+                
+                return (
+                <div
+                key={key} 
+                style={dragOverItemIndex === key ? { width:"100%", outline:"2px solid #2050DF", backgroundColor:"#e4e6eb", padding:"8px 16px", borderRadius:"8px", margin:"7px 0px 16px 0px", opacity:"0.999"} : {width:"100%", backgroundColor:"#e4e6eb", padding:"8px 16px", borderRadius:"8px", margin:"7px 0px 16px 0px", opacity:"0.999"}} 
+                draggable="true" 
+                onDragStart={() => handleDragStart(key)}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                onDragEnter={() => handleDragEnter(key)}
+                onDragEnd={handleDragEnd}
+                >
                   
-                  <div 
-                  style={{
-                    width: "350px", 
-                    display:"flex", 
-                    alignItems:"center",
-                    justifyContent:"space-between"
-                  }}
-                  >
-                    <span
-                    style={{padding:"0px 16px"}}
+                    <div 
+                    style={{display:"flex", justifyContent:"space-between", margin: "0px"}}
                     >
-                    {key + 1}
-                    </span>
-                    <div
+                    
+                    <Form.Item
+                      style={{display:"none", justifyContent:"center", margin: "0px"}}
+                      {...restField}
+                      name={[name, 'image']}
+                      rules={[{ required: true, message: 'Missing image url' }]}
+                    >
+
+                    </Form.Item>
+
+                    <HolderOutlined/>
+                    
+                    <div 
                     style={{
-                      border:"1px solid #c7c7c7", 
-                      display:"inline-block", 
-                      width: "100px", 
-                      height: "56px",
-                      overflow: "hidden",
-                      borderRadius:"5px", 
-                      userSelect:"none",
-                      flexShrink:"0"
-                      
+                      width: "350px", 
+                      display:"flex", 
+                      alignItems:"center",
+                      justifyContent:"space-between"
                     }}
                     >
-                    <img
-                      src={form.getFieldValue(['images', name, 'image'])}
-                     
+                      <span
+                      style={{padding:"0px 16px"}}
+                      >
+                      {key + 1}
+                      </span>
+                      <div
                       style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "contain",
+                        border:"1px solid #c7c7c7", 
+                        display:"inline-block", 
+                        width: "100px", 
+                        height: "56px",
+                        overflow: "hidden",
+                        borderRadius:"5px", 
                         userSelect:"none",
                         flexShrink:"0"
+                        
                       }}
-                      draggable="false" 
-                    />
-                    </div>
-                    
-                    
-                    <p style={{userSelect:"none",padding:"0px 16px", flexGrow: 1, wordBreak:"break-word", whiteSpace:"normal", overflowWrap:"break-word"}}>{extractFilename(form.getFieldValue(['images', name, 'image']))}</p>
+                      >
+                      <img
+                        src={form.getFieldValue(['images', name, 'image'])}
                       
-                    
-                  </div> 
-                  <MinusCircleOutlined onClick={()=> remove(name)} />
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "contain",
+                          userSelect:"none",
+                          flexShrink:"0"
+                        }}
+                        draggable="false" 
+                      />
+                      </div>
+                      
+                      
+                      <p style={{userSelect:"none",padding:"0px 16px", flexGrow: 1, wordBreak:"break-word", whiteSpace:"normal", overflowWrap:"break-word"}}>{extractFilename(form.getFieldValue(['images', name, 'image']))}</p>
+                        
+                      
+                    </div> 
+                    <MinusCircleOutlined onClick={()=> remove(name)} />
+                    </div>
                   </div>
-                </div>
-              );
-        })}
-              
+                );
+          })}
+                
+      
+                <Form.ErrorList errors={errors}/>
+              </>
     
-              <Form.ErrorList errors={errors}/>
-            </>
-  
-          )
-        }}
-        </Form.List>
-        </div>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" className="save-modal-button">preview</Button>
-        </Form.Item>
-        
-        </Form>
+            )
+          }}
+          </Form.List>
+          </div>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" className="save-modal-button">preview</Button>
+          </Form.Item>
+          
+          </Form>
       </> 
         return(
           <>
@@ -690,7 +619,6 @@ export default class ImageBlock extends Block {
                   -ms-overflow-style: none;  /* IE and Edge */
                   scrollbar-width: none;  /* Firefox */
                 }
-
               `}
             </style>
 
