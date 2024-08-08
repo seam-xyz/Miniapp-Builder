@@ -469,15 +469,4 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "seam",
     fullscreenEdit: false,
   },
-  "Testing": { 
-    type: "Testing",
-    displayName: "testing",
-    displayDescription: "testing 123",
-    icon: voiceNoteIcon, // TODO: insert your app icon here
-    deprecated: false,
-    doesBlockPost: true,
-    doesBlockEdit: true,
-    createdBy: "jamesburet",
-    fullscreenEdit: false,
-},
 };
