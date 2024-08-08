@@ -32,12 +32,12 @@ import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 
 export type BlockModel = {
   type: string;
-  account: ReadOnlyAccountModel;
+  account: AccountModel;
   data: { [key: string]: string };
   uuid: string; // must be unique to avoid layout issues
 };
 
-export interface ReadOnlyAccountModel {
+export interface AccountModel {
   readonly id: string;
   readonly username: string;
   readonly badges?: Badge[];
@@ -46,7 +46,6 @@ export interface ReadOnlyAccountModel {
 }
 
 export interface Badge {
-  date: string; // Badge earn date
   type: string; // Badge name
 }
 
