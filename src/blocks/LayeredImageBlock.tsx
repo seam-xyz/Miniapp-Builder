@@ -1,5 +1,5 @@
-import Block from './Block'
-import { BlockModel } from './types'
+
+import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
 import BlockFactory from './BlockFactory';
 import './BlockStyles.css'
 import { Box, Key } from 'react-feather';
@@ -14,6 +14,7 @@ import { EventType } from '@testing-library/react';
 import { first, round } from 'lodash';
 import FormItem from 'antd/es/form/FormItem';
 import { text } from 'stream/consumers';
+
 
 const convertToImagesString = (images: { image: string }[]) => {
   const imgs = images;
@@ -290,11 +291,10 @@ const SliderCounter = (props:{images:{image:string}[], count: number, mode: bool
 
 }
 
-export default class ImageBlock extends Block {
-  render() {
-    
-    let images = convertToObjects(this.model.data['images'])
-    let isSubtract = (this.model.data["mode"] === "true");
+
+  export const UnknownFeedComponent = ({model}:FeedComponentProps) => {
+    let images = convertToObjects(model.data['images'])
+    let isSubtract = (model.data["mode"] === "true");
     let count = images.length;
 
     return (
@@ -305,17 +305,18 @@ export default class ImageBlock extends Block {
         mode={isSubtract}
         />
       </div>
-    );
+    )
   }
 
-  renderEditModal(done: (data: BlockModel) => void) {
+  export const UnknownComposerComponent = ({ model, done }: ComposerComponentProps) =>
+   {
     
     const onFinish = (values: { images: { image: string; }[]; isSubtract: boolean}) => {
       
       values.images = values.isSubtract === true ? values.images.reverse() :  values.images;
-      this.model.data["images"] = convertToImagesString(values.images)
-      this.model.data["mode"] = (values.isSubtract).toString();
-      done(this.model);
+      model.data["images"] = convertToImagesString(values.images)
+      model.data["mode"] = (values.isSubtract).toString();
+      done(model);
 
     }
 
@@ -373,8 +374,6 @@ export default class ImageBlock extends Block {
           form.setFieldsValue({images: imgs});
         }, [form, imgs]);
 
-        
-        
         const extractFilename = (url: string) => {
           return url.split('/').pop();
         };
@@ -384,7 +383,7 @@ export default class ImageBlock extends Block {
           label="Upload Images"
           onUpdate={(urls)=>{
           
-            this.model.data['images'] = urls.join(",");
+            model.data['images'] = urls.join(",");
             setIsImagesUploaded(true);
 
           }}
@@ -632,9 +631,4 @@ export default class ImageBlock extends Block {
     )
   }
 
-  renderErrorState() {
-    return (
-      <h1>Error!</h1>
-    )
-  }
-}
+  
