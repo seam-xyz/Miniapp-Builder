@@ -12,6 +12,7 @@ import { Mode, Padding, Scale } from '@mui/icons-material';
 import { EventType } from '@testing-library/react';
 import { first, round } from 'lodash';
 import { text } from 'stream/consumers';
+import { id } from 'date-fns/locale';
 
 
 const convertToImagesString = (images: { src: string }[]) => {
@@ -24,8 +25,8 @@ const convertToImagesString = (images: { src: string }[]) => {
 const convertToObjects = (imageURLString: string | undefined) => {
   if (imageURLString === undefined) return []
   const imageURLS = imageURLString.split(",")
-  return imageURLS.map(url => {
-    return {src: decodeURIComponent(url)}
+  return imageURLS.map((url,index) => {
+    return {src: decodeURIComponent(url), id: index}
   })
 }
 
@@ -515,7 +516,8 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
                       width: "100%", 
                       display:"flex", 
                       alignItems:"center",
-                      justifyContent:"space-between"
+                      justifyContent:"space-between",
+                      gap: "16px",
                     }}
                     >
                       <span
@@ -556,6 +558,15 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
 
                       }}
                       >
+                      <p 
+                      style={{
+                        width: "100%",
+                        wordBreak: "break-word",
+                        wordWrap: "break-word"
+                      }}
+                      >
+                      image_{image.id}
+                      </p>
 
                       </div>
 
