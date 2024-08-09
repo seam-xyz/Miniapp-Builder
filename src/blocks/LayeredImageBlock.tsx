@@ -372,6 +372,11 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
 
         }
 
+        const deleteItem = (index: number) => {
+          const newArray = [...imgs.slice(0,index), ...imgs.slice(index + 1)];
+          setImgs(newArray);
+        }
+
         useEffect(() => {
           //form.setFieldsValue({images: imgs});
         }, [imgs]);
@@ -601,6 +606,7 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
                         backgroundColor: "#d45d5d",
                         color: "#ffffff"
                       }}
+                      onClick={()=> deleteItem(image.id)}
                       >
                       Remove  
                       </button>
