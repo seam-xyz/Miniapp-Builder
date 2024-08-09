@@ -6,6 +6,7 @@ import { Box, Key } from 'react-feather';
 import React, { useState, useEffect, SetStateAction, useRef } from 'react';
 import FileUploadComponent from './utils/FileUploadComponent';
 import SeamSaveButton from '../components/SeamSaveButton';
+import GrabbableDots from './assets/LayeredImageBlock/GrabbableDots.svg'
 
 import { type } from 'os';
 import { Mode, Padding, Scale } from '@mui/icons-material';
@@ -520,8 +521,31 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
                       gap: "16px",
                     }}
                     >
+                      
+                      <svg 
+                      style={{
+                        width: "12px",
+                        height: "auto",
+
+                      }}
+                      viewBox="0 0 325 525" 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      >
+                        
+                        <path 
+                        style={{
+                          fill: "#969a9e",
+                          strokeWidth: "0px",
+                          opacity: "100%",
+                        }}
+                        d="m100,50c0,27.61-22.39,50-50,50S0,77.61,0,50,22.39,0,50,0c27.61,0,50,22.39,50,50Zm175,50c27.61,0,50-22.39,50-50S302.61,0,275,0s-50,22.39-50,50c0,27.61,22.39,50,50,50ZM50,212.5c-27.61,0-50,22.39-50,50s22.39,50,50,50,50-22.39,50-50h0c0-27.61-22.39-50-50-50h0Zm225,0c-27.61,0-50,22.39-50,50s22.39,50,50,50,50-22.39,50-50h0c0-27.61-22.39-50-50-50h0ZM50,425c-27.61,0-50,22.39-50,50s22.39,50,50,50,50-22.39,50-50c0-27.61-22.39-50-50-50h0Zm225,0c-27.61,0-50,22.39-50,50s22.39,50,50,50,50-22.39,50-50c0-27.61-22.39-50-50-50h0Z"
+                        />
+                        
+                      </svg>
+                      
+                      
                       <span
-                      style={{padding:"0px 16px"}}
+                      style={{padding:"0px 0px 0px 16px"}}
                       >
                         {index + 1}
                       </span>
