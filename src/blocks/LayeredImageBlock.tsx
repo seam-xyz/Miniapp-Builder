@@ -335,6 +335,7 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
         console.log(imgs);
 
         const handleDragStart = (index: number) => {
+          
           setDragItemIndex(index);
           
         };
@@ -413,8 +414,8 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
             </p>
             <h3 style={{fontSize: "1rem", color:"#cfcfcf"}}>Step 1</h3>
             <h2 style={{margin: "0px 0px 16px 0px"}}>Add Images</h2>
-            <p style={{fontSize: "0.8rem", margin: "16px 0px 16px 0px", padding: "0px 16px"}}>
-            <span style={{fontWeight: "bold"}}>Tip:</span> Use images that are the same size or aspect ratio for best results.
+            <p style={{fontSize: "0.8rem", margin: "16px 0px 32px 0px", padding: "0px 16px"}}>
+            <span style={{fontWeight: "bold"}}>&#128161; Tip:</span> Use images that are the same size or aspect ratio for best results.
             </p>
             {uploaderComponent}
 
@@ -429,44 +430,17 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
           <h3 style={{fontSize: "1rem", color:"#cfcfcf"}}>Step 2</h3>
           <h2 style={{margin: "0px 0px 16px 0px"}}>Order Images</h2>
 
-          
-          <p style={{fontSize: "1rem", margin: "8px 0px 16px 0px"}}>
-            Choose Layering Mode:
-          </p>
-
-          <button 
-          onClick={() => {setIsSubtract(false);}}
+          <div
           style={{
-            flex:1,
-            width: "100%",
-            height:"auto", 
-            padding:"12px 16px 12px 16px", 
-            margin: "4px 0px",
-            textAlign:"left", 
-            overflowWrap:"break-word", 
-            whiteSpace:"normal", 
-            borderRadius:"8px",
-            backgroundColor: isSubtract ? "#ffffff" : "#2050DF",
-            color: isSubtract ? "#000000" : "#ffffff",
-            borderWidth: "1px",
-            borderStyle: "solid",
-            borderColor: "#2050DF"
+            margin: "16px 0px",
           }}
           >
-              <div style={{display: "flex", flexDirection: "column",}}>
-              
-              <div style={{display:"flex", flexDirection: "row", alignItems: "baseline"}}>
-                <h3 style={{fontSize: "1rem", marginTop:"-4px"}}>Add</h3>
-              </div>
-            
-              <p style={{height: "auto", fontSize: "0.75rem",boxSizing: "border-box", flexWrap:"wrap", lineHeight: "1.2"}}>
-                Images are added on top of previous images. <br/> (e.g. the 1st image will be covered by the 2nd image) 
-              </p>
-            </div>
-            </button>
+            <p style={{fontSize: "1rem", margin: "8px 0px 8px 0px"}}>
+              Choose Layering Mode:
+            </p>
 
-          <button 
-            onClick={() => {setIsSubtract(true);}}
+            <button 
+            onClick={() => {setIsSubtract(false);}}
             style={{
               flex:1,
               width: "100%",
@@ -477,8 +451,8 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
               overflowWrap:"break-word", 
               whiteSpace:"normal", 
               borderRadius:"8px",
-              backgroundColor: isSubtract ? "#2050DF" : "#ffffff",
-              color: isSubtract ? "#ffffff" : "#000000",
+              backgroundColor: isSubtract ? "#ffffff" : "#2050DF",
+              color: isSubtract ? "#000000" : "#ffffff",
               borderWidth: "1px",
               borderStyle: "solid",
               borderColor: "#2050DF"
@@ -487,136 +461,180 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
                 <div style={{display: "flex", flexDirection: "column",}}>
                 
                 <div style={{display:"flex", flexDirection: "row", alignItems: "baseline"}}>
-                  <h3 style={{fontSize: "1rem", marginTop:"-4px"}}>Subtract</h3>
+                  <h3 style={{fontSize: "1rem", marginTop:"-4px"}}>Add</h3>
                 </div>
               
                 <p style={{height: "auto", fontSize: "0.75rem",boxSizing: "border-box", flexWrap:"wrap", lineHeight: "1.2"}}>
                   Images are added on top of previous images. <br/> (e.g. the 1st image will be covered by the 2nd image) 
                 </p>
               </div>
-            </button>
-          
-          <p style={{fontSize: "1rem", margin: "16px 0px 8px 0px"}}>
-            Drag and drop to reorder
-          </p>
+              </button>
 
-          <p style={{fontSize: "0.8rem", margin: "16px 0px 16px 0px", padding: "0px 16px"}}>
-            <span style={{fontWeight: "bold"}}>Tip:</span> First image determines post dimensions. If an image does not have the same aspect ratio as the first, it will be cropped.
-          </p>
-
-          <div> 
-            {imgs.map((image, index) => (
-              <div
-                key={index} 
-                style={dragOverItemIndex === index ? { width:"100%", outline:"2px solid #2050DF", backgroundColor:"#e4e6eb", padding:"8px 16px", borderRadius:"8px", margin:"7px 0px 16px 0px", opacity:"0.999"} : {width:"100%", backgroundColor:"#e4e6eb", padding:"8px 16px", borderRadius:"8px", margin:"7px 0px 16px 0px", opacity:"0.999"}} 
-                draggable="true" 
-                onDragStart={() => handleDragStart(index)}
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-                onDragEnter={() => handleDragEnter(index)}
-                onDragEnd={handleDragEnd}
-                >
-
-                  <div 
-                    style={{
-                      width: "100%", 
-                      display:"flex", 
-                      alignItems:"center",
-                      justifyContent:"space-between",
-                      gap: "16px",
-                    }}
-                    >
-                      
-                      <svg 
-                      style={{
-                        width: "12px",
-                        height: "auto",
-
-                      }}
-                      viewBox="0 0 325 525" 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      >
-                        
-                        <path 
-                        style={{
-                          fill: "#969a9e",
-                          strokeWidth: "0px",
-                          opacity: "100%",
-                        }}
-                        d="m100,50c0,27.61-22.39,50-50,50S0,77.61,0,50,22.39,0,50,0c27.61,0,50,22.39,50,50Zm175,50c27.61,0,50-22.39,50-50S302.61,0,275,0s-50,22.39-50,50c0,27.61,22.39,50,50,50ZM50,212.5c-27.61,0-50,22.39-50,50s22.39,50,50,50,50-22.39,50-50h0c0-27.61-22.39-50-50-50h0Zm225,0c-27.61,0-50,22.39-50,50s22.39,50,50,50,50-22.39,50-50h0c0-27.61-22.39-50-50-50h0ZM50,425c-27.61,0-50,22.39-50,50s22.39,50,50,50,50-22.39,50-50c0-27.61-22.39-50-50-50h0Zm225,0c-27.61,0-50,22.39-50,50s22.39,50,50,50,50-22.39,50-50c0-27.61-22.39-50-50-50h0Z"
-                        />
-                        
-                      </svg>
-                      
-                      
-                      <span
-                      style={{padding:"0px 0px 0px 16px"}}
-                      >
-                        {index + 1}
-                      </span>
-
-                      <div
-                      style={{
-                        border:"1px solid #c7c7c7", 
-                        display:"inline-block", 
-                        width: "100px", 
-                        height: "56px",
-                        overflow: "hidden",
-                        borderRadius:"5px", 
-                        userSelect:"none",
-                        flexShrink:"0"
-                      }}
-                      >
-                        <img
-                          src={image.src}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "contain",
-                            userSelect:"none",
-                            flexShrink:"0"
-                          }}
-                          draggable="false" 
-                        />
-                      </div>
-                      
-                      <div 
-                      style={{
-                        flexGrow: "1",
-
-
-                      }}
-                      >
-                      <p 
-                      style={{
-                        width: "100%",
-                        wordBreak: "break-word",
-                        wordWrap: "break-word"
-                      }}
-                      >
-                      image_{image.id}
-                      </p>
-
-                      </div>
-
-                      <button 
-                      style={{
-                        padding: "4px 8px",
-                        borderRadius: "4px",
-                        backgroundColor: "#d45d5d",
-                        color: "#ffffff"
-                      }}
-                      onClick={()=> deleteItem(image.id)}
-                      >
-                      Remove  
-                      </button>
-                    </div> 
-
+            <button 
+              onClick={() => {setIsSubtract(true);}}
+              style={{
+                flex:1,
+                width: "100%",
+                height:"auto", 
+                padding:"12px 16px 12px 16px", 
+                margin: "4px 0px",
+                textAlign:"left", 
+                overflowWrap:"break-word", 
+                whiteSpace:"normal", 
+                borderRadius:"8px",
+                backgroundColor: isSubtract ? "#2050DF" : "#ffffff",
+                color: isSubtract ? "#ffffff" : "#000000",
+                borderWidth: "1px",
+                borderStyle: "solid",
+                borderColor: "#2050DF"
+              }}
+              >
+                  <div style={{display: "flex", flexDirection: "column",}}>
+                  
+                  <div style={{display:"flex", flexDirection: "row", alignItems: "baseline"}}>
+                    <h3 style={{fontSize: "1rem", marginTop:"-4px"}}>Subtract</h3>
+                  </div>
+                
+                  <p style={{height: "auto", fontSize: "0.75rem",boxSizing: "border-box", flexWrap:"wrap", lineHeight: "1.2"}}>
+                    Images are added on top of previous images. <br/> (e.g. the 1st image will be covered by the 2nd image) 
+                  </p>
                 </div>
+              </button>
+          </div>
+         
+          <div
+          style={{
+            margin:"32px 0px 64px 0px",
 
-            ))}
+          }}
+          > 
+            <p style={{fontSize: "1rem", margin: "16px 0px 8px 0px"}}>
+              Drag and drop to reorder
+            </p>
+
+            <p style={{fontSize: "0.8rem", margin: "16px 0px 32px 0px", padding: "0px 16px"}}>
+              <span style={{fontWeight: "bold"}}>&#128161; Tip:</span> First image determines post dimensions. If an image does not have the same aspect ratio as the first, it will be cropped.
+            </p>
             
-          </div>  
+            <div> 
+              {imgs.map((image, index) => (
+                <div
+                  key={index} 
+                  style={dragOverItemIndex === index ? { width:"100%", outline:"2px solid #2050DF", backgroundColor:"#e4e6eb", padding:"8px 16px", borderRadius:"8px", margin:"7px 0px 16px 0px", opacity:"0.999"} : {width:"100%", backgroundColor:"#e4e6eb", padding:"8px 16px", borderRadius:"8px", margin:"7px 0px 16px 0px", opacity:"0.999"}} 
+                  draggable="true" 
+                  onDragStart={() => handleDragStart(index)}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                  onDragEnter={() => handleDragEnter(index)}
+                  onDragEnd={handleDragEnd}
+
+                  >
+
+                    <div 
+                      style={{
+                        width: "100%", 
+                        display:"flex", 
+                        alignItems:"center",
+                        justifyContent:"space-between",
+                        gap: "16px",
+                      }}
+                      >
+                        
+                        <svg 
+                        style={{
+                          width: "12px",
+                          height: "auto",
+
+                        }}
+                        viewBox="0 0 325 525" 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        >
+                          
+                          <path 
+                          style={{
+                            fill: "#969a9e",
+                            strokeWidth: "0px",
+                            opacity: "100%",
+                          }}
+                          d="m100,50c0,27.61-22.39,50-50,50S0,77.61,0,50,22.39,0,50,0c27.61,0,50,22.39,50,50Zm175,50c27.61,0,50-22.39,50-50S302.61,0,275,0s-50,22.39-50,50c0,27.61,22.39,50,50,50ZM50,212.5c-27.61,0-50,22.39-50,50s22.39,50,50,50,50-22.39,50-50h0c0-27.61-22.39-50-50-50h0Zm225,0c-27.61,0-50,22.39-50,50s22.39,50,50,50,50-22.39,50-50h0c0-27.61-22.39-50-50-50h0ZM50,425c-27.61,0-50,22.39-50,50s22.39,50,50,50,50-22.39,50-50c0-27.61-22.39-50-50-50h0Zm225,0c-27.61,0-50,22.39-50,50s22.39,50,50,50,50-22.39,50-50c0-27.61-22.39-50-50-50h0Z"
+                          />
+                          
+                        </svg>
+                        
+                        
+                        <span
+                        style={{padding:"0px 0px 0px 16px"}}
+                        >
+                          {index + 1}
+                        </span>
+
+                        <div
+                        style={{
+                          border:"1px solid #c7c7c7", 
+                          display:"inline-block", 
+                          width: "100px", 
+                          height: "56px",
+                          overflow: "hidden",
+                          borderRadius:"5px", 
+                          userSelect:"none",
+                          flexShrink:"0"
+                        }}
+                        >
+                          <img
+                            src={image.src}
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "contain",
+                              userSelect:"none",
+                              flexShrink:"0"
+                            }}
+                            draggable="false" 
+                          />
+                        </div>
+                        
+                        <div 
+                        style={{
+                          flexGrow: "1",
+
+
+                        }}
+                        >
+                        <p 
+                        style={{
+                          width: "100%",
+                          wordBreak: "break-word",
+                          wordWrap: "break-word"
+                        }}
+                        >
+                        image_{image.id}
+                        </p>
+
+                        </div>
+
+                        <button 
+                        style={{
+                          padding: "4px 8px",
+                          borderRadius: "4px",
+                          color: "#d64747",
+                          borderWidth: "1px",
+                          borderStyle: "solid",
+                          borderColor: "#d64747",
+                          fontSize: "0.7rem",
+
+                        }}
+                        onClick={()=> deleteItem(image.id)}
+                        >
+                        Remove  
+                        </button>
+                      </div> 
+
+                  </div>
+
+              ))}
+              
+            </div>  
+          </div>
 
           <SeamSaveButton onClick={() => onFinish(imgs, isSubtract)}/>
 
@@ -818,7 +836,7 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
               `}
             </style>
 
-            <div className='hideScroll' style={{padding:"3px 12px", maxHeight: "90vh",overflow: "hidden", overflowY:"scroll",}}>
+            <div className='hideScroll' style={{padding:"3px 12px", maxHeight: "90vh",overflow: "hidden", overflowY: "scroll"}}>
               {isImagesUploaded ? layerOrderingMenu : uploadMenu}
             </div>
           </>
