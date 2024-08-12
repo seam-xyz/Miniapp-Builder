@@ -331,7 +331,7 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
         const [dragOverItemIndex, setDragOverItemIndex] = useState<number | undefined>(undefined);
         const [isSubtract, setIsSubtract] = useState(false);
 
-        const [imgs,setImgs] = useState(convertToObjects("https://jakeaicher.com/wp-content/uploads/2023/07/Research-Stats.png,https://jakeaicher.com/wp-content/uploads/2023/07/InsightCard.png,https://jakeaicher.com/wp-content/uploads/2023/07/Paper-Prototypes-Image.png, https://jakeaicher.com/wp-content/uploads/2024/07/Seam_Test_image.png"));
+        const [imgs,setImgs] = useState(convertToObjects(model.data['images']));
         console.log(imgs);
 
         const handleDragStart = (index: number) => {
@@ -379,7 +379,16 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
         }
 
         useEffect(() => {
+          // Ensure model.data['images'] exists and is not empty before converting
+          if (model.data['images']) {
+            const convertedImages = convertToObjects(model.data['images']);
+            setImgs(convertedImages);
+          }
+        }, [model.data['images']]); // Depend on model.data['images']
+
+        useEffect(() => {
           //form.setFieldsValue({images: imgs});
+          
         }, [imgs]);
 
         useEffect(() => {
@@ -395,8 +404,8 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
           fileTypes='image/*'
           label="Upload Images"
           onUpdate={(urls)=>{
-          
-            model.data['images'] = urls.join(",");
+            
+            model.data['images'] = urls.join(",").replace(/v0\/b\/|o\//g,"");
             setIsImagesUploaded(true);
 
           }}
