@@ -99,8 +99,8 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({ fileTypes, la
             textTransform: 'none',
             fontFamily: "Public Sans",
             fontSize: "16px",
-            background: uploading ? `linear-gradient(to right, #2196F3 ${progressPercent}%, #E0E0E0 ${progressPercent}%)` : undefined,
-            backgroundColor: '#0051E8'
+            // background: uploading ? `linear-gradient(to right, #2196F3 ${progressPercent}%, #E0E0E0 ${progressPercent}%)` : undefined,
+            backgroundColor: 'black'
           }}
           disabled={uploading}
           onClick={(e) => {

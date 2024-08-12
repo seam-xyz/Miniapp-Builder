@@ -4,6 +4,7 @@ import videoIcon from "./blockIcons/Video.png";
 import imageIcon from "./blockIcons/Image.png";
 import linkIcon from "./blockIcons/Button.png";
 import twitterIcon from "./blockIcons/twitterIcon.png";
+import MemerIcon from "./blockIcons/MemerIcon.png";
 import bookmarkIcon from "./blockIcons/Link.png";
 import mapIcon from "./blockIcons/Map.png";
 import giphyIcon from "./blockIcons/GIPHY.png";
@@ -457,4 +458,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "seam",
     fullscreenEdit: false,
   },
+  "Memer": { 
+    type: "Memer",
+    displayName: "memer",
+    displayDescription: "share and evaluate memes :)",
+    icon: MemerIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "rishit",
+    fullscreenEdit: false,
+},
 };
