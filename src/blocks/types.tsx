@@ -33,7 +33,7 @@ import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 export type BlockModel = {
   type: string;
   account: AccountModel;
-  data: { [key: string]: string };
+  data: { [key: string]: any };
   uuid: string; // must be unique to avoid layout issues
 };
 
@@ -466,4 +466,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "seam",
     fullscreenEdit: false,
   },
+  "Vibecheck": { 
+    type: "Vibecheck",
+    displayName: "VibeCheck",
+    displayDescription: "vibe check",
+    icon: "VibecheckIcon", // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "jamesburet",
+    fullscreenEdit: true,
+},
 };
