@@ -1,11 +1,13 @@
 
 import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
 import BlockFactory from './BlockFactory';
-import './BlockStyles.css'
+import './BlockStyles.css';
+import './assets/LayeredImageBlock/LayeredImageStyles.css';
 import { Box, Key } from 'react-feather';
 import React, { useState, useEffect, SetStateAction, useRef } from 'react';
 import FileUploadComponent from './utils/FileUploadComponent';
 import SeamSaveButton from '../components/SeamSaveButton';
+
 import GrabbableDots from './assets/LayeredImageBlock/GrabbableDots.svg'
 
 import { type } from 'os';
@@ -31,7 +33,6 @@ const convertToObjects = (imageURLString: string | undefined) => {
   })
 }
 
- 
 const ErrorState = (props:{imgCount: number}) => {
   let canContinue = false;
   let errorMessage = '';
@@ -203,68 +204,6 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
 
   return (
     <div style={{width:`100%`}}>
-
-      <style>
-      {`
-        .LayeredImageBlock-slider {  
-          -webkit-appearance: none;  
-          -moz-appearance: none;    
-          -ms-appearance: none;      
-          appearance: none;          
-          padding: 0px;
-          margin: 0px;
-          width: 100%;
-          height: 10px;
-          border-radius: 5px;
-          margin-right: 12px;
-          flex-grow: inherit;
-          Border: 2px solid #2050DF;
-        }
- 
-        .LayeredImageBlock-slider::-webkit-slider-thumb {
-          -webkit-appearance: none;  
-          width: 20px;
-          height: 20px;
-          border-radius: 10px;
-          background: #2050DF;
-        }
-
-        .LayeredImageBlock-slider::-moz-range-thumb {
-          width: 20px;               
-          height: 20px;
-          border-radius: 10px;
-          background: #2050DF;
-          border: none;              
-        }
-
-        .LayeredImageBlock-slider::-ms-thumb {
-          width: 20px;              
-          height: 20px;
-          border-radius: 10px;
-          background: #2050DF;
-          border: none;             
-        }
-
-        .LayeredImageBlock-slider::-ms-track {
-          width: 100%;
-          height: 10px;
-          background: transparent;  
-          border-color: transparent;
-          color: transparent;
-        }
-
-        .LayeredImageBlock-slider::-ms-fill-lower {
-          background: #2050DF;      
-          border-radius: 5px;
-        }
-
-        .LayeredImageBlock-slider::-ms-fill-upper {
-          background: #2050DF;
-          border-radius: 5px;
-        }
-
-      `}
-      </style>
 
       <div style={{ width:`100%`, height:`${isBiggerThanRatio(firstImgSize,maxRatio) ? maxheight + "px" : "auto"}`,overflow:"hidden",}}>
       <div ref={imgContainerRef} style={{ width: "100%", height: "auto", position: "relative", overflow:"hidden",transformOrigin: "top center", borderRadius: "10px", scale: `${isBiggerThanRatio(firstImgSize,maxRatio) ? imgScaleFactor : 1}`}}>
@@ -885,19 +824,7 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
       </> 
         return(
           <>
-            <style>
-              {`
-                .hideScroll::-webkit-scrollbar {
-                  display: none;
-                }
-
-                .hideScroll {
-                  -ms-overflow-style: none;  /* IE and Edge */
-                  scrollbar-width: none;  /* Firefox */
-                }
-              `}
-            </style>
-
+            
             <div className='hideScroll' style={{padding:"3px 12px", maxHeight: "90vh",overflow: "hidden", overflowY: "scroll"}}>
               {isImagesUploaded ? layerOrderingMenu : uploadMenu}
             </div>
