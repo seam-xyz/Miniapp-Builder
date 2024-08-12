@@ -67,29 +67,31 @@ export const MemerFeedComponent = ({ model }: FeedComponentProps) => {
     model.data.imageUrls = JSON.stringify(updatedUrls);
   };
 
-  // Assuming model.data.savedResponses is a string and you cannot change it directly
   useEffect(() => {
     // Initialize votes based on model.data.votes if it exists
     if (model.data.votes) {
-      const initialVotes = model.data.votes.split('').map(vote => parseInt(vote, 10) || 0);
+      const initialVotes = model.data.votes.split(',').map(vote => parseInt(vote, 10) || 0);
       setVotes(initialVotes);
     } else {
       setVotes(new Array(savedResponses.length).fill(0));
     }
   }, []);
+  
   const handleVoteChange = (index: number) => {
     if (loading) return; // Prevent further action if currently processing
-
+  
     setLoading(true);
-
+  
     // Ensure model.data.votes is initialized
     if (!model.data.votes || typeof model.data.votes !== 'string') {
-      model.data.votes = new Array(savedResponses.length).fill('0').join('');
+      model.data.votes = new Array(savedResponses.length).fill(0).join(',');
     }
-
+    console.log(model.data.votes)
+  
     // Convert model.data.votes to an array of numbers
-    const votesArray = model.data.votes.split('').map(vote => parseInt(vote, 10) || 0);
-
+    const votesArray = model.data.votes.split(',').map(vote => parseInt(vote, 10) || 0);
+    console.log(votesArray)
+  
     if (userVotes[index]) {
       // User has voted, so we need to remove the vote
       votesArray[index] = Math.max(votesArray[index] - 1, 0); // Ensure votes don't go below 0
@@ -101,16 +103,17 @@ export const MemerFeedComponent = ({ model }: FeedComponentProps) => {
         setUserVotes(userVotes.map((voted, i) => i === index ? true : voted));
       }
     }
-
+  
     // Update the model with the new total votes
-    model.data.votes = votesArray.join('');
-
+    model.data.votes = votesArray.join(',');
+  
     // Update state with the new vote counts
     setVotes(votesArray);
-
+  
     // Reset loading state
     setLoading(false);
   };
+  
   
   
 
@@ -456,6 +459,7 @@ export const MemerComposerComponent = ({ model, done }: ComposerComponentProps) 
   };
 
   const handlePost = () => {
+    model.data.votes=''
     done(model);  // Pass the model with stored data back to the parent component
   };
 
