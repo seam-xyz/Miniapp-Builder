@@ -31,6 +31,38 @@ const convertToObjects = (imageURLString: string | undefined) => {
   })
 }
 
+ 
+const ErrorState = (props:{imgCount: number}) => {
+  let canContinue = false;
+  let errorMessage = '';
+
+  if(props.imgCount < 2){
+    canContinue= false;
+    errorMessage = "Must have more than two images. Return to step one to add more images."
+  } else if(props.imgCount > 10){
+    canContinue= false;
+    errorMessage = "Max images is 10. Remove images to continue."
+  } else {
+    canContinue= true;
+    errorMessage = "";
+  }
+
+  return (
+    <>
+    <div
+    style={{
+      display: canContinue ? "none" : "inline-block",
+      color: "red",
+
+    }}
+    >
+      <span style={{fontWeight: "bold"}}>Error: </span>{errorMessage}
+    </div>
+    </>
+
+  )
+}
+
 const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolean}) => {
   const [sliderValue, setSliderValue] = useState(0);
   const sliderMax = 1000;
@@ -427,7 +459,7 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
             <p style={{fontSize: "0.8rem", margin: "16px 0px 32px 0px", padding: "0px 16px"}}>
               <span style={{fontWeight: "bold"}}>&#128161; Tip:</span> Use images that are the same size or aspect ratio for best results.
             </p>
-            
+
             {uploaderComponent}
 
           </div>
@@ -642,11 +674,25 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
 
               ))}
               
-            </div>  
+            </div> 
+
+            <ErrorState imgCount={imgs.length}/>
+             
           </div>
+          
+          
 
+
+
+          <div 
+          style={{
+          display: imgs.length < 2 || imgs.length > 10 ? "none" : "inline-block",
+          width: "100%",
+          }}
+          >  
           <SeamSaveButton onClick={() => onFinish(imgs, isSubtract)}/>
-
+          </div>  
+          
           {/* <Form form={form} initialValues={{images: imgs, isSubtract: false}}
           style={{width: "100%", display:"block"}}
           onValuesChange={handleValueChange}
