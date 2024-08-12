@@ -265,6 +265,7 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
 
       `}
       </style>
+
       <div style={{ width:`100%`, height:`${isBiggerThanRatio(firstImgSize,maxRatio) ? maxheight + "px" : "auto"}`,overflow:"hidden",}}>
       <div ref={imgContainerRef} style={{ width: "100%", height: "auto", position: "relative", overflow:"hidden",transformOrigin: "top center", borderRadius: "10px", scale: `${isBiggerThanRatio(firstImgSize,maxRatio) ? imgScaleFactor : 1}`}}>
         {images.map((image) => (
@@ -448,11 +449,13 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
         const uploadMenu = (
           <div>
 
-            <h1>Layered Image</h1>
-
             <p style={{margin: "5px 5px 20px 5px"}}>
-              Gallery of images that are revealed sequentially where transparent images can modify the images below.
+              Slide to explore images in layers, where transparent layers can transform the image beneath.
             </p>
+            <p style={{margin: "5px 5px 20px 5px"}}>
+              Viewers can explore the gallery at their own pace with a slider at the bottom of the post. By layering transparent images, underlying layers are able to shine through making it perfect for animations, work in progress, drawovers, slide decks, and more…
+            </p>
+
             <h3 style={{fontSize: "1rem", color:"#cfcfcf"}}>Step 1</h3>
             <h2 style={{margin: "0px 0px 16px 0px"}}>Add Images</h2>
             
@@ -478,6 +481,10 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
           >
             <p style={{fontSize: "1rem", margin: "8px 0px 8px 0px"}}>
               Choose Layering Mode:
+            </p>
+
+            <p style={{fontSize: "0.8rem", margin: "16px 0px 32px 0px", padding: "0px 16px"}}>
+              <span style={{fontWeight: "bold"}}>&#128161; Tip:</span> Changing layering mode is only relevant if you are using transparent images.
             </p>
 
             <button 
@@ -537,7 +544,7 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
                   </div>
                 
                   <p style={{height: "auto", fontSize: "0.75rem",boxSizing: "border-box", flexWrap:"wrap", lineHeight: "1.2"}}>
-                    Images are added on top of previous images. <br/> (e.g. the 1st image will be covered by the 2nd image) 
+                    Images are subtracted revealing the next image underneath. <br/>(e.g. the 1st image will be removed to reveal 2nd image) 
                   </p>
                 </div>
               </button>
