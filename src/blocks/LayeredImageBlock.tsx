@@ -419,17 +419,17 @@ const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolea
             <h1>Layered Image</h1>
 
             <p style={{margin: "5px 5px 20px 5px"}}>
-            Gallery of images that are revealed sequentially where transparent images can modify the images below.
+              Gallery of images that are revealed sequentially where transparent images can modify the images below.
             </p>
             <h3 style={{fontSize: "1rem", color:"#cfcfcf"}}>Step 1</h3>
             <h2 style={{margin: "0px 0px 16px 0px"}}>Add Images</h2>
+            
             <p style={{fontSize: "0.8rem", margin: "16px 0px 32px 0px", padding: "0px 16px"}}>
-            <span style={{fontWeight: "bold"}}>&#128161; Tip:</span> Use images that are the same size or aspect ratio for best results.
+              <span style={{fontWeight: "bold"}}>&#128161; Tip:</span> Use images that are the same size or aspect ratio for best results.
             </p>
+            
             {uploaderComponent}
 
-            <button style={{width:"100%", height: "20px", backgroundColor: "black"}} type='button' onClick={() => setIsImagesUploaded(true)}></button>
-            
           </div>
         )
 
