@@ -31,15 +31,14 @@ interface AudioFeatures {
   valence: number;
 }
 
-interface VibeDescription {
-  animal: string;
-  descriptions: string[];
-}
-
 type VibeLevel = 'veryLow' | 'low' | 'medium' | 'high' | 'veryHigh';
 
+interface VibeDescription {
+  messages: string[];
+}
+
 type VibeMap = {
-  [K in keyof Pick<AudioFeatures, 'danceability' | 'energy' | 'valence'>]: Record<VibeLevel, VibeDescription>;
+  [K in keyof AudioFeatures]: Record<VibeLevel, VibeDescription>;
 };
 
 const generateVibeSummary = (scores: AudioFeatures) => {
@@ -59,98 +58,156 @@ const generateVibeSummary = (scores: AudioFeatures) => {
   };
 
   const vibeMap: VibeMap = {
+    valence: {
+      veryLow: { messages: ["feeling blue and introspective", "in a melancholic mood", "exploring the depths of your emotions"] },
+      low: { messages: ["a bit wistful", "contemplating life's mysteries", "in touch with your deeper feelings"] },
+      medium: { messages: ["emotionally balanced", "in a steady state of mind", "neither too high nor too low"] },
+      high: { messages: ["pretty upbeat", "seeing the bright side of things", "radiating positive energy"] },
+      veryHigh: { messages: ["on cloud nine", "bubbling with joy", "spreading happiness wherever you go"] },
+    },
     danceability: {
-      veryLow: { animal: "🐌 Snail", descriptions: ["slow and steady", "taking it easy", "in no rush"] },
-      low: { animal: "🐢 Turtle", descriptions: ["taking it easy", "moving at a relaxed pace", "cruising along"] },
-      medium: { animal: "🐈 Cat", descriptions: ["quick and nimble", "graceful and agile", "smooth moves"] },
-      high: { animal: "🐒 Monkey", descriptions: ["swinging and grooving", "full of energy", "bouncing around"] },
-      veryHigh: { animal: "💃 Dancer", descriptions: ["born to boogie", "can’t stop moving", "dance floor ready"] },
+      veryLow: { messages: ["not in the mood to move", "preferring stillness", "finding peace in tranquility"] },
+      low: { messages: ["swaying gently", "moving at your own pace", "enjoying subtle rhythms"] },
+      medium: { messages: ["ready for a casual groove", "finding your rhythm", "in sync with the beat"] },
+      high: { messages: ["feeling the urge to dance", "ready to hit the dance floor", "moving with the music"] },
+      veryHigh: { messages: ["can't stop won't stop dancing", "fully in the groove", "letting the rhythm take control"] },
     },
     energy: {
-      veryLow: { animal: "🦥 Sloth", descriptions: ["super chill", "taking it easy", "completely relaxed"] },
-      low: { animal: "🐨 Koala", descriptions: ["laid-back", "chilled out", "calm and cozy"] },
-      medium: { animal: "🦌 Deer", descriptions: ["alert and active", "ready to move", "on the go"] },
-      high: { animal: "🐆 Cheetah", descriptions: ["full of energy", "speeding through", "can't be stopped"] },
-      veryHigh: { animal: "⚡ Lightning Bolt", descriptions: ["electrifying", "high voltage", "charged up"] },
+      veryLow: { messages: ["totally zen", "in a state of calm", "conserving your energy"] },
+      low: { messages: ["taking it easy", "enjoying a relaxed vibe", "going with the flow"] },
+      medium: { messages: ["feeling unsure about the future", "solid chill music", "finding your balance"] },
+      high: { messages: ["feeling invigorated", "charged up and ready to go", "radiating enthusiasm"] },
+      veryHigh: { messages: ["absolutely electrified", "bursting with energy", "on a non-stop power trip"] },
     },
-    valence: {
-      veryLow: { animal: "🦇 Bat", descriptions: ["dark and brooding", "gloomy vibes", "shadowy and mysterious"] },
-      low: { animal: "🐺 Wolf", descriptions: ["creeping in the night", "lone wolf mood", "mysterious and cool"] },
-      medium: { animal: "🦜 Parrot", descriptions: ["showing off their colorful character", "chatty and bright", "full of personality"] },
-      high: { animal: "🐶 Dog", descriptions: ["happy-go-lucky", "always smiling", "man's best friend energy"] },
-      veryHigh: { animal: "🦄 Unicorn", descriptions: ["magical and joyful", "sparkling with positivity", "pure happiness"] },
+    acousticness: {
+      veryHigh: { messages: ["embracing raw, unplugged sounds", "appreciating the beauty of acoustic instruments", "enjoying a stripped-down musical experience"] },
+      high: { messages: ["feeling that down to earth vibe", "finding comfort in acoustic vibes", "connecting with organic sounds"] },
+      medium: { messages: ["balancing acoustic and electronic elements", "enjoying a mix of natural and produced sounds", "appreciating diverse musical textures"] },
+      low: { messages: ["gravitating towards polished production", "enjoying a more processed sound", "vibing with modern musical techniques"] },
+      veryLow: { messages: ["all about those electronic beats", "immersed in synthetic sounds", "enjoying cutting-edge production"] },
+    },
+    instrumentalness: {
+      veryHigh: { messages: ["lost in instrumental landscapes", "appreciating music without words", "letting the instruments do the talking"] },
+      high: { messages: ["mostly vibing to instrumentals", "focusing on musical composition", "enjoying the interplay of instruments"] },
+      medium: { messages: ["balancing vocals and instrumentals", "appreciating both lyrics and composition", "enjoying a diverse musical palette"] },
+      low: { messages: ["connecting with lyrical content", "focusing on the message in the music", "appreciating the power of words in songs"] },
+      veryLow: { messages: ["all about that vocal performance", "hanging on every word", "connecting deeply with lyrics"] },
+    },
+    liveness: {
+      veryHigh: { messages: ["feeling like you're at a live concert", "feeding off the energy of a crowd", "experiencing the thrill of live performance"] },
+      high: { messages: ["enjoying that live performance energy", "feeling connected to the artists", "appreciating the rawness of live music"] },
+      medium: { messages: ["balancing studio polish with live energy", "enjoying a mix of live and produced tracks", "appreciating different recording styles"] },
+      low: { messages: ["leaning towards polished productions", "enjoying the precision of studio recordings", "appreciating carefully crafted tracks"] },
+      veryLow: { messages: ["all about that crisp studio sound", "enjoying meticulously produced music", "appreciating audio perfection"] },
+    },
+    speechiness: {
+      veryHigh: { messages: ["focusing on spoken word and rap", "connecting with lyrical flow", "appreciating the power of the spoken word"] },
+      high: { messages: ["enjoying lyric-heavy tracks", "paying attention to the message", "connecting with wordsmiths"] },
+      medium: { messages: ["balancing lyrics and instrumentals", "enjoying a mix of words and music", "appreciating both verbal and musical expression"] },
+      low: { messages: ["leaning towards less wordy tracks", "letting the music speak for itself", "enjoying subtle lyrical touches"] },
+      veryLow: { messages: ["mostly vibing to instrumentals", "letting the music tell the story", "connecting with wordless melodies"] },
     },
   };
 
-  const getRandomDescription = (descriptions: string[]) => {
-    return descriptions[Math.floor(Math.random() * descriptions.length)];
+  const getRandomMessage = (messages: string[]) => {
+    return messages[Math.floor(Math.random() * messages.length)];
   };
 
-  const getDominantVibe = (): VibeDescription | null => {
-    const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-    const [topFeature, topScore] = sortedScores[0];
-    const level = getLevel(topScore);
-    return (topFeature in vibeMap) ? vibeMap[topFeature as keyof VibeMap][level] : null;
-  };
-
-  const dominantVibe = getDominantVibe();
+  const valenceLevel = getLevel(scores.valence);
   const danceLevel = getLevel(scores.danceability);
   const energyLevel = getLevel(scores.energy);
-  const valenceLevel = getLevel(scores.valence);
 
-  let result = ""
-  let summary = "";
-  if (dominantVibe) {
-    result = `Your vibe is: ${dominantVibe.animal}`;
-  } else {
-    const animal = randomAnimal();
-    result = `Your vibe is: ${animal.emoji}`;
+  let summary = `You're ${getRandomMessage(vibeMap.valence[valenceLevel].messages)}. `;
+  summary += `This playlists energy is ${getRandomMessage(vibeMap.danceability[danceLevel].messages)}. `;
+  summary += `and ${getRandomMessage(vibeMap.energy[energyLevel].messages)}. `;
+
+  // Add messages for other features if they're particularly high or low
+  if (scores.acousticness > thresholds.medium) {
+    const acousticLevel = getLevel(scores.acousticness);
+    summary += `You're ${getRandomMessage(vibeMap.acousticness[acousticLevel].messages)}. `;
   }
 
-  summary += `It's ${getRandomDescription(vibeMap.danceability[danceLevel].descriptions)} with ${getRandomDescription(vibeMap.energy[energyLevel].descriptions)} tracks that are ${getRandomDescription(vibeMap.valence[valenceLevel].descriptions)}. `;
+  if (scores.instrumentalness > thresholds.medium) {
+    const instrumentalLevel = getLevel(scores.instrumentalness);
+    summary += `You're ${getRandomMessage(vibeMap.instrumentalness[instrumentalLevel].messages)}. `;
+  }
 
-  if (scores.acousticness > thresholds.high) {
-    summary += "The acoustic vibes are strong with this one. ";
-  } else if (scores.instrumentalness > thresholds.high) {
-    summary += "Instruments take the lead in this playlist. ";
+  if (scores.liveness > thresholds.medium) {
+    const liveLevel = getLevel(scores.liveness);
+    summary += `You're ${getRandomMessage(vibeMap.liveness[liveLevel].messages)}. `;
   }
 
   if (scores.speechiness > thresholds.medium) {
-    summary += "There's a lot of vocal action happening here. ";
+    const speechLevel = getLevel(scores.speechiness);
+    summary += `You're ${getRandomMessage(vibeMap.speechiness[speechLevel].messages)}. `;
   }
 
-  if (scores.liveness > thresholds.high) {
-    summary += "It's like a live concert in your ears! ";
-  }
+  const determineAnimal = (scores: AudioFeatures) => {
+    const animals = [
+      { emoji: "🐌", name: "Snail" },
+      { emoji: "🐢", name: "Turtle" },
+      { emoji: "🦥", name: "Sloth" },
+      { emoji: "🐨", name: "Koala" },
+      { emoji: "🐈", name: "Cat" },
+      { emoji: "🦊", name: "Fox" },
+      { emoji: "🐒", name: "Monkey" },
+      { emoji: "🐆", name: "Cheetah" },
+      { emoji: "🦄", name: "Unicorn" },
+    ];
 
-  return { result, summary, emoji: dominantVibe ? dominantVibe.animal.split(' ')[0] : '🎵' };
-};
+    // Calculate individual feature scores
+    const energyScore = scores.energy * 2;  // 0-2
+    const danceScore = scores.danceability * 2;  // 0-2
+    const valenceScore = scores.valence * 2;  // 0-2
+    const acousticScore = (1 - scores.acousticness) * 1;  // 0-1 (inverted)
+    const livenessScore = scores.liveness * 1;  // 0-1
+    
+    // Combine scores
+    const totalScore = energyScore + danceScore + valenceScore + acousticScore + livenessScore;
+    // Max possible score is 8 (2 + 2 + 2 + 1 + 1)
+    
+    // Map total score to animal index
+    const animalIndex = Math.floor((totalScore / 8) * animals.length);
+    
+    // Ensure index is within bounds
+    return animals[Math.min(animalIndex, animals.length - 1)];
+  };
 
-const randomAnimal = (): { emoji: string; text: string } => {
-  const animals = [
-    { emoji: "🦩 Flamingo", text: "a Flamingo—quirky and standing out" },
-    { emoji: "🦔 Hedgehog", text: "a Hedgehog—cute but a little prickly" },
-    { emoji: "🦜 Parrot", text: "a Parrot—colorful and talkative" },
-    { emoji: "🐙 Octopus", text: "an Octopus—complex and multifaceted" },
-    { emoji: "🦊 Fox", text: "a Fox—clever and adaptable" },
-    { emoji: "🦚 Peacock", text: "a Peacock—showy and proud" },
-    { emoji: "🐸 Frog", text: "a Frog—hopping from genre to genre" },
-    { emoji: "🦉 Owl", text: "an Owl—wise and mysterious" }
-  ];
-  return animals[Math.floor(Math.random() * animals.length)];
+  const animal = determineAnimal(scores);
+
+  return { summary, animal };
 };
 
 export const VibecheckComposerComponent = ({ model, done }: ComposerComponentProps) => {
   const [url, setUrl] = useState<string>('');
-  const classes = useStyles();
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [showError, setShowError] = useState<boolean>(false);
+  const classes = useStyles();
+
+  const triggerErrorAnimation = () => {
+    // Reset the showError state to restart the animation
+    setShowError(false);
+    setTimeout(() => {
+      setShowError(true);
+    }, 10); // Small delay to ensure state change is recognized
+  };
 
   const handleFetch = async () => {
     setLoading(true);
+    setError('');
 
     try {
       const playlistId = extractPlaylistId(url);
+      if (!playlistId) {
+        throw new Error("Invalid Playlist URL");
+      }
+
       const tracks = await getPlaylistTracks(playlistId);
+      if (!tracks || tracks.length === 0) {
+        throw new Error("No tracks found in playlist");
+      }
+
       const trackIds = tracks.map((track: any) => track.id);
       const audioFeatures = await getAudioFeatures(trackIds);
       
@@ -164,6 +221,8 @@ export const VibecheckComposerComponent = ({ model, done }: ComposerComponentPro
       done(model); // Go to feed component
     } catch (error) {
       console.error("Error fetching playlist data:", error);
+      setError("Must be a valid public Spotify Playlist link.");
+      triggerErrorAnimation();  // Trigger the error message to flash
     } finally {
       setLoading(false);
     }
@@ -182,7 +241,7 @@ export const VibecheckComposerComponent = ({ model, done }: ComposerComponentPro
         <>
         <div className="flex flex-col items-center justify-center w-auto h-auto space-y-4">
           <h2 className="text-seam-white font-sans">Vibe check your playlists</h2>
-          <h3 className="text-seam-white font-sans">Enter a Spotify playlist URL to get started</h3>
+          <h3 className="text-seam-white font-sans">Enter a Spotify playlist URL</h3>
           <Box className="w-auto border-2 border-white-300 mt-[24px] rounded-full w-full" style={{ display: "flex", flexDirection: "row", fontFamily: "Unbounded", justifyContent: 'center', alignItems: 'center', paddingInline: '16px' }}>
             <TextField
               type="search"
@@ -195,9 +254,17 @@ export const VibecheckComposerComponent = ({ model, done }: ComposerComponentPro
               className={`mr-2 text-white-300 placeholder:text-white-300/20 placeholder:text-lg ${classes.field} border-2 w-full border-white-300`}
               sx={{ input: { border: 'none', fontFamily: "Public Sans", textTransform: 'none', } }} />
           </Box>
+          {error && (
+            <motion.div
+              animate={{ opacity: showError ? [0.2, 1, 0.2, 1] : 1 }}
+              transition={{ duration: 0.8, repeat: 0 }}
+            >
+              <h3 className="text-seam-pink mt-2">{error}</h3>
+            </motion.div>
+          )}
           <Box className="flex items-center justify-center bg-seam-black" style={{ paddingBottom: `calc(env(safe-area-inset-bottom, 24px) + 24px)` }} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, p: 3, zIndex: 1301 }}>
             <button className="p-4 bg-seam-pink w-full h-auto rounded-[8px]" onClick={handleFetch} disabled={loading}>
-              <h3 className="text-seam-white font-sans">{loading ? "Fetching..." : "Create your vibe"}</h3>
+              <h3 className="text-seam-white font-sans">{loading ? "Fetching..." : "Check the vibe"}</h3>
             </button>
           </Box>
         </div>
@@ -270,7 +337,7 @@ const generateRandomAnimation = () => {
 
 export const VibecheckFeedComponent: React.FC<FeedComponentProps> = ({ model }) => {
   const scores = model.data.scores as AudioFeatures || {};
-  const playlistUrl = model.data.playlistUrl || "#"; // Retrieve the stored playlist URL
+  const playlistUrl = model.data.playlistUrl || "#";
 
   const featureDisplayNames: { [key: string]: string } = {
     danceability: "Dance",
@@ -282,11 +349,11 @@ export const VibecheckFeedComponent: React.FC<FeedComponentProps> = ({ model }) 
     valence: "Positivity",
   };
 
-  const { result, summary, emoji } = generateVibeSummary(scores);
+  const { summary, animal } = generateVibeSummary(scores);
 
   return (
     <div className="flex items-center justify-center flex-col w-full h-auto bg-black text-white p-5 rounded-lg text-center font-sans relative">
-      <div className="relative w-32 h-32 mx-4 w-full h-full my-5">
+      <div className="relative w-32 h-32 mx-4" style={{marginTop: '24px', marginBottom: '32px'}}>
         {Object.keys(featureColors).map((key) => (
           <motion.div
             key={key}
@@ -300,12 +367,12 @@ export const VibecheckFeedComponent: React.FC<FeedComponentProps> = ({ model }) 
           />
         ))}
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-6xl">{emoji}</span>
+          <span className="text-6xl">{animal.emoji}</span>
         </div>
       </div>
-      <h2 className="text-2xl mb-3">{result}</h2>
-      <h3 className="text-lg mb-5">{summary}</h3>
-      <ul className="list-none p-0 w-full text-left mt-4">
+      <h2 className="text-2xl mb-4">Your Vibe Animal: {animal.name}</h2>
+      <h3 className="text-lg mb-4">{summary}</h3>
+      <ul className="list-none p-0 w-full text-left" style={{marginTop: '16px',}}>
         {Object.entries(scores).map(([key, value]) => (
           <li key={key} className="mb-2 flex justify-between items-center text-base">
             <span
