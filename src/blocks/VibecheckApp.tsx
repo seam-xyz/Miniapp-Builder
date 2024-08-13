@@ -76,7 +76,7 @@ const generateVibeSummary = (scores: AudioFeatures) => {
       veryLow: { messages: ["totally zen", "in a state of calm", "conserving your energy"] },
       low: { messages: ["taking it easy", "enjoying a relaxed vibe", "going with the flow"] },
       medium: { messages: ["feeling unsure about the future", "solid chill music", "finding your balance"] },
-      high: { messages: ["feeling invigorated", "charged up and ready to go", "radiating enthusiasm"] },
+      high: { messages: ["feeling invigorated", "feeling charged up and ready to go", "radiating enthusiasm"] },
       veryHigh: { messages: ["absolutely electrified", "bursting with energy", "on a non-stop power trip"] },
     },
     acousticness: {
@@ -196,28 +196,28 @@ export const VibecheckComposerComponent = ({ model, done }: ComposerComponentPro
   const handleFetch = async () => {
     setLoading(true);
     setError('');
-
+  
     try {
       const playlistId = extractPlaylistId(url);
       if (!playlistId) {
         throw new Error("Invalid Playlist URL");
       }
-
+  
       const tracks = await getPlaylistTracks(playlistId);
       if (!tracks || tracks.length === 0) {
         throw new Error("No tracks found in playlist");
       }
-
+  
       const trackIds = tracks.map((track: any) => track.id);
       const audioFeatures = await getAudioFeatures(trackIds);
       
       // Calculate weighted scores for the audio features
       const scores = calculateWeightedScores(audioFeatures);
       
-      // Store scores and playlist URL in model data
-      model.data.scores = scores;
+      // Store scores and playlist URL in model data as a JSON string
+      model.data.scores = JSON.stringify(scores);
       model.data.playlistUrl = url; // Store the playlist URL
-
+  
       done(model); // Go to feed component
     } catch (error) {
       console.error("Error fetching playlist data:", error);
@@ -226,7 +226,7 @@ export const VibecheckComposerComponent = ({ model, done }: ComposerComponentPro
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   const extractPlaylistId = (url: string) => {
     const regex = /playlist\/([a-zA-Z0-9]+)\?/;
@@ -336,16 +336,16 @@ const generateRandomAnimation = () => {
 };
 
 export const VibecheckFeedComponent: React.FC<FeedComponentProps> = ({ model }) => {
-  const scores = model.data.scores as AudioFeatures || {};
+  const scores = JSON.parse(model.data.scores) as AudioFeatures || {};
   const playlistUrl = model.data.playlistUrl || "#";
 
   const featureDisplayNames: { [key: string]: string } = {
-    danceability: "Dance",
-    energy: "Energy",
-    speechiness: "Vocals",
+    danceability: "Groovy",
+    energy: "Energized",
+    // speechiness: "Vocals",
     acousticness: "Acoustic",
     instrumentalness: "Instrumental",
-    liveness: "Live Concert",
+    // liveness: "Live Concert",
     valence: "Positivity",
   };
 
@@ -353,15 +353,15 @@ export const VibecheckFeedComponent: React.FC<FeedComponentProps> = ({ model }) 
 
   return (
     <div className="flex items-center justify-center flex-col w-full h-auto bg-black text-white p-5 rounded-lg text-center font-sans relative">
-      <div className="relative w-32 h-32 mx-4" style={{marginTop: '24px', marginBottom: '32px'}}>
+      <div className="relative w-32 h-32 mx-4" style={{ marginTop: '24px', marginBottom: '32px' }}>
         {Object.keys(featureColors).map((key) => (
           <motion.div
             key={key}
             className="absolute w-full h-full rounded-full mix-blend-screen"
             style={{
               backgroundColor: featureColors[key],
-              opacity: 1, // Adjust opacity for layering effect
-              filter: 'blur(0px)', // Adds a softer look to the edges
+              opacity: 1,
+              filter: 'blur(0px)',
             }}
             animate={generateRandomAnimation()}
           />
@@ -371,18 +371,19 @@ export const VibecheckFeedComponent: React.FC<FeedComponentProps> = ({ model }) 
         </div>
       </div>
       <h2 className="text-2xl mb-4">Your Vibe Animal: {animal.name}</h2>
-      <h3 className="text-lg mb-4">{summary}</h3>
-      <ul className="list-none p-0 w-full text-left" style={{marginTop: '16px',}}>
-        {Object.entries(scores).map(([key, value]) => (
-          <li key={key} className="mb-2 flex justify-between items-center text-base">
+      <h3 className="text-lg mb-4 text-[#A2A1A1]">{summary}</h3>
+      <ul className="list-none p-0 w-full text-left" style={{ marginTop: '16px' }}>
+        {Object.entries(scores).filter(([key]) => key !== 'speechiness' && key !== 'liveness').map(([key, value]) => (
+          <li key={key} className="mb-2 flex items-center text-base">
             <span
-              className="inline-block w-3 h-3 rounded-full mr-2"
-              style={{ backgroundColor: featureColors[key] }}
+              className="inline-block w-4 h-4 rounded-full"
+              style={{ backgroundColor: featureColors[key], marginRight: '12px' }}
             ></span>
-            <span className="capitalize flex-grow">
-              {featureDisplayNames[key] || key}: {/* Use the display name or fall back to the original key */}
-            </span>
-            <span>{((value as number) * 100).toFixed(2)}%</span>
+            <span className="flex-grow self-end border-dashed border-t border-[#A2A1A1] opacity-50" style={{ height: '100%', marginRight: '12px', marginBottom: '4px', }}></span>
+            <div className="flex items-baseline space-x-2">
+              <span className="font-sans text-seam-white" style={{ fontWeight: 700 }}>{((value as number) * 100).toFixed(2)}%</span>
+              <span className="font-sans text-[#A2A1A1] whitespace-nowrap">{featureDisplayNames[key] || key}</span>
+            </div>
           </li>
         ))}
       </ul>

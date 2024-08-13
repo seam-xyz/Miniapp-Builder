@@ -33,7 +33,7 @@ import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 export type BlockModel = {
   type: string;
   account: AccountModel;
-  data: { [key: string]: any };
+  data: { [key: string]: string };
   uuid: string; // must be unique to avoid layout issues
 };
 
