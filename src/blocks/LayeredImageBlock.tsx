@@ -2,7 +2,7 @@
 import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
 import './BlockStyles.css';
 import './assets/LayeredImageBlock/LayeredImageStyles.css';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Children } from 'react';
 import FileUploadComponent from './utils/FileUploadComponent';
 import SeamSaveButton from '../components/SeamSaveButton';
 
@@ -20,6 +20,16 @@ const convertToObjects = (imageURLString: string | undefined) => {
   return imageURLS.map((url,index) => {
     return {src: decodeURIComponent(url), id: index}
   })
+}
+
+const TipCard = (props:{children: any}) => {
+  return (
+    <>
+      <p style={{fontSize: "0.8rem", margin: "16px 0px 32px 0px", padding: "0px 16px"}}>
+        <span style={{fontWeight: "bold"}}>&#128161; Tip:</span> {props.children}
+      </p>
+    </>
+  )
 }
 
 const SliderCounter = (props:{images:{src:string}[], count: number, mode: boolean}) => {
@@ -322,9 +332,7 @@ export const LayeredImageComposerComponent = ({ model, done }: ComposerComponent
           <h3 style={{fontSize: "1rem", color:"#cfcfcf"}}>Step 1</h3>
           <h2 style={{margin: "0px 0px 16px 0px"}}>Add Images</h2>
           
-          <p style={{fontSize: "0.8rem", margin: "16px 0px 32px 0px", padding: "0px 16px"}}>
-            <span style={{fontWeight: "bold"}}>&#128161; Tip:</span> Use images that are the same size or aspect ratio for best results.
-          </p>
+          <TipCard>Use images that are the same size or aspect ratio for best results.</TipCard>
 
           {uploaderComponent}
 
@@ -346,9 +354,7 @@ export const LayeredImageComposerComponent = ({ model, done }: ComposerComponent
               Choose Layering Mode:
             </p>
 
-            <p style={{fontSize: "0.8rem", margin: "16px 0px 32px 0px", padding: "0px 16px"}}>
-              <span style={{fontWeight: "bold"}}>&#128161; Tip:</span> Changing layering mode is only relevant if you are using transparent images.
-            </p>
+            <TipCard>Changing layering mode is only relevant if you are using transparent images.</TipCard>
 
             <button 
             onClick={() => {setIsSubtract(false);}}
@@ -422,11 +428,9 @@ export const LayeredImageComposerComponent = ({ model, done }: ComposerComponent
             <p style={{fontSize: "1rem", margin: "16px 0px 8px 0px"}}>
               Drag and drop to reorder
             </p>
-
-            <p style={{fontSize: "0.8rem", margin: "16px 0px 32px 0px", padding: "0px 16px"}}>
-              <span style={{fontWeight: "bold"}}>&#128161; Tip:</span> First image determines post dimensions. If an image does not have the same aspect ratio as the first, it will be cropped.
-            </p>
             
+            <TipCard>First image determines post dimensions. If an image does not have the same aspect ratio as the first, it will be cropped.</TipCard>
+
             <div> 
               {imgs.map((image, index) => (
                 <div
