@@ -37,8 +37,76 @@ interface VibeDescription {
   messages: string[];
 }
 
+<<<<<<< HEAD
 type VibeMap = {
   [K in keyof AudioFeatures]: Record<VibeLevel, VibeDescription>;
+=======
+const determineAnimal = (scores: AudioFeatures) => {
+  const animals = [
+    {
+      emoji: "🐌",
+      name: "Snail",
+      blurb: "cruisin’ along, reflectively! As the Snail, you’re in touch with your inner self, as you glide effortlessly along to your solemnest tunes."
+    },
+    {
+      emoji: "🐢",
+      name: "Turtle",
+      blurb: "the green MACHINE, Turtle! Chew away on your veggies and let the chillest of vibes wash over you. Enjoy the ride!"
+    },
+    {
+      emoji: "🦥",
+      name: "Sloth",
+      blurb: "hanging from a branch, in a cocoon of vibey tunes, Sloth! No one can say you don’t know how to take it easy."
+    },
+    {
+      emoji: "🐨",
+      name: "Koala",
+      blurb: "a great reminder to stop and smell the eucalyptus, Koala! Cozy and calm energy surrounds you, as you relax to your infectious beats."
+    },
+    {
+      emoji: "🐈",
+      name: "Cat",
+      blurb: "having a slinky little listen! Strut along smoothly, dodging bad vibes and swaying to your gentle beats."
+    },
+    {
+      emoji: "🦊",
+      name: "Fox",
+      blurb: "sniffing out something groovy, Fox? Trot on to your upbeat tracks, you one-of-a-kind creature!"
+    },
+    {
+      emoji: "🐒",
+      name: "Monkey",
+      blurb: "swinging high in the treetops, you can’t be stopped, Monkey! You love a good vibe and a deep laugh more than anyone."
+    },
+    {
+      emoji: "🐆",
+      name: "Cheetah",
+      blurb: "sprinting on, Cheetah! You can’t be slowed down, and who would want you to anyways?"
+    },
+    {
+      emoji: "🦄",
+      name: "Unicorn",
+      blurb: "shining bright, you beautiful fantasy of a creature! As the unicorn, you prance along to the most magical of rhythms, bouncing over bad energy and lighting up the world."
+    },
+  ];
+
+  // Calculate individual feature scores
+  const energyScore = scores.energy * 2;  // 0-2
+  const danceScore = scores.danceability * 2;  // 0-2
+  const valenceScore = scores.valence * 2;  // 0-2
+  const acousticScore = (1 - scores.acousticness) * 1;  // 0-1 (inverted)
+  const livenessScore = scores.liveness * 1;  // 0-1
+  
+  // Combine scores
+  const totalScore = energyScore + danceScore + valenceScore + acousticScore + livenessScore;
+  // Max possible score is 8 (2 + 2 + 2 + 1 + 1)
+  
+  // Map total score to animal index
+  const animalIndex = Math.floor((totalScore / 8) * animals.length);
+  
+  // Ensure index is within bounds
+  return animals[Math.min(animalIndex, animals.length - 1)];
+>>>>>>> c9fc838ecb485ad07da4d00f2a4dd990014e46db
 };
 
 const generateVibeSummary = (scores: AudioFeatures) => {
@@ -57,6 +125,7 @@ const generateVibeSummary = (scores: AudioFeatures) => {
     return 'veryHigh';
   };
 
+<<<<<<< HEAD
   const vibeMap: VibeMap = {
     valence: {
       veryLow: { messages: ["feeling blue and introspective", "in a melancholic mood", "exploring the depths of your emotions"] },
@@ -111,10 +180,46 @@ const generateVibeSummary = (scores: AudioFeatures) => {
 
   const getRandomMessage = (messages: string[]) => {
     return messages[Math.floor(Math.random() * messages.length)];
+=======
+  const valenceMessages = {
+    veryLow: "as deep as the ocean, and as reflective as a puddle",
+    low: "like a nostalgic tear, rolling down a grandmother’s cheek",
+    medium: "cool as a cat, and balanced as a scale",
+    high: "the ideal soundtrack for your windows-down-drive with your best friend on a summer day",
+    veryHigh: "bursting with joy, like a disco ball that bounces positive vibes across every surface of the room"
+  };
+
+  const danceabilityMessages = {
+    veryLow: "sitting still and contemplating",
+    low: "breathing deep and swaying gently",
+    medium: "joyful, casual movement (no pressure!)",
+    high: "a late-night kitchen dance party with your friends",
+    veryHigh: "an effervescent, non-stop dancefloor groove-fest"
+  };
+
+  const bonusMessages = {
+    acousticness: {
+      high: "connecting with the world of the physical instrument",
+      veryHigh: "after some real feet-in-the-earth, raw jam session vibes"
+    },
+    instrumentalness: {
+      high: "enjoying the diverse and beautiful world of instruments",
+      veryHigh: "experiencing an ambient landscape of intense instrumentals"
+    },
+    liveness: {
+      high: "connecting to the beauty of the live concert experience, but in a cool, digital way",
+      veryHigh: "immersed in the boundless energy of the live show, complete with the roaring crowd in your heart"
+    },
+    speechiness: {
+      high: "tuning in to the lyrical geniuses and expert wordsmiths of your world",
+      veryHigh: "engaging with the power of the spoken word. Feeling the depths of the lyrical message"
+    }
+>>>>>>> c9fc838ecb485ad07da4d00f2a4dd990014e46db
   };
 
   const valenceLevel = getLevel(scores.valence);
   const danceLevel = getLevel(scores.danceability);
+<<<<<<< HEAD
   const energyLevel = getLevel(scores.energy);
 
   let summary = `You're ${getRandomMessage(vibeMap.valence[valenceLevel].messages)}. `;
@@ -175,6 +280,21 @@ const generateVibeSummary = (scores: AudioFeatures) => {
 
   const animal = determineAnimal(scores);
 
+=======
+  const animal = determineAnimal(scores);
+
+  let summary = `You are ${animal.blurb}\n\n`;
+  summary += `This playlist’s energy is ${valenceMessages[valenceLevel]}, and great for ${danceabilityMessages[danceLevel]}.\n\n`;
+
+  // Add bonus messages if thresholds are met
+  ['acousticness', 'instrumentalness', 'liveness', 'speechiness'].forEach((feature) => {
+    const level = getLevel(scores[feature as keyof AudioFeatures]);
+    if (level === 'high' || level === 'veryHigh') {
+      summary += `You're ${bonusMessages[feature as keyof typeof bonusMessages][level]}. `;
+    }
+  });
+
+>>>>>>> c9fc838ecb485ad07da4d00f2a4dd990014e46db
   return { summary, animal };
 };
 
@@ -342,10 +462,15 @@ export const VibecheckFeedComponent: React.FC<FeedComponentProps> = ({ model }) 
   const featureDisplayNames: { [key: string]: string } = {
     danceability: "Groovy",
     energy: "Energized",
+<<<<<<< HEAD
     // speechiness: "Vocals",
     acousticness: "Acoustic",
     instrumentalness: "Instrumental",
     // liveness: "Live Concert",
+=======
+    acousticness: "Acoustic",
+    instrumentalness: "Instrumental",
+>>>>>>> c9fc838ecb485ad07da4d00f2a4dd990014e46db
     valence: "Positivity",
   };
 

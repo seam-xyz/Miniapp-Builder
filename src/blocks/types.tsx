@@ -29,6 +29,7 @@ import CameraIcon from './blockIcons/CameraIcon.png'
 import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
+import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
 
 export type BlockModel = {
   type: string;
@@ -460,6 +461,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "samsam", split: 1}],
     fullscreenEdit: false,
   },
+  "Vibecheck": { 
+    type: "Vibecheck",
+    displayName: "VibeCheck",
+    displayDescription: "Get a vibe check on your favorite Spotify Playlists!",
+    icon: vibecheckIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
+    fullscreenEdit: true,
+  },
   "Unknown": {
     type: "Unknown",
     displayName: "Unknown",
@@ -470,16 +482,5 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockEdit: true,
     createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
-  },
-  "Vibecheck": { 
-    type: "Vibecheck",
-    displayName: "VibeCheck",
-    displayDescription: "vibe check",
-    icon: "VibecheckIcon",
-    deprecated: false,
-    doesBlockPost: true,
-    doesBlockEdit: true,
-    createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
-    fullscreenEdit: true,
   },
 };
