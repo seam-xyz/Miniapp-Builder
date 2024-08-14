@@ -37,6 +37,14 @@ export type BlockModel = {
   uuid: string; // must be unique to avoid layout issues
 };
 
+export interface AccountModel {
+  readonly spotifyAccount?: any;
+}
+
+export interface Badge {
+  type: string; // Badge name
+}
+
 export interface FeedComponentProps {
   model: BlockModel;
   width?: number;
@@ -446,6 +454,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockEdit: true,
     createdBy: "samsam",
     fullscreenEdit: false,
+  },
+  "Vibecheck": { 
+    type: "Vibecheck",
+    displayName: "VibeCheck",
+    displayDescription: "Get a vibe check on your favorite Spotify Playlists!",
+    icon: vibecheckIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "jamesburet",
+    fullscreenEdit: true,
   },
   "Unknown": {
     type: "Unknown",

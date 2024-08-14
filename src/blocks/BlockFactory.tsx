@@ -71,8 +71,9 @@ export default class BlockFactory {
       case "Calligraphy": return <CalligraphyFeedComponent model={model} />;
       case "localelocatr": return <LocalelocatrFeedComponent model={model} />;
       case "Voice": return <VoiceFeedComponent model={model} />;
-      case "Snake": return <SnakeFeedComponent model={model} />;
+      case "Snake": return SnakeComposerComponent(props);
       // new feed components go here
+      case "Snake": return SnakeComposerComponent(props);
       default: return UnknownFeedComponent({ model });
     }
   }
@@ -113,7 +114,6 @@ export default class BlockFactory {
       case "Calligraphy": return CalligraphyComposerComponent(props);
       case "localelocatr": return LocalelocatrComposerComponent(props);
       case "Voice": return VoiceComposerComponent(props);
-
       case "Snake": return SnakeComposerComponent(props);
       // new composer components go here
       default: return UnknownComposerComponent(props);
