@@ -475,11 +475,11 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "Vibecheck",
     displayName: "VibeCheck",
     displayDescription: "vibe check",
-    icon: "VibecheckIcon", // TODO: insert your app icon here
+    icon: "VibecheckIcon",
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "jamesburet",
+    createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
     fullscreenEdit: true,
-},
+  },
 };
