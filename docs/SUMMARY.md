@@ -14,6 +14,7 @@
 * [Uploading Images, Videos, and Files](miniapp-creation/uploading-images-videos-and-files.md)
 * [Miniapp Icons](miniapp-creation/miniapp-icons.md)
 * [FAQ](miniapp-creation/faq.md)
+* [Tips & Tricks](miniapp-creation/tips-and-tricks.md)
 
 ## Submission
 

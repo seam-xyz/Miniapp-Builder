@@ -32,9 +32,18 @@ import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 
 export type BlockModel = {
   type: string;
+  account: AccountModel;
   data: { [key: string]: string };
   uuid: string; // must be unique to avoid layout issues
 };
+
+export interface AccountModel {
+  readonly spotifyAccount?: any;
+}
+
+export interface Badge {
+  type: string; // Badge name
+}
 
 export interface FeedComponentProps {
   model: BlockModel;
@@ -462,4 +471,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
+  "Vibecheck": { 
+    type: "Vibecheck",
+    displayName: "VibeCheck",
+    displayDescription: "vibe check",
+    icon: "VibecheckIcon", // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "jamesburet",
+    fullscreenEdit: true,
+},
 };
