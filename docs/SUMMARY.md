@@ -19,3 +19,4 @@
 ## Submission
 
 * [Creating a Pull Request](submission/creating-a-pull-request.md)
+* [Adding Teammates](submission/multiple-collabs.md)
