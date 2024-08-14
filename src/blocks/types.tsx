@@ -457,4 +457,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "seam",
     fullscreenEdit: false,
   },
+  "Distrivial": { 
+    type: "Distrivial",
+    displayName: "Distrivial",
+    displayDescription: "Its not trivial, its trivia",
+    icon: "DistrivialIcon", // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "alexjshepler",
+    fullscreenEdit: false,
+},
 };
