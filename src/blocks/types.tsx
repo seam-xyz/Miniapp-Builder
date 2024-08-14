@@ -349,7 +349,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: [{username: "jamesburet", split: 1}],
+    createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
     fullscreenEdit: false,
   },
   "Bookshelf": {
@@ -371,7 +371,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: [{username: "jamesburet", split: 1}],
+    createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
     fullscreenEdit: false,
   },
   "Mood": {
@@ -382,7 +382,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: [{username: "jamesburet", split: 1}],
+    createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
     fullscreenEdit: true,
   },
   "Whiteboard": {
@@ -393,7 +393,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: [{username: "emilee", split: 0.9}, {username: "rocco", split: 0.1}],
+    createdBy: [{username: "emilee", split: 0.5}, {username: "rocco", split: 0.5}],
     fullscreenEdit: false,
   },
   "ImagePuzzle": {
@@ -426,7 +426,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: [{username: "mbehera", split: 0.5}],
+    createdBy: [{username: "mbehera", split: 1.0}],
     fullscreenEdit: false,
   },
   "Camera": {
