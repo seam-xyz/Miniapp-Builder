@@ -49,7 +49,7 @@ export interface ComposerComponentProps {
 
 export type PointSplit = {
   username: string;
-  split: number;
+  split: number; // 1.0 is 100%, 0.5 is 50%, etc. Make sure to add up to 1.0!
 };
 
 export type BlockType = {
