@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
 import BlockFactory from '../blocks/BlockFactory';
 
-const BlockSelectorModal = ({ account, selectedBlockType, initialBlockData, setSelectedBlockData }) => {
+const BlockSelectorModal = ({ selectedBlockType, initialBlockData, setSelectedBlockData }) => {
   const [width, setWidth] = useState(undefined);
   const divRef = useRef(null);
   const isFullscreenEdit = BlockFactory.doesBlockEditFullscreen(selectedBlockType);
@@ -19,7 +19,6 @@ const BlockSelectorModal = ({ account, selectedBlockType, initialBlockData, setS
 
   const model = {
     type: selectedBlockType,
-    account: account,
     data: initialBlockData || {},
     uuid: nanoid()  // Generate a new unique ID
   };

@@ -33,7 +33,6 @@ import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
 
 export type BlockModel = {
   type: string;
-  account: AccountModel;
   data: { [key: string]: string };
   uuid: string; // must be unique to avoid layout issues
 };
