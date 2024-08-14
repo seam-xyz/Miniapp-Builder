@@ -29,6 +29,9 @@ import CameraIcon from './blockIcons/CameraIcon.png'
 import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
+import distrivialIcon from "./blockIcons/distrivialIcon.png";
+
+
 
 export type BlockModel = {
   type: string;
@@ -461,11 +464,11 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "Distrivial",
     displayName: "Distrivial",
     displayDescription: "Its not trivial, its trivia",
-    icon: "DistrivialIcon", // TODO: insert your app icon here
+    icon: distrivialIcon, // TODO: insert your app icon here
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "alexjshepler",
+    createdBy: "alexjshepler, @basilisk",
     fullscreenEdit: false,
-},
+  },
 };
