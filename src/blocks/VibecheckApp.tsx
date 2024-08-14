@@ -37,8 +37,71 @@ interface VibeDescription {
   messages: string[];
 }
 
-type VibeMap = {
-  [K in keyof AudioFeatures]: Record<VibeLevel, VibeDescription>;
+const determineAnimal = (scores: AudioFeatures) => {
+  const animals = [
+    {
+      emoji: "🐌",
+      name: "Snail",
+      blurb: "cruisin’ along, reflectively! As the Snail, you’re in touch with your inner self, as you glide effortlessly along to your solemnest tunes."
+    },
+    {
+      emoji: "🐢",
+      name: "Turtle",
+      blurb: "the green MACHINE, Turtle! Chew away on your veggies and let the chillest of vibes wash over you. Enjoy the ride!"
+    },
+    {
+      emoji: "🦥",
+      name: "Sloth",
+      blurb: "hanging from a branch, in a cocoon of vibey tunes, Sloth! No one can say you don’t know how to take it easy."
+    },
+    {
+      emoji: "🐨",
+      name: "Koala",
+      blurb: "a great reminder to stop and smell the eucalyptus, Koala! Cozy and calm energy surrounds you, as you relax to your infectious beats."
+    },
+    {
+      emoji: "🐈",
+      name: "Cat",
+      blurb: "having a slinky little listen! Strut along smoothly, dodging bad vibes and swaying to your gentle beats."
+    },
+    {
+      emoji: "🦊",
+      name: "Fox",
+      blurb: "sniffing out something groovy, Fox? Trot on to your upbeat tracks, you one-of-a-kind creature!"
+    },
+    {
+      emoji: "🐒",
+      name: "Monkey",
+      blurb: "swinging high in the treetops, you can’t be stopped, Monkey! You love a good vibe and a deep laugh more than anyone."
+    },
+    {
+      emoji: "🐆",
+      name: "Cheetah",
+      blurb: "sprinting on, Cheetah! You can’t be slowed down, and who would want you to anyways?"
+    },
+    {
+      emoji: "🦄",
+      name: "Unicorn",
+      blurb: "shining bright, you beautiful fantasy of a creature! As the unicorn, you prance along to the most magical of rhythms, bouncing over bad energy and lighting up the world."
+    },
+  ];
+
+  // Calculate individual feature scores
+  const energyScore = scores.energy * 2;  // 0-2
+  const danceScore = scores.danceability * 2;  // 0-2
+  const valenceScore = scores.valence * 2;  // 0-2
+  const acousticScore = (1 - scores.acousticness) * 1;  // 0-1 (inverted)
+  const livenessScore = scores.liveness * 1;  // 0-1
+  
+  // Combine scores
+  const totalScore = energyScore + danceScore + valenceScore + acousticScore + livenessScore;
+  // Max possible score is 8 (2 + 2 + 2 + 1 + 1)
+  
+  // Map total score to animal index
+  const animalIndex = Math.floor((totalScore / 8) * animals.length);
+  
+  // Ensure index is within bounds
+  return animals[Math.min(animalIndex, animals.length - 1)];
 };
 
 const generateVibeSummary = (scores: AudioFeatures) => {
@@ -57,123 +120,55 @@ const generateVibeSummary = (scores: AudioFeatures) => {
     return 'veryHigh';
   };
 
-  const vibeMap: VibeMap = {
-    valence: {
-      veryLow: { messages: ["feeling blue and introspective", "in a melancholic mood", "exploring the depths of your emotions"] },
-      low: { messages: ["a bit wistful", "contemplating life's mysteries", "in touch with your deeper feelings"] },
-      medium: { messages: ["emotionally balanced", "in a steady state of mind", "neither too high nor too low"] },
-      high: { messages: ["pretty upbeat", "seeing the bright side of things", "radiating positive energy"] },
-      veryHigh: { messages: ["on cloud nine", "bubbling with joy", "spreading happiness wherever you go"] },
-    },
-    danceability: {
-      veryLow: { messages: ["not in the mood to move", "preferring stillness", "finding peace in tranquility"] },
-      low: { messages: ["swaying gently", "moving at your own pace", "enjoying subtle rhythms"] },
-      medium: { messages: ["ready for a casual groove", "finding your rhythm", "in sync with the beat"] },
-      high: { messages: ["feeling the urge to dance", "ready to hit the dance floor", "moving with the music"] },
-      veryHigh: { messages: ["can't stop won't stop dancing", "fully in the groove", "letting the rhythm take control"] },
-    },
-    energy: {
-      veryLow: { messages: ["totally zen", "in a state of calm", "conserving your energy"] },
-      low: { messages: ["taking it easy", "enjoying a relaxed vibe", "going with the flow"] },
-      medium: { messages: ["feeling unsure about the future", "solid chill music", "finding your balance"] },
-      high: { messages: ["feeling invigorated", "feeling charged up and ready to go", "radiating enthusiasm"] },
-      veryHigh: { messages: ["absolutely electrified", "bursting with energy", "on a non-stop power trip"] },
-    },
-    acousticness: {
-      veryHigh: { messages: ["embracing raw, unplugged sounds", "appreciating the beauty of acoustic instruments", "enjoying a stripped-down musical experience"] },
-      high: { messages: ["feeling that down to earth vibe", "finding comfort in acoustic vibes", "connecting with organic sounds"] },
-      medium: { messages: ["balancing acoustic and electronic elements", "enjoying a mix of natural and produced sounds", "appreciating diverse musical textures"] },
-      low: { messages: ["gravitating towards polished production", "enjoying a more processed sound", "vibing with modern musical techniques"] },
-      veryLow: { messages: ["all about those electronic beats", "immersed in synthetic sounds", "enjoying cutting-edge production"] },
-    },
-    instrumentalness: {
-      veryHigh: { messages: ["lost in instrumental landscapes", "appreciating music without words", "letting the instruments do the talking"] },
-      high: { messages: ["mostly vibing to instrumentals", "focusing on musical composition", "enjoying the interplay of instruments"] },
-      medium: { messages: ["balancing vocals and instrumentals", "appreciating both lyrics and composition", "enjoying a diverse musical palette"] },
-      low: { messages: ["connecting with lyrical content", "focusing on the message in the music", "appreciating the power of words in songs"] },
-      veryLow: { messages: ["all about that vocal performance", "hanging on every word", "connecting deeply with lyrics"] },
-    },
-    liveness: {
-      veryHigh: { messages: ["feeling like you're at a live concert", "feeding off the energy of a crowd", "experiencing the thrill of live performance"] },
-      high: { messages: ["enjoying that live performance energy", "feeling connected to the artists", "appreciating the rawness of live music"] },
-      medium: { messages: ["balancing studio polish with live energy", "enjoying a mix of live and produced tracks", "appreciating different recording styles"] },
-      low: { messages: ["leaning towards polished productions", "enjoying the precision of studio recordings", "appreciating carefully crafted tracks"] },
-      veryLow: { messages: ["all about that crisp studio sound", "enjoying meticulously produced music", "appreciating audio perfection"] },
-    },
-    speechiness: {
-      veryHigh: { messages: ["focusing on spoken word and rap", "connecting with lyrical flow", "appreciating the power of the spoken word"] },
-      high: { messages: ["enjoying lyric-heavy tracks", "paying attention to the message", "connecting with wordsmiths"] },
-      medium: { messages: ["balancing lyrics and instrumentals", "enjoying a mix of words and music", "appreciating both verbal and musical expression"] },
-      low: { messages: ["leaning towards less wordy tracks", "letting the music speak for itself", "enjoying subtle lyrical touches"] },
-      veryLow: { messages: ["mostly vibing to instrumentals", "letting the music tell the story", "connecting with wordless melodies"] },
-    },
+  const valenceMessages = {
+    veryLow: "as deep as the ocean, and as reflective as a puddle",
+    low: "like a nostalgic tear, rolling down a grandmother’s cheek",
+    medium: "cool as a cat, and balanced as a scale",
+    high: "the ideal soundtrack for your windows-down-drive with your best friend on a summer day",
+    veryHigh: "bursting with joy, like a disco ball that bounces positive vibes across every surface of the room"
   };
 
-  const getRandomMessage = (messages: string[]) => {
-    return messages[Math.floor(Math.random() * messages.length)];
+  const danceabilityMessages = {
+    veryLow: "sitting still and contemplating",
+    low: "breathing deep and swaying gently",
+    medium: "joyful, casual movement (no pressure!)",
+    high: "a late-night kitchen dance party with your friends",
+    veryHigh: "an effervescent, non-stop dancefloor groove-fest"
+  };
+
+  const bonusMessages = {
+    acousticness: {
+      high: "connecting with the world of the physical instrument",
+      veryHigh: "after some real feet-in-the-earth, raw jam session vibes"
+    },
+    instrumentalness: {
+      high: "enjoying the diverse and beautiful world of instruments",
+      veryHigh: "experiencing an ambient landscape of intense instrumentals"
+    },
+    liveness: {
+      high: "connecting to the beauty of the live concert experience, but in a cool, digital way",
+      veryHigh: "immersed in the boundless energy of the live show, complete with the roaring crowd in your heart"
+    },
+    speechiness: {
+      high: "tuning in to the lyrical geniuses and expert wordsmiths of your world",
+      veryHigh: "engaging with the power of the spoken word. Feeling the depths of the lyrical message"
+    }
   };
 
   const valenceLevel = getLevel(scores.valence);
   const danceLevel = getLevel(scores.danceability);
-  const energyLevel = getLevel(scores.energy);
-
-  let summary = `You're ${getRandomMessage(vibeMap.valence[valenceLevel].messages)}. `;
-  summary += `This playlists energy is ${getRandomMessage(vibeMap.danceability[danceLevel].messages)}. `;
-  summary += `and ${getRandomMessage(vibeMap.energy[energyLevel].messages)}. `;
-
-  // Add messages for other features if they're particularly high or low
-  if (scores.acousticness > thresholds.medium) {
-    const acousticLevel = getLevel(scores.acousticness);
-    summary += `You're ${getRandomMessage(vibeMap.acousticness[acousticLevel].messages)}. `;
-  }
-
-  if (scores.instrumentalness > thresholds.medium) {
-    const instrumentalLevel = getLevel(scores.instrumentalness);
-    summary += `You're ${getRandomMessage(vibeMap.instrumentalness[instrumentalLevel].messages)}. `;
-  }
-
-  if (scores.liveness > thresholds.medium) {
-    const liveLevel = getLevel(scores.liveness);
-    summary += `You're ${getRandomMessage(vibeMap.liveness[liveLevel].messages)}. `;
-  }
-
-  if (scores.speechiness > thresholds.medium) {
-    const speechLevel = getLevel(scores.speechiness);
-    summary += `You're ${getRandomMessage(vibeMap.speechiness[speechLevel].messages)}. `;
-  }
-
-  const determineAnimal = (scores: AudioFeatures) => {
-    const animals = [
-      { emoji: "🐌", name: "Snail" },
-      { emoji: "🐢", name: "Turtle" },
-      { emoji: "🦥", name: "Sloth" },
-      { emoji: "🐨", name: "Koala" },
-      { emoji: "🐈", name: "Cat" },
-      { emoji: "🦊", name: "Fox" },
-      { emoji: "🐒", name: "Monkey" },
-      { emoji: "🐆", name: "Cheetah" },
-      { emoji: "🦄", name: "Unicorn" },
-    ];
-
-    // Calculate individual feature scores
-    const energyScore = scores.energy * 2;  // 0-2
-    const danceScore = scores.danceability * 2;  // 0-2
-    const valenceScore = scores.valence * 2;  // 0-2
-    const acousticScore = (1 - scores.acousticness) * 1;  // 0-1 (inverted)
-    const livenessScore = scores.liveness * 1;  // 0-1
-    
-    // Combine scores
-    const totalScore = energyScore + danceScore + valenceScore + acousticScore + livenessScore;
-    // Max possible score is 8 (2 + 2 + 2 + 1 + 1)
-    
-    // Map total score to animal index
-    const animalIndex = Math.floor((totalScore / 8) * animals.length);
-    
-    // Ensure index is within bounds
-    return animals[Math.min(animalIndex, animals.length - 1)];
-  };
-
   const animal = determineAnimal(scores);
+
+  let summary = `You are ${animal.blurb}\n\n`;
+  summary += `This playlist’s energy is ${valenceMessages[valenceLevel]}, and great for ${danceabilityMessages[danceLevel]}.\n\n`;
+
+  // Add bonus messages if thresholds are met
+  ['acousticness', 'instrumentalness', 'liveness', 'speechiness'].forEach((feature) => {
+    const level = getLevel(scores[feature as keyof AudioFeatures]);
+    if (level === 'high' || level === 'veryHigh') {
+      summary += `You're ${bonusMessages[feature as keyof typeof bonusMessages][level]}. `;
+    }
+  });
 
   return { summary, animal };
 };
@@ -342,10 +337,8 @@ export const VibecheckFeedComponent: React.FC<FeedComponentProps> = ({ model }) 
   const featureDisplayNames: { [key: string]: string } = {
     danceability: "Groovy",
     energy: "Energized",
-    // speechiness: "Vocals",
     acousticness: "Acoustic",
     instrumentalness: "Instrumental",
-    // liveness: "Live Concert",
     valence: "Positivity",
   };
 
