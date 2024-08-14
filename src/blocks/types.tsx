@@ -360,7 +360,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: [{username: "nick", split: 1}],
+    createdBy: [{username: "nick", split: 0.50}, {username: "rocco", split: 0.50}],
     fullscreenEdit: true,
   },
   "Wordle": {
@@ -393,7 +393,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: [{username: "emilee", split: 1}],
+    createdBy: [{username: "emilee", split: 0.9}, {username: "rocco", split: 0.1}],
     fullscreenEdit: false,
   },
   "ImagePuzzle": {
