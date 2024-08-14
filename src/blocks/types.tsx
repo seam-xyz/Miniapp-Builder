@@ -34,6 +34,9 @@ import distrivialIcon from "./blockIcons/distrivialIcon.png";
 
 
 export type BlockModel = {
+  userAnswers: never[];
+  userScore: number;
+  questions: never[];
   type: string;
   data: { [key: string]: string };
   uuid: string; // must be unique to avoid layout issues

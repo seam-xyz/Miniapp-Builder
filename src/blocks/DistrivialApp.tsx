@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
+import { ComposerComponentProps, FeedComponentProps } from './types';
 
 interface Question {
   question: string;
@@ -7,16 +7,19 @@ interface Question {
   incorrect_answers: string[];
 }
 
+// Decode HTML entities
 const decodeHTML = (html: string) => {
   const text = document.createElement('textarea');
   text.innerHTML = html;
   return text.value;
 };
 
+// Shuffle array elements
 const shuffleArray = (array: any[]) => {
   return array.sort(() => Math.random() - 0.5);
 };
 
+// Fetch questions from API
 const fetchQuestions = async (): Promise<Question[]> => {
   const response = await fetch('https://opentdb.com/api.php?amount=5&type=multiple');
   const data = await response.json();
@@ -27,12 +30,12 @@ const fetchQuestions = async (): Promise<Question[]> => {
   }));
 };
 
-let _questions: Question[] = [];
-let _userScore: number = 0;
-let _userAnswers: string[] = [];
-let _correctAnswers: string[] = [];
-
+// DistrivialFeedComponent definition
 export const DistrivialFeedComponent = ({ model }: FeedComponentProps) => {
+  const questions: any[] = model.questions || [];
+  const userScore: number = model.userScore || 0;
+  const userAnswers: any[] = model.userAnswers || [];
+
   return (
     <div className="results-container">
       <style>{`
@@ -70,18 +73,18 @@ export const DistrivialFeedComponent = ({ model }: FeedComponentProps) => {
           border-radius: 10px;
         }
       `}</style>
-      <h1>User score: {_userScore} out of {_questions.length}</h1>
-      {_questions.map((question, index) => (
+      <h1>User score: {userScore} out of {questions.length}</h1>
+      {questions.map((question: any, index: number) => (
         <div key={index} className="result-row">
           <div className="question-text">{question.question}</div>
           <div
             className={
-              _userAnswers[index] === question.correct_answer
+              userAnswers[index] === question.correct_answer
                 ? 'answer-correct'
                 : 'answer-incorrect'
             }
           >
-            {_userAnswers[index]}
+            {userAnswers[index]}
           </div>
         </div>
       ))}
@@ -89,12 +92,12 @@ export const DistrivialFeedComponent = ({ model }: FeedComponentProps) => {
   );
 };
 
+// DistrivialComposerComponent definition
 export const DistrivialComposerComponent = ({ model, done }: ComposerComponentProps) => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [userScore, setUserScore] = useState(0);
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
-  const [correctAnswers, setCorrectAnswers] = useState<string[]>([]); // new state variable
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -112,8 +115,6 @@ export const DistrivialComposerComponent = ({ model, done }: ComposerComponentPr
 
   const handleAnswer = (answer: string) => {
     const current = questions[currentQuestion];
-    const correctAnswer = current.correct_answer;
-    setCorrectAnswers((prevCorrectAnswers) => [...prevCorrectAnswers, correctAnswer]);
     if (answer === current.correct_answer) {
       setUserScore(userScore + 1);
     }
@@ -126,70 +127,75 @@ export const DistrivialComposerComponent = ({ model, done }: ComposerComponentPr
   }
 
   if (error) {
-    return <div><h1>Error</h1><p>{error}</p></div>;
+    return (
+      <div>
+        <h1>Error</h1>
+        <p>{error}</p>
+      </div>
+    );
   }
 
   if (currentQuestion >= questions.length) {
-    _questions = questions;
-    _userScore = userScore;
-    _userAnswers = userAnswers;
-    _correctAnswers = correctAnswers;
+    // Save the current state to the model to persist it for this post
+    (model as any).questions = questions;
+    (model as any).userScore = userScore;
+    (model as any).userAnswers = userAnswers;
 
     done(model);
 
     return (
       <div className="results-container">
         <style>{`
-        .results-container {
-          padding: 20px;
-          text-align: center;
-        }
-        .result-row {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 10px;
-          border-radius: 10px;
-          padding: 10px;
-          background-color: #f9f9f9;
-        }
-        .question-text {
-          flex-grow: 1;
-          text-align: left;
-          margin-right: 10px;
-          background-color: #e0e0e0;
-          padding: 10px;
-          border-radius: 10px;
-        }
-        .answer-correct {
-          background-color: #4CAF50; /* Green */
-          color: white;
-          padding: 10px;
-          border-radius: 10px;
-        }
-        .answer-incorrect {
-          background-color: #F44336; /* Red */
-          color: white;
-          padding: 10px;
-          border-radius: 10px;
-        }
-      `}</style>
-        <h1>User score: {_userScore} out of {_questions.length}</h1>
-        {_questions.map((question, index) => (
+          .results-container {
+            padding: 20px;
+            text-align: center;
+          }
+          .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+          }
+          .question-text {
+            flex-grow: 1;
+            text-align: left;
+            margin-right: 10px;
+            background-color: #e0e0e0;
+            padding: 10px;
+            border-radius: 10px;
+          }
+          .answer-correct {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+          }
+          .answer-incorrect {
+            background-color: #F44336; /* Red */
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+          }
+        `}</style>
+        <h1>User score: {userScore} out of {questions.length}</h1>
+        {questions.map((question: any, index: number) => (
           <div key={index} className="result-row">
             <div className="question-text">{question.question}</div>
             <div
               className={
-                _userAnswers[index] === question.correct_answer
+                userAnswers[index] === question.correct_answer
                   ? 'answer-correct'
                   : 'answer-incorrect'
               }
             >
-              {_userAnswers[index]}
+              {userAnswers[index]}
             </div>
           </div>
         ))}
-        <button className="question-text" onClick={() => { done(model) }}>Post</button>
+        <button className="question-text" onClick={() => done(model)}>Post</button>
       </div>
     );
   }
