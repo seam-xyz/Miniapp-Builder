@@ -38,11 +38,18 @@ export type BlockModel = {
 };
 
 export interface AccountModel {
-  readonly spotifyAccount?: any;
+  readonly id: string;
+  readonly username: string;
+  badges: Badge[];
+  readonly profilePhoto: string;
 }
 
 export interface Badge {
-  type: string; // Badge name
+  type: string;
+  date: {
+    __type: string;
+    iso: string;
+  };
 }
 
 export interface FeedComponentProps {
