@@ -410,25 +410,29 @@ export const GoComposerComponent = ({ model, done }: ComposerComponentProps) => 
   const [bets, setBets] = useState<Bet[]>([]);
   const [resultRoulette, setResultRoulette] = useState<string>('');
   const [winningPocket, setWinningPocket] = useState<{ number: number, color: string } | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
-  // Function to place a bet
   const placeBet = (type: BetType, value: number | string, amount: number) => {
-    setBets([...bets, { type, value, amount }]);
+    if (amount > token) {
+      setErrorMessage('Not enough tokens to place the bet.');
+      return;
+    }
+    setErrorMessage('');
+    setToken(prevToken => prevToken - amount); 
+    setBets(prevBets => [...prevBets, { type, value, amount }]); 
   };
-
-  // Function to spin the wheel
+  
+  
   const spinRoulette = () => {
     const randomIndex = Math.floor(Math.random() * rouletteWheel.length);
     const winningPocket = rouletteWheel[randomIndex];
     setWinningPocket(winningPocket);
-
     evaluateBets(winningPocket);
   };
-
-  // Function to evaluate bets
+  
   const evaluateBets = (winningPocket: { number: number, color: string }) => {
     let totalWinnings = 0;
-
+  
     bets.forEach(bet => {
       switch (bet.type) {
         case 'color':
@@ -450,10 +454,13 @@ export const GoComposerComponent = ({ model, done }: ComposerComponentProps) => 
           break;
       }
     });
-
+  
     setResultRoulette(`You won ${totalWinnings}`);
-    setToken(totalWinnings);
+    setToken(prevToken => prevToken + totalWinnings);
+    setBets([]);
+
   };
+  
 
   const handleSubmit = () => {
     model.data.token = (token - 7).toString();
@@ -746,6 +753,7 @@ export const GoComposerComponent = ({ model, done }: ComposerComponentProps) => 
                 <p className='text-center'>Winning Number: <u>{winningPocket.number}</u></p>
                 <p className='text-center'>Winning Color: <u>{winningPocket.color}</u></p>
                 <h2>{resultRoulette}</h2>
+                {errorMessage && <p className="text-red-500">{errorMessage}</p>}
               </div>
             )}
           </div>
