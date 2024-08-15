@@ -88,7 +88,7 @@ function reducer(state, action) {
   }
 }
 
-function Composer({ addNewPost }) {
+function Composer({ account, addNewPost }) {
   const modal = useRef(null);
   const blockPreviewRef = useRef(null);
   const classes = useStyles();
@@ -176,7 +176,7 @@ function Composer({ addNewPost }) {
         />
       </div>
       <BlockSelectorModal
-        account={{spotifyAccount: "YOUR_AUTHORIZED_SPOTIFY_ACCOUNT_DETAILS"}}
+        account={account}
         selectedBlockType={state.selectedBlockType.type}
         initialBlockData={state.selectedBlockData?.data ?? {}}
         setSelectedBlockData={(data) => {
@@ -185,7 +185,7 @@ function Composer({ addNewPost }) {
         style={{ width: "100%" }}
       />
     </div>
-  );
+  );  
 
   const renderBlockPreview = (blockData) => {
     if (!blockData) return <div>No Block Data</div>;
