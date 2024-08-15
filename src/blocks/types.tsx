@@ -33,16 +33,24 @@ import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
 
 export type BlockModel = {
   type: string;
+  account: AccountModel;
   data: { [key: string]: string };
   uuid: string; // must be unique to avoid layout issues
 };
 
 export interface AccountModel {
-  readonly spotifyAccount?: any;
+  readonly id: string;
+  readonly username: string;
+  badges: Badge[];
+  readonly profilePhoto: string;
 }
 
 export interface Badge {
-  type: string; // Badge name
+  type: string;
+  date: {
+    __type: string;
+    iso: string;
+  };
 }
 
 export interface FeedComponentProps {
