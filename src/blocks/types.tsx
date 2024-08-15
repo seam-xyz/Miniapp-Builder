@@ -29,6 +29,7 @@ import CameraIcon from './blockIcons/CameraIcon.png'
 import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
+import GoIcon from "./blockIcons/goicon.png" 
 
 export type BlockModel = {
   type: string;
@@ -457,4 +458,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "seam",
     fullscreenEdit: false,
   },
+  "Go": { 
+    type: "Go",
+    displayName: "Go Big or Go Home",
+    displayDescription: "Start with 7 tokens. Play to win more or risk losing it all. Go big or go home! Share how much you made with your friends",
+    icon: GoIcon, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "kherklen",
+    fullscreenEdit: false,
+},
 };
