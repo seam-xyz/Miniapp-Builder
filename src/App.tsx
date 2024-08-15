@@ -42,30 +42,31 @@ const useStyles = makeStyles((theme) => ({
 
 export default function App() {
   const classes = useStyles();
+  const account = {
+    id: "4CKMNhPiZu",
+    username: "FrankieTheStar",
+    badges: [
+      {
+        date: {
+          __type: "Date",
+          iso: "2024-03-25T15:38:26.614Z"
+        },
+        type: "og"
+      },
+      {
+        date: {
+          __type: "Date",
+          iso: "2024-03-25T15:38:26.614Z"
+        },
+        type: "beta"
+      }
+    ],
+    profilePhoto: "https://upcdn.io/W142hWW/raw/uploads/2024/02/23/start-4skb.png"
+  };  
   const [loadedPosts, setLoadedPosts] = useState<BlockModel[]>([
     {
       type: 'FlashingText',
-      account: 
-        {
-      id: "4CKMNhPiZu", 
-      username: "FrankieTheStar", 
-      badges: [
-        {
-          "date": {
-            "__type": "Date",
-            "iso": "2024-03-25T15:38:26.614Z"
-          },
-          "type": "og"
-        },
-        {
-          "date": {
-            "__type": "Date",
-            "iso": "2024-03-25T15:38:26.614Z"
-          },
-          "type": "beta"
-        }
-      ], 
-      profilePhoto: "https://upcdn.io/W142hWW/raw/uploads/2024/02/23/start-4skb.png"},
+      account: account, 
       data: {
         text: 'Welcome to the Seam Miniapp Builder!',
       },
@@ -89,7 +90,7 @@ export default function App() {
               <h1 style={{ fontSize: 'calc(10px + 2vmin)' }}> Seam Miniapp Builder </h1>
             </div>
             <div className={`flex max-w-justify-end items-center text-white rounded-full bg-[#ea3bf7] ${classes.noScrollBar}`} style={{ marginLeft: '16px' }}>
-              <Composer addNewPost={addNewPost} />
+              <Composer account={account} addNewPost={addNewPost} />
             </div>
           </div>
         </IonHeader>
