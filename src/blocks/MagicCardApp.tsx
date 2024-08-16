@@ -244,7 +244,7 @@ const MagicCardEditor = (props: MagicCardProps & MagicCardSetterProps) => {
   );
 
   return (
-    <Stack style={{ height: "100%", overflowY: "auto", paddingTop: 8, paddingBottom: 8 }} spacing={2}>
+    <Stack style={{ height: "100%", paddingTop: 72, paddingBottom: 8 }} spacing={2}>
       <Stack gap={2} direction={"row"} flexWrap="wrap">
         <TextField
           required
@@ -684,7 +684,7 @@ const MagicCard = forwardRef((props: MagicCardProps, ref: React.ForwardedRef<HTM
   ]);
 
   return (
-    <div style={{ width: "auto", height: "98%", marginLeft: "auto", marginRight: "auto" }}>
+    <Stack justifyContent="center" alignItems="center" padding={2} style={{ width: "auto", height: "100vh" }}>
       <canvas ref={mergedRef} style={{ height: "100%" }} width={744} height={1039} />
       <div
         style={{
@@ -697,7 +697,7 @@ const MagicCard = forwardRef((props: MagicCardProps, ref: React.ForwardedRef<HTM
       >
         <CircularProgress size={48} />
       </div>
-    </div>
+    </Stack>
   );
 });
 
@@ -735,9 +735,9 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
   }, [done, model]);
 
   return (
-    <>
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "calc(100vh - 132px)" }}>
-        {editing ? (
+    <Stack style={{ display: "flex", height: "100vh" }}>
+      {editing ? (
+        <Box sx={{ overflowY: "auto", height: "calc(100vh - 86px)", display: "flex", justifyContent: "center", alignItems: "center" }}>
           <MagicCardEditor
             cardName={cardName}
             manaCost={manaCost}
@@ -762,37 +762,47 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
             setRules={setRules}
             setFlavorText={setFlavorText}
           />
-        ) : (
-          <MagicCard
-            ref={canvasRef}
-            cardName={cardName}
-            manaCost={manaCost}
-            cardColor={cardColor}
-            borderColor={borderColor}
-            illustration={illustration}
-            type={type}
-            subType={subType}
-            power={power}
-            toughness={toughness}
-            rules={rules}
-            flavorText={flavorText}
-          />
-        )}
-      </Box>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        </Box>
+      ) : (
+        <MagicCard
+          ref={canvasRef}
+          cardName={cardName}
+          manaCost={manaCost}
+          cardColor={cardColor}
+          borderColor={borderColor}
+          illustration={illustration}
+          type={type}
+          subType={subType}
+          power={power}
+          toughness={toughness}
+          rules={rules}
+          flavorText={flavorText}
+        />
+      )}
+
+      <Stack
+        bottom={0}
+        width={"100%"}
+        position="absolute"
+        padding={3}
+        spacing={2}
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
         {editing ? (
           <Button variant="contained" startIcon={<WandIcon />} onClick={() => setEditing(false)}>
             View Card
           </Button>
         ) : (
           <Button variant="contained" startIcon={<EditIcon />} onClick={() => setEditing(true)}>
-            Edit
+            Edit Card
           </Button>
         )}
         <Button disabled={editing} variant="contained" endIcon={<SendIcon />} onClick={preview}>
           Preview Post
         </Button>
       </Stack>
-    </>
+    </Stack>
   );
 };
