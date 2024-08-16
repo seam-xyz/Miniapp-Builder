@@ -445,4 +445,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "seam",
     fullscreenEdit: false,
   },
+  "Tatergangs": { 
+    type: "Tatergangs",
+    displayName: "TaterGangs",
+    displayDescription: "Customize a potat and learn its story",
+    icon: "TatergangsIcon", // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "roxanne",
+    fullscreenEdit: false,
+},
 };
