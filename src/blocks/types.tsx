@@ -483,4 +483,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
+  "Poll": { 
+    type: "Poll",
+    displayName: "Poll",
+    displayDescription: "Ask a question.",
+    icon: "PollsIcon",
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "seam", split: 1.0}],
+    fullscreenEdit: false,
+},
 };

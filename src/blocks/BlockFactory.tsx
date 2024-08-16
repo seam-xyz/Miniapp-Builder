@@ -1,3 +1,4 @@
+import { PollFeedComponent, PollComposerComponent } from './PollApp'
 import { VibecheckFeedComponent, VibecheckComposerComponent } from './VibecheckApp'
 import { ImagePuzzleFeedComponent, ImagePuzzleComposerComponent } from './ImagePuzzleBlock'
 import { LocalelocatrFeedComponent, LocalelocatrComposerComponent } from './localelocatrBlock'
@@ -72,6 +73,7 @@ export default class BlockFactory {
       case "localelocatr": return <LocalelocatrFeedComponent model={model} update={update}/>;
       case "Voice": return <VoiceFeedComponent model={model} update={update}/>;
       case "Vibecheck": return <VibecheckFeedComponent model={model} update={update}/>;
+      case "Poll": return <PollFeedComponent model={model} update={update} />;
       // new feed components go here
       default: return UnknownFeedComponent({ model, update });
     }
@@ -114,6 +116,7 @@ export default class BlockFactory {
       case "localelocatr": return LocalelocatrComposerComponent(props);
       case "Voice": return VoiceComposerComponent(props);
       case "Vibecheck": return VibecheckComposerComponent(props);
+      case "Poll": return PollComposerComponent(props);
       // new composer components go here
       default: return UnknownComposerComponent(props);
     }
