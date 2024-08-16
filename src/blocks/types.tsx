@@ -47,6 +47,7 @@ export interface Badge {
 
 export interface FeedComponentProps {
   model: BlockModel;
+  update?: (data: { [key: string]: string }) => void;
   width?: number;
 }
 
