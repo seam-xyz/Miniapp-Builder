@@ -1,6 +1,6 @@
 import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
 
-export const %NAME%FeedComponent = ({ model }: FeedComponentProps) => {
+export const %NAME%FeedComponent = ({ model, update }: FeedComponentProps) => {
   return <h1>Hi, I'm in the feed!</h1>;
 }
 
