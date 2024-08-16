@@ -1,4 +1,5 @@
 import { DistrivialFeedComponent, DistrivialComposerComponent } from './DistrivialApp'
+import { VibecheckFeedComponent, VibecheckComposerComponent } from './VibecheckApp'
 import { ImagePuzzleFeedComponent, ImagePuzzleComposerComponent } from './ImagePuzzleBlock'
 import { LocalelocatrFeedComponent, LocalelocatrComposerComponent } from './localelocatrBlock'
 import { MapFeedComponent, MapComposerComponent } from './MapApp'
@@ -72,6 +73,7 @@ export default class BlockFactory {
       case "localelocatr": return <LocalelocatrFeedComponent model={model} />;
       case "Voice": return <VoiceFeedComponent model={model} />;
       case "Distrivial": return <DistrivialFeedComponent model={model} />;
+      case "Vibecheck": return <VibecheckFeedComponent model={model} />;
       // new feed components go here
       default: return UnknownFeedComponent({ model });
     }
@@ -114,6 +116,7 @@ export default class BlockFactory {
       case "localelocatr": return LocalelocatrComposerComponent(props);
       case "Voice": return VoiceComposerComponent(props);
       case "Distrivial": return DistrivialComposerComponent(props);
+      case "Vibecheck": return VibecheckComposerComponent(props);
       // new composer components go here
       default: return UnknownComposerComponent(props);
     }
