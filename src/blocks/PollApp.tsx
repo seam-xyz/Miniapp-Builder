@@ -99,18 +99,51 @@ export const PollFeedComponent = ({ model, update }: FeedComponentProps) => {
 export const PollComposerComponent = ({ model, done }: ComposerComponentProps) => {
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(['', '']);
+  const [error, setError] = useState('');
 
   const addOption = () => {
+    if (options.length >= 10) {
+      setError('You can only have a maximum of 10 options.');
+      return;
+    }
     setOptions([...options, '']);
   };
 
   const updateOption = (index: number, value: string) => {
+    if (value.length > 80) {
+      setError('Each option must be 80 characters or less.');
+      return;
+    }
     const newOptions = [...options];
     newOptions[index] = value;
     setOptions(newOptions);
   };
 
+  const removeOption = (index: number) => {
+    if (options.length <= 2) {
+      setError('You must have at least 2 options.');
+      return;
+    }
+    const newOptions = options.filter((_, i) => i !== index);
+    setOptions(newOptions);
+  };
+
   const handleSubmit = () => {
+    if (question.length < 1) {
+      setError('You must ask a question.');
+      return;
+    }
+    if (options.length < 2) {
+      setError('You must have at least 2 options.');
+      return;
+    }
+    if (options.some(option => option.trim() === '')) {
+      setError('All options must be filled out.');
+      return;
+    }
+
+    setError('');
+
     model.data.question = question;
     options.forEach((option, index) => {
       model.data[`option${index + 1}`] = option;
@@ -120,38 +153,62 @@ export const PollComposerComponent = ({ model, done }: ComposerComponentProps) =
   };
 
   return (
-    <div className="p-4 bg-white w-auto rounded-lg shadow">
+    <div className="flex flex-col items-center p-4 bg-seam-white">
       <input
         type="text"
         className="w-full p-2 mb-4 border rounded"
         placeholder="Enter your question"
-        maxLength={240}
         value={question}
+        maxLength={80}
         onChange={(e) => setQuestion(e.target.value)}
       />
       {options.map((option, index) => (
-        <input
-          key={index}
-          type="text"
-          className="w-full p-2 mb-2 border rounded"
-          placeholder={`Option ${index + 1}`}
-          maxLength={50}
-          value={option}
-          onChange={(e) => updateOption(index, e.target.value)}
-        />
+        <div key={index} className="flex w-full items-center mb-2">
+          <button
+            className="text-red-500 mr-2"
+            onClick={() => removeOption(index)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="black"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+          <input
+            type="text"
+            className="w-full p-2 border rounded"
+            placeholder={`Option ${index + 1}`}
+            value={option}
+            maxLength={50}
+            onChange={(e) => updateOption(index, e.target.value)}
+          />
+        </div>
       ))}
+      {options.length < 10 && 
+        <button
+          className={`w-full p-4 mt-4 bg-gray-200 rounded'}`}
+          onClick={addOption}
+          disabled={options.length >= 10}
+        >
+          <h3>Add Option</h3>
+        </button>
+      }
       <button
-        className="w-full p-2 mb-4 bg-gray-200 rounded"
-        onClick={addOption}
-      >
-        Add Option
-      </button>
-      <button
-        className="w-full p-2 bg-blue-500 text-white rounded"
+        className="w-full mt-4 p-4 bg-blue-500 text-white rounded"
         onClick={handleSubmit}
       >
-        Create Poll
+        <h3>Create Poll</h3>
       </button>
+      {error && <div className="text-red-500 mt-2">{error}</div>}
     </div>
   );
 };
