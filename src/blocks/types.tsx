@@ -29,6 +29,7 @@ import CameraIcon from './blockIcons/CameraIcon.png'
 import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
+import FCIcon from "./blockIcons/FCIcon.png";
 
 export type BlockModel = {
   type: string;
@@ -457,4 +458,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "seam",
     fullscreenEdit: false,
   },
+  "Quoter": { 
+    type: "Quoter",
+    displayName: "Fortune Cookie",
+    displayDescription: "Live one day, gain one wisdom",
+    icon: FCIcon, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "Mun09",
+    fullscreenEdit: false,
+},
 };
