@@ -37,7 +37,7 @@ import { VoiceFeedComponent, VoiceComposerComponent } from './VoiceApp'
 import { BlockModel, BlockTypes, ComposerComponentProps } from './types'
 
 export default class BlockFactory {
-  static getFeedComponent(model: BlockModel, update?: ((data: { [key: string]: string; }) => void)) {
+  static getFeedComponent(model: BlockModel, update: ((data: { [key: string]: string; }) => void)) {
     switch (model.type) {
       case "iframe": return <IFrameFeedComponent model={model} update={update}/>;
       case "link": return <LinkFeedComponent model={model}update={update}/>;
