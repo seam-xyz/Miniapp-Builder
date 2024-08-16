@@ -1,4 +1,5 @@
 import { VibecheckFeedComponent, VibecheckComposerComponent } from './VibecheckApp'
+import { MagicCardFeedComponent, MagicCardComposerComponent } from './MagicCardApp'
 import { ImagePuzzleFeedComponent, ImagePuzzleComposerComponent } from './ImagePuzzleBlock'
 import { LocalelocatrFeedComponent, LocalelocatrComposerComponent } from './localelocatrBlock'
 import { MapFeedComponent, MapComposerComponent } from './MapApp'
@@ -72,6 +73,7 @@ export default class BlockFactory {
       case "localelocatr": return <LocalelocatrFeedComponent model={model} />;
       case "Voice": return <VoiceFeedComponent model={model} />;
       case "Vibecheck": return <VibecheckFeedComponent model={model} />;
+      case "MagicCard": return <MagicCardFeedComponent model={model} />;
       // new feed components go here
       default: return UnknownFeedComponent({ model });
     }
@@ -114,6 +116,7 @@ export default class BlockFactory {
       case "localelocatr": return LocalelocatrComposerComponent(props);
       case "Voice": return VoiceComposerComponent(props);
       case "Vibecheck": return VibecheckComposerComponent(props);
+      case "MagicCard": return MagicCardComposerComponent(props);
       // new composer components go here
       default: return UnknownComposerComponent(props);
     }
