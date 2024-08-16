@@ -1,5 +1,5 @@
 import { forwardRef, memo, useCallback, useEffect, useRef, useState } from "react";
-import { BlockModel, ComposerComponentProps, FeedComponentProps } from "./types";
+import { ComposerComponentProps, FeedComponentProps } from "./types";
 import {
   Box,
   Button,
@@ -206,225 +206,227 @@ const RulesHelper = memo(({ addIcon }: { addIcon: (icon: string) => void }) => {
   );
 });
 
-const MagicCardEditor = (props: MagicCardProps & MagicCardSetterProps) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const rulesInputRef = useRef<HTMLInputElement>(null);
+const MagicCardEditor = forwardRef(
+  (props: MagicCardProps & MagicCardSetterProps, formRef: React.ForwardedRef<HTMLFormElement>) => {
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const rulesInputRef = useRef<HTMLInputElement>(null);
+    const { setRules } = props;
 
-  const { setRules } = props;
-
-  const addToRules = useCallback(
-    (icon: string) => {
-      setRules((state) => {
-        if (rulesInputRef.current == null) {
-          return state + icon;
-        }
-
-        if (rulesInputRef.current.selectionEnd == null) {
-          return state + icon;
-        }
-
-        const newSelection = rulesInputRef.current.selectionStart ?? 0;
-
-        setTimeout(() => {
+    const addToRules = useCallback(
+      (icon: string) => {
+        setRules((state) => {
           if (rulesInputRef.current == null) {
-            return;
+            return state + icon;
           }
-          rulesInputRef.current.setSelectionRange(newSelection + 3, newSelection + 3, "forward");
-        }, 1);
 
-        return (
-          state.slice(0, rulesInputRef.current.selectionStart ?? 0) +
-          icon +
-          state.slice(rulesInputRef.current.selectionEnd)
-        );
-      });
-      rulesInputRef.current?.focus();
-    },
-    [setRules]
-  );
+          if (rulesInputRef.current.selectionEnd == null) {
+            return state + icon;
+          }
 
-  return (
-    <Box
-      style={{
-        overflowY: "auto",
-        height: "calc(100vh - 86px)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Stack style={{ justifyContent: "center", height: "100%", paddingTop: 72, paddingBottom: 8 }} spacing={2}>
-        <Stack gap={2} direction={"row"} flexWrap="wrap">
-          <TextField
-            required
-            style={{ flexGrow: 1 }}
-            label="Card Name"
-            placeholder="Name"
-            value={props.cardName}
-            onChange={(e) => props.setCardName(e.target.value)}
-          />
-          <FormControl style={{ flexGrow: 1 }}>
-            <InputLabel id="magic-color-label">Color</InputLabel>
-            <Select
-              native
-              labelId="magic-color-label"
-              id="magic-color-select"
-              label="Color"
-              value={props.cardColor}
-              onChange={(e) => props.setCardColor(e.target.value as CardColor)}
-            >
-              <option value="artifact">Artifact</option>
-              <option value="white">White</option>
-              <option value="blue">Blue</option>
-              <option value="black">Black</option>
-              <option value="red">Red</option>
-              <option value="green">Green</option>
-            </Select>
-          </FormControl>
-          <FormControl style={{ flexGrow: 1 }}>
-            <InputLabel id="magic-border-label">Border</InputLabel>
-            <Select
-              native
-              labelId="magic-border-label"
-              id="magic-border-select"
-              label="Border"
-              value={props.borderColor}
-              onChange={(e) => props.setBorderColor(e.target.value as BorderColor)}
-            >
-              <option value="white">White</option>
-              <option value="black">Black</option>
-            </Select>
-          </FormControl>
-        </Stack>
-        <Stack gap={1} direction={"row"} flexWrap="wrap">
-          <TextField
-            InputProps={{
-              inputProps: {
-                min: 0,
-                max: 9,
-              },
-            }}
-            size="small"
-            label="Colorless"
-            type="number"
-            value={props.manaCost.colorless}
-            onChange={(e) => props.setManaCost({ ...props.manaCost, colorless: Number(e.target.value) })}
-          />
-          {["white", "blue", "black", "red", "green"].map((color) => (
+          const newSelection = rulesInputRef.current.selectionStart ?? 0;
+
+          setTimeout(() => {
+            if (rulesInputRef.current == null) {
+              return;
+            }
+            rulesInputRef.current.setSelectionRange(newSelection + 3, newSelection + 3, "forward");
+          }, 1);
+
+          return (
+            state.slice(0, rulesInputRef.current.selectionStart ?? 0) +
+            icon +
+            state.slice(rulesInputRef.current.selectionEnd)
+          );
+        });
+        rulesInputRef.current?.focus();
+      },
+      [setRules]
+    );
+
+    return (
+      <Box
+        style={{
+          overflowY: "auto",
+          marginTop: 72,
+          height: "calc(100vh - 158px)",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <Stack component="form" ref={formRef} style={{ height: "100%", paddingTop: 8, paddingBottom: 8 }} spacing={2}>
+          <Stack gap={2} direction={"row"} flexWrap="wrap">
             <TextField
-              key={color}
+              required
+              style={{ flexGrow: 1 }}
+              label="Card Name"
+              placeholder=""
+              value={props.cardName}
+              onChange={(e) => props.setCardName(e.target.value)}
+            />
+            <FormControl style={{ flexGrow: 1 }}>
+              <InputLabel id="magic-color-label">Color</InputLabel>
+              <Select
+                native
+                labelId="magic-color-label"
+                id="magic-color-select"
+                label="Color"
+                value={props.cardColor}
+                onChange={(e) => props.setCardColor(e.target.value as CardColor)}
+              >
+                <option value="artifact">Artifact</option>
+                <option value="white">White</option>
+                <option value="blue">Blue</option>
+                <option value="black">Black</option>
+                <option value="red">Red</option>
+                <option value="green">Green</option>
+              </Select>
+            </FormControl>
+            <FormControl style={{ flexGrow: 1 }}>
+              <InputLabel id="magic-border-label">Border</InputLabel>
+              <Select
+                native
+                labelId="magic-border-label"
+                id="magic-border-select"
+                label="Border"
+                value={props.borderColor}
+                onChange={(e) => props.setBorderColor(e.target.value as BorderColor)}
+              >
+                <option value="white">White</option>
+                <option value="black">Black</option>
+              </Select>
+            </FormControl>
+          </Stack>
+          <Stack gap={1} direction={"row"} flexWrap="wrap">
+            <TextField
               InputProps={{
                 inputProps: {
                   min: 0,
-                  max: 5,
+                  max: 9,
                 },
               }}
               size="small"
-              label={color}
+              label="Colorless"
               type="number"
-              value={props.manaCost[color as keyof typeof props.manaCost]}
-              onChange={(e) => props.setManaCost({ ...props.manaCost, [color]: Number(e.target.value) })}
+              value={props.manaCost.colorless}
+              onChange={(e) => props.setManaCost({ ...props.manaCost, colorless: Number(e.target.value) })}
             />
-          ))}
-        </Stack>
-        <ButtonBase
-          onClick={() => {
-            props.setIllustration("");
-            fileInputRef.current?.click();
-          }}
-        >
+            {["white", "blue", "black", "red", "green"].map((color) => (
+              <TextField
+                key={color}
+                InputProps={{
+                  inputProps: {
+                    min: 0,
+                    max: 5,
+                  },
+                }}
+                size="small"
+                label={color}
+                type="number"
+                value={props.manaCost[color as keyof typeof props.manaCost]}
+                onChange={(e) => props.setManaCost({ ...props.manaCost, [color]: Number(e.target.value) })}
+              />
+            ))}
+          </Stack>
+          <ButtonBase
+            onClick={() => {
+              props.setIllustration("");
+              fileInputRef.current?.click();
+            }}
+          >
+            <TextField
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              required
+              label="Illustration"
+              placeholder="Upload an image"
+              style={{
+                pointerEvents: "none",
+              }}
+              value={props.illustration}
+            />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={(event) => {
+                const { files } = event.target;
+                if (files && files.length > 0) {
+                  const reader = new FileReader();
+                  reader.onload = (e) => {
+                    const dataURL = e.target?.result;
+                    if (typeof dataURL === "string") {
+                      props.setIllustration(dataURL);
+                    }
+                  };
+                  reader.readAsDataURL(files[0]);
+                } else {
+                  props.setIllustration("");
+                }
+              }}
+            />
+          </ButtonBase>
+          <Stack spacing={2} direction={"row"}>
+            <TextField
+              style={{ flexGrow: 1 }}
+              label="Type"
+              placeholder="Creature"
+              value={props.type}
+              onChange={(e) => props.setType(e.target.value)}
+            />
+            <TextField
+              style={{ flexGrow: 1 }}
+              label="Subtype"
+              placeholder="Dragon"
+              value={props.subType}
+              onChange={(e) => props.setSubType(e.target.value)}
+            />
+          </Stack>
           <TextField
-            InputLabelProps={{ shrink: true }}
             fullWidth
-            required
-            label="Illustration"
-            placeholder="Upload an image"
-            style={{
-              pointerEvents: "none",
+            inputRef={rulesInputRef}
+            label="Rules"
+            placeholder={"Flying, haste\n{t}: Add {m} to your mana pool"}
+            multiline
+            minRows={2}
+            value={props.rules}
+            onChange={(e) => props.setRules(e.target.value)}
+            FormHelperTextProps={{
+              classes: {
+                root: "flex flex-row flex-wrap gap-1",
+              },
+              component: "div",
             }}
-            value={props.illustration}
-          />
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            hidden
-            onChange={(event) => {
-              const { files } = event.target;
-              if (files && files.length > 0) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                  const dataURL = e.target?.result;
-                  if (typeof dataURL === "string") {
-                    props.setIllustration(dataURL);
-                  }
-                };
-                reader.readAsDataURL(files[0]);
-              } else {
-                props.setIllustration("");
-              }
-            }}
-          />
-        </ButtonBase>
-        <Stack spacing={2} direction={"row"}>
-          <TextField
-            required
-            style={{ flexGrow: 1 }}
-            label="Type"
-            placeholder="Creature"
-            value={props.type}
-            onChange={(e) => props.setType(e.target.value)}
+            helperText={<RulesHelper addIcon={addToRules} />}
           />
           <TextField
-            style={{ flexGrow: 1 }}
-            label="Subtype"
-            placeholder="Dragon"
-            value={props.subType}
-            onChange={(e) => props.setSubType(e.target.value)}
+            fullWidth
+            label="Flavor Text"
+            placeholder="Fus Ro Dah!"
+            value={props.flavorText}
+            onChange={(e) => props.setFlavorText(e.target.value)}
           />
+          <Stack spacing={2} direction={"row"}>
+            <TextField
+              style={{ flexGrow: 1 }}
+              label="Power"
+              placeholder="2"
+              value={props.power}
+              onChange={(e) => props.setPower(e.target.value)}
+            />
+            <TextField
+              style={{ flexGrow: 1 }}
+              placeholder="2"
+              label="Toughness"
+              value={props.toughness}
+              onChange={(e) => props.setToughness(e.target.value)}
+            />
+          </Stack>
         </Stack>
-        <TextField
-          fullWidth
-          inputRef={rulesInputRef}
-          label="Rules"
-          multiline
-          minRows={2}
-          value={props.rules}
-          onChange={(e) => props.setRules(e.target.value)}
-          FormHelperTextProps={{
-            classes: {
-              root: "flex flex-row flex-wrap gap-1",
-            },
-            component: "div",
-          }}
-          helperText={<RulesHelper addIcon={addToRules} />}
-        />
-        <TextField
-          fullWidth
-          label="Flavor Text"
-          value={props.flavorText}
-          onChange={(e) => props.setFlavorText(e.target.value)}
-        />
-        <Stack spacing={2} direction={"row"}>
-          <TextField
-            style={{ flexGrow: 1 }}
-            label="Power"
-            // type="number"
-            value={props.power}
-            onChange={(e) => props.setPower(e.target.value)}
-          />
-          <TextField
-            style={{ flexGrow: 1 }}
-            label="Toughness"
-            // type="number"
-            value={props.toughness}
-            onChange={(e) => props.setToughness(e.target.value)}
-          />
-        </Stack>
-      </Stack>
-    </Box>
-  );
-};
+      </Box>
+    );
+  }
+);
 
 // Function to wrap text into lines in a canvas
 function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number, font: string) {
@@ -433,6 +435,10 @@ function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number,
   let currentLine = "";
   const saveFont = ctx.font;
   ctx.font = font;
+
+  if (text === "") {
+    return [];
+  }
 
   for (const word of words) {
     const line = currentLine + word + " ";
@@ -601,12 +607,17 @@ const MagicCard = forwardRef((props: MagicCardProps, ref: React.ForwardedRef<HTM
 
     // draw rules and flavor text
     // the rules are centered vertically in the box
-    const lineHeight = 35;
+    let lineHeight = 35;
     const startX = 68; // starting x
-    let y = 654; // starting y
+    const startY = 654; // starting y
+    let y = startY;
     const maxWidth = 610;
-    const maxHeight = 940; // 666 + 295
+    const maxHeight = 270;
+    const maxY = y + maxHeight;
     const rulesLines = [];
+    // ctx.fillRect(startX, y, 10, 10);
+    // ctx.fillRect(startX, maxHeight, 10, 10);
+
     const flavorTextLines = wrapText(ctx, props.flavorText, maxWidth, "italic 30px MagicCard");
 
     const paragraphs = props.rules.split("\n");
@@ -615,11 +626,17 @@ const MagicCard = forwardRef((props: MagicCardProps, ref: React.ForwardedRef<HTM
     }
 
     // get an estimate of the total height
-    const totalHeight = (rulesLines.length + flavorTextLines.length + 1) * lineHeight; // +1 for the space between rules and flavor text
+    const totalLines = rulesLines.length + flavorTextLines.length + Math.sign(flavorTextLines.length);
+    let totalHeight = totalLines * lineHeight;
 
+    lineHeight =
+      totalHeight < maxHeight
+        ? lineHeight
+        : Math.max(lineHeight + ((16 - lineHeight) * totalHeight) / (maxY - maxHeight), 22);
+    totalHeight = totalLines * lineHeight;
     // center vertically -> set the new starting y
-    y = y + (maxHeight - totalHeight - y) / 2;
-
+    y = Math.max(y, y + (maxY - totalHeight - y) / 2);
+    // console.log("totalHeight: ", totalHeight, "maxHeight: ", maxHeight, "lineHeight: ", lineHeight, "y: ", y);
     // fill rules
     ctx.font = "normal 30px MagicCard";
     const spaceWidth = ctx.measureText(" ").width;
@@ -733,6 +750,14 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
   const [editing, setEditing] = useState(true);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  console.log(formRef);
+
+  const generateCard = useCallback(() => {
+    if (formRef.current?.reportValidity() ?? false) {
+      setEditing(false);
+    }
+  }, []);
 
   const preview = useCallback(() => {
     if (canvasRef.current == null) {
@@ -748,6 +773,7 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
     <Stack style={{ display: "flex", height: "100vh" }}>
       {editing ? (
         <MagicCardEditor
+          ref={formRef}
           cardName={cardName}
           manaCost={manaCost}
           cardColor={cardColor}
@@ -789,6 +815,7 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
       )}
 
       <Stack
+        boxShadow={2}
         bottom={0}
         width={"100%"}
         position="absolute"
@@ -799,16 +826,16 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
         alignItems="center"
       >
         {editing ? (
-          <Button variant="contained" startIcon={<WandIcon />} onClick={() => setEditing(false)}>
-            View Card
+          <Button variant="contained" startIcon={<WandIcon />} onClick={generateCard}>
+            View
           </Button>
         ) : (
           <Button variant="contained" startIcon={<EditIcon />} onClick={() => setEditing(true)}>
-            Edit Card
+            Edit
           </Button>
         )}
         <Button disabled={editing} variant="contained" endIcon={<SendIcon />} onClick={preview}>
-          Preview Post
+          Preview
         </Button>
       </Stack>
     </Stack>
