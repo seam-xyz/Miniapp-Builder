@@ -4,6 +4,7 @@ import videoIcon from "./blockIcons/Video.png";
 import imageIcon from "./blockIcons/Image.png";
 import linkIcon from "./blockIcons/Button.png";
 import twitterIcon from "./blockIcons/twitterIcon.png";
+import DiceIcon from "./blockIcons/diceIcon.png";
 import bookmarkIcon from "./blockIcons/Link.png";
 import mapIcon from "./blockIcons/Map.png";
 import giphyIcon from "./blockIcons/GIPHY.png";
@@ -482,4 +483,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
+  "Dice": { 
+    type: "Dice",
+    displayName: "dice",
+    displayDescription: "Click to see and share a dice roll with your friends.",
+    icon: DiceIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "defcon", split: 1.0}],
+    fullscreenEdit: false,
+},
 };
