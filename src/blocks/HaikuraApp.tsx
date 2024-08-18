@@ -6,25 +6,52 @@ import { motion } from 'framer-motion';
 
 const useStyles = makeStyles({
   field: {
-    [`& fieldset`]: {
+    '& fieldset': {
       borderRadius: 0,
       border: 'none',
     },
     '& .MuiInputBase-input': {
-      color: '#333',
+      color: '#444',
     },
     '& .MuiInputBase-input::placeholder': {
-      color: '#aaa',
-      opacity: 0.5,
+      color: '#888',
+      opacity: 0.8,
     },
   },
 });
 
 const haikus = {
-  joy: "Joy blossoms like spring\nSunshine dances on the leaves\nHeart's light whispers soft",
-  sadness: "Gray clouds veil the sky\nRaindrops trace paths on the glass\nLoneliness speaks low",
-  anger: "Storm winds rage and roar\nFury burns in darkened skies\nLightning strikes the earth",
-  peace: "Quiet river flows\nStillness wraps around the soul\nCalm breathes in the air",
+  joy: "Joy blossoms like spring 🌸\nSunshine dances on the leaves ☀️\nHeart's light whispers soft 💖",
+  sadness: "Gray clouds veil the sky ☁️\nRaindrops trace paths on the glass 💧\nLoneliness speaks low 🥀",
+  anger: "Storm winds rage and roar 🌪️\nFury burns in darkened skies ⚡\nLightning strikes the earth 🔥",
+  peace: "Quiet river flows 🌊\nStillness wraps around the soul 🌿\nCalm breathes in the air 🕊️",
+};
+
+const asciiArt = {
+  joy: `
+  😊😊😊
+  😊😊😊
+   😊😊
+    😊
+`,
+  sadness: `
+   😢😢
+  😢😢😢
+   😢😢
+    😢
+`,
+  anger: `
+   😠😠
+  😠😠😠
+   😠😠
+    😠
+`,
+  peace: `
+   😌😌
+  😌😌😌
+   😌😌
+    😌
+`,
 };
 
 export const HaikuraComposerComponent = ({ model, done }: ComposerComponentProps) => {
@@ -48,19 +75,18 @@ export const HaikuraComposerComponent = ({ model, done }: ComposerComponentProps
     setLoading(true);
     setError('');
 
-    // Find the haiku based on the mood
     const generatedHaiku = haikus[mood.toLowerCase() as keyof typeof haikus];
+    const generatedArt = asciiArt[mood.toLowerCase() as keyof typeof asciiArt];
 
     if (generatedHaiku) {
       const lines = generatedHaiku.split('\n');
       setUserHaiku(generatedHaiku);
-      setDisplayedLines([]);
+      setDisplayedLines([generatedArt]);
 
-      // Display each line with a delay
       lines.forEach((line, index) => {
         setTimeout(() => {
           setDisplayedLines(prevLines => [...prevLines, line]);
-        }, index * 1000); // 1-second delay between lines
+        }, index * 1000);
       });
     } else {
       setError('No Haiku could be generated for this mood.');
@@ -86,32 +112,34 @@ export const HaikuraComposerComponent = ({ model, done }: ComposerComponentProps
   };
 
   return (
-    <div className="w-full h-full flex bg-[#f8f0f2] flex-col items-center overflow-y-hidden">
+    <div className="w-full h-full flex bg-gradient-to-b from-purple-200 via-pink-200 to-yellow-200 flex-col items-center overflow-y-hidden">
       <div className="w-full h-full flex flex-col mt-6 items-center justify-center">
         {!loading ? (
           <>
-            <h2 className="text-3xl font-serif mb-4 text-[#c0a8a8]">Create Your Haiku</h2>
+            <h2 className="text-5xl font-serif mb-4 text-[#ff66c4]">✨ Create Your Haiku ✨</h2>
             <TextField
               type="text"
-              placeholder="Enter your mood..."
+              placeholder="Enter your mood... 😊 😢 😠 😌"
               fullWidth
               value={mood}
               onChange={(e) => setMood(e.target.value)}
               className={`${classes.field} mb-4`}
+              style={{ backgroundColor: '#fff0f6', borderRadius: '8px', fontSize: '1.5rem' }}
             />
             <Button
               variant="contained"
-              color="secondary"
+              style={{ backgroundColor: '#ff4081', color: '#fff', fontSize: '1.5rem' }}
               onClick={generateHaiku}
               disabled={loading}
             >
-              {loading ? 'Generating...' : 'Generate Haiku'}
+              {loading ? 'Generating...' : '🎨 Generate Haiku'}
             </Button>
             {error && (
               <motion.div
                 animate={{ opacity: showError ? [0.2, 1, 0.2, 1] : 1 }}
                 transition={{ duration: 0.8, repeat: 0 }}
                 className="mt-2 text-red-500"
+                style={{ fontSize: '1.5rem' }}
               >
                 {error}
               </motion.div>
@@ -119,28 +147,29 @@ export const HaikuraComposerComponent = ({ model, done }: ComposerComponentProps
             {displayedLines.length > 0 && (
               <>
                 {displayedLines.map((line, index) => (
-                  <p key={index} className="text-xl font-serif">{line}</p>
+                  <p key={index} className="text-3xl font-mono whitespace-pre">{line}</p>
                 ))}
                 <textarea
-                  className="w-full p-4 border rounded-lg mt-4"
-                  placeholder="Edit your Haiku here..."
+                  className="w-full p-4 border border-pink-300 rounded-lg mt-4 bg-yellow-50"
+                  placeholder="Edit your Haiku here... ✍️"
                   value={userHaiku}
                   onChange={(e) => setUserHaiku(e.target.value)}
+                  style={{ fontSize: '1.5rem' }}
                 />
                 <Button
                   variant="contained"
-                  color="secondary"
+                  style={{ backgroundColor: '#ff4081', color: '#fff', fontSize: '1.5rem' }}
                   onClick={handlePost}
                   disabled={loading}
                   className="mt-4"
                 >
-                  {loading ? 'Posting...' : 'Post Haiku'}
+                  {loading ? 'Posting...' : '📤 Post Haiku'}
                 </Button>
               </>
             )}
           </>
         ) : (
-          <h2 className="text-2xl font-serif">Generating your Haiku...</h2>
+          <h2 className="text-3xl font-serif">Generating your Haiku... 🌱</h2>
         )}
       </div>
     </div>
@@ -148,14 +177,14 @@ export const HaikuraComposerComponent = ({ model, done }: ComposerComponentProps
 };
 
 export const HaikuraFeedComponent = ({ model }: FeedComponentProps) => {
-  const userHaiku = model.data['userHaiku'] || 'No Haiku available.';
+  const userHaiku = model.data['userHaiku'] || 'No Haiku available. 😶';
   
   return (
-    <div className="w-full h-full flex bg-[#f8f0f2] flex-col items-center overflow-y-hidden">
+    <div className="w-full h-full flex bg-gradient-to-b from-blue-200 via-teal-200 to-green-200 flex-col items-center overflow-y-hidden">
       <div className="w-full h-full flex flex-col mt-6 items-center justify-center">
-        <h2 className="text-3xl font-serif mb-4 text-[#c0a8a8]">Your Generated Haiku</h2>
-        <div className="p-4 border rounded-lg bg-white shadow-md">
-          <p className="text-xl font-serif">{userHaiku}</p>
+        <h2 className="text-5xl font-serif mb-4 text-[#66c4ff]">🌟 Your Generated Haiku 🌟</h2>
+        <div className="p-4 border border-blue-300 rounded-lg bg-white shadow-md">
+          <p className="text-3xl font-serif">{userHaiku}</p>
         </div>
       </div>
     </div>
