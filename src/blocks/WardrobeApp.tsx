@@ -52,7 +52,7 @@ export const WardrobeComposerComponent = ({ model, done }: ComposerComponentProp
   };
 
   const handleSubmit = () => {
-    console.log('----' + selectColor)
+    // console.log('----' + selectColor)
     model.data.Outfits = JSON.stringify(selectedOutfits);
     model.data.BgColor = selectColor;
     done(model);
@@ -68,7 +68,6 @@ export const WardrobeComposerComponent = ({ model, done }: ComposerComponentProp
           <ChevronRightRoundedIcon className="-translate-y-[1px]" />
         </Button>
       </div>
-      {/* <button className="absolute bottom-0 w-full col-span-3 text-center" >  </button> */}
     </div>
   );
 }
@@ -183,17 +182,17 @@ const DressUpDisplay = ({ outfits, backColor, setBackColor }: { outfits: { [key:
     'bg-pink',
     'bg-rose',
   ];
-  const [backgroundColor, setBackgroundColor] = useState(backColor === "bg-white" ? backColor : backColor.slice(0, -5));
-  const [colorLevel, setColorLevel] = useState(backColor === "bg-white" ? "-500" : backColor.slice(-5, backColor.length));
+  const [backgroundColor, setBackgroundColor] = useState(backColor === "bg-white" ? backColor : backColor.slice(0, -4));
+  const [colorLevel, setColorLevel] = useState(backColor === "bg-white" ? "-500" : backColor.slice(-4, backColor.length));
   const handleIntensityChange = (event: Event, newValue: number | number[]) => {
     setColorLevel("-" + (newValue as number).toString());
     setBackColor(backgroundColor + "-" + (newValue as number).toString());
-    console.log(backgroundColor, colorLevel, backColor, "---Intensity");
+    // console.log(backgroundColor, colorLevel, backColor, "---Intensity");
   }
   const handleColorChange = (newValue: string) => {
     setBackgroundColor(newValue as string);
     setBackColor((newValue as string) + colorLevel);
-    console.log(backgroundColor, colorLevel, backColor, "---Color");
+    // console.log(backgroundColor, colorLevel, backColor, "---Color");
   }
   return (
     <div className={`border shadow-md rounded-lg ${backgroundColor === "bg-white" ? backgroundColor : backgroundColor + colorLevel}`}>
@@ -201,7 +200,7 @@ const DressUpDisplay = ({ outfits, backColor, setBackColor }: { outfits: { [key:
         {Object.keys(outfits).map((part, index) => (
           <div key={index}>
             {outfits[part] !== "" ?
-              <img src={outfits[part]} alt={part} className="absolute -top-14 w-full" />
+              <img src={outfits[part]} alt={part} className="absolute -top-12 w-full" />
               : <></>}
           </div>
         ))}
