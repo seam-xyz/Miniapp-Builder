@@ -15,25 +15,23 @@ import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
 // }
 
 export const DizzyFeedComponent = ({ model }: FeedComponentProps) => {
-  const userText = model.data.userText;
-  const [toggle, setToggle] = useState(''); //used for rerendering
-  const userFGColor = model.data.userFGColor;
-  const userBGColor = model.data.userBGColor;
+  const userText = model.data.userText; 
+  const colors = [model.data.userFGColor, model.data.userBGColor];
+  const [i, setI] = useState(0);
   const userTextSize = parseInt(model.data.userTextSize);
-  const i = useRef(0);
-  const wordsUserText = model.data.userText.split(" ")
+  const userTransTime = parseInt(model.data.userTransTime);
+  const wordsUserText = userText.split(" ")
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setToggle(wordsUserText[i.current]); //after toggling again calls useEffect
-      i.current = (i.current === wordsUserText.length-1) ? 0 : i.current+1;
-    }, 400);
+      setI((i=== wordsUserText.length-1) ? 0 : i+1)
+    }, userTransTime);
     return () => clearInterval(interval);
-  }, []);
+  }, [i, wordsUserText.length, userTransTime]);
 
   return (
-    <div className='p-3 text-center font-bold rounded-lg' style={{color: userFGColor, background: userBGColor, fontSize: userTextSize}}>
-        {wordsUserText[i.current]}
+    <div className='p-3 text-center font-bold rounded-lg' style={{color: colors[i%2], background: colors[(i+1)%2], fontSize: userTextSize}}>
+        {wordsUserText[i]}
     </div>
   )
 }
@@ -43,12 +41,14 @@ export const DizzyComposerComponent = ({ model, done }: ComposerComponentProps) 
   const [userFGColor, setUserFGColor] = useState('#000000');
   const [userBGColor, setUserBGColor] = useState('#ffffff');
   const [userTextSize, setUserTextSize] = useState(20);
+  const [userTransTime, setUserTransTime] = useState(400);
   
   const onUserSubmit = () => {
     model.data.userText = userText.toUpperCase();
     model.data.userFGColor = userFGColor;
     model.data.userBGColor = userBGColor;
     model.data.userTextSize = userTextSize.toString();
+    model.data.userTransTime = userTransTime.toString();
     done(model);
   }
   return (
@@ -79,6 +79,13 @@ export const DizzyComposerComponent = ({ model, done }: ComposerComponentProps) 
         type="color"
         value={userBGColor}
         onChange={(e) => setUserBGColor(e.target.value)}
+      />
+      <p>Transition time in (milliseconds)</p>
+      <input 
+      type='number'
+      placeholder='400'
+      value={userTransTime}
+      onChange={(e) => setUserTransTime(parseInt(e.target.value))}
       />
       <p></p>
       <button className="mt-2 mb-3 bg-blue-500 text-white p-2 rounded-lg" onClick={onUserSubmit}> Preview </button>
