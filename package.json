@@ -37,6 +37,7 @@
     "draft-js": "^0.11.7",
     "feather-icons": "^4.29.1",
     "firebase": "^10.11.1",
+    "framer-motion": "^11.3.27",
     "p5": "^1.9.4",
     "react": "^18.2.0",
     "react-color": "^2.19.3",
