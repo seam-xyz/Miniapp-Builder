@@ -30,7 +30,7 @@ import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
-
+import riddleQuestIcon from "./blockIcons/RiddleQuest.png";
 export type BlockModel = {
   type: string;
   data: { [key: string]: string };
@@ -482,4 +482,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
+  "Riddlequest": { 
+    type: "Riddlequest",
+    displayName: "RiddleQuest",
+    displayDescription: "Playing riddle of the day game and share your answer with friends",
+    icon: riddleQuestIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "laniD", split: 1.0}],
+    fullscreenEdit: false,
+},
 };
