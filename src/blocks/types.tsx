@@ -30,6 +30,7 @@ import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
+import WardrobeIcon from "./blockIcons/WardrobeIcon.png";
 
 export type BlockModel = {
   type: string;
@@ -477,4 +478,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: "seam",
     fullscreenEdit: false,
   },
+  "Wardrobe": { 
+    type: "Wardrobe",
+    displayName: "Wardrobe",
+    displayDescription: "Dress Up your character",
+    icon: WardrobeIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: "manmohansinghraghav",
+    fullscreenEdit: false,
+},
 };
