@@ -15,12 +15,11 @@ import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
 // }
 
 export const DizzyFeedComponent = ({ model }: FeedComponentProps) => {
-  const userText = model.data.userText; 
+  const wordsUserText = model.data.userText.split(" "); 
   const colors = [model.data.userFGColor, model.data.userBGColor];
   const [i, setI] = useState(0);
   const userTextSize = parseInt(model.data.userTextSize);
   const userTransTime = parseInt(model.data.userTransTime);
-  const wordsUserText = userText.split(" ")
 
   useEffect(() => {
     const interval = setInterval(() => {

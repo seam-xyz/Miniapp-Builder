@@ -17,6 +17,7 @@ import photoAlbumIcon from "./blockIcons/photoAlbumIcon.png"
 import flashingTextIcon from "./blockIcons/flashingTextIcon.png";
 import tokenIcon from "./blockIcons/tokenIcon.png";
 import clockIcon from "./blockIcons/clockIcon.png"
+import DizzyIcon from "./blockIcons/DizzyIcon.png"
 import farcasterIcon from "./blockIcons/farcasterIcon.svg"
 import eyesIcon from "./blockIcons/eyeIcon.png"
 import MondrianIcon from './blockIcons/MondrianIcon.png'
@@ -486,7 +487,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "Dizzy",
     displayName: "dizzy Text",
     displayDescription: "Create a text input to a continuously flashing RGB color with background contrast!",
-    icon: "DizzyIcon", // TODO: insert your app icon here
+    icon: DizzyIcon, // TODO: insert your app icon here
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
