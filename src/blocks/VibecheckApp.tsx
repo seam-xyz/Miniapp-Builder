@@ -55,6 +55,16 @@ const determineAnimal = (scores: AudioFeatures) => {
       blurb: "hanging from a branch, in a cocoon of vibey tunes, Sloth! No one can say you don’t know how to take it easy."
     },
     {
+      emoji: "🐁",
+      name: "Mouse",
+      blurb: "nibbling something reflective, Mouse. You love sleeping in your cozy little hole-in-the-wall, floating on a dreamy cloud of low-energy beats."
+    },
+    {
+      emoji: "🐝",
+      name: "Honeybee",
+      blurb: "flying from flower to flower, Honeybee! Your tunes are addictively chill. Your playlists could heal the world!"
+    },
+    {
       emoji: "🐨",
       name: "Koala",
       blurb: "a great reminder to stop and smell the eucalyptus, Koala! Cozy and calm energy surrounds you, as you relax to your infectious beats."
@@ -63,6 +73,16 @@ const determineAnimal = (scores: AudioFeatures) => {
       emoji: "🐈",
       name: "Cat",
       blurb: "having a slinky little listen! Strut along smoothly, dodging bad vibes and swaying to your gentle beats."
+    },
+    {
+      emoji: "🐗",
+      name: "Boar",
+      blurb: "searching the forest floor with your keen nose for delicious nuggets of rhythm, Boar! Your steady and unstoppable presence is noted wherever you go."
+    },
+    {
+      emoji: "🐐",
+      name: "Goat",
+      blurb: "bouncing and leaping up the side of a mountain, Goat! Your music is motivating and exciting, my silly and stubborn friend."
     },
     {
       emoji: "🦊",
@@ -84,7 +104,7 @@ const determineAnimal = (scores: AudioFeatures) => {
       name: "Unicorn",
       blurb: "shining bright, you beautiful fantasy of a creature! As the unicorn, you prance along to the most magical of rhythms, bouncing over bad energy and lighting up the world."
     },
-  ];
+  ]; // 14 animals
 
   // Calculate individual feature scores
   const energyScore = scores.energy * 2;  // 0-2
@@ -96,12 +116,34 @@ const determineAnimal = (scores: AudioFeatures) => {
   // Combine scores
   const totalScore = energyScore + danceScore + valenceScore + acousticScore + livenessScore;
   // Max possible score is 8 (2 + 2 + 2 + 1 + 1)
+
+  // Define score thresholds for each animal with a bell curve distribution
+  const thresholds = [
+    { max: 3.0, animal: animals[0] },
+    { max: 3.1, animal: animals[1] },
+    { max: 3.2, animal: animals[2] },
+    { max: 3.3, animal: animals[3] },
+    { max: 3.4, animal: animals[4] },
+    { max: 3.5, animal: animals[5] },  // Snail (covers 3.0 points)
+    { max: 3.6, animal: animals[6] },  // Turtle (covers 0.5 points)
+    { max: 3.8, animal: animals[7] },  // Sloth (covers 0.3 points)
+    { max: 4.0, animal: animals[8] },  // Koala (covers 0.4 points)
+    { max: 4.2, animal: animals[9] },  // Cat (covers 0.3 points)
+    { max: 4.4, animal: animals[10] },  // Fox (covers 0.3 points)
+    { max: 4.6, animal: animals[11] },  // Monkey (covers 0.2 points)
+    { max: 4.8, animal: animals[12] },  // Cheetah (covers 0.5 points)
+    { max: 5.0, animal: animals[13] },  // Unicorn (covers 2.5 points)
+  ];
   
-  // Map total score to animal index
-  const animalIndex = Math.floor((totalScore / 8) * animals.length);
-  
-  // Ensure index is within bounds
-  return animals[Math.min(animalIndex, animals.length - 1)];
+  // Determine which animal corresponds to the total score
+  for (let i = 0; i < thresholds.length; i++) {
+    if (totalScore <= thresholds[i].max) {
+      return thresholds[i].animal;
+    }
+  }
+
+  // Fallback in case of rounding errors
+  return animals[animals.length - 1]; // Unicorn
 };
 
 const generateVibeSummary = (scores: AudioFeatures) => {
@@ -120,38 +162,42 @@ const generateVibeSummary = (scores: AudioFeatures) => {
     return 'veryHigh';
   };
 
+  const getRandomMessage = (messages: string[]) => {
+    return messages[Math.floor(Math.random() * messages.length)];
+  };
+
   const valenceMessages = {
-    veryLow: "as deep as the ocean, and as reflective as a puddle",
-    low: "like a nostalgic tear, rolling down a grandmother’s cheek",
-    medium: "cool as a cat, and balanced as a scale",
-    high: "the ideal soundtrack for your windows-down-drive with your best friend on a summer day",
-    veryHigh: "bursting with joy, like a disco ball that bounces positive vibes across every surface of the room"
+    veryLow: ["cranky", "lugubrious", "anxious", "insomniac", "whining"],
+    low: ["nostalgic", "crawling", "swaying", "humming"],
+    medium: ["cool", "calm", "glowing", "vibrant", "elevated"],
+    high: ["shining", "rambling", "beaming", "fired up", "floating"],
+    veryHigh: ["exuberant", "sleepless", "hyper", "chaotic"],
   };
 
   const danceabilityMessages = {
-    veryLow: "sitting still and contemplating",
-    low: "breathing deep and swaying gently",
-    medium: "joyful, casual movement (no pressure!)",
-    high: "a late-night kitchen dance party with your friends",
-    veryHigh: "an effervescent, non-stop dancefloor groove-fest"
+    veryLow: ["rock", "vegetable", "ghost", "rain", "cloud"], 
+    low: ["tree", "sandwich", "canoe", "giant", "thumbs-up", "clock"],
+    medium: ["windmill", "river", "bicycle", "high-five", "smile"],
+    high: ["paper airplane", "ocean", "ballerina", "laugh", "twirl"],
+    veryHigh: ["engine", "disco ball", "kite", "angel", "demon", "live wire"],
   };
 
   const bonusMessages = {
     acousticness: {
-      high: "connecting with the world of the physical instrument",
-      veryHigh: "after some real feet-in-the-earth, raw jam session vibes"
+      high: "taking your bare feet out and digging your piggies into the dirt",
+      veryHigh: "making ASMR content in your voice memos app and then never sharing it with anyone"
     },
     instrumentalness: {
-      high: "enjoying the diverse and beautiful world of instruments",
-      veryHigh: "experiencing an ambient landscape of intense instrumentals"
+      high: "playing your guitar at the wrong time",
+      veryHigh: "scoffing at other people's music taste",
     },
     liveness: {
-      high: "connecting to the beauty of the live concert experience, but in a cool, digital way",
-      veryHigh: "immersed in the boundless energy of the live show, complete with the roaring crowd in your heart"
+      high: "spying on your ex's social media",
+      veryHigh: "hopping the fence to get into music festivals"
     },
     speechiness: {
-      high: "tuning in to the lyrical geniuses and expert wordsmiths of your world",
-      veryHigh: "engaging with the power of the spoken word. Feeling the depths of the lyrical message"
+      high: "lying in bed ruminating on everything you said that day",
+      veryHigh: "shaming your friends for watching the movie before they read the book",
     }
   };
 
@@ -160,13 +206,13 @@ const generateVibeSummary = (scores: AudioFeatures) => {
   const animal = determineAnimal(scores);
 
   let summary = `You are ${animal.blurb}\n\n`;
-  summary += `This playlist’s energy is ${valenceMessages[valenceLevel]}, and great for ${danceabilityMessages[danceLevel]}.\n\n`;
+  summary += `This playlist’s energy is like a ${getRandomMessage(valenceMessages[valenceLevel])} ${getRandomMessage(danceabilityMessages[danceLevel])}.\n\n`;
 
   // Add bonus messages if thresholds are met
   ['acousticness', 'instrumentalness', 'liveness', 'speechiness'].forEach((feature) => {
     const level = getLevel(scores[feature as keyof AudioFeatures]);
     if (level === 'high' || level === 'veryHigh') {
-      summary += `You're ${bonusMessages[feature as keyof typeof bonusMessages][level]}. `;
+      summary += `We're assuming you're really into ${bonusMessages[feature as keyof typeof bonusMessages][level]}?`;
     }
   });
 
