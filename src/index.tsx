@@ -34,9 +34,9 @@ const firebaseConfig = {
   apiKey: "demo-api-key",
   authDomain: "localhost",
   projectId: "demo-seam-miniapp-builder",
-  storageBucket: "localhost:9199",
+  storageBucket: "demo-seam-miniapp-builder",
   messagingSenderId: "demo-messaging-sender-id",
-  appId: "demo-app-id",
+  appId: "demo-seam-miniapp-builder",
   measurementId: "demo-measurement-id"
 };
 

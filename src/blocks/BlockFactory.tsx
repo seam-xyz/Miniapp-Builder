@@ -1,4 +1,5 @@
 import { TatergangsFeedComponent, TatergangsComposerComponent } from './TatergangsApp'
+import { VibecheckFeedComponent, VibecheckComposerComponent } from './VibecheckApp'
 import { ImagePuzzleFeedComponent, ImagePuzzleComposerComponent } from './ImagePuzzleBlock'
 import { LocalelocatrFeedComponent, LocalelocatrComposerComponent } from './localelocatrBlock'
 import { MapFeedComponent, MapComposerComponent } from './MapApp'
@@ -32,6 +33,7 @@ import { LinkBookmarkFeedComponent, LinkBookmarkComposerComponent } from './Link
 import { VideoFeedComponent, VideoComposerComponent } from './VideoBlock'
 import { MondrianFeedComponent, MondrianComposerComponent } from './MondrianBlock'
 import { WordleFeedComponent, WordleComposerComponent } from './WordleBlock'
+import { VoiceFeedComponent, VoiceComposerComponent } from './VoiceApp'
 import { BlockModel, BlockTypes, ComposerComponentProps } from './types'
 
 export default class BlockFactory {
@@ -70,6 +72,8 @@ export default class BlockFactory {
       case "Calligraphy": return <CalligraphyFeedComponent model={model} />;
       case "localelocatr": return <LocalelocatrFeedComponent model={model} />;
       case "Tatergangs": return <TatergangsFeedComponent model={model} />;
+      case "Voice": return <VoiceFeedComponent model={model} />;
+      case "Vibecheck": return <VibecheckFeedComponent model={model} />;
       // new feed components go here
       default: return UnknownFeedComponent({ model });
     }
@@ -111,6 +115,8 @@ export default class BlockFactory {
       case "Calligraphy": return CalligraphyComposerComponent(props);
       case "localelocatr": return LocalelocatrComposerComponent(props);
       case "Tatergangs": return TatergangsComposerComponent(props);
+      case "Voice": return VoiceComposerComponent(props);
+      case "Vibecheck": return VibecheckComposerComponent(props);
       // new composer components go here
       default: return UnknownComposerComponent(props);
     }

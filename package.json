@@ -12,6 +12,7 @@
     "@emotion/styled": "^11.13.0",
     "@giphy/js-fetch-api": "^4.6.0",
     "@ionic/react": "^8.1.2",
+    "@mozartec/capacitor-microphone": "^6.0.0",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.10.16",
     "@mui/styles": "^5.11.2",
@@ -36,6 +37,7 @@
     "draft-js": "^0.11.7",
     "feather-icons": "^4.29.1",
     "firebase": "^10.11.1",
+    "framer-motion": "^11.3.27",
     "p5": "^1.9.4",
     "react": "^18.2.0",
     "react-color": "^2.19.3",
@@ -82,6 +84,7 @@
     ]
   },
   "devDependencies": {
-    "@types/axios": "^0.14.0"
+    "@types/axios": "^0.14.0",
+    "firebase-tools": "^13.15.0"
   }
 }
