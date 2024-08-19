@@ -54,8 +54,10 @@ import redPtBox from "../blocks/assets/MagicCard/ptBoxes/red-pt-box.png";
 
 import "../blocks/assets/MagicCard/magicCard.css";
 
-type CardColor = "artifact" | "white" | "blue" | "black" | "red" | "green";
-type BorderColor = "black" | "white";
+const cardColors = ["artifact", "white", "blue", "black", "red", "green"] as const;
+type CardColor = (typeof cardColors)[number];
+const borderColors = ["black", "white"] as const;
+type BorderColor = (typeof borderColors)[number];
 
 type MagicCardProps = {
   cardName: string;
@@ -169,14 +171,14 @@ function mergeRefs<T = any>(
   };
 }
 
-function isMouseEvent(event: React.MouseEvent | React.TouchEvent): event is React.MouseEvent {
-  return event instanceof MouseEvent;
+function randomEl<T>(arr: readonly T[]) {
+  return arr[Math.floor(Math.random() * arr.length)];
 }
 
 export const MagicCardFeedComponent = ({ model }: FeedComponentProps) => {
   return (
     <img
-      style={{ width: "100%", height: "auto", objectFit: "contain", maxHeight: "500px" }}
+      style={{ width: "100%", height: "auto", objectFit: "contain", maxHeight: "500px", alignSelf: "center" }}
       src={model.data["dataURL"]}
       alt="Magic Card"
     />
@@ -970,8 +972,8 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
     red: 0,
     green: 0,
   });
-  const [cardColor, setCardColor] = useState<CardColor>("artifact");
-  const [borderColor, setBorderColor] = useState<BorderColor>("black");
+  const [cardColor, setCardColor] = useState<CardColor>(() => randomEl(cardColors));
+  const [borderColor, setBorderColor] = useState<BorderColor>(() => randomEl(borderColors));
   const [illustration, setIllustration] = useState("");
   const [type, setType] = useState(""); // creature
   const [subType, setSubType] = useState(""); // human warrior
