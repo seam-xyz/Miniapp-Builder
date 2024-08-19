@@ -38,6 +38,7 @@ import iconX from "../blocks/assets/MagicCard/icons/x.png";
 import blackBorder from "../blocks/assets/MagicCard/borders/black-border.png";
 import whiteBorder from "../blocks/assets/MagicCard/borders/white-border.png";
 
+import landFrame from "../blocks/assets/MagicCard/frames/land-frame.png";
 import artifactFrame from "../blocks/assets/MagicCard/frames/artifact-frame.png";
 import whiteFrame from "../blocks/assets/MagicCard/frames/white-frame.png";
 import blackFrame from "../blocks/assets/MagicCard/frames/black-frame.png";
@@ -45,6 +46,7 @@ import blueFrame from "../blocks/assets/MagicCard/frames/blue-frame.png";
 import greenFrame from "../blocks/assets/MagicCard/frames/green-frame.png";
 import redFrame from "../blocks/assets/MagicCard/frames/red-frame.png";
 
+import landPtBox from "../blocks/assets/MagicCard/ptBoxes/land-pt-box.png";
 import artifactPtBox from "../blocks/assets/MagicCard/ptBoxes/artifact-pt-box.png";
 import whitePtBox from "../blocks/assets/MagicCard/ptBoxes/white-pt-box.png";
 import blackPtBox from "../blocks/assets/MagicCard/ptBoxes/black-pt-box.png";
@@ -54,7 +56,7 @@ import redPtBox from "../blocks/assets/MagicCard/ptBoxes/red-pt-box.png";
 
 import "../blocks/assets/MagicCard/magicCard.css";
 
-const cardColors = ["artifact", "white", "blue", "black", "red", "green"] as const;
+const cardColors = ["land", "artifact", "white", "blue", "black", "red", "green"] as const;
 type CardColor = (typeof cardColors)[number];
 const borderColors = ["black", "white"] as const;
 type BorderColor = (typeof borderColors)[number];
@@ -129,6 +131,7 @@ const resources: Resources = {
     "{x}": iconX,
   },
   frames: {
+    land: landFrame,
     artifact: artifactFrame,
     white: whiteFrame,
     black: blackFrame,
@@ -137,6 +140,7 @@ const resources: Resources = {
     red: redFrame,
   },
   ptBoxes: {
+    land: landPtBox,
     artifact: artifactPtBox,
     white: whitePtBox,
     black: blackPtBox,
@@ -481,6 +485,7 @@ const MagicCardEditor = forwardRef(
                   value={props.cardColor}
                   onChange={(e) => props.setCardColor(e.target.value as CardColor)}
                 >
+                  <option value="land">Land</option>
                   <option value="artifact">Artifact</option>
                   <option value="white">White</option>
                   <option value="blue">Blue</option>
