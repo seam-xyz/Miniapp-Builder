@@ -71,7 +71,7 @@ echo "  \"$shortName\": {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: \"$username\",
+    createdBy: [{username: \"$username\", split: 1.0}],
     fullscreenEdit: false,
 },
 };" >> $output

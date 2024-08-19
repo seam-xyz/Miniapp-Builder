@@ -4,6 +4,10 @@ description: Step-by-step guide on how to create your own Seam miniapp
 
 # Quickstart
 
+{% embed url="https://youtu.be/oPiLc6U1oIA?si=mw2DICgrm72LQO6L" %}
+Tutorial for getting started creating a Seam miniapp
+{% endembed %}
+
 ### Create a Seam Account
 
 Before creating a miniapp, you should join Seam! Creating a Seam account allows you to claim a username and profile that will be used as the author of the miniapp. More importantly though, it allows you to join a community of other builders, designers, and curators all building the future of social networking together.

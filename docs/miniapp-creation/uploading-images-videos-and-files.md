@@ -62,8 +62,8 @@ This gives you a button that when clicked allows the user to a video from their 
 
 #### Uploading arbitrary files
 
-For any other file types, you can use the Firebase uploader functions yourself. Read more in the [documentation here](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/storage).
+For any other file types, you can use the Firebase uploader functions yourself. Read more in the [documentation here](https://github.com/capawesome-team/capacitor-firebase/tree/main/packages/storage). The strategy is 1) use the upload component to upload, and then 2) store the URL in your block.
 
-#### Testing file uploads
+#### Troubleshooting
 
-The strategy is 1) use the upload component to upload, and then 2) store the URL in your block. TADA! You're done, that's all you need to upload any file! Try it with audio files, pdfs, videos, ect. Have fun!
+If you get the error: `Error: firebase-tools no longer supports Java version before 11. Please upgrade to Java version 11 or above to continue using the emulators.`, you unfortunately need to download a new version of the JDK (Java Development Kit). Go to the [Oracle JDK Download page](https://www.oracle.com/java/technologies/downloads/#java11-mac), download the installer, and try starting the emulators again.
