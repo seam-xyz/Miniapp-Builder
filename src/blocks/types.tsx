@@ -28,6 +28,7 @@ import ImagePuzzleIcon from './blockIcons/imagePuzzleIcon.webp'
 import CameraIcon from './blockIcons/CameraIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
+import potatoIcon from './blockIcons/PotatoIcon.png'
 
 export type BlockModel = {
   type: string;
@@ -447,9 +448,9 @@ export const BlockTypes: { [key: string]: BlockType } = {
   },
   "Tatergangs": { 
     type: "Tatergangs",
-    displayName: "TaterGangs",
-    displayDescription: "Customize a potat and learn its story",
-    icon: "TatergangsIcon", // TODO: insert your app icon here
+    displayName: "Potato Fortunes",
+    displayDescription: "Choose your potato and discover your fate!",
+    icon: potatoIcon, // TODO: insert your app icon here
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
