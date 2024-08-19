@@ -36,10 +36,6 @@ import icon7 from "../blocks/assets/MagicCard/icons/7.png";
 import icon8 from "../blocks/assets/MagicCard/icons/8.png";
 import icon9 from "../blocks/assets/MagicCard/icons/9.png";
 import iconX from "../blocks/assets/MagicCard/icons/x.png";
-
-import blackBorder from "../blocks/assets/MagicCard/borders/black-border.png";
-import whiteBorder from "../blocks/assets/MagicCard/borders/white-border.png";
-
 import landFrame from "../blocks/assets/MagicCard/frames/land-frame.png";
 import artifactFrame from "../blocks/assets/MagicCard/frames/artifact-frame.png";
 import whiteFrame from "../blocks/assets/MagicCard/frames/white-frame.png";
@@ -111,45 +107,45 @@ type Resources = {
 
 const resources: Resources = {
   borders: {
-    black: blackBorder,
-    white: whiteBorder,
+    black: "https://storage.googleapis.com/miniapp-resources/magicCard/borders/black-border.png",
+    white: "https://storage.googleapis.com/miniapp-resources/magicCard/borders/white-border.png",
   },
   icons: {
-    "{p}": plainsIcon,
-    "{i}": islandIcon,
-    "{s}": swampIcon,
-    "{m}": mountainIcon,
-    "{f}": forestIcon,
-    "{t}": tapIcon,
-    "{u}": untapIcon,
-    "{1}": icon1,
-    "{2}": icon2,
-    "{3}": icon3,
-    "{4}": icon4,
-    "{5}": icon5,
-    "{6}": icon6,
-    "{7}": icon7,
-    "{8}": icon8,
-    "{9}": icon9,
-    "{x}": iconX,
+    "{p}": "https://storage.googleapis.com/miniapp-resources/magicCard/icons/plains.png",
+    "{i}": "https://storage.googleapis.com/miniapp-resources/magicCard/icons/island.png",
+    "{s}": "https://storage.googleapis.com/miniapp-resources/magicCard/icons/swamp.png",
+    "{m}": "https://storage.googleapis.com/miniapp-resources/magicCard/icons/mountain.png",
+    "{f}": "https://storage.googleapis.com/miniapp-resources/magicCard/icons/forest.png",
+    "{t}": "https://storage.googleapis.com/miniapp-resources/magicCard/icons/tap.png",
+    "{u}": "https://storage.googleapis.com/miniapp-resources/magicCard/icons/untap.png",
+    "{1}": "https://storage.googleapis.com/miniapp-resources/magicCard/icons/1.png",
+    "{2}": "https://storage.googleapis.com/miniapp-resources/magicCard/icons/2.png",
+    "{3}": "https://storage.googleapis.com/miniapp-resources/magicCard/icons/3.png",
+    "{4}": "https://storage.googleapis.com/miniapp-resources/magicCard/icons/4.png",
+    "{5}": "https://storage.googleapis.com/miniapp-resources/magicCard/icons/5.png",
+    "{6}": "https://storage.googleapis.com/miniapp-resources/magicCard/icons/6.png",
+    "{7}": "https://storage.googleapis.com/miniapp-resources/magicCard/icons/7.png",
+    "{8}": "https://storage.googleapis.com/miniapp-resources/magicCard/icons/8.png",
+    "{9}": "https://storage.googleapis.com/miniapp-resources/magicCard/icons/9.png",
+    "{x}": "https://storage.googleapis.com/miniapp-resources/magicCard/icons/x.png",
   },
   frames: {
-    land: landFrame,
-    artifact: artifactFrame,
-    white: whiteFrame,
-    black: blackFrame,
-    blue: blueFrame,
-    green: greenFrame,
-    red: redFrame,
+    land: "https://storage.googleapis.com/miniapp-resources/magicCard/frames/land-frame.png",
+    artifact: "https://storage.googleapis.com/miniapp-resources/magicCard/frames/artifact-frame.png",
+    white: "https://storage.googleapis.com/miniapp-resources/magicCard/frames/white-frame.png",
+    black: "https://storage.googleapis.com/miniapp-resources/magicCard/frames/black-frame.png",
+    blue: "https://storage.googleapis.com/miniapp-resources/magicCard/frames/blue-frame.png",
+    green: "https://storage.googleapis.com/miniapp-resources/magicCard/frames/green-frame.png",
+    red: "https://storage.googleapis.com/miniapp-resources/magicCard/frames/red-frame.png",
   },
   ptBoxes: {
-    land: landPtBox,
-    artifact: artifactPtBox,
-    white: whitePtBox,
-    black: blackPtBox,
-    blue: bluePtBox,
-    green: greenPtBox,
-    red: redPtBox,
+    land: "https://storage.googleapis.com/miniapp-resources/magicCard/ptBoxes/land-pt-box.png",
+    artifact: "https://storage.googleapis.com/miniapp-resources/magicCard/ptBoxes/artifact-pt-box.png",
+    white: "https://storage.googleapis.com/miniapp-resources/magicCard/ptBoxes/white-pt-box.png",
+    black: "https://storage.googleapis.com/miniapp-resources/magicCard/ptBoxes/black-pt-box.png",
+    blue: "https://storage.googleapis.com/miniapp-resources/magicCard/ptBoxes/blue-pt-box.png",
+    green: "https://storage.googleapis.com/miniapp-resources/magicCard/ptBoxes/green-pt-box.png",
+    red: "https://storage.googleapis.com/miniapp-resources/magicCard/ptBoxes/red-pt-box.png",
   },
 } as const;
 
@@ -602,6 +598,7 @@ const MagicCardEditor = forwardRef(
                       const dataURL = e.target?.result;
                       if (typeof dataURL === "string") {
                         const image = new Image();
+                        image.crossOrigin = "anonymous";
                         image.src = dataURL;
                         image.onload = () => setCropImage(image);
                       }
@@ -728,18 +725,22 @@ const MagicCard = forwardRef((props: MagicCardProps, ref: React.ForwardedRef<HTM
   // load resources
   useEffect(() => {
     const illustration = new Image();
+    illustration.crossOrigin = "anonymous";
     illustration.src = props.illustration;
     illustration.onload = () => setIllustrationImg(illustration);
 
     const border = new Image();
+    border.crossOrigin = "anonymous";
     border.src = resources.borders[props.borderColor];
     border.onload = () => setBorderImg(border);
 
     const frame = new Image();
+    frame.crossOrigin = "anonymous";
     frame.src = resources.frames[props.cardColor];
     frame.onload = () => setFrameImg(frame);
 
     const ptBox = new Image();
+    ptBox.crossOrigin = "anonymous";
     ptBox.src = resources.ptBoxes[props.cardColor];
     ptBox.onload = () => setPtBoxImg(ptBox);
 
@@ -753,6 +754,7 @@ const MagicCard = forwardRef((props: MagicCardProps, ref: React.ForwardedRef<HTM
       return new Promise<void>((resolve) => {
         const iconUrl = resources.icons[iconPlaceholder];
         const img = new Image();
+        img.crossOrigin = "anonymous";
         img.src = iconUrl;
         img.onload = () => {
           images[iconPlaceholder] = img;
@@ -1054,7 +1056,7 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
   }, [done, model]);
 
   return (
-    <Stack style={{ display: "flex", height: "100vh" }}>
+    <Stack className="flex w-full h-screen">
       {editing ? (
         <MagicCardEditor
           ref={formRef}
@@ -1097,18 +1099,17 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
           flavorText={flavorText}
         />
       )}
-
-      <Stack
+      <Box style={{ paddingBottom: `calc(env(safe-area-inset-bottom, 24px) + 24px)` }} sx={{ display: 'flex', justifyContent: 'space-between', position: 'fixed', bottom: 0, left: 0, right: 0, p: 3, bgcolor: 'background.paper', boxShadow: 3, zIndex: 1301 }}>
+      {/* <Stack
         boxShadow={2}
         bottom={0}
-        width={"100%"}
         position="absolute"
-        padding={3}
         spacing={2}
         direction="row"
         justifyContent="space-between"
         alignItems="center"
-      >
+        className="w-full"
+      > */}
         {editing ? (
           <Button
             disabled={generateCardButtonDisabled}
@@ -1131,7 +1132,8 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
         >
           Preview
         </Button>
-      </Stack>
+      {/* </Stack> */}
+      </Box>
     </Stack>
   );
 };

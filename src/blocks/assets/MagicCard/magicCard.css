@@ -1,6 +1,6 @@
 @font-face {
   font-family: "MagicCard";
-  src: url(./fonts/mplantin.ttf) format("truetype");
+  src: url("https://storage.googleapis.com/miniapp-resources/magicCard/fonts/mplantin.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -8,7 +8,7 @@
 /* Bold */
 @font-face {
   font-family: "MagicCard";
-  src: url(./fonts/ModMatrix.ttf) format("truetype");
+  src: url("https://storage.googleapis.com/miniapp-resources/magicCard/fonts/ModMatrix.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
 }
@@ -16,7 +16,7 @@
 /* Italic */
 @font-face {
   font-family: "MagicCard";
-  src: url(./fonts/mplantinit.ttf) format("truetype");
+  src: url("https://storage.googleapis.com/miniapp-resources/magicCard/fonts/mplantinit.ttf") format("truetype");
   font-weight: normal;
   font-style: italic;
 }
