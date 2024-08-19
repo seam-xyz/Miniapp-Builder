@@ -12,6 +12,8 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
+import { nanoid } from "nanoid";
+import { FirebaseStorage } from "@capacitor-firebase/storage";
 
 import EditIcon from "@mui/icons-material/Edit";
 import WandIcon from "@mui/icons-material/AutoFixHigh";
@@ -55,6 +57,7 @@ import greenPtBox from "../blocks/assets/MagicCard/ptBoxes/green-pt-box.png";
 import redPtBox from "../blocks/assets/MagicCard/ptBoxes/red-pt-box.png";
 
 import "../blocks/assets/MagicCard/magicCard.css";
+
 
 const cardColors = ["land", "artifact", "white", "blue", "black", "red", "green"] as const;
 type CardColor = (typeof cardColors)[number];
@@ -177,6 +180,23 @@ function mergeRefs<T = any>(
 
 function randomEl<T>(arr: readonly T[]) {
   return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function rescaleCanvas(canvas: HTMLCanvasElement, scale: number) {
+  const scaledWidth = canvas.width * scale;
+  const scaledHeight = canvas.height * scale;
+
+  const tempCanvas = document.createElement("canvas");
+  tempCanvas.width = scaledWidth;
+  tempCanvas.height = scaledHeight;
+
+  // Draw the original canvas onto the temporary canvas
+  const ctx = tempCanvas.getContext("2d");
+  if (ctx == null) {
+    throw new Error("Could not get 2d context");
+  }
+  ctx.drawImage(canvas, 0, 0, scaledWidth, scaledHeight);
+  return tempCanvas;
 }
 
 export const MagicCardFeedComponent = ({ model }: FeedComponentProps) => {
@@ -805,7 +825,6 @@ const MagicCard = forwardRef((props: MagicCardProps, ref: React.ForwardedRef<HTM
     const manaImageSize = 30;
     placeholderRegex.lastIndex = 0;
     for (const [icon] of Array.from(manaCostPlaceholders.reverse().join("").matchAll(placeholderRegex))) {
-      // console.log(manaCostPlaceholder);
       ctx.drawImage(placeholderImages[icon], x - manaImageSize, 70, manaImageSize, manaImageSize);
       x -= manaImageSize + 1.5;
     }
@@ -849,12 +868,9 @@ const MagicCard = forwardRef((props: MagicCardProps, ref: React.ForwardedRef<HTM
     const maxHeight = 270;
     const maxY = y + maxHeight;
     const rulesLines = [];
-    // ctx.fillRect(startX, y, 10, 10);
-    // ctx.fillRect(startX, maxHeight, 10, 10);
-
     const flavorTextLines = wrapText(ctx, props.flavorText, maxWidth, "italic 30px MagicCard");
-
     const paragraphs = props.rules.split("\n");
+
     for (const paragraph of paragraphs) {
       rulesLines.push(...wrapText(ctx, paragraph, maxWidth, "normal 30px MagicCard"));
     }
@@ -870,7 +886,6 @@ const MagicCard = forwardRef((props: MagicCardProps, ref: React.ForwardedRef<HTM
     totalHeight = totalLines * lineHeight;
     // center vertically -> set the new starting y
     y = Math.max(y, y + (maxY - totalHeight - y) / 2);
-    // console.log("totalHeight: ", totalHeight, "maxHeight: ", maxHeight, "lineHeight: ", lineHeight, "y: ", y);
     // fill rules
     ctx.font = "normal 30px MagicCard";
     const spaceWidth = ctx.measureText(" ").width;
@@ -987,6 +1002,7 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
   const [rules, setRules] = useState<string>("");
   const [flavorText, setFlavorText] = useState("");
   const [editing, setEditing] = useState(true);
+  const [uploading, setUploading] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -994,19 +1010,47 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
   const generateCardButtonDisabled = cardName === "" || illustration === "";
 
   const generateCard = useCallback(() => {
-    // if (formRef.current?.reportValidity() ?? false) {
     setEditing(false);
-    // }
   }, []);
 
-  const preview = useCallback(() => {
+  const preview = useCallback(async () => {
     if (canvasRef.current == null) {
       return;
     }
-    const dataURL = canvasRef.current.toDataURL("image/png");
-    // TODO file upload
-    model.data["dataURL"] = dataURL;
-    done(model);
+    setUploading(true);
+    const hadError = (err: unknown) => {
+      console.error("Upload failed:", err);
+      setUploading(false);
+    };
+
+    const rescaledCanvas = rescaleCanvas(canvasRef.current, 0.5); // rescale width and height by 0.5
+    const dataURL = rescaledCanvas.toDataURL("image/png");
+    const blob = await (await fetch(dataURL)).blob();
+    const name = nanoid();
+    const path = `files/${name}`;
+
+    await FirebaseStorage.uploadFile(
+      {
+        path,
+        blob,
+        uri: path,
+      },
+      async (event, error) => {
+        if (error) {
+          hadError(error);
+          return;
+        }
+
+        if (event && event.completed) {
+          const result = await FirebaseStorage.getDownloadUrl({ path }).catch(hadError);
+          if (result) {
+            setUploading(false);
+            model.data["dataURL"] = result.downloadUrl;
+            done(model);
+          }
+        }
+      }
+    ).catch(hadError);
   }, [done, model]);
 
   return (
@@ -1079,7 +1123,12 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
             Edit
           </Button>
         )}
-        <Button disabled={editing} variant="contained" endIcon={<SendIcon />} onClick={preview}>
+        <Button
+          disabled={editing || uploading}
+          variant="contained"
+          endIcon={uploading ? <CircularProgress size={20} /> : <SendIcon />}
+          onClick={preview}
+        >
           Preview
         </Button>
       </Stack>
