@@ -3,8 +3,8 @@ import { ComposerComponentProps, FeedComponentProps } from './types';
 import { TextField, Button, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { motion } from 'framer-motion';
-import backgroundGif from '../blocks/assets/Haikura/sakura.gif';
 
+const backgroundGif = 'https://firebasestorage.googleapis.com/v0/b/miniapp-resources/o/Haikura%2Fsakura.gif?alt=media'
 const useStyles = makeStyles({
   field: {
     '& fieldset': {
