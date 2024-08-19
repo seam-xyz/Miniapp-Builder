@@ -30,6 +30,7 @@ import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
+import JournalIcon from "./blockIcons/journal.png";
 
 export type BlockModel = {
   type: string;
@@ -482,4 +483,16 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
+
+  "Journal": { 
+    type: "Journal",
+    displayName: "Journal",
+    displayDescription: "Write or draw whatever that made you happy today :)",
+    icon: JournalIcon, 
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "slothbaby", split: 1.0}],
+    fullscreenEdit: false,
+},
 };
