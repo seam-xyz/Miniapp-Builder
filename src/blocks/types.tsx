@@ -482,4 +482,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
+  "Quicks": { 
+    type: "Quicks",
+    displayName: "quicks",
+    displayDescription: "show your creativity, quickly and in a fun way!",
+    icon: "QuicksIcon", // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "ombhojane", split: 1.0}],
+    fullscreenEdit: false,
+},
 };
