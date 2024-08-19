@@ -120,15 +120,15 @@ const asciiArt = {
 };
 
 const spiritAnimals = [
-  { month: '01', emoji: '🦁', name: 'Shishi' }, 
-  { month: '02', emoji: '🐉', name: 'Ryū' }, 
-  { month: '03', emoji: '🦊', name: 'Koi' }, 
-  { month: '04', emoji: '🐦', name: 'Tori' },
-  { month: '05', emoji: '🐢', name: 'Kame' }, 
-  { month: '06', emoji: '🐬', name: 'Iruka' }, 
-  { month: '07', emoji: '🐯', name: 'Tora' }, 
-  { month: '08', emoji: '🦅', name: 'Washi' }, 
-  { month: '09', emoji: '🐍', name: 'Hebi' }, 
+  { month: '1', emoji: '🦁', name: 'Shishi' }, 
+  { month: '2', emoji: '🐉', name: 'Ryū' }, 
+  { month: '3', emoji: '🦊', name: 'Koi' }, 
+  { month: '4', emoji: '🐦', name: 'Tori' },
+  { month: '5', emoji: '🐢', name: 'Kame' }, 
+  { month: '6', emoji: '🐬', name: 'Iruka' }, 
+  { month: '7', emoji: '🐯', name: 'Tora' }, 
+  { month: '8', emoji: '🦅', name: 'Washi' }, 
+  { month: '9', emoji: '🐍', name: 'Hebi' }, 
   { month: '10', emoji: '🐺', name: 'Okami' }, 
   { month: '11', emoji: '🦅', name: 'Washi' }, 
   { month: '12', emoji: '🐼', name: 'Panda' }, 
@@ -174,7 +174,7 @@ export const HaikuraComposerComponent = ({ model, done }: ComposerComponentProps
     setHaikuGenerated(true); // Set haikuGenerated to true immediately after clicking
 
     const generatedHaiku = getRandomHaiku(mood);
-    const generatedArt = asciiArt[mood.toLowerCase() as keyof typeof asciiArt];
+    const generatedArt = asciiArt[mood.toLowerCase() as keyof typeof asciiArt];   
     const spirit = generateSpiritAnimal(birthMonth);
 
     setSpiritAnimal(spirit);
@@ -225,14 +225,16 @@ export const HaikuraComposerComponent = ({ model, done }: ComposerComponentProps
       }}
     >
     <div className="w-full h-full flex flex-col items-center justify-center" style={{ paddingTop: '2rem' }}>
-      <h1 className="text-3xl font-serif mb-4 text-[#D86771]" style={{ width: '70%', textAlign: 'center',  fontStyle: 'italic' }}>
-        Haikura - Create your Haiku and share!
-      </h1>
+    <h1
+  className="mb-4"
+  style={{width: '70%',textAlign: 'center',fontStyle: 'normtal',fontFamily: "'Sawarabi Mincho', serif",color: '#F0E4D7',textShadow: '2px 2px 4px rgba(0, 0, 0, 0.4)',fontSize: '3rem',}}
+>Haikura - Create your Haiku and share!
+</h1>
         {!loading ? (
           <>
             <TextField
               type="text"
-              placeholder="Birth Month (01-12)"
+              placeholder="Birth Month (1-12)"
               fullWidth
               value={birthMonth}
               onChange={(e) => setBirthMonth(e.target.value)}
@@ -260,7 +262,7 @@ export const HaikuraComposerComponent = ({ model, done }: ComposerComponentProps
                 disabled={loading}
                 className={`${classes.button} mt-4`}
               >
-                {loading ? 'Generating...' : '🎨 Generate Haiku'}
+                {loading ? 'Generating...' : '🌸 Generate Haiku'}
               </Button>
             )}
             {error && (
