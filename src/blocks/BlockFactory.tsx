@@ -1,3 +1,4 @@
+import { ColorFeedComponent, ColorComposerComponent } from './ColorApp'
 import { VibecheckFeedComponent, VibecheckComposerComponent } from './VibecheckApp'
 import { ImagePuzzleFeedComponent, ImagePuzzleComposerComponent } from './ImagePuzzleBlock'
 import { LocalelocatrFeedComponent, LocalelocatrComposerComponent } from './localelocatrBlock'
@@ -72,6 +73,7 @@ export default class BlockFactory {
       case "localelocatr": return <LocalelocatrFeedComponent model={model} />;
       case "Voice": return <VoiceFeedComponent model={model} />;
       case "Vibecheck": return <VibecheckFeedComponent model={model} />;
+      case "Color": return <ColorFeedComponent model={model} />;
       // new feed components go here
       default: return UnknownFeedComponent({ model });
     }
@@ -114,6 +116,7 @@ export default class BlockFactory {
       case "localelocatr": return LocalelocatrComposerComponent(props);
       case "Voice": return VoiceComposerComponent(props);
       case "Vibecheck": return VibecheckComposerComponent(props);
+      case "Color": return ColorComposerComponent(props);
       // new composer components go here
       default: return UnknownComposerComponent(props);
     }

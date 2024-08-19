@@ -30,6 +30,7 @@ import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
+import ColorIcon from './blockIcons/colorCatcher.png';
 
 export type BlockModel = {
   type: string;
@@ -482,4 +483,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
+  "Color": { 
+    type: "Color",
+    displayName: "Color Catcher",
+    displayDescription: "Swap fast how long can you last?",
+    icon: ColorIcon, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "stressedsadness", split: 1.0}],
+    fullscreenEdit: false,
+},
 };
