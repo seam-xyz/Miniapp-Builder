@@ -1,7 +1,4 @@
 import { JournalFeedComponent, JournalComposerComponent } from './JournalApp'
-import { StampFeedComponent, StampComposerComponent } from './StampApp'
-import { PostcardFeedComponent, PostcardComposerComponent } from './PostcardApp'
-import { PizzaFeedComponent, PizzaComposerComponent } from './PizzaApp'
 import { VibecheckFeedComponent, VibecheckComposerComponent } from './VibecheckApp'
 import { ImagePuzzleFeedComponent, ImagePuzzleComposerComponent } from './ImagePuzzleBlock'
 import { LocalelocatrFeedComponent, LocalelocatrComposerComponent } from './localelocatrBlock'
@@ -76,9 +73,6 @@ export default class BlockFactory {
       case "localelocatr": return <LocalelocatrFeedComponent model={model} />;
       case "Voice": return <VoiceFeedComponent model={model} />;
       case "Vibecheck": return <VibecheckFeedComponent model={model} />;
-      case "Pizza": return <PizzaFeedComponent model={model} />;
-      case "Postcard": return <PostcardFeedComponent model={model} />;
-      case "Stamp": return <StampFeedComponent model={model} />;
       case "Journal": return <JournalFeedComponent model={model} />;
       // new feed components go here
       default: return UnknownFeedComponent({ model });
@@ -122,9 +116,6 @@ export default class BlockFactory {
       case "localelocatr": return LocalelocatrComposerComponent(props);
       case "Voice": return VoiceComposerComponent(props);
       case "Vibecheck": return VibecheckComposerComponent(props);
-      case "Pizza": return PizzaComposerComponent(props);
-      case "Postcard": return PostcardComposerComponent(props);
-      case "Stamp": return StampComposerComponent(props);
       case "Journal": return JournalComposerComponent(props);
       // new composer components go here
       default: return UnknownComposerComponent(props);
