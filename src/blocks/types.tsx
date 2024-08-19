@@ -491,7 +491,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "manmohansinghraghav",
+    createdBy: [{username: "manmohansinghraghav", split: 1}],
     fullscreenEdit: false,
 },
 };
