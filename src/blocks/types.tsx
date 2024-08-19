@@ -29,6 +29,7 @@ import CameraIcon from './blockIcons/CameraIcon.png'
 import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
+import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
 import snakeGame from "./blockIcons/snakeGame.png"
 
 export type BlockModel = {
@@ -486,11 +487,11 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "Snake",
     displayName: "snake game",
     displayDescription: "Feeling Bored? Try using this clsasic snake🔮 game! ",
-    icon: snakeGame, // TODO: insert your app icon here
+    icon: snakeGame,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "Jay",
+    createdBy: [{username: "Jay", split: 1}],
     fullscreenEdit: false,
 },
 };
