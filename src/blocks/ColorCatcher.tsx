@@ -250,26 +250,31 @@ const ColorGame: React.FC<{ model?: any, done?: any }> = ({ model, done}) => {
               placeholder="Add a reaction"
             />
             <div className="flex flex-col space-y-2 mb-4">
-              <label>
-                <input
-                  type="radio"
-                  value="score"
-                  checked={selectedText === 'score'}
-                  onChange={() => setSelectedText('score')}
-                  className="mr-2"
-                />
-                Score
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  value="highscore"
-                  checked={selectedText === 'highscore'}
-                  onChange={() => setSelectedText('highscore')}
-                  className="mr-2"
-                />
-                High Score
-              </label>
+ <label>
+  <input
+    type="radio"
+    value="score"
+    checked={selectedText === 'score'}
+    onChange={() => setSelectedText('score')}
+    className="mr-2"
+  />
+  
+ Current Score <span className='text-gray-400'>{score}</span>
+ 
+</label>
+{score !== highScore && (
+  <label>
+    <input
+      type="radio"
+      value="highscore"
+      checked={selectedText === 'highscore'}
+      onChange={() => setSelectedText('highscore')}
+      className="mr-2"
+    />
+    High Score <span className='text-gray-400'>{highScore}</span>
+  </label>
+)}
+
             </div>
             <div className="flex justify-between mt-4">
               <button
