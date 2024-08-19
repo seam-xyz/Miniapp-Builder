@@ -486,12 +486,12 @@ export const BlockTypes: { [key: string]: BlockType } = {
   "Snake": { 
     type: "Snake",
     displayName: "snake game",
-    displayDescription: "Feeling Bored? Try using this clsasic snake🔮 game! ",
+    displayDescription: "Feeling Bored? Try using this classic snake🔮 game! ",
     icon: snakeGame,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: [{username: "Jay", split: 1}],
+    createdBy: [{username: "jayzalani", split: 1}],
     fullscreenEdit: false,
 },
 };
