@@ -37,6 +37,12 @@ interface VibeDescription {
   messages: string[];
 }
 
+interface Animal {
+  emoji: string;
+  name: string;
+  blurb: string;
+}
+
 const determineAnimal = (scores: AudioFeatures) => {
   const animals = [
     {
@@ -55,6 +61,16 @@ const determineAnimal = (scores: AudioFeatures) => {
       blurb: "hanging from a branch, in a cocoon of vibey tunes, Sloth! No one can say you don’t know how to take it easy."
     },
     {
+      emoji: "🐁",
+      name: "Mouse",
+      blurb: "nibbling something reflective, Mouse. You love sleeping in your cozy little hole-in-the-wall, floating on a dreamy cloud of low-energy beats."
+    },
+    {
+      emoji: "🐝",
+      name: "Honeybee",
+      blurb: "flying from flower to flower, Honeybee! Your tunes are addictively chill. Your playlists could heal the world!"
+    },
+    {
       emoji: "🐨",
       name: "Koala",
       blurb: "a great reminder to stop and smell the eucalyptus, Koala! Cozy and calm energy surrounds you, as you relax to your infectious beats."
@@ -63,6 +79,16 @@ const determineAnimal = (scores: AudioFeatures) => {
       emoji: "🐈",
       name: "Cat",
       blurb: "having a slinky little listen! Strut along smoothly, dodging bad vibes and swaying to your gentle beats."
+    },
+    {
+      emoji: "🐗",
+      name: "Boar",
+      blurb: "searching the forest floor with your keen nose for delicious nuggets of rhythm, Boar! Your steady and unstoppable presence is noted wherever you go."
+    },
+    {
+      emoji: "🐐",
+      name: "Goat",
+      blurb: "bouncing and leaping up the side of a mountain, Goat! Your music is motivating and exciting, my silly and stubborn friend."
     },
     {
       emoji: "🦊",
@@ -84,7 +110,7 @@ const determineAnimal = (scores: AudioFeatures) => {
       name: "Unicorn",
       blurb: "shining bright, you beautiful fantasy of a creature! As the unicorn, you prance along to the most magical of rhythms, bouncing over bad energy and lighting up the world."
     },
-  ];
+  ]; // 14 animals
 
   // Calculate individual feature scores
   const energyScore = scores.energy * 2;  // 0-2
@@ -96,12 +122,36 @@ const determineAnimal = (scores: AudioFeatures) => {
   // Combine scores
   const totalScore = energyScore + danceScore + valenceScore + acousticScore + livenessScore;
   // Max possible score is 8 (2 + 2 + 2 + 1 + 1)
-  
-  // Map total score to animal index
-  const animalIndex = Math.floor((totalScore / 8) * animals.length);
-  
-  // Ensure index is within bounds
-  return animals[Math.min(animalIndex, animals.length - 1)];
+
+  // Define score thresholds for each animal with a bell curve distribution
+  const thresholds = [
+    { max: 3.0, animal: animals[0] },   // Snail
+    { max: 3.1, animal: animals[1] },   // Turtle
+    { max: 3.2, animal: animals[2] },   // Sloth
+    { max: 3.3, animal: animals[3] },   // Mouse
+    { max: 3.4, animal: animals[4] },   // Honeybee
+    { max: 3.5, animal: animals[5] },   // Koala
+    { max: 3.6, animal: animals[6] },   // Cat
+    { max: 3.8, animal: animals[7] },   // Boar
+    { max: 4.0, animal: animals[8] },   // Goat
+    { max: 4.2, animal: animals[9] },   // Fox
+    { max: 4.4, animal: animals[10] },  // Monkey
+    { max: 4.6, animal: animals[11] },  // Cheetah
+    { max: 5.0, animal: animals[12] },  // Unicorn
+  ];
+
+  // Ensure score precision to avoid floating-point issues
+  const roundedScore = Math.round(totalScore * 100) / 100;
+
+  // Determine which animal corresponds to the total score
+  for (let i = 0; i < thresholds.length; i++) {
+    if (roundedScore <= thresholds[i].max) {
+      return thresholds[i].animal;
+    }
+  }
+
+  // Fallback in case of unexpected issues
+  return animals[animals.length - 1]; // Unicorn as fallback
 };
 
 const generateVibeSummary = (scores: AudioFeatures) => {
@@ -120,53 +170,63 @@ const generateVibeSummary = (scores: AudioFeatures) => {
     return 'veryHigh';
   };
 
+  const getRandomMessage = (messages: string[]) => {
+    return messages[Math.floor(Math.random() * messages.length)];
+  };
+
   const valenceMessages = {
-    veryLow: "as deep as the ocean, and as reflective as a puddle",
-    low: "like a nostalgic tear, rolling down a grandmother’s cheek",
-    medium: "cool as a cat, and balanced as a scale",
-    high: "the ideal soundtrack for your windows-down-drive with your best friend on a summer day",
-    veryHigh: "bursting with joy, like a disco ball that bounces positive vibes across every surface of the room"
+    veryLow: ["cranky", "lugubrious", "anxious", "insomniac", "whining"],
+    low: ["nostalgic", "crawling", "swaying", "humming"],
+    medium: ["cool", "calm", "glowing", "vibrant", "elevated"],
+    high: ["shining", "rambling", "beaming", "fired up", "floating"],
+    veryHigh: ["exuberant", "sleepless", "hyper", "chaotic"],
   };
 
   const danceabilityMessages = {
-    veryLow: "sitting still and contemplating",
-    low: "breathing deep and swaying gently",
-    medium: "joyful, casual movement (no pressure!)",
-    high: "a late-night kitchen dance party with your friends",
-    veryHigh: "an effervescent, non-stop dancefloor groove-fest"
+    veryLow: ["rock", "vegetable", "ghost", "rain", "cloud"], 
+    low: ["tree", "sandwich", "canoe", "giant", "thumbs-up", "clock"],
+    medium: ["windmill", "river", "bicycle", "high-five", "smile"],
+    high: ["paper airplane", "ocean", "ballerina", "laugh", "twirl"],
+    veryHigh: ["engine", "disco ball", "kite", "angel", "demon", "live wire"],
   };
 
   const bonusMessages = {
     acousticness: {
-      high: "connecting with the world of the physical instrument",
-      veryHigh: "after some real feet-in-the-earth, raw jam session vibes"
+      high: "taking your bare feet out and digging your piggies into the dirt",
+      veryHigh: "making ASMR content in your voice memos app and then never sharing it with anyone"
     },
     instrumentalness: {
-      high: "enjoying the diverse and beautiful world of instruments",
-      veryHigh: "experiencing an ambient landscape of intense instrumentals"
+      high: "playing your guitar at the wrong time",
+      veryHigh: "scoffing at other people's music taste",
     },
     liveness: {
-      high: "connecting to the beauty of the live concert experience, but in a cool, digital way",
-      veryHigh: "immersed in the boundless energy of the live show, complete with the roaring crowd in your heart"
+      high: "spying on your ex's social media",
+      veryHigh: "hopping the fence to get into music festivals"
     },
     speechiness: {
-      high: "tuning in to the lyrical geniuses and expert wordsmiths of your world",
-      veryHigh: "engaging with the power of the spoken word. Feeling the depths of the lyrical message"
+      high: "lying in bed ruminating on everything you said that day",
+      veryHigh: "shaming your friends for watching the movie before they read the book",
     }
   };
 
   const valenceLevel = getLevel(scores.valence);
   const danceLevel = getLevel(scores.danceability);
-  const animal = determineAnimal(scores);
+  
+  let animal: Animal;
+  try {
+    animal = determineAnimal(scores);
+  } catch (error) {
+    console.error("Error determining animal:", error);
+    animal = { emoji: "❓", name: "Unknown", blurb: "we couldn't determine your vibe animal. Please try again later." };
+  }
 
   let summary = `You are ${animal.blurb}\n\n`;
-  summary += `This playlist’s energy is ${valenceMessages[valenceLevel]}, and great for ${danceabilityMessages[danceLevel]}.\n\n`;
+  summary += `This playlist’s energy is like a ${getRandomMessage(valenceMessages[valenceLevel])} ${getRandomMessage(danceabilityMessages[danceLevel])}.\n\n`;
 
-  // Add bonus messages if thresholds are met
   ['acousticness', 'instrumentalness', 'liveness', 'speechiness'].forEach((feature) => {
     const level = getLevel(scores[feature as keyof AudioFeatures]);
     if (level === 'high' || level === 'veryHigh') {
-      summary += `You're ${bonusMessages[feature as keyof typeof bonusMessages][level]}. `;
+      summary += `We're assuming you're really into ${bonusMessages[feature as keyof typeof bonusMessages][level]}?`;
     }
   });
 
@@ -181,47 +241,49 @@ export const VibecheckComposerComponent = ({ model, done }: ComposerComponentPro
   const classes = useStyles();
 
   const triggerErrorAnimation = () => {
-    // Reset the showError state to restart the animation
     setShowError(false);
     setTimeout(() => {
       setShowError(true);
-    }, 10); // Small delay to ensure state change is recognized
+    }, 10);
   };
 
   const handleFetch = async () => {
     setLoading(true);
     setError('');
-  
+
     try {
       const playlistId = extractPlaylistId(url);
       if (!playlistId) {
         throw new Error("Invalid Playlist URL");
       }
-  
+
       const tracks = await getPlaylistTracks(playlistId);
       if (!tracks || tracks.length === 0) {
         throw new Error("No tracks found in playlist");
       }
-  
+
       const trackIds = tracks.map((track: any) => track.id);
       const audioFeatures = await getAudioFeatures(trackIds);
       
-      // Calculate weighted scores for the audio features
       const scores = calculateWeightedScores(audioFeatures);
       
-      // Store scores and playlist URL in model data as a JSON string
+      const { summary, animal } = generateVibeSummary(scores);
+      
+      model.data.summary = summary;
+      model.data.animal = JSON.stringify(animal);  // Store as JSON string
       model.data.scores = JSON.stringify(scores);
-      model.data.playlistUrl = url; // Store the playlist URL
-  
-      done(model); // Go to feed component
+      model.data.playlistUrl = url;
+
+      
+      done(model); 
     } catch (error) {
       console.error("Error fetching playlist data:", error);
       setError("Must be a valid public Spotify Playlist link.");
-      triggerErrorAnimation();  // Trigger the error message to flash
+      triggerErrorAnimation();
     } finally {
       setLoading(false);
     }
-  };  
+  };
 
   const extractPlaylistId = (url: string) => {
     const regex = /playlist\/([a-zA-Z0-9]+)\?/;
@@ -232,62 +294,62 @@ export const VibecheckComposerComponent = ({ model, done }: ComposerComponentPro
   return (
     <div className="w-full h-full flex bg-seam-black flex-col items-center overflow-y-hidden hide-scrollbar">
       <div className="w-full h-full flex flex-col mt-[24px] items-center justify-center overflow-y-hidden hide-scrollbar">
-        { !loading ? (
-        <>
-        <div className="flex flex-col items-center justify-center w-auto h-auto space-y-4">
-          <h2 className="text-seam-white font-sans">Vibe check your playlists</h2>
-          <h3 className="text-seam-white font-sans">Enter a Spotify playlist URL</h3>
-          <Box className="w-auto border-2 border-white-300 mt-[24px] rounded-full w-full" style={{ display: "flex", flexDirection: "row", fontFamily: "Unbounded", justifyContent: 'center', alignItems: 'center', paddingInline: '16px' }}>
-            <TextField
-              type="search"
-              name="searchTerm"
-              fullWidth
-              value={url}
-              onChange={(e: any) => setUrl(e.target.value)}
-              autoComplete="off"
-              placeholder="Playlist link"
-              className={`mr-2 text-white-300 placeholder:text-white-300/20 placeholder:text-lg ${classes.field} border-2 w-full border-white-300`}
-              sx={{ input: { border: 'none', fontFamily: "Public Sans", textTransform: 'none', } }} />
-          </Box>
-          {error && (
-            <motion.div
-              animate={{ opacity: showError ? [0.2, 1, 0.2, 1] : 1 }}
-              transition={{ duration: 0.8, repeat: 0 }}
-            >
-              <h3 className="text-seam-pink mt-2">{error}</h3>
-            </motion.div>
-          )}
-          <Box className="flex items-center justify-center bg-seam-black" style={{ paddingBottom: `calc(env(safe-area-inset-bottom, 24px) + 24px)` }} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, p: 3, zIndex: 1301 }}>
-            <button className="p-4 bg-seam-pink w-full h-auto rounded-[8px]" onClick={handleFetch} disabled={loading}>
-              <h3 className="text-seam-white font-sans">{loading ? "Fetching..." : "Check the vibe"}</h3>
-            </button>
-          </Box>
-        </div>
-        </> 
-        ) : ( 
-        <>
-        <div className="flex flex-col items-center justify-center w-auto h-auto">
-          <h2 className="text-seam-white">Vibe checking your playlist ...</h2>
-          <div className="flex space-x-[-4px] mt-[24px]">
-            {Object.keys(featureColors).map((key) => (
-              <motion.div
-                key={key}
-                className="w-8 h-8 rounded-full mix-blend-screen"
-                style={{ backgroundColor: featureColors[key] }}
-                animate={{
-                  scale: [1, 1.5, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  delay: (Math.random() * 1),
-                  ease: 'easeInOut',
-                }}
-              />
-            ))}
-          </div>
-        </div>
-        </> 
+        {!loading ? (
+          <>
+            <div className="flex flex-col items-center justify-center w-auto h-auto space-y-4">
+              <h2 className="text-seam-white font-sans">Vibe check your playlists</h2>
+              <h3 className="text-seam-white font-sans">Enter a Spotify playlist URL</h3>
+              <Box className="w-auto border-2 border-white-300 mt-[24px] rounded-full w-full" style={{ display: "flex", flexDirection: "row", fontFamily: "Unbounded", justifyContent: 'center', alignItems: 'center', paddingInline: '16px' }}>
+                <TextField
+                  type="search"
+                  name="searchTerm"
+                  fullWidth
+                  value={url}
+                  onChange={(e: any) => setUrl(e.target.value)}
+                  autoComplete="off"
+                  placeholder="Playlist link"
+                  className={`mr-2 text-white-300 placeholder:text-white-300/20 placeholder:text-lg ${classes.field} border-2 w-full border-white-300`}
+                  sx={{ input: { border: 'none', fontFamily: "Public Sans", textTransform: 'none', } }} />
+              </Box>
+              {error && (
+                <motion.div
+                  animate={{ opacity: showError ? [0.2, 1, 0.2, 1] : 1 }}
+                  transition={{ duration: 0.8, repeat: 0 }}
+                >
+                  <h3 className="text-seam-pink mt-2">{error}</h3>
+                </motion.div>
+              )}
+              <Box className="flex items-center justify-center bg-seam-black" style={{ paddingBottom: `calc(env(safe-area-inset-bottom, 24px) + 24px)` }} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, p: 3, zIndex: 1301 }}>
+                <button className="p-4 bg-seam-pink w-full h-auto rounded-[8px]" onClick={handleFetch} disabled={loading}>
+                  <h3 className="text-seam-white font-sans">{loading ? "Fetching..." : "Check the vibe"}</h3>
+                </button>
+              </Box>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex flex-col items-center justify-center w-auto h-auto">
+              <h2 className="text-seam-white">Vibe checking your playlist ...</h2>
+              <div className="flex space-x-[-4px] mt-[24px]">
+                {Object.keys(featureColors).map((key) => (
+                  <motion.div
+                    key={key}
+                    className="w-8 h-8 rounded-full mix-blend-screen"
+                    style={{ backgroundColor: featureColors[key] }}
+                    animate={{
+                      scale: [1, 1.5, 1],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      delay: (Math.random() * 1),
+                      ease: 'easeInOut',
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </>
         )}
       </div>
     </div>
@@ -303,7 +365,6 @@ const featureColors: { [key: string]: string } = {
   liveness: '#ffd92f',      // Yellow
   valence: '#e5c494',       // Beige
 };
-
 
 const generateRandomAnimation = () => {
   const duration = Math.random() * 2 + 6; // Random duration between 6-8 seconds
@@ -331,7 +392,32 @@ const generateRandomAnimation = () => {
 };
 
 export const VibecheckFeedComponent: React.FC<FeedComponentProps> = ({ model }) => {
-  const scores = JSON.parse(model.data.scores) as AudioFeatures || {};
+  let scores: AudioFeatures;
+  let animal: Animal;
+
+  try {
+    scores = JSON.parse(model.data.scores) as AudioFeatures;
+  } catch (error) {
+    console.error("Failed to parse scores from model.data:", error);
+    scores = {
+      danceability: 0,
+      energy: 0,
+      speechiness: 0,
+      acousticness: 0,
+      instrumentalness: 0,
+      liveness: 0,
+      valence: 0,
+    };
+  }
+
+  try {
+    animal = JSON.parse(model.data.animal) as Animal;
+  } catch (error) {
+    console.error("Failed to parse animal from model.data:", error);
+    animal = { emoji: "❓", name: "Unknown", blurb: "Unknown animal" };
+  }
+
+  const summary = model.data.summary || generateVibeSummary(scores).summary;
   const playlistUrl = model.data.playlistUrl || "#";
 
   const featureDisplayNames: { [key: string]: string } = {
@@ -341,8 +427,6 @@ export const VibecheckFeedComponent: React.FC<FeedComponentProps> = ({ model }) 
     instrumentalness: "Instrumental",
     valence: "Positivity",
   };
-
-  const { summary, animal } = generateVibeSummary(scores);
 
   return (
     <div className="flex items-center justify-center flex-col w-full h-auto bg-black text-white p-5 rounded-lg text-center font-sans relative">
