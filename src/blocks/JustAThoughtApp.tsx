@@ -20,7 +20,7 @@ interface ThoughtEditorProps {
 
 const ThoughtEditor: React.FC<ThoughtEditorProps> = ({ model, done }) => {
   const [thought, setThought] = useState('');
-  const [bgColor, setBgColor] = useState('#ffffff');
+  const [bgColor, setBgColor] = useState('#cdcdcd');
   const [textColor, setTextColor] = useState('#000000');
 
   const handleSubmit = () => {
@@ -38,13 +38,13 @@ const ThoughtEditor: React.FC<ThoughtEditorProps> = ({ model, done }) => {
     <>
       <h2 className="text-xl mb-4">Just A Thought</h2>
       <textarea
-        style={thought ? seamFontStyle(textColor, bgColor) : {}}
+        style={seamFontStyle(textColor, bgColor)}
         value={thought}
         onChange={(e) => setThought(e.target.value)}
         maxLength={120}
-        className="w-full p-2 mb-4 border rounded"
+        className="w-full p-2 mb-4 border rounded box-border"
         placeholder="Enter your thought (max 120 characters)"
-        rows={5}
+        rows={4}
       />
       <div className="grid grid-cols-2 mb-4">
         <div className="mb-4">
@@ -53,7 +53,6 @@ const ThoughtEditor: React.FC<ThoughtEditorProps> = ({ model, done }) => {
             type="color"
             value={bgColor}
             onChange={(e) => setBgColor(e.target.value)}
-            className="w-full"
           />
         </div>
         <div className="mb-4">
@@ -62,7 +61,6 @@ const ThoughtEditor: React.FC<ThoughtEditorProps> = ({ model, done }) => {
             type="color"
             value={textColor}
             onChange={(e) => setTextColor(e.target.value)}
-            className="w-full"
           />
         </div>
       </div>
