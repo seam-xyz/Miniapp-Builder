@@ -3,6 +3,7 @@ import { HoroscopeFeedComponent, HoroscopeComposerComponent } from './HoroscopeA
 import { DizzyFeedComponent, DizzyComposerComponent } from './DizzyApp'
 import { JustAThoughtFeedComponent, JustAThoughtComposerComponent } from './JustAThoughtApp'
 import { VibecheckFeedComponent, VibecheckComposerComponent } from './VibecheckApp'
+import { MagicCardFeedComponent, MagicCardComposerComponent } from './MagicCardApp'
 import { ImagePuzzleFeedComponent, ImagePuzzleComposerComponent } from './ImagePuzzleBlock'
 import { LocalelocatrFeedComponent, LocalelocatrComposerComponent } from './localelocatrBlock'
 import { MapFeedComponent, MapComposerComponent } from './MapApp'
@@ -74,12 +75,13 @@ export default class BlockFactory {
       case "Map": return <MapFeedComponent model={model} update={update}/>;
       case "Calligraphy": return <CalligraphyFeedComponent model={model} update={update} />;
       case "localelocatr": return <LocalelocatrFeedComponent model={model} update={update}/>;
-      case "Tatergangs": return <TatergangsFeedComponent model={model} />;
+      case "Tatergangs": return <TatergangsFeedComponent model={model} update={update}/>;
       case "Voice": return <VoiceFeedComponent model={model} update={update}/>;
       case "Vibecheck": return <VibecheckFeedComponent model={model} update={update}/>;
       case "JustAThought": return <JustAThoughtFeedComponent model={model} update={update}/>;
       case "Dizzy": return <DizzyFeedComponent model={model} update={update}/>;
       case "Horoscope": return <HoroscopeFeedComponent model={model} update={update}/>;
+      case "MagicCard": return <MagicCardFeedComponent model={model} update={update}/>;
       // new feed components go here
       default: return UnknownFeedComponent({ model, update });
     }
@@ -124,6 +126,7 @@ export default class BlockFactory {
       case "JustAThought": return JustAThoughtComposerComponent(props);
       case "Voice": return VoiceComposerComponent(props);
       case "Vibecheck": return VibecheckComposerComponent(props);
+      case "MagicCard": return MagicCardComposerComponent(props);
       case "Horoscope": return HoroscopeComposerComponent(props);
       case "Dizzy": return DizzyComposerComponent(props);
       // new composer components go here

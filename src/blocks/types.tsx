@@ -34,6 +34,7 @@ import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 import potatoIcon from './blockIcons/PotatoIcon.png'
 import justAThoughtIcon from "./blockIcons/justAThoughtIcon.png";
 import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
+import MagicCardIcon from "./blockIcons/MagicCardIcon.png";
 
 export type BlockModel = {
   type: string;
@@ -520,6 +521,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "roxanne", split: 1}],
     fullscreenEdit: false,
   },
+  "MagicCard": { 
+    type: "MagicCard",
+    displayName: "Magic Card Creator",
+    displayDescription: "Create your own Magic: The Gathering card!",
+    icon: MagicCardIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{ username: "ixenbay", split: 1 }],
+    fullscreenEdit: true,
+  },
   "Unknown": {
     type: "Unknown",
     displayName: "Unknown",
@@ -532,4 +544,3 @@ export const BlockTypes: { [key: string]: BlockType } = {
     fullscreenEdit: false,
   },
 }
-
