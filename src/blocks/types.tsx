@@ -30,6 +30,7 @@ import CameraIcon from './blockIcons/CameraIcon.png'
 import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
+import justAThoughtIcon from "./blockIcons/justAThoughtIcon.png";
 import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
 
 export type BlockModel = {
@@ -48,6 +49,7 @@ export interface Badge {
 
 export interface FeedComponentProps {
   model: BlockModel;
+  update: (data: { [key: string]: string }) => void;
   width?: number;
 }
 
@@ -448,6 +450,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: [{username: "seam", split: 1}],
+    fullscreenEdit: false,
+  },
+  "JustAThought": { 
+    type: "JustAThought",
+    displayName: "Just a Thought",
+    displayDescription: "Just a thought in 120 characters or less",
+    icon: justAThoughtIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "emilee", split: 1}],
     fullscreenEdit: false,
   },
   "Voice": { 

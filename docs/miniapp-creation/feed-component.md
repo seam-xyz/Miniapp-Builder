@@ -44,3 +44,65 @@ export const ImageFeedComponent = ({ model }: FeedComponentProps) => {
   );
 }
 ```
+
+### Updating User Data
+
+If your miniapp requires changing the data stored in a post after it has been posted to the feed (for example: the Poll Miniapp), use the ```update``` function. 
+
+Not unlike the done function, ```update``` is designed to take a single argument, your updated post data, of the following type: ```({ [key: string]: string })```
+
+In the example of the Poll Miniapp, when a user votes on a poll, the new vote totals need to be stored and reflected across Seam. The ```update``` function handles this by interacting with Seam's backend. 
+
+```
+const handleVote = async (optionKey: string) => {
+  if (hasVoted) return; // Prevent multiple votes
+
+  const updatedVotes = { ...votes, [optionKey]: votes[optionKey] + 1 };
+  setVotes(updatedVotes); // Optimistic update
+  setTotalVotes(totalVotes + 1);
+  setSelectedOption(optionKey);
+  setHasVoted(true);
+
+  try {
+    // Prepare the updated data for the backend
+    const updatedData = { ...model.data };
+    updatedData[`${optionKey}Votes`] = updatedVotes[optionKey].toString();
+
+    // Call the update function to save the new vote counts
+    if (update) {
+      await update(updatedData);
+    }
+  } catch (error) {
+    console.error('Failed to update votes:', error);
+  }
+};
+```
+
+In the above example, after a Seam user casts their vote, the ```update``` function is called with the updatedData containing the user's vote. The function call will update that post's data on Seam's backend. 
+
+Poll Miniapp postData before calling the update function:
+```
+"data": {
+  "question": "a or b",
+  "option1": "a",
+  "option1Votes": “0”,
+  "option2": "b",
+  "option2Votes": "0"
+},
+```
+
+After:
+```
+"data": {
+  "question": "a or b",
+  "option1": "a",
+  "option1Votes": “1”,
+  "option2": "b",
+  "option2Votes": "0"
+},
+```
+
+### Optimistic UI Updates
+
+It is generally advised to update the local state before calling the ```update``` function. This will provide immediate optimistic feedback to the user while the backend update is processed.
+
