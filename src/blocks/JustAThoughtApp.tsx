@@ -1,21 +1,15 @@
 import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
-import { loadLocalFont } from './utils/Fonts';
 import './BlockStyles.css'
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import SeamSaveButton from '../components/SeamSaveButton';
 
 const seamFontStyle = (textColor: string, bgColor: string) => {
-  return { fontFamily: 'Seam Community Font, fantasy', color: textColor, backgroundColor: bgColor, fontSize: "1.8rem" }
+  return { fontFamily: 'SeamCommunityFont-Regular', color: textColor, backgroundColor: bgColor, fontSize: "1.8rem" }
 };
 
 const ThoughtPreview: React.FC<{ content: string, textColor: string, bgColor: string }> = ({ content, textColor, bgColor }) => {
-  const [fontLoaded, setFontLoaded] = useState<boolean>(false);
-  useEffect(() => {
-    loadLocalFont('Seam Community Font', 'blocks/assets/common/SeamCommunityFont-Regular.ttf', 'fantasy')
-    setFontLoaded(true);
-  }, []);
   return (
-    <div className="whitespace-pre items-center" style={fontLoaded ? seamFontStyle(textColor, bgColor) : {}}>{content}</div>
+    <div className="whitespace-pre items-center" style={seamFontStyle(textColor, bgColor)}>{content}</div>
   )
 }
 
@@ -28,11 +22,6 @@ const ThoughtEditor: React.FC<ThoughtEditorProps> = ({ model, done }) => {
   const [thought, setThought] = useState('');
   const [bgColor, setBgColor] = useState('#ffffff');
   const [textColor, setTextColor] = useState('#000000');
-  const [fontLoaded, setFontLoaded] = useState<boolean>(false);
-  useEffect(() => {
-    loadLocalFont('Seam Community Font', 'blocks/assets/common/SeamCommunityFont-Regular.ttf', 'fantasy')
-    setFontLoaded(true);
-  }, []);
 
   const handleSubmit = () => {
     done({
@@ -49,7 +38,7 @@ const ThoughtEditor: React.FC<ThoughtEditorProps> = ({ model, done }) => {
     <>
       <h2 className="text-xl mb-4">Just A Thought</h2>
       <textarea
-        style={(fontLoaded && thought) ? seamFontStyle(textColor, bgColor) : {}}
+        style={thought ? seamFontStyle(textColor, bgColor) : {}}
         value={thought}
         onChange={(e) => setThought(e.target.value)}
         maxLength={120}
