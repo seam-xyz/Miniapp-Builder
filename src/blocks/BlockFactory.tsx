@@ -1,3 +1,4 @@
+import { JustAThoughtFeedComponent, JustAThoughtComposerComponent } from './JustAThoughtApp'
 import { VibecheckFeedComponent, VibecheckComposerComponent } from './VibecheckApp'
 import { ImagePuzzleFeedComponent, ImagePuzzleComposerComponent } from './ImagePuzzleBlock'
 import { LocalelocatrFeedComponent, LocalelocatrComposerComponent } from './localelocatrBlock'
@@ -72,6 +73,7 @@ export default class BlockFactory {
       case "localelocatr": return <LocalelocatrFeedComponent model={model} update={update}/>;
       case "Voice": return <VoiceFeedComponent model={model} update={update}/>;
       case "Vibecheck": return <VibecheckFeedComponent model={model} update={update}/>;
+      case "JustAThought": return <JustAThoughtFeedComponent model={model} update={update}/>;
       // new feed components go here
       default: return UnknownFeedComponent({ model, update });
     }
@@ -112,6 +114,7 @@ export default class BlockFactory {
       case "Map": return MapComposerComponent(props);
       case "Calligraphy": return CalligraphyComposerComponent(props);
       case "localelocatr": return LocalelocatrComposerComponent(props);
+      case "JustAThought": return JustAThoughtComposerComponent(props);
       case "Voice": return VoiceComposerComponent(props);
       case "Vibecheck": return VibecheckComposerComponent(props);
       // new composer components go here
