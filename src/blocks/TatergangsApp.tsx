@@ -7,92 +7,100 @@ import {
 import "./TatergangsStyles.css";
 import { useState, useRef } from "react";
 import SeamSaveButton from "../components/SeamSaveButton";
-import fortune from "./assets/Potato/fortune.png"
-import background from "./assets/Potato/background.png";
-// arm imports
-import arrrgh from "./assets/Potato/arms/arrrgh.png";
-import chadArms from "./assets/Potato/arms/chadArms.png";
-import gothArms from "./assets/Potato/arms/gothArms.png";
-import gunna from "./assets/Potato/arms/gunna.png";
-import kawaii from "./assets/Potato/arms/kawaii.png";
-import measure from "./assets/Potato/arms/measure.png";
-import puppetArms from "./assets/Potato/arms/puppetArms.png";
-import rockon from "./assets/Potato/arms/rockon.png";
-import slothCoffee from "./assets/Potato/arms/slothCoffee.png";
-import soup from "./assets/Potato/arms/soup.png";
-import spideyGrab from "./assets/Potato/arms/spideyGrab.png";
-import sticks from "./assets/Potato/arms/sticks.png";
-import strong from "./assets/Potato/arms/strong.png";
-import violin from "./assets/Potato/arms/violin.png";
-import yay from "./assets/Potato/arms/yay.png";
-// eyes imports
-import babyEyes from "./assets/Potato/eyes/babyEyes.png";
-import chill from "./assets/Potato/eyes/chill.png";
-import crybaby from "./assets/Potato/eyes/crybaby.png";
-import dead from "./assets/Potato/eyes/dead.png";
-import determined from "./assets/Potato/eyes/determined.png";
-import diabolical from "./assets/Potato/eyes/diabolical.png";
-import entertainer from "./assets/Potato/eyes/entertainer.png";
-import flirt from "./assets/Potato/eyes/flirt.png";
-import glamVamp from "./assets/Potato/eyes/glamVamp.png";
-import iconEyes from "./assets/Potato/eyes/iconEyes.png";
-import insistent from "./assets/Potato/eyes/insistent.png";
-import pathetic from "./assets/Potato/eyes/pathetic.png";
-import ready from "./assets/Potato/eyes/ready.png";
-import spideyEyes from "./assets/Potato/eyes/spideyEyes.png";
-import trollEyes from "./assets/Potato/eyes/trollEyes.png";
-import Yang from "./assets/Potato/eyes/Yang.png";
-// legs imports
-import ballet from "./assets/Potato/legs/ballet.png";
-import chadLegs from "./assets/Potato/legs/chadLegs.png";
-import crab from "./assets/Potato/legs/crab.png";
-import diaper from "./assets/Potato/legs/diaper.png";
-import goth from "./assets/Potato/legs/goth.png";
-import handy from "./assets/Potato/legs/handy.png";
-import islandBoy from "./assets/Potato/legs/islandBoy.png";
-import jeans from "./assets/Potato/legs/jeans.png";
-import parachute from "./assets/Potato/legs/parachute.png";
-import skater from "./assets/Potato/legs/skater.png";
-import snowBottom from "./assets/Potato/legs/snowBottom.png";
-import spideyJump from "./assets/Potato/legs/spideyJump.png";
-import trollLegs from "./assets/Potato/legs/trollLegs.png";
-// mouth imports
-import beard from "./assets/Potato/mouth/beard.png";
-import bling from "./assets/Potato/mouth/bling.png";
-import braces from "./assets/Potato/mouth/braces.png";
-import buckteeth from "./assets/Potato/mouth/buckteeth.png";
-import deadMouth from "./assets/Potato/mouth/deadMouth.png";
-import drool from "./assets/Potato/mouth/drool.png";
-import fangs from "./assets/Potato/mouth/fangs.png";
-import fruit from "./assets/Potato/mouth/fruit.png";
-import gritNBearIt from "./assets/Potato/mouth/gritNBearIt.png";
-import puppetMouth from "./assets/Potato/mouth/puppetMouth.png";
-import sharkMouth from "./assets/Potato/mouth/sharkMouth.png";
-import singing from "./assets/Potato/mouth/singing.png";
-import smile from "./assets/Potato/mouth/smile.png";
-import wut from "./assets/Potato/mouth/wut.png";
-import yikes from "./assets/Potato/mouth/yikes.png";
-// nose imports
-import bandaid from "./assets/Potato/nose/bandaid.png";
-import beak from "./assets/Potato/nose/beak.png";
-import carrot from "./assets/Potato/nose/carrot.png";
-import frysWithThat from "./assets/Potato/nose/frysWithThat.png";
-import gothSeptum from "./assets/Potato/nose/gothSeptum.png";
-import liar from "./assets/Potato/nose/liar.png";
-import mustachio from "./assets/Potato/nose/mustachio.png";
-import quirkyAndUnique from "./assets/Potato/nose/quirkyAndUnique.png";
-import roughNose from "./assets/Potato/nose/roughNose.png";
-import thicNose from "./assets/Potato/nose/thicNose.png";
-import thinNose from "./assets/Potato/nose/thinNose.png";
-import trollNose from "./assets/Potato/nose/trollNose.png";
-// potato imports
-import chip from "./assets/Potato/potato/chip.png";
-import Okinawa from "./assets/Potato/potato/Okinawa.png";
-import red from "./assets/Potato/potato/red.png";
-import russet from "./assets/Potato/potato/russet.png";
-import sweetPurps from "./assets/Potato/potato/sweetPurps.png";
-import yam from "./assets/Potato/potato/yam.png";
-import yukon from "./assets/Potato/potato/yukon.png";
+
+// Define constants for each image URL
+const fortune = "https://storage.googleapis.com/miniapp-resources/Potato/fortune.png";
+const background = "https://storage.googleapis.com/miniapp-resources/Potato/background.png";
+
+// Arm imports
+const arrrgh = "https://storage.googleapis.com/miniapp-resources/Potato/arms/arrrgh.png";
+const chadArms = "https://storage.googleapis.com/miniapp-resources/Potato/arms/chadArms.png";
+const gothArms = "https://storage.googleapis.com/miniapp-resources/Potato/arms/gothArms.png";
+const gunna = "https://storage.googleapis.com/miniapp-resources/Potato/arms/gunna.png";
+const kawaii = "https://storage.googleapis.com/miniapp-resources/Potato/arms/kawaii.png";
+const measure = "https://storage.googleapis.com/miniapp-resources/Potato/arms/measure.png";
+const puppetArms = "https://storage.googleapis.com/miniapp-resources/Potato/arms/puppetArms.png";
+const rockon = "https://storage.googleapis.com/miniapp-resources/Potato/arms/rockon.png";
+const slothCoffee = "https://storage.googleapis.com/miniapp-resources/Potato/arms/slothCoffee.png";
+const soup = "https://storage.googleapis.com/miniapp-resources/Potato/arms/soup.png";
+const spideyGrab = "https://storage.googleapis.com/miniapp-resources/Potato/arms/spideyGrab.png";
+const sticks = "https://storage.googleapis.com/miniapp-resources/Potato/arms/sticks.png";
+const strong = "https://storage.googleapis.com/miniapp-resources/Potato/arms/strong.png";
+const violin = "https://storage.googleapis.com/miniapp-resources/Potato/arms/violin.png";
+const yay = "https://storage.googleapis.com/miniapp-resources/Potato/arms/yay.png";
+
+// Eyes imports
+const babyEyes = "https://storage.googleapis.com/miniapp-resources/Potato/eyes/babyEyes.png";
+const chill = "https://storage.googleapis.com/miniapp-resources/Potato/eyes/chill.png";
+const crybaby = "https://storage.googleapis.com/miniapp-resources/Potato/eyes/crybaby.png";
+const dead = "https://storage.googleapis.com/miniapp-resources/Potato/eyes/dead.png";
+const determined = "https://storage.googleapis.com/miniapp-resources/Potato/eyes/determined.png";
+const diabolical = "https://storage.googleapis.com/miniapp-resources/Potato/eyes/diabolical.png";
+const entertainer = "https://storage.googleapis.com/miniapp-resources/Potato/eyes/entertainer.png";
+const flirt = "https://storage.googleapis.com/miniapp-resources/Potato/eyes/flirt.png";
+const glamVamp = "https://storage.googleapis.com/miniapp-resources/Potato/eyes/glamVamp.png";
+const iconEyes = "https://storage.googleapis.com/miniapp-resources/Potato/eyes/iconEyes.png";
+const insistent = "https://storage.googleapis.com/miniapp-resources/Potato/eyes/insistent.png";
+const pathetic = "https://storage.googleapis.com/miniapp-resources/Potato/eyes/pathetic.png";
+const ready = "https://storage.googleapis.com/miniapp-resources/Potato/eyes/ready.png";
+const spideyEyes = "https://storage.googleapis.com/miniapp-resources/Potato/eyes/spideyEyes.png";
+const trollEyes = "https://storage.googleapis.com/miniapp-resources/Potato/eyes/trollEyes.png";
+const Yang = "https://storage.googleapis.com/miniapp-resources/Potato/eyes/Yang.png";
+
+// Legs imports
+const ballet = "https://storage.googleapis.com/miniapp-resources/Potato/legs/ballet.png";
+const chadLegs = "https://storage.googleapis.com/miniapp-resources/Potato/legs/chadLegs.png";
+const crab = "https://storage.googleapis.com/miniapp-resources/Potato/legs/crab.png";
+const diaper = "https://storage.googleapis.com/miniapp-resources/Potato/legs/diaper.png";
+const goth = "https://storage.googleapis.com/miniapp-resources/Potato/legs/goth.png";
+const handy = "https://storage.googleapis.com/miniapp-resources/Potato/legs/handy.png";
+const islandBoy = "https://storage.googleapis.com/miniapp-resources/Potato/legs/islandBoy.png";
+const jeans = "https://storage.googleapis.com/miniapp-resources/Potato/legs/jeans.png";
+const parachute = "https://storage.googleapis.com/miniapp-resources/Potato/legs/parachute.png";
+const skater = "https://storage.googleapis.com/miniapp-resources/Potato/legs/skater.png";
+const snowBottom = "https://storage.googleapis.com/miniapp-resources/Potato/legs/snowBottom.png";
+const spideyJump = "https://storage.googleapis.com/miniapp-resources/Potato/legs/spideyJump.png";
+const trollLegs = "https://storage.googleapis.com/miniapp-resources/Potato/legs/trollLegs.png";
+
+// Mouth imports
+const beard = "https://storage.googleapis.com/miniapp-resources/Potato/mouth/beard.png";
+const bling = "https://storage.googleapis.com/miniapp-resources/Potato/mouth/bling.png";
+const braces = "https://storage.googleapis.com/miniapp-resources/Potato/mouth/braces.png";
+const buckteeth = "https://storage.googleapis.com/miniapp-resources/Potato/mouth/buckteeth.png";
+const deadMouth = "https://storage.googleapis.com/miniapp-resources/Potato/mouth/deadMouth.png";
+const drool = "https://storage.googleapis.com/miniapp-resources/Potato/mouth/drool.png";
+const fangs = "https://storage.googleapis.com/miniapp-resources/Potato/mouth/fangs.png";
+const fruit = "https://storage.googleapis.com/miniapp-resources/Potato/mouth/fruit.png";
+const gritNBearIt = "https://storage.googleapis.com/miniapp-resources/Potato/mouth/gritNBearIt.png";
+const puppetMouth = "https://storage.googleapis.com/miniapp-resources/Potato/mouth/puppetMouth.png";
+const sharkMouth = "https://storage.googleapis.com/miniapp-resources/Potato/mouth/sharkMouth.png";
+const singing = "https://storage.googleapis.com/miniapp-resources/Potato/mouth/singing.png";
+const smile = "https://storage.googleapis.com/miniapp-resources/Potato/mouth/smile.png";
+const wut = "https://storage.googleapis.com/miniapp-resources/Potato/mouth/wut.png";
+const yikes = "https://storage.googleapis.com/miniapp-resources/Potato/mouth/yikes.png";
+
+// Nose imports
+const bandaid = "https://storage.googleapis.com/miniapp-resources/Potato/nose/bandaid.png";
+const beak = "https://storage.googleapis.com/miniapp-resources/Potato/nose/beak.png";
+const carrot = "https://storage.googleapis.com/miniapp-resources/Potato/nose/carrot.png";
+const frysWithThat = "https://storage.googleapis.com/miniapp-resources/Potato/nose/frysWithThat.png";
+const gothSeptum = "https://storage.googleapis.com/miniapp-resources/Potato/nose/gothSeptum.png";
+const liar = "https://storage.googleapis.com/miniapp-resources/Potato/nose/liar.png";
+const mustachio = "https://storage.googleapis.com/miniapp-resources/Potato/nose/mustachio.png";
+const quirkyAndUnique = "https://storage.googleapis.com/miniapp-resources/Potato/nose/quirkyAndUnique.png";
+const roughNose = "https://storage.googleapis.com/miniapp-resources/Potato/nose/roughNose.png";
+const thicNose = "https://storage.googleapis.com/miniapp-resources/Potato/nose/thicNose.png";
+const thinNose = "https://storage.googleapis.com/miniapp-resources/Potato/nose/thinNose.png";
+const trollNose = "https://storage.googleapis.com/miniapp-resources/Potato/nose/trollNose.png";
+
+// Potato imports
+const chip = "https://storage.googleapis.com/miniapp-resources/Potato/potato/chip.png";
+const Okinawa = "https://storage.googleapis.com/miniapp-resources/Potato/potato/Okinawa.png";
+const red = "https://storage.googleapis.com/miniapp-resources/Potato/potato/red.png";
+const russet = "https://storage.googleapis.com/miniapp-resources/Potato/potato/russet.png";
+const sweetPurps = "https://storage.googleapis.com/miniapp-resources/Potato/potato/sweetPurps.png";
+const yam = "https://storage.googleapis.com/miniapp-resources/Potato/potato/yam.png";
+const yukon = "https://storage.googleapis.com/miniapp-resources/Potato/potato/yukon.png";
 
 interface InnerSpudProps {
   potato: Potato;

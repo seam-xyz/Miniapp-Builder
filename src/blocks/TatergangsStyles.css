@@ -1,7 +1,7 @@
 /* PotatoHead Font */
 @font-face {
     font-family: 'cute';
-    src: url('./assets/Potato/SpicyRice-Regular.ttf');
+    src: url('https://storage.googleapis.com/miniapp-resources/Potato/SpicyRice-Regular.ttf');
 }
 
 p, .tater {
