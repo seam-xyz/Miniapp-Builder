@@ -6,6 +6,7 @@ import linkIcon from "./blockIcons/Button.png";
 import twitterIcon from "./blockIcons/twitterIcon.png";
 import bookmarkIcon from "./blockIcons/Link.png";
 import mapIcon from "./blockIcons/Map.png";
+import HoroscopeIcon from "./blockIcons/HoroscopeIcon.png";
 import giphyIcon from "./blockIcons/GIPHY.png";
 import profileIcon from "./blockIcons/profileHeaderIcon.png";
 import musicIcon from "./blockIcons/Music.png";
@@ -467,14 +468,14 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "Voice",
     displayName: "Voice Note",
     displayDescription: "Use the microphone to record a voice note. The post then allows users to play it back.",
-    icon: voiceNoteIcon, 
+    icon: voiceNoteIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: [{username: "samsam", split: 1}],
     fullscreenEdit: false,
   },
-  "Vibecheck": { 
+  "Vibecheck": {
     type: "Vibecheck",
     displayName: "VibeCheck",
     displayDescription: "Get a vibe check on your favorite Spotify Playlists!",
@@ -494,6 +495,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: [{username: "seam", split: 1}],
+    fullscreenEdit: false,
+  },
+  "Horoscope": {
+    type: "Horoscope",
+    displayName: "Horoscope",
+    displayDescription: "Get your daily dose of cosmic insights with our easy-to-use horoscope generator!",
+    icon: HoroscopeIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "defcon", split: 1.0}],
     fullscreenEdit: false,
   },
   "Dizzy": { 

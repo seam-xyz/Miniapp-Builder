@@ -1,3 +1,4 @@
+import { HoroscopeFeedComponent, HoroscopeComposerComponent } from './HoroscopeApp'
 import { DizzyFeedComponent, DizzyComposerComponent } from './DizzyApp'
 import { JustAThoughtFeedComponent, JustAThoughtComposerComponent } from './JustAThoughtApp'
 import { VibecheckFeedComponent, VibecheckComposerComponent } from './VibecheckApp'
@@ -76,6 +77,7 @@ export default class BlockFactory {
       case "Vibecheck": return <VibecheckFeedComponent model={model} update={update}/>;
       case "JustAThought": return <JustAThoughtFeedComponent model={model} update={update}/>;
       case "Dizzy": return <DizzyFeedComponent model={model} update={update}/>;
+      case "Horoscope": return <HoroscopeFeedComponent model={model} update={update}/>;
       // new feed components go here
       default: return UnknownFeedComponent({ model, update });
     }
@@ -119,6 +121,7 @@ export default class BlockFactory {
       case "JustAThought": return JustAThoughtComposerComponent(props);
       case "Voice": return VoiceComposerComponent(props);
       case "Vibecheck": return VibecheckComposerComponent(props);
+      case "Horoscope": return HoroscopeComposerComponent(props);
       case "Dizzy": return DizzyComposerComponent(props);
       // new composer components go here
       default: return UnknownComposerComponent(props);
