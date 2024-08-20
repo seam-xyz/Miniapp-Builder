@@ -121,7 +121,6 @@ const determineAnimal = (scores: AudioFeatures) => {
   
   // Combine scores
   const totalScore = energyScore + danceScore + valenceScore + acousticScore + livenessScore;
-  console.log("Total score: ", totalScore)
   // Max possible score is 8 (2 + 2 + 2 + 1 + 1)
 
   // Define score thresholds for each animal with a bell curve distribution
@@ -147,13 +146,11 @@ const determineAnimal = (scores: AudioFeatures) => {
   // Determine which animal corresponds to the total score
   for (let i = 0; i < thresholds.length; i++) {
     if (roundedScore <= thresholds[i].max) {
-      console.log("animal: ", thresholds[i].animal);
       return thresholds[i].animal;
     }
   }
 
   // Fallback in case of unexpected issues
-  console.log("Fallback to Unicorn");
   return animals[animals.length - 1]; // Unicorn as fallback
 };
 
@@ -276,8 +273,6 @@ export const VibecheckComposerComponent = ({ model, done }: ComposerComponentPro
       model.data.animal = JSON.stringify(animal);  // Store as JSON string
       model.data.scores = JSON.stringify(scores);
       model.data.playlistUrl = url;
-      console.log("composer model.data.scores: ", model.data.scores);
-      console.log("composer model.data.animal: ", model.data.animal);
 
       
       done(model); 
