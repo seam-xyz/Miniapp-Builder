@@ -4,9 +4,7 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { Avatar, Button } from '@mui/material';
 import Slider from '@mui/material/Slider';
-import ImageList from '@mui/material/ImageList';
 import Typography from '@mui/material/Typography';
-import ImageListItem from '@mui/material/ImageListItem';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DoNotDisturbAltIcon from '@mui/icons-material/DoNotDisturbAlt';
 import { ComposerComponentProps, FeedComponentProps } from './types';
@@ -42,36 +40,17 @@ export const WardrobeComposerComponent = ({ model, done }: ComposerComponentProp
     Bottom: Char_BW[7],
     Shoe: Char_BW[8],
   });
+
   const [selectColor, setColor] = useState(model.data.BgColor ? model.data.BgColor : "bg-white");
-
-  const backgroundColors = [
-    'bg-white',
-    'bg-slate',
-    'bg-gray',
-    'bg-zinc',
-    'bg-neutral',
-    'bg-stone',
-    'bg-red',
-    'bg-orange',
-    'bg-amber',
-    'bg-yellow',
-    'bg-lime',
-    'bg-green',
-    'bg-emerald',
-    'bg-teal',
-    'bg-cyan',
-    'bg-sky',
-    'bg-blue',
-    'bg-indigo',
-    'bg-violet',
-    'bg-purple',
-    'bg-fuchsia',
-    'bg-pink',
-    'bg-rose',
-  ];
-
   const [backgroundColor, setBackgroundColor] = useState(selectColor === "bg-white" ? selectColor : selectColor.slice(0, -4));
   const [colorLevel, setColorLevel] = useState(selectColor === "bg-white" ? "-500" : selectColor.slice(-4, selectColor.length));
+
+  const backgroundColors = [
+    'bg-white', 'bg-slate', 'bg-gray', 'bg-zinc', 'bg-neutral', 'bg-stone', 
+    'bg-red', 'bg-orange', 'bg-amber', 'bg-yellow', 'bg-lime', 'bg-green', 
+    'bg-emerald', 'bg-teal', 'bg-cyan', 'bg-sky', 'bg-blue', 'bg-indigo', 
+    'bg-violet', 'bg-purple', 'bg-fuchsia', 'bg-pink', 'bg-rose',
+  ];
 
   const handleDressUp = (part: string, outfit: string) => {
     setSelectedOutfits((prevOutfits: any) => ({
@@ -81,24 +60,27 @@ export const WardrobeComposerComponent = ({ model, done }: ComposerComponentProp
   };
 
   const handleIntensityChange = (event: Event, newValue: number | number[]) => {
-    setColorLevel("-" + (newValue as number).toString());
-    setColor(backgroundColor + "-" + (newValue as number).toString());
+    const newColorLevel = "-" + (newValue as number).toString();
+    setColorLevel(newColorLevel);
+    const newColor = backgroundColor + newColorLevel;
+    setColor(newColor);
   };
 
   const handleColorChange = (newValue: string) => {
-    setBackgroundColor(newValue as string);
-    setColor((newValue as string) + colorLevel);
+    setBackgroundColor(newValue);
+    const newColor = newValue + colorLevel;
+    setColor(newColor);
   };
 
   const handleSubmit = () => {
     model.data.Outfits = JSON.stringify(selectedOutfits);
     model.data.BgColor = selectColor;
     done(model);
-  }
+  };
 
   return (
     <div className="flex flex-col h-screen w-full select-none">
-      <DressUpDisplay outfits={selectedOutfits} backColor={selectColor} setBackColor={setColor} />
+      <DressUpDisplay outfits={selectedOutfits} backColor={selectColor} />
       <div className="flex flex-col items-center w-full h-full overflow-y-visible overflow-x-hidden">
         <Box className="relative flex flex-col items-center w-full p-4 bg-transparent rounded-lg">
           <MenuDisplay onDressUp={handleDressUp} />
@@ -226,52 +208,15 @@ const MenuDisplay = ({ onDressUp }: { onDressUp: (part: string, outfit: string) 
   );
 };
 
-const DressUpDisplay = ({ outfits, backColor, setBackColor }: { outfits: { [key: string]: string }; backColor: string; setBackColor: (color: string) => void }) => {
-  const backgroundColors = [
-    'bg-white',
-    'bg-slate',
-    'bg-gray',
-    'bg-zinc',
-    'bg-neutral',
-    'bg-stone',
-    'bg-red',
-    'bg-orange',
-    'bg-amber',
-    'bg-yellow',
-    'bg-lime',
-    'bg-green',
-    'bg-emerald',
-    'bg-teal',
-    'bg-cyan',
-    'bg-sky',
-    'bg-blue',
-    'bg-indigo',
-    'bg-violet',
-    'bg-purple',
-    'bg-fuchsia',
-    'bg-pink',
-    'bg-rose',
-  ];
-  const [backgroundColor, setBackgroundColor] = useState(backColor === "bg-white" ? backColor : backColor.slice(0, -4));
-  const [colorLevel, setColorLevel] = useState(backColor === "bg-white" ? "-500" : backColor.slice(-4, backColor.length));
-  const handleIntensityChange = (event: Event, newValue: number | number[]) => {
-    setColorLevel("-" + (newValue as number).toString());
-    setBackColor(backgroundColor + "-" + (newValue as number).toString());
-    // console.log(backgroundColor, colorLevel, backColor, "---Intensity");
-  }
-  const handleColorChange = (newValue: string) => {
-    setBackgroundColor(newValue as string);
-    setBackColor((newValue as string) + colorLevel);
-    // console.log(backgroundColor, colorLevel, backColor, "---Color");
-  }
+const DressUpDisplay = ({ outfits, backColor }: { outfits: { [key: string]: string }; backColor: string }) => {
   return (
-    <div style={{zIndex: 3}} className={`w-full flex items-start justify-center h-[420px] border shadow-md rounded-lg ${backgroundColor === "bg-white" ? backgroundColor : backgroundColor + colorLevel}`}>
+    <div style={{ zIndex: 3 }} className={`w-full flex items-start justify-center h-[420px] border shadow-md rounded-lg ${backColor}`}>
       <div className="relative w-[20em] h-[420px] pointer-events-none">
         {Object.keys(outfits).map((part, index) => (
           <div key={index}>
-            {outfits[part] !== "" ?
-              <img src={outfits[part]} alt={part} style={{marginTop: '-64px'}} className="absolute w-full" />
-              : <></>}
+            {outfits[part] !== "" ? (
+              <img src={outfits[part]} alt={part} style={{ marginTop: '-64px' }} className="absolute w-full" />
+            ) : null}
           </div>
         ))}
       </div>
