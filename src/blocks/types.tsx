@@ -31,6 +31,7 @@ import CameraIcon from './blockIcons/CameraIcon.png'
 import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
+import potatoIcon from './blockIcons/PotatoIcon.png'
 import justAThoughtIcon from "./blockIcons/justAThoughtIcon.png";
 import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
 
@@ -486,17 +487,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
     fullscreenEdit: true,
   },
-  "Unknown": {
-    type: "Unknown",
-    displayName: "Unknown",
-    displayDescription: "Unknown",
-    icon: "UnknownIcon",
-    deprecated: true,
-    doesBlockPost: true,
-    doesBlockEdit: true,
-    createdBy: [{username: "seam", split: 1}],
-    fullscreenEdit: false,
-  },
   "Horoscope": {
     type: "Horoscope",
     displayName: "Horoscope",
@@ -518,5 +508,28 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockEdit: true,
     createdBy: [{username: "shloknemani", split: 1.0}],
     fullscreenEdit: false,
-},
-};
+  },
+  "Tatergangs": { 
+    type: "Tatergangs",
+    displayName: "Potato Fortunes",
+    displayDescription: "Choose your potato and discover your fate!",
+    icon: potatoIcon, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "roxanne", split: 1}],
+    fullscreenEdit: false,
+  },
+  "Unknown": {
+    type: "Unknown",
+    displayName: "Unknown",
+    displayDescription: "Unknown",
+    icon: "UnknownIcon",
+    deprecated: true,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "seam", split: 1}],
+    fullscreenEdit: false,
+  },
+}
+
