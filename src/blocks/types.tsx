@@ -31,10 +31,19 @@ import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
 
+export type ApiResponse = {
+  faces: {
+    dominant_emotion: string;
+    emotion: Record<string, number>;
+    region: { x: number; y: number; w: number; h: number };
+  }[];
+};
+
 export type BlockModel = {
   type: string;
   data: { [key: string]: string };
   uuid: string; // must be unique to avoid layout issues
+  responseData?: ApiResponse; // Add this if responseData is part of BlockModel
 };
 
 export interface AccountModel {
@@ -55,6 +64,10 @@ export interface ComposerComponentProps {
   model: BlockModel;
   width?: number;
 }
+
+export interface EmotionTodeiProps {
+  model: any;
+};
 
 export type PointSplit = {
   username: string;
@@ -469,6 +482,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
+    fullscreenEdit: true,
+  },
+  "EmotionTodei": { 
+    type: "EmotionTodei",
+    displayName: "EmotionTodei",
+    displayDescription: "Get a face emotion recognition check!",
+    icon: MoodIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "hoangnguyen", split: 0.5}, {username: "rocco", split: 0.5}],
     fullscreenEdit: true,
   },
   "Unknown": {

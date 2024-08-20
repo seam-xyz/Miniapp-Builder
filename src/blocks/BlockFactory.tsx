@@ -34,6 +34,7 @@ import { MondrianFeedComponent, MondrianComposerComponent } from './MondrianBloc
 import { WordleFeedComponent, WordleComposerComponent } from './WordleBlock'
 import { VoiceFeedComponent, VoiceComposerComponent } from './VoiceApp'
 import { BlockModel, BlockTypes, ComposerComponentProps } from './types'
+import EmotionTodei from './EmotionTodei'
 
 export default class BlockFactory {
   static getFeedComponent(model: BlockModel) {
@@ -72,6 +73,7 @@ export default class BlockFactory {
       case "localelocatr": return <LocalelocatrFeedComponent model={model} />;
       case "Voice": return <VoiceFeedComponent model={model} />;
       case "Vibecheck": return <VibecheckFeedComponent model={model} />;
+      case "EmotionTodei": return <EmotionTodei model={model} done={() => {}} />;
       // new feed components go here
       default: return UnknownFeedComponent({ model });
     }
@@ -114,6 +116,7 @@ export default class BlockFactory {
       case "localelocatr": return LocalelocatrComposerComponent(props);
       case "Voice": return VoiceComposerComponent(props);
       case "Vibecheck": return VibecheckComposerComponent(props);
+      case "EmotionTodei": return EmotionTodei(props);
       // new composer components go here
       default: return UnknownComposerComponent(props);
     }
