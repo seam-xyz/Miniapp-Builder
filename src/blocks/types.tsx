@@ -6,6 +6,7 @@ import linkIcon from "./blockIcons/Button.png";
 import twitterIcon from "./blockIcons/twitterIcon.png";
 import bookmarkIcon from "./blockIcons/Link.png";
 import mapIcon from "./blockIcons/Map.png";
+import HoroscopeIcon from "./blockIcons/HoroscopeIcon.png";
 import giphyIcon from "./blockIcons/GIPHY.png";
 import profileIcon from "./blockIcons/profileHeaderIcon.png";
 import musicIcon from "./blockIcons/Music.png";
@@ -17,6 +18,7 @@ import photoAlbumIcon from "./blockIcons/photoAlbumIcon.png"
 import flashingTextIcon from "./blockIcons/flashingTextIcon.png";
 import tokenIcon from "./blockIcons/tokenIcon.png";
 import clockIcon from "./blockIcons/clockIcon.png"
+import DizzyIcon from "./blockIcons/DizzyIcon.png"
 import farcasterIcon from "./blockIcons/farcasterIcon.svg"
 import eyesIcon from "./blockIcons/eyeIcon.png"
 import MondrianIcon from './blockIcons/MondrianIcon.png'
@@ -30,6 +32,7 @@ import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 import potatoIcon from './blockIcons/PotatoIcon.png'
+import justAThoughtIcon from "./blockIcons/justAThoughtIcon.png";
 import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
 
 export type BlockModel = {
@@ -48,6 +51,7 @@ export interface Badge {
 
 export interface FeedComponentProps {
   model: BlockModel;
+  update: (data: { [key: string]: string }) => void;
   width?: number;
 }
 
@@ -450,18 +454,29 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
+  "JustAThought": { 
+    type: "JustAThought",
+    displayName: "Just a Thought",
+    displayDescription: "Just a thought in 120 characters or less",
+    icon: justAThoughtIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "emilee", split: 1}],
+    fullscreenEdit: false,
+  },
   "Voice": { 
     type: "Voice",
     displayName: "Voice Note",
     displayDescription: "Use the microphone to record a voice note. The post then allows users to play it back.",
-    icon: voiceNoteIcon, 
+    icon: voiceNoteIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: [{username: "samsam", split: 1}],
     fullscreenEdit: false,
   },
-  "Vibecheck": { 
+  "Vibecheck": {
     type: "Vibecheck",
     displayName: "VibeCheck",
     displayDescription: "Get a vibe check on your favorite Spotify Playlists!",
@@ -472,15 +487,26 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
     fullscreenEdit: true,
   },
-  "Unknown": {
-    type: "Unknown",
-    displayName: "Unknown",
-    displayDescription: "Unknown",
-    icon: "UnknownIcon",
-    deprecated: true,
+  "Horoscope": {
+    type: "Horoscope",
+    displayName: "Horoscope",
+    displayDescription: "Get your daily dose of cosmic insights with our easy-to-use horoscope generator!",
+    icon: HoroscopeIcon,
+    deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: [{username: "seam", split: 1}],
+    createdBy: [{username: "defcon", split: 1.0}],
+    fullscreenEdit: false,
+  },
+  "Dizzy": { 
+    type: "Dizzy",
+    displayName: "dizzy Text",
+    displayDescription: "Create a text input to a continuously flashing RGB color with background contrast!",
+    icon: DizzyIcon, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "shloknemani", split: 1.0}],
     fullscreenEdit: false,
   },
   "Tatergangs": { 
@@ -493,5 +519,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockEdit: true,
     createdBy: [{username: "roxanne", split: 1}],
     fullscreenEdit: false,
-},
-};
+  },
+  "Unknown": {
+    type: "Unknown",
+    displayName: "Unknown",
+    displayDescription: "Unknown",
+    icon: "UnknownIcon",
+    deprecated: true,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "seam", split: 1}],
+    fullscreenEdit: false,
+  },
+}
+
