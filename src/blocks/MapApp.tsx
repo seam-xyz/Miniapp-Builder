@@ -146,7 +146,7 @@ const MapEditor: React.FC<MapEditorProps> = ({ onSelect }) => {
                       width: 'calc(100% - 64px)', // Adjust the width of the input to fit within the map container
                       maxWidth: '600px',
                       position: 'absolute',
-                      top: '0',
+                      top: '16px',
                       left: '50%',
                       transform: 'translateX(-50%)',
                       zIndex: 1,
