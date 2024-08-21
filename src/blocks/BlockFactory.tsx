@@ -1,4 +1,5 @@
 import { QuickPollFeedComponent, QuickPollComposerComponent } from './QuickPollApp'
+import { PickrrFeedComponent, PickrrComposerComponent } from './PickrrApp'
 import { WardrobeFeedComponent, WardrobeComposerComponent } from './WardrobeApp'
 import { JournalFeedComponent, JournalComposerComponent } from './JournalApp'
 import { HaikuraFeedComponent, HaikuraComposerComponent } from './HaikuraApp'
@@ -91,6 +92,7 @@ export default class BlockFactory {
       case "Haikura": return <HaikuraFeedComponent model={model} update={update}/>;
       case "Journal": return <JournalFeedComponent model={model} update={update}/>;
       case "QuickPoll": return <QuickPollFeedComponent model={model} update={update}/>;
+      case "Pickrr": return <PickrrFeedComponent model={model} update={update} />;
       // new feed components go here
       default: return UnknownFeedComponent({ model, update });
     }
@@ -135,6 +137,7 @@ export default class BlockFactory {
       case "JustAThought": return JustAThoughtComposerComponent(props);
       case "Voice": return VoiceComposerComponent(props);      
       case "QuickPoll": return QuickPollComposerComponent(props);
+      case "Pickrr": return PickrrComposerComponent(props);
       case "Vibecheck": return VibecheckComposerComponent(props);
       case "Wardrobe": return WardrobeComposerComponent(props);
       case "Journal": return JournalComposerComponent(props);

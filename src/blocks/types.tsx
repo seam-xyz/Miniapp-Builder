@@ -31,6 +31,7 @@ import CameraIcon from './blockIcons/CameraIcon.png'
 import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
+import Pickrr from "./blockIcons/Pickrr.png"
 import quickpoll from "./blockIcons/quickpoll.png";
 import potatoIcon from './blockIcons/PotatoIcon.png'
 import justAThoughtIcon from "./blockIcons/justAThoughtIcon.png";
@@ -578,6 +579,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: [{username: "bkaraba", split: 1}], 
+    fullscreenEdit: false,
+  },
+  "Pickrr": { 
+    type: "Pickrr",
+    displayName: "Pickrr",
+    displayDescription: "The ultimate solution for YouTubers struggling to choose the perfect thumbnail.",
+    icon: Pickrr, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "Jay", split: 1}],
     fullscreenEdit: false,
   },
   "Unknown": {
