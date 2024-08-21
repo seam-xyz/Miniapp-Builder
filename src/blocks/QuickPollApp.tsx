@@ -1,44 +1,54 @@
 import { useState, ChangeEvent } from 'react';
 import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
 
-
 interface Question {
   question: string;
   options: string[];
   type: string;
 }
-export const QuickPollFeedComponent = ({ model }: FeedComponentProps) => {
+
+export const QuickPollFeedComponent = ({ model, update }: FeedComponentProps) => {
   const questions: Question[] = JSON.parse(model.data['questions']);
-  const initialVotes = questions.map((question) => question.options.map(() => 0));
+  const initialVotes = JSON.parse(model.data['votes'] || '[]') || questions.map((question) => question.options.map(() => 0));
   const [votes, setVotes] = useState(initialVotes);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [hasVoted, setHasVoted] = useState(false);
+  const [hasVoted, setHasVoted] = useState<boolean[]>(Array(questions.length).fill(false));
 
-  const handleVote = (optionIndex: number) => {
-    if (!hasVoted) {
+  const handleVote = async (optionIndex: number) => {
+    if (!hasVoted[currentQuestionIndex]) {
       const newVotes = [...votes];
       newVotes[currentQuestionIndex][optionIndex]++;
       setVotes(newVotes);
+
+      // Save votes to the model and update the backend
       model.data['votes'] = JSON.stringify(newVotes);
-      setHasVoted(true);
+      const newHasVoted = [...hasVoted];
+      newHasVoted[currentQuestionIndex] = true;
+      setHasVoted(newHasVoted);
+
+      try {
+        if (update) {
+          await update(model.data); // Persist the updated data
+        }
+      } catch (error) {
+        console.error('Failed to update votes:', error);
+      }
     }
   };
 
   const nextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setHasVoted(false); // Reset voting state for the new question
     }
   };
 
   const previousQuestion = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
-      setHasVoted(false); // Reset voting state for the previous question
     }
   };
 
-  const totalVotes = votes[currentQuestionIndex].reduce((acc, curr) => acc + curr, 0);
+  const totalVotes = votes[currentQuestionIndex].reduce((acc: any, curr: any) => acc + curr, 0);
 
   return (
     <div className="p-6 rounded-2xl shadow-lg bg-gradient-to-r from-gray-800 to-black text-white w-full mx-auto">
@@ -54,10 +64,10 @@ export const QuickPollFeedComponent = ({ model }: FeedComponentProps) => {
                 onClick={() => handleVote(optionIndex)}
                 className="w-full p-2 text-left rounded-lg text-white relative overflow-hidden"
                 style={{
-                  backgroundColor: hasVoted ? '#4A5568' : '#2D3748', // Darken the color if already voted
-                  cursor: hasVoted ? 'not-allowed' : 'pointer',
+                  backgroundColor: hasVoted[currentQuestionIndex] ? '#4A5568' : '#2D3748', // Darken the color if already voted
+                  cursor: hasVoted[currentQuestionIndex] ? 'not-allowed' : 'pointer',
                 }}
-                disabled={hasVoted}
+                disabled={hasVoted[currentQuestionIndex]}
               >
                 <span
                   className="absolute top-0 left-0 h-full bg-blue-500 rounded-lg"
@@ -73,7 +83,7 @@ export const QuickPollFeedComponent = ({ model }: FeedComponentProps) => {
         <select
           onChange={(e) => handleVote(parseInt(e.target.value))}
           className="w-full p-2 mb-2 bg-gray-600 rounded-lg text-white border border-gray-500"
-          disabled={hasVoted}
+          disabled={hasVoted[currentQuestionIndex]}
         >
           {questions[currentQuestionIndex].options.map((option, optionIndex) => (
             <option key={optionIndex} value={optionIndex}>
@@ -106,7 +116,6 @@ export const QuickPollFeedComponent = ({ model }: FeedComponentProps) => {
     </div>
   );
 };
-
 
 export const QuickPollComposerComponent = ({ model, done }: ComposerComponentProps) => {
   const [questions, setQuestions] = useState<Question[]>([{ question: '', options: ['', ''], type: 'multiple-choice' }]);
@@ -143,6 +152,7 @@ export const QuickPollComposerComponent = ({ model, done }: ComposerComponentPro
 
   const handleSubmit = () => {
     model.data['questions'] = JSON.stringify(questions);
+    model.data['votes'] = JSON.stringify(questions.map((question) => question.options.map(() => 0))); // Initialize votes for each option
     done(model);
   };
 

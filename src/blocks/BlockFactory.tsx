@@ -90,7 +90,7 @@ export default class BlockFactory {
       case "Wardrobe": return <WardrobeFeedComponent model={model} update={update}/>;
       case "Haikura": return <HaikuraFeedComponent model={model} update={update}/>;
       case "Journal": return <JournalFeedComponent model={model} update={update}/>;
-      case "QuickPoll": return <QuickPollFeedComponent model={model} />;
+      case "QuickPoll": return <QuickPollFeedComponent model={model} update={update}/>;
       // new feed components go here
       default: return UnknownFeedComponent({ model, update });
     }
