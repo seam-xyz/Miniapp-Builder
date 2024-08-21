@@ -11,6 +11,7 @@
 
 * [Composer Component](miniapp-creation/composer-component.md)
 * [Feed Component](miniapp-creation/feed-component.md)
+* [Supporting Mobile](miniapp-creation/supporting-mobile.md)
 * [Uploading Images, Videos, and Files](miniapp-creation/uploading-images-videos-and-files.md)
 * [Miniapp Icons](miniapp-creation/miniapp-icons.md)
 * [FAQ](miniapp-creation/faq.md)

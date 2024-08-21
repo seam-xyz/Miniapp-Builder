@@ -30,7 +30,6 @@ const photoURL = model.data['photoURL']
 
 Make sure that the key that you're looking at is the same as the one you used in your Composer Component.
 
-<<<<<<< HEAD
 ** Retrieving Numbers **
 
 To get numbers out of the model, you can use the Javascript function `parseInt`, like so:
@@ -47,7 +46,7 @@ let urls = model.data['urls'] ? JSON.parse(model.data['urls']) : [];
 ```
 
 It's important to check if the model data does have data in it to avoid crashing from the JSON parsing an undefined variable.
-=======
+
 ### Rendering User Data
 
 Then, once you have successfully retrieved your string data, you can render a component's UI. For example, here's a simple miniapp that just renders an image that it is given:
@@ -124,4 +123,3 @@ After:
 
 It is generally advised to update the local state before calling the ```update``` function. This will provide immediate optimistic feedback to the user while the backend update is processed.
 
->>>>>>> ae788b55f94f7731bc46338848732a1578c84c95
