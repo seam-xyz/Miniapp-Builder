@@ -23,3 +23,20 @@ Just as you stored data in the composer component, in the feed component you'll 
 const photoURL = model.data['photoURL']
 ```
 Make sure that the key that you're looking at is the same as the one you used in your Composer Component.
+
+** Retrieving Numbers **
+
+To get numbers out of the model, you can use the Javascript function `parseInt`, like so:
+
+```
+const highscore: number = parseInt(model.data['highscore'])
+```
+
+** Retrieving Arrays **
+
+Once you've stored your array in the model using `stringify`, you can get it back out again into an array by using `JSON.parse`, like so:
+```
+let urls = model.data['urls'] ? JSON.parse(model.data['urls']) : [];
+```
+
+It's important to check if the model data does have data in it to avoid crashing from the JSON parsing an undefined variable.
