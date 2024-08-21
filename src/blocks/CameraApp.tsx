@@ -7,6 +7,7 @@ import { nanoid } from 'nanoid';
 import SeamSaveButton from '../components/SeamSaveButton';
 import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
 import './BlockStyles.css';
+import { Capacitor } from '@capacitor/core';
 
 interface CameraBlockProps {
   onFinalize: (photoUrl: string) => void;
@@ -19,6 +20,7 @@ const CameraBlock: React.FC<CameraBlockProps> = ({ onFinalize }) => {
   const [cameraError, setCameraError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const isWeb = Capacitor.getPlatform() === 'web';
 
   useEffect(() => {
     const openCamera = async () => {
@@ -28,7 +30,7 @@ const CameraBlock: React.FC<CameraBlockProps> = ({ onFinalize }) => {
           source: CameraSource.Camera,
           quality: 90,
         });
-        setSelectedPhoto(photo.webPath!);
+        setSelectedPhoto(photo.path!);
       } catch (error) {
         console.error('Error opening camera', error);
         setCameraError('Camera is disabled or permissions denied.');
@@ -78,19 +80,26 @@ const CameraBlock: React.FC<CameraBlockProps> = ({ onFinalize }) => {
   };
 
   const uploadPhoto = async (photoUri: string) => {
+    console.log("uploading file at path", photoUri)
     setUploading(true);
     const name = nanoid();
-    const path = `files/${name}`;
+    const path = `cameraApp/${name}`;
 
     try {
-      // Fetch the photo URI and convert to Blob
-      const response = await fetch(photoUri);
-      const blob = await response.blob();
+      let uploadData: Blob | string;
 
-      // Upload the Blob to Firebase Storage
+      if (isWeb) {
+        // Fetch the photo URI and convert to Blob
+        const response = await fetch(photoUri);
+        uploadData = await response.blob();
+      } else {
+        uploadData = photoUri;
+      }
+
       await FirebaseStorage.uploadFile({
         path,
-        blob,
+        blob: isWeb ? (uploadData as Blob) : undefined,
+        uri: isWeb ? undefined : (uploadData as string),
       }, async (event, error) => {
         if (error) {
           console.error('Upload failed:', error);

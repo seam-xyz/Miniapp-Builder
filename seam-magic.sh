@@ -71,7 +71,7 @@ echo "  \"$shortName\": {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: \"$username\",
+    createdBy: [{username: \"$username\", split: 1.0}],
     fullscreenEdit: false,
 },
 };" >> $output
@@ -94,7 +94,7 @@ feedPlaceholder="\/\/ new feed components go here"
 composerPlaceholder="\/\/ new composer components go here"
 importBlock="import { ${shortName}FeedComponent, ${shortName}ComposerComponent } from \'./${shortName}App\'
 "
-newFeedComponentCase="case \"$shortName\": return \<${shortName}FeedComponent model={model} \/\>;\\n      $feedPlaceholder"
+newFeedComponentCase="case \"$shortName\": return \<${shortName}FeedComponent model={model} update={update} \/\>;\\n      $feedPlaceholder"
 newComposerComponentCase="case \"$shortName\": return ${shortName}ComposerComponent(props);\\n      $composerPlaceholder"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
