@@ -1,11 +1,5 @@
-
-
+import { QuickPollFeedComponent, QuickPollComposerComponent } from './QuickPollApp'
 import { PickrrFeedComponent, PickrrComposerComponent } from './PickrrApp'
-import { SnakeFeedComponent, SnakeComposerComponent } from './SnakeApp'
-
-import { VibecheckFeedComponent, VibecheckComposerComponent } from './VibecheckApp'
-
-
 import { WardrobeFeedComponent, WardrobeComposerComponent } from './WardrobeApp'
 import { JournalFeedComponent, JournalComposerComponent } from './JournalApp'
 import { HaikuraFeedComponent, HaikuraComposerComponent } from './HaikuraApp'
@@ -57,45 +51,6 @@ export default class BlockFactory {
   static getFeedComponent(model: BlockModel, update: ((data: { [key: string]: string; }) => void)) {
     switch (model.type) {
 
-      case "iframe": return <IFrameFeedComponent model={model} />;
-      case "link": return <LinkFeedComponent model={model} />;
-      case "image": return <ImageFeedComponent model={model} />;
-      case "twitter": return <TwitterFeedComponent model={model} />;
-      case "text": return <TextEditFeedComponent model={model} />;
-      case "tweet": return <TweetFeedComponent model={model} />;
-      case "Link Bookmark": return <LinkBookmarkFeedComponent model={model} />;
-      case "Music": return <MusicFeedComponent model={model} />;
-      case "video": return <VideoFeedComponent model={model} />;
-      case "profile": return <ProfileFeedComponent model={model} />;
-      case "giphy": return <GiphyFeedComponent model={model} />;
-      case "PixelArt": return <PixelArtFeedComponent model={model} />;
-      case "NFTs": return <NFTsFeedComponent model={model} />;
-      case "Pokemon": return <PokemonFeedComponent model={model} />;
-      case "Marquee": return <MarqueeFeedComponent model={model} />;
-      case "PhotoAlbum": return <PhotoAlbumFeedComponent model={model} />;
-      case "FlashingText": return <FlashingTextFeedComponent model={model} />;
-      case "tokenHoldings": return <TokenHoldingsFeedComponent model={model} />;
-      case "NFT": return <NFTFeedComponent model={model} />;
-      case "countdown": return <CountdownFeedComponent model={model} />;
-      case "fcUserFeed": return <FcUserFeedComponent model={model} />;
-      case "eyes": return <EyesFeedComponent model={model} />;
-      case "Mondrian": return <MondrianFeedComponent model={model} />;
-      case "Bookshelf": return <BookshelfFeedComponent model={model} />;
-      case "Wordle": return <WordleFeedComponent model={model} />;
-      case "Mood": return <MoodFeedComponent model={model} />;
-      case "Whiteboard": return <WhiteboardFeedComponent model={model} />;
-      case "ImagePuzzle": return <ImagePuzzleFeedComponent model={model} />;
-      case "Camera": return <CameraFeedComponent model={model} />;
-      case "Map": return <MapFeedComponent model={model} />;
-      case "Calligraphy": return <CalligraphyFeedComponent model={model} />;
-      case "localelocatr": return <LocalelocatrFeedComponent model={model} />;
-      case "Voice": return <VoiceFeedComponent model={model} />;
-
-      case "Snake": return <SnakeFeedComponent model={model} />;
-      case "Pickrr": return <PickrrFeedComponent model={model} />;
-
-      case "Vibecheck": return <VibecheckFeedComponent model={model} />;
-
       case "iframe": return <IFrameFeedComponent model={model} update={update}/>;
       case "link": return <LinkFeedComponent model={model}update={update}/>;
       case "image": return <ImageFeedComponent model={model} update={update}/>;
@@ -138,7 +93,8 @@ export default class BlockFactory {
       case "Wardrobe": return <WardrobeFeedComponent model={model} update={update}/>;
       case "Haikura": return <HaikuraFeedComponent model={model} update={update}/>;
       case "Journal": return <JournalFeedComponent model={model} update={update}/>;
-
+      case "QuickPoll": return <QuickPollFeedComponent model={model} update={update}/>;
+      case "Pickrr": return <PickrrFeedComponent model={model} update={update} />;
       // new feed components go here
       default: return UnknownFeedComponent({ model, update });
     }
@@ -181,12 +137,9 @@ export default class BlockFactory {
       case "localelocatr": return LocalelocatrComposerComponent(props);
       case "Tatergangs": return TatergangsComposerComponent(props);
       case "JustAThought": return JustAThoughtComposerComponent(props);
-      case "Voice": return VoiceComposerComponent(props);
-
-
-      case "Snake": return SnakeComposerComponent(props);
+      case "Voice": return VoiceComposerComponent(props);      
+      case "QuickPoll": return QuickPollComposerComponent(props);
       case "Pickrr": return PickrrComposerComponent(props);
-
       case "Vibecheck": return VibecheckComposerComponent(props);
 
 

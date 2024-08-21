@@ -31,15 +31,10 @@ import CameraIcon from './blockIcons/CameraIcon.png'
 import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
-
-
-import snakeGame from "./blockIcons/snakeGame.png"
 import Pickrr from "./blockIcons/Pickrr.png"
-
-
+import quickpoll from "./blockIcons/quickpoll.png";
 import potatoIcon from './blockIcons/PotatoIcon.png'
 import justAThoughtIcon from "./blockIcons/justAThoughtIcon.png";
-
 import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
 import WardrobeIcon from "./blockIcons/WardrobeIcon.png";
 import JournalIcon from "./blockIcons/journal.png";
@@ -573,6 +568,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: [{username: "manmohansinghraghav", split: 1}],
+    fullscreenEdit: false,
+  },
+  "QuickPoll": { 
+    type: "QuickPoll",
+    displayName: "QuickPoll",
+    displayDescription: "A tool for creating and sharing quick polls on any topic",
+    icon: quickpoll, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "bkaraba", split: 1}], 
     fullscreenEdit: false,
   },
   "Unknown": {
