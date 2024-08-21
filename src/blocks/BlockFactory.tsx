@@ -1,4 +1,13 @@
 import { QuickPollFeedComponent, QuickPollComposerComponent } from './QuickPollApp'
+import { WardrobeFeedComponent, WardrobeComposerComponent } from './WardrobeApp'
+import { JournalFeedComponent, JournalComposerComponent } from './JournalApp'
+import { HaikuraFeedComponent, HaikuraComposerComponent } from './HaikuraApp'
+import { TatergangsFeedComponent, TatergangsComposerComponent } from './TatergangsApp'
+import { HoroscopeFeedComponent, HoroscopeComposerComponent } from './HoroscopeApp'
+import { DizzyFeedComponent, DizzyComposerComponent } from './DizzyApp'
+import { JustAThoughtFeedComponent, JustAThoughtComposerComponent } from './JustAThoughtApp'
+import { VibecheckFeedComponent, VibecheckComposerComponent } from './VibecheckApp'
+import { MagicCardFeedComponent, MagicCardComposerComponent } from './MagicCardApp'
 import { ImagePuzzleFeedComponent, ImagePuzzleComposerComponent } from './ImagePuzzleBlock'
 import { LocalelocatrFeedComponent, LocalelocatrComposerComponent } from './localelocatrBlock'
 import { MapFeedComponent, MapComposerComponent } from './MapApp'
@@ -35,45 +44,55 @@ import { WordleFeedComponent, WordleComposerComponent } from './WordleBlock'
 import { VoiceFeedComponent, VoiceComposerComponent } from './VoiceApp'
 import { BlockModel, BlockTypes, ComposerComponentProps } from './types'
 
+
 export default class BlockFactory {
-  static getFeedComponent(model: BlockModel) {
+  static getFeedComponent(model: BlockModel, update: ((data: { [key: string]: string; }) => void)) {
     switch (model.type) {
-      case "iframe": return <IFrameFeedComponent model={model} />;
-      case "link": return <LinkFeedComponent model={model} />;
-      case "image": return <ImageFeedComponent model={model} />;
-      case "twitter": return <TwitterFeedComponent model={model} />;
-      case "text": return <TextEditFeedComponent model={model} />;
-      case "tweet": return <TweetFeedComponent model={model} />;
-      case "Link Bookmark": return <LinkBookmarkFeedComponent model={model} />;
-      case "Music": return <MusicFeedComponent model={model} />;
-      case "video": return <VideoFeedComponent model={model} />;
-      case "profile": return <ProfileFeedComponent model={model} />;
-      case "giphy": return <GiphyFeedComponent model={model} />;
-      case "PixelArt": return <PixelArtFeedComponent model={model} />;
-      case "NFTs": return <NFTsFeedComponent model={model} />;
-      case "Pokemon": return <PokemonFeedComponent model={model} />;
-      case "Marquee": return <MarqueeFeedComponent model={model} />;
-      case "PhotoAlbum": return <PhotoAlbumFeedComponent model={model} />;
-      case "FlashingText": return <FlashingTextFeedComponent model={model} />;
-      case "tokenHoldings": return <TokenHoldingsFeedComponent model={model} />;
-      case "NFT": return <NFTFeedComponent model={model} />;
-      case "countdown": return <CountdownFeedComponent model={model} />;
-      case "fcUserFeed": return <FcUserFeedComponent model={model} />;
-      case "eyes": return <EyesFeedComponent model={model} />;
-      case "Mondrian": return <MondrianFeedComponent model={model} />;
-      case "Bookshelf": return <BookshelfFeedComponent model={model} />;
-      case "Wordle": return <WordleFeedComponent model={model} />;
-      case "Mood": return <MoodFeedComponent model={model} />;
-      case "Whiteboard": return <WhiteboardFeedComponent model={model} />;
-      case "ImagePuzzle": return <ImagePuzzleFeedComponent model={model} />;
-      case "Camera": return <CameraFeedComponent model={model} />;
-      case "Map": return <MapFeedComponent model={model} />;
-      case "Calligraphy": return <CalligraphyFeedComponent model={model} />;
-      case "localelocatr": return <LocalelocatrFeedComponent model={model} />;
-      case "Voice": return <VoiceFeedComponent model={model} />;
+      case "iframe": return <IFrameFeedComponent model={model} update={update}/>;
+      case "link": return <LinkFeedComponent model={model}update={update}/>;
+      case "image": return <ImageFeedComponent model={model} update={update}/>;
+      case "twitter": return <TwitterFeedComponent model={model} update={update}/>;
+      case "text": return <TextEditFeedComponent model={model} update={update}/>;
+      case "tweet": return <TweetFeedComponent model={model} update={update}/>;
+      case "Link Bookmark": return <LinkBookmarkFeedComponent model={model} update={update}/>;
+      case "Music": return <MusicFeedComponent model={model} update={update}/>;
+      case "video": return <VideoFeedComponent model={model} update={update}/>;
+      case "profile": return <ProfileFeedComponent model={model} update={update}/>;
+      case "giphy": return <GiphyFeedComponent model={model} update={update}/>;
+      case "PixelArt": return <PixelArtFeedComponent model={model} update={update}/>;
+      case "NFTs": return <NFTsFeedComponent model={model} update={update}/>;
+      case "Pokemon": return <PokemonFeedComponent model={model} update={update}/>;
+      case "Marquee": return <MarqueeFeedComponent model={model} update={update}/>;
+      case "PhotoAlbum": return <PhotoAlbumFeedComponent model={model} update={update}/>;
+      case "FlashingText": return <FlashingTextFeedComponent model={model} update={update}/>;
+      case "tokenHoldings": return <TokenHoldingsFeedComponent model={model} update={update}/>;
+      case "NFT": return <NFTFeedComponent model={model} update={update}/>;
+      case "countdown": return <CountdownFeedComponent model={model} update={update}/>;
+      case "fcUserFeed": return <FcUserFeedComponent model={model} update={update}/>;
+      case "eyes": return <EyesFeedComponent model={model} update={update}/>;
+      case "Mondrian": return <MondrianFeedComponent model={model} update={update}/>;
+      case "Bookshelf": return <BookshelfFeedComponent model={model} update={update}/>;
+      case "Wordle": return <WordleFeedComponent model={model} update={update}/>;
+      case "Mood": return <MoodFeedComponent model={model} update={update}/>;
+      case "Whiteboard": return <WhiteboardFeedComponent model={model} update={update}/>;
+      case "ImagePuzzle": return <ImagePuzzleFeedComponent model={model} update={update}/>;
+      case "Camera": return <CameraFeedComponent model={model} update={update} />;
+      case "Map": return <MapFeedComponent model={model} update={update}/>;
+      case "Calligraphy": return <CalligraphyFeedComponent model={model} update={update} />;
+      case "localelocatr": return <LocalelocatrFeedComponent model={model} update={update}/>;
+      case "Tatergangs": return <TatergangsFeedComponent model={model} update={update}/>;
+      case "Voice": return <VoiceFeedComponent model={model} update={update}/>;
+      case "Vibecheck": return <VibecheckFeedComponent model={model} update={update}/>;
+      case "JustAThought": return <JustAThoughtFeedComponent model={model} update={update}/>;
+      case "Dizzy": return <DizzyFeedComponent model={model} update={update}/>;
+      case "Horoscope": return <HoroscopeFeedComponent model={model} update={update}/>;
+      case "MagicCard": return <MagicCardFeedComponent model={model} update={update}/>;
+      case "Wardrobe": return <WardrobeFeedComponent model={model} update={update}/>;
+      case "Haikura": return <HaikuraFeedComponent model={model} update={update}/>;
+      case "Journal": return <JournalFeedComponent model={model} update={update}/>;
       case "QuickPoll": return <QuickPollFeedComponent model={model} />;
       // new feed components go here
-      default: return UnknownFeedComponent({ model });
+      default: return UnknownFeedComponent({ model, update });
     }
   }
 
@@ -112,8 +131,17 @@ export default class BlockFactory {
       case "Map": return MapComposerComponent(props);
       case "Calligraphy": return CalligraphyComposerComponent(props);
       case "localelocatr": return LocalelocatrComposerComponent(props);
+      case "Tatergangs": return TatergangsComposerComponent(props);
+      case "JustAThought": return JustAThoughtComposerComponent(props);
       case "Voice": return VoiceComposerComponent(props);      
       case "QuickPoll": return QuickPollComposerComponent(props);
+      case "Vibecheck": return VibecheckComposerComponent(props);
+      case "Wardrobe": return WardrobeComposerComponent(props);
+      case "Journal": return JournalComposerComponent(props);
+      case "Haikura": return HaikuraComposerComponent(props);
+      case "MagicCard": return MagicCardComposerComponent(props);
+      case "Horoscope": return HoroscopeComposerComponent(props);
+      case "Dizzy": return DizzyComposerComponent(props);
       // new composer components go here
       default: return UnknownComposerComponent(props);
     }

@@ -6,6 +6,7 @@ import linkIcon from "./blockIcons/Button.png";
 import twitterIcon from "./blockIcons/twitterIcon.png";
 import bookmarkIcon from "./blockIcons/Link.png";
 import mapIcon from "./blockIcons/Map.png";
+import HoroscopeIcon from "./blockIcons/HoroscopeIcon.png";
 import giphyIcon from "./blockIcons/GIPHY.png";
 import profileIcon from "./blockIcons/profileHeaderIcon.png";
 import musicIcon from "./blockIcons/Music.png";
@@ -17,6 +18,7 @@ import photoAlbumIcon from "./blockIcons/photoAlbumIcon.png"
 import flashingTextIcon from "./blockIcons/flashingTextIcon.png";
 import tokenIcon from "./blockIcons/tokenIcon.png";
 import clockIcon from "./blockIcons/clockIcon.png"
+import DizzyIcon from "./blockIcons/DizzyIcon.png"
 import farcasterIcon from "./blockIcons/farcasterIcon.svg"
 import eyesIcon from "./blockIcons/eyeIcon.png"
 import MondrianIcon from './blockIcons/MondrianIcon.png'
@@ -30,6 +32,13 @@ import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 import quickpoll from "./blockIcons/quickpoll.png";
+import potatoIcon from './blockIcons/PotatoIcon.png'
+import justAThoughtIcon from "./blockIcons/justAThoughtIcon.png";
+import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
+import WardrobeIcon from "./blockIcons/WardrobeIcon.png";
+import JournalIcon from "./blockIcons/journal.png";
+import HaikuraIcon from "./blockIcons/HaikuraIcon.png";
+import MagicCardIcon from "./blockIcons/MagicCardIcon.png";
 
 export type BlockModel = {
   type: string;
@@ -37,8 +46,17 @@ export type BlockModel = {
   uuid: string; // must be unique to avoid layout issues
 };
 
+export interface AccountModel {
+  readonly spotifyAccount?: any;
+}
+
+export interface Badge {
+  type: string; // Badge name
+}
+
 export interface FeedComponentProps {
   model: BlockModel;
+  update: (data: { [key: string]: string }) => void;
   width?: number;
 }
 
@@ -48,6 +66,11 @@ export interface ComposerComponentProps {
   width?: number;
 }
 
+export type PointSplit = {
+  username: string;
+  split: number; // 1.0 is 100%, 0.5 is 50%, etc. Make sure to add up to 1.0!
+};
+
 export type BlockType = {
   type: string;
   displayName: string; // in add block menu
@@ -56,7 +79,7 @@ export type BlockType = {
   deprecated: boolean; // if users can continue to add the block
   doesBlockPost: boolean; // do updates of this block show up in the feed?
   doesBlockEdit: boolean; // does the user need to edit this block?
-  createdBy: string; // the user who created the block
+  createdBy: PointSplit[]; // the users who created the block
   fullscreenEdit: boolean; // does the block have a fullscreen edit modal?
 };
 
@@ -70,7 +93,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "seam",
+    createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
   "PixelArt": {
@@ -81,7 +104,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "emilee",
+    createdBy: [{username: "emilee", split: 1}],
     fullscreenEdit: false,
   },
   giphy: {
@@ -92,7 +115,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "seam",
+    createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
   text: {
@@ -103,7 +126,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "seam",
+    createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
   iframe: {
@@ -114,7 +137,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "seam",
+    createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
   video: {
@@ -125,7 +148,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "seam",
+    createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
   image: {
@@ -136,7 +159,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "seam",
+    createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
   link: {
@@ -147,7 +170,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "seam",
+    createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
   "Link Bookmark": {
@@ -158,7 +181,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "seam",
+    createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
   twitter: {
@@ -169,7 +192,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: true,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "seam",
+    createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
   tweet: {
@@ -180,7 +203,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: true,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "seam",
+    createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
   Music: {
@@ -191,7 +214,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "seam",
+    createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: true,
   },
   Map: {
@@ -202,7 +225,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "seam",
+    createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: true,
   },
   "Image Button": {
@@ -213,7 +236,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: true,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "seam",
+    createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
   instagram: {
@@ -224,7 +247,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: true,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "seam",
+    createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
   "NFTs": {
@@ -235,7 +258,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "andrew",
+    createdBy: [{username: "andrew", split: 1}],
     fullscreenEdit: false,
   },
   "Pokemon": {
@@ -246,7 +269,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: false,
-    createdBy: "luisenriqueg",
+    createdBy: [{username: "luisenriqueg", split: 1}],
     fullscreenEdit: false,
   },
   "Marquee": {
@@ -257,7 +280,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "nick",
+    createdBy: [{username: "nick", split: 1}],
     fullscreenEdit: false,
   },
   "PhotoAlbum": {
@@ -268,7 +291,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "jamesburet",
+    createdBy: [{username: "jamesburet", split: 1}],
     fullscreenEdit: false,
   },
   "FlashingText": {
@@ -279,7 +302,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "ttran010",
+    createdBy: [{username: "ttran010", split: 1}],
     fullscreenEdit: false,
   },
   "countdown": {
@@ -290,7 +313,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: true,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "coldreactor",
+    createdBy: [{username: "coldreactor", split: 1}],
     fullscreenEdit: false,
   },
   "tokenHoldings": {
@@ -301,7 +324,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "proofofjake",
+    createdBy: [{username: "proofofjake", split: 1}],
     fullscreenEdit: false,
   },
   "NFT": {
@@ -312,7 +335,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "nick",
+    createdBy: [{username: "nick", split: 1}],
     fullscreenEdit: false,
   },
   "fcUserFeed": {
@@ -323,7 +346,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: true,
-    createdBy: "nick",
+    createdBy: [{username: "nick", split: 1}],
     fullscreenEdit: false,
   },
   "eyes": {
@@ -334,7 +357,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: false,
     doesBlockEdit: false,
-    createdBy: "razberry",
+    createdBy: [{username: "razberry", split: 1}],
     fullscreenEdit: false,
   },
   "Mondrian": {
@@ -345,7 +368,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "jamesburet",
+    createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
     fullscreenEdit: false,
   },
   "Bookshelf": {
@@ -356,7 +379,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "nick",
+    createdBy: [{username: "nick", split: 0.50}, {username: "rocco", split: 0.50}],
     fullscreenEdit: true,
   },
   "Wordle": {
@@ -367,7 +390,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "jamesburet",
+    createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
     fullscreenEdit: false,
   },
   "Mood": {
@@ -378,7 +401,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "jamesburet",
+    createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
     fullscreenEdit: true,
   },
   "Whiteboard": {
@@ -389,7 +412,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "emilee",
+    createdBy: [{username: "emilee", split: 0.5}, {username: "rocco", split: 0.5}],
     fullscreenEdit: false,
   },
   "ImagePuzzle": {
@@ -400,7 +423,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "ssebexen",
+    createdBy: [{username: "ssebexen", split: 1}],
     fullscreenEdit: false,
   },
   "Calligraphy": {
@@ -411,7 +434,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "chevron", // ssebexen & @chevron, TODO implement splits
+    createdBy: [{username: "chevron", split: 0.5}, {username: "ssbexen", split: 0.5}],
     fullscreenEdit: false,
   },
   "localelocatr": {
@@ -422,7 +445,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "mbehera",
+    createdBy: [{username: "mbehera", split: 1.0}],
     fullscreenEdit: false,
   },
   "Camera": {
@@ -433,29 +456,117 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "seam",
+    createdBy: [{username: "seam", split: 1}],
+    fullscreenEdit: false,
+  },
+  "JustAThought": { 
+    type: "JustAThought",
+    displayName: "Just a Thought",
+    displayDescription: "Just a thought in 120 characters or less",
+    icon: justAThoughtIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "emilee", split: 1}],
     fullscreenEdit: false,
   },
   "Voice": { 
     type: "Voice",
     displayName: "Voice Note",
     displayDescription: "Use the microphone to record a voice note. The post then allows users to play it back.",
-    icon: voiceNoteIcon, 
+    icon: voiceNoteIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "samsam",
+    createdBy: [{username: "samsam", split: 1}],
     fullscreenEdit: false,
   },
-  "Unknown": {
-    type: "Unknown",
-    displayName: "Unknown",
-    displayDescription: "Unknown",
-    icon: "UnknownIcon",
-    deprecated: true,
+  "Vibecheck": {
+    type: "Vibecheck",
+    displayName: "VibeCheck",
+    displayDescription: "Get a vibe check on your favorite Spotify Playlists!",
+    icon: vibecheckIcon,
+    deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "seam",
+    createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
+    fullscreenEdit: true,
+  },
+  "Horoscope": {
+    type: "Horoscope",
+    displayName: "Horoscope",
+    displayDescription: "Get your daily dose of cosmic insights with our easy-to-use horoscope generator!",
+    icon: HoroscopeIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "defcon", split: 1.0}],
+    fullscreenEdit: false,
+  },
+  "Dizzy": { 
+    type: "Dizzy",
+    displayName: "dizzy Text",
+    displayDescription: "Create a text input to a continuously flashing RGB color with background contrast!",
+    icon: DizzyIcon, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "shloknemani", split: 1.0}],
+    fullscreenEdit: false,
+  },
+  "Tatergangs": { 
+    type: "Tatergangs",
+    displayName: "Potato Fortunes",
+    displayDescription: "Choose your potato and discover your fate!",
+    icon: potatoIcon, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "roxanne", split: 1}],
+    fullscreenEdit: false,
+  },
+  "MagicCard": { 
+    type: "MagicCard",
+    displayName: "Magic Card Creator",
+    displayDescription: "Create your own Magic: The Gathering card!",
+    icon: MagicCardIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{ username: "ixenbay", split: 1 }],
+    fullscreenEdit: true,
+  },
+  "Journal": { 
+    type: "Journal",
+    displayName: "Journal",
+    displayDescription: "Write or draw whatever that made you happy today :)",
+    icon: JournalIcon, 
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "slothbaby", split: 1.0}],
+    fullscreenEdit: false,
+  },
+  "Haikura": { 
+    type: "Haikura",
+    displayName: "Haikura",
+    displayDescription: "Craft a Haiku, share the magic, and watch your words bloom online! Create, post, and flaunt your poems!",
+    icon: HaikuraIcon, 
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "juanitacathy", split: 0.5}, {username: "akira", split: 0.5}],
+    fullscreenEdit: true,
+  },
+  "Wardrobe": { 
+    type: "Wardrobe",
+    displayName: "Wardrobe",
+    displayDescription: "Dress Up your character",
+    icon: WardrobeIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "manmohansinghraghav", split: 1}],
     fullscreenEdit: false,
   },
   "QuickPoll": { 
@@ -466,7 +577,18 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "bkaraba",
+    createdBy: [{username: "bkaraba", split: 1}], 
     fullscreenEdit: false,
-},
+  },
+  "Unknown": {
+    type: "Unknown",
+    displayName: "Unknown",
+    displayDescription: "Unknown",
+    icon: "UnknownIcon",
+    deprecated: true,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "seam", split: 1}],
+    fullscreenEdit: false,
+  },
 };
