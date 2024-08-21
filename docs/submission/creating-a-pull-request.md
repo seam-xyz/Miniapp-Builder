@@ -14,6 +14,7 @@ To help your pull request go as smoothly as possible, review the steps listed be
 
 * Test your miniapp for crashes and bugs!
 * Remove all `console.log` statements, commented code, and unused code. Remember, your miniapp will live open source as an example for new developers who come behind you!
+* Make sure your miniapp works on phone sizes as well as desktop sizes. See [Supporting Mobile](../miniapp-creation/supporting-mobile.md) for more.
 * Don't include any large new dependencies that would slow down the entire Seam loading experience.
 
 We'll accept any miniapps that are genuine and fun and come from your own imagination. We strongly support all points of view being represented on Seam, as long as the miniapps are respectful to users with differing opinions and the quality of the miniapp is great. We won't merge any miniapps for any content or behavior that we believe is over the line.

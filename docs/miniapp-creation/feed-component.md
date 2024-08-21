@@ -30,7 +30,7 @@ const photoURL = model.data['photoURL']
 
 Make sure that the key that you're looking at is the same as the one you used in your Composer Component.
 
-** Retrieving Numbers **
+**Retrieving Numbers**
 
 To get numbers out of the model, you can use the Javascript function `parseInt`, like so:
 
@@ -38,9 +38,10 @@ To get numbers out of the model, you can use the Javascript function `parseInt`,
 const highscore: number = parseInt(model.data['highscore'])
 ```
 
-** Retrieving Arrays **
+**Retrieving Arrays**
 
 Once you've stored your array in the model using `stringify`, you can get it back out again into an array by using `JSON.parse`, like so:
+
 ```
 let urls = model.data['urls'] ? JSON.parse(model.data['urls']) : [];
 ```
@@ -64,11 +65,11 @@ export const ImageFeedComponent = ({ model }: FeedComponentProps) => {
 
 ### Updating User Data
 
-If your miniapp requires changing the data stored in a post after it has been posted to the feed (for example: the Poll Miniapp), use the ```update``` function. 
+If your miniapp requires changing the data stored in a post after it has been posted to the feed (for example: the Poll Miniapp), use the `update` function.
 
-Not unlike the done function, ```update``` is designed to take a single argument, your updated post data, of the following type: ```({ [key: string]: string })```
+Not unlike the done function, `update` is designed to take a single argument, your updated post data, of the following type: `({ [key: string]: string })`
 
-In the example of the Poll Miniapp, when a user votes on a poll, the new vote totals need to be stored and reflected across Seam. The ```update``` function handles this by interacting with Seam's backend. 
+In the example of the Poll Miniapp, when a user votes on a poll, the new vote totals need to be stored and reflected across Seam. The `update` function handles this by interacting with Seam's backend.
 
 ```
 const handleVote = async (optionKey: string) => {
@@ -95,9 +96,10 @@ const handleVote = async (optionKey: string) => {
 };
 ```
 
-In the above example, after a Seam user casts their vote, the ```update``` function is called with the updatedData containing the user's vote. The function call will update that post's data on Seam's backend. 
+In the above example, after a Seam user casts their vote, the `update` function is called with the updatedData containing the user's vote. The function call will update that post's data on Seam's backend.
 
 Poll Miniapp postData before calling the update function:
+
 ```
 "data": {
   "question": "a or b",
@@ -109,6 +111,7 @@ Poll Miniapp postData before calling the update function:
 ```
 
 After:
+
 ```
 "data": {
   "question": "a or b",
@@ -121,5 +124,4 @@ After:
 
 ### Optimistic UI Updates
 
-It is generally advised to update the local state before calling the ```update``` function. This will provide immediate optimistic feedback to the user while the backend update is processed.
-
+It is generally advised to update the local state before calling the `update` function. This will provide immediate optimistic feedback to the user while the backend update is processed.

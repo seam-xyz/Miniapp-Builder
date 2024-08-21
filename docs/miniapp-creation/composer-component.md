@@ -37,7 +37,7 @@ model.data['text'] = "New User Text Here!"
 
 Make sure not to store any data in here that is too large, for performance reasons. If you want to store images, videos, or other large files, you can use our [FileUploader](uploading-images-videos-and-files.md) component, and store the URL as a string in the model.
 
-** Storing Numbers **
+**Storing Numbers**
 
 To store numbers, you can use the Javascript function `toString`, like so:
 
@@ -46,9 +46,10 @@ const highscore: number = 10;
 model.data['highscore'] = highscore.toString();
 ```
 
-** Storing Arrays **
+**Storing Arrays**
 
 The model only allows strings, so how do you store more complex data types, like arrays? For that, you can use the `JSON.stringify()` function, like so:
+
 ```
 const userPreferences = ['apple', 'orange'];
 model.data['userPreferences'] = JSON.stringify(userPreferences)
