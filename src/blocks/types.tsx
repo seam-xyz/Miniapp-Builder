@@ -34,6 +34,7 @@ import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 import potatoIcon from './blockIcons/PotatoIcon.png'
 import justAThoughtIcon from "./blockIcons/justAThoughtIcon.png";
 import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
+import JournalIcon from "./blockIcons/journal.png";
 import HaikuraIcon from "./blockIcons/HaikuraIcon.png";
 import MagicCardIcon from "./blockIcons/MagicCardIcon.png";
 
@@ -542,6 +543,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: [{username: "seam", split: 1}],
+    fullscreenEdit: false,
+  },
+  "Journal": { 
+    type: "Journal",
+    displayName: "Journal",
+    displayDescription: "Write or draw whatever that made you happy today :)",
+    icon: JournalIcon, 
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "slothbaby", split: 1.0}],
     fullscreenEdit: false,
   },
   "Haikura": { 
