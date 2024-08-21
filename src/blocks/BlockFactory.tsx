@@ -1,3 +1,4 @@
+import { WardrobeFeedComponent, WardrobeComposerComponent } from './WardrobeApp'
 import { JournalFeedComponent, JournalComposerComponent } from './JournalApp'
 import { HaikuraFeedComponent, HaikuraComposerComponent } from './HaikuraApp'
 import { TatergangsFeedComponent, TatergangsComposerComponent } from './TatergangsApp'
@@ -85,6 +86,7 @@ export default class BlockFactory {
       case "Dizzy": return <DizzyFeedComponent model={model} update={update}/>;
       case "Horoscope": return <HoroscopeFeedComponent model={model} update={update}/>;
       case "MagicCard": return <MagicCardFeedComponent model={model} update={update}/>;
+      case "Wardrobe": return <WardrobeFeedComponent model={model} update={update}/>;
       case "Haikura": return <HaikuraFeedComponent model={model} update={update}/>;
       case "Journal": return <JournalFeedComponent model={model} update={update}/>;
       // new feed components go here
@@ -131,6 +133,7 @@ export default class BlockFactory {
       case "JustAThought": return JustAThoughtComposerComponent(props);
       case "Voice": return VoiceComposerComponent(props);
       case "Vibecheck": return VibecheckComposerComponent(props);
+      case "Wardrobe": return WardrobeComposerComponent(props);
       case "Journal": return JournalComposerComponent(props);
       case "Haikura": return HaikuraComposerComponent(props);
       case "MagicCard": return MagicCardComposerComponent(props);
