@@ -83,7 +83,7 @@ export default class BlockFactory {
       case "Dizzy": return <DizzyFeedComponent model={model} update={update}/>;
       case "Horoscope": return <HoroscopeFeedComponent model={model} update={update}/>;
       case "MagicCard": return <MagicCardFeedComponent model={model} update={update}/>;
-      case "Wardrobe": return <WardrobeFeedComponent model={model} />;
+      case "Wardrobe": return <WardrobeFeedComponent model={model} update={update}/>;
       // new feed components go here
       default: return UnknownFeedComponent({ model, update });
     }
