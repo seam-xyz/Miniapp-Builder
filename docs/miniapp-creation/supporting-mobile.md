@@ -6,7 +6,9 @@ All miniapps on Seam run on all devices, both phones and on web on desktop compu
 
 The best way to test for mobile screen sizes is by using the dev tools built into your web browser. For example, in Chrome, you'll want to use [Device Mode](https://developer.chrome.com/docs/devtools/device-mode).
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption><p>Using Chrome devtools, you can try all the different device type dimensions.</p></figcaption></figure>
+{% embed url="https://developer.chrome.com/static/docs/devtools/device-mode/image/the-dimensions-list-c94d72e725e49_1920.png" %}
+Using Chrome devtools, you can try all the different device types
+{% endembed %}
 
 ### Requirements
 
