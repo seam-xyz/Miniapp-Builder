@@ -34,6 +34,7 @@ import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 import potatoIcon from './blockIcons/PotatoIcon.png'
 import justAThoughtIcon from "./blockIcons/justAThoughtIcon.png";
 import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
+import HaikuraIcon from "./blockIcons/HaikuraIcon.png";
 import MagicCardIcon from "./blockIcons/MagicCardIcon.png";
 
 export type BlockModel = {
@@ -543,4 +544,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
-}
+  "Haikura": { 
+    type: "Haikura",
+    displayName: "Haikura",
+    displayDescription: "Craft a Haiku, share the magic, and watch your words bloom online! Create, post, and flaunt your poems!",
+    icon: HaikuraIcon, 
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "juanitacathy", split: 0.5}, {username: "akira", split: 0.5}],
+    fullscreenEdit: true,
+},
+};
