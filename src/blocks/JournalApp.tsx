@@ -28,7 +28,6 @@ export const JournalFeedComponent = ({ model }: FeedComponentProps) => {
 export const JournalComposerComponent = ({ model, done }: ComposerComponentProps) => {
   const [entry, setEntry] = useState('');
   const [selectedSticker, setSelectedSticker] = useState('');
-  const [emojiUrl, setEmojiUrl] = useState('');
   const [showCanvas, setShowCanvas] = useState(false); // State to control canvas visibility
 
   //Made a drawing canvas with a pen
@@ -60,7 +59,6 @@ export const JournalComposerComponent = ({ model, done }: ComposerComponentProps
     const canvas = document.querySelector('canvas');
     if (canvas) {
       const dataUrl = canvas.toDataURL();
-      setEmojiUrl(dataUrl);
       model.data.emojiUrl = dataUrl;
       done(model);
     }
