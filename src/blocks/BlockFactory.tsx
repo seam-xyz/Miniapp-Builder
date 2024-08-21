@@ -9,7 +9,6 @@ import { DizzyFeedComponent, DizzyComposerComponent } from './DizzyApp'
 import { JustAThoughtFeedComponent, JustAThoughtComposerComponent } from './JustAThoughtApp'
 import { VibecheckFeedComponent, VibecheckComposerComponent } from './VibecheckApp'
 import { MagicCardFeedComponent, MagicCardComposerComponent } from './MagicCardApp'
-
 import { ImagePuzzleFeedComponent, ImagePuzzleComposerComponent } from './ImagePuzzleBlock'
 import { LocalelocatrFeedComponent, LocalelocatrComposerComponent } from './localelocatrBlock'
 import { MapFeedComponent, MapComposerComponent } from './MapApp'
@@ -50,7 +49,6 @@ import { BlockModel, BlockTypes, ComposerComponentProps } from './types'
 export default class BlockFactory {
   static getFeedComponent(model: BlockModel, update: ((data: { [key: string]: string; }) => void)) {
     switch (model.type) {
-
       case "iframe": return <IFrameFeedComponent model={model} update={update}/>;
       case "link": return <LinkFeedComponent model={model}update={update}/>;
       case "image": return <ImageFeedComponent model={model} update={update}/>;
@@ -141,8 +139,6 @@ export default class BlockFactory {
       case "QuickPoll": return QuickPollComposerComponent(props);
       case "Pickrr": return PickrrComposerComponent(props);
       case "Vibecheck": return VibecheckComposerComponent(props);
-
-
       case "Wardrobe": return WardrobeComposerComponent(props);
       case "Journal": return JournalComposerComponent(props);
       case "Haikura": return HaikuraComposerComponent(props);
