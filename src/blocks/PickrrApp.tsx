@@ -112,21 +112,23 @@ export const PickrrComposerComponent = ({ model, done }: ComposerComponentProps)
   }
 
   return (
-    <div className="w-full h-full">
-      <h2 style={{ textAlign: 'center' }}>Create a Youtube Thumbnail Elections!</h2>
-    <div style={{ textAlign: 'center', paddingTop: '20px' }}>
-      <TextField
-          style={{ textAlign: 'center' }}
-          id="filled-textarea"
-          label="Describe Your video here!"
-          placeholder="Video Title"
-          multiline
-          variant="filled"
-          
-          onChange={(e) => setVideoTitle(e.target.value)}
-        />
-        </div>
-        <Typography style={{ textAlign: 'center', paddingTop: '20px', fontWeight: 'bold', fontSize: '24px', color: 'red' } }>You can upload atmost 10 Thumbnails!!</Typography>;
+    <div className="w-full h-full relative">
+      <div className="absolute" style={{ textAlign: 'center', paddingTop: '20px', position: 'absolute',
+                      top: '0',
+                      left: '50%',
+                      transform: 'translateX(-50%)',}}>
+        <TextField
+            style={{ textAlign: 'center' }}
+            id="filled-textarea"
+            label="Describe Your video here!"
+            placeholder="Video Title"
+            multiline
+            variant="filled"
+            
+            onChange={(e) => setVideoTitle(e.target.value)}
+          />
+        <h2 style={{ textAlign: 'center' }}>Create a Youtube Thumbnail Poll!</h2>
+      </div>
        <ImageUploadPreview
         initialUrls={thumbnails.map(thumb => thumb.url)}
         onUpdate={handleUpdate}

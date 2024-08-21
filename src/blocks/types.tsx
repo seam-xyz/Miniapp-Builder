@@ -592,26 +592,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
-  "Snake": { 
-    type: "Snake",
-    displayName: "snake game",
-    displayDescription: "Feeling Bored? Try using this clsasic snake🔮 game! ",
-    icon: snakeGame, // TODO: insert your app icon here
-    deprecated: false,
-    doesBlockPost: true,
-    doesBlockEdit: true,
-    createdBy: "Jay",
-    fullscreenEdit: false,
-},
   "Pickrr": { 
     type: "Pickrr",
     displayName: "Pickrr",
-    displayDescription: "The ultimate solution for YouTubers struggling to choose the perfect thumbnail. With Pickrr, creators can upload multiple thumbnail options side by side, and our community of users will vote to select the most engaging one. This not only streamlines the decision-making process but also enhances viewer engagement. In the future, we'll introduce crypto-backed rewards, incentivizing voters to participate and ensuring high-quality feedback. With the potential to handle 100 thumbnails a week, Pickrr is set to become an essential tool for every content creator looking to optimize their video impact",
+    displayDescription: "The ultimate solution for YouTubers struggling to choose the perfect thumbnail.",
     icon: Pickrr, // TODO: insert your app icon here
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "Jay",
+    createdBy: [{username: "Jay", split: 1}],
     fullscreenEdit: false,
-},
+  },
 };
