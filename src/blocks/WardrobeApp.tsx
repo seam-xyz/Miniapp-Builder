@@ -79,7 +79,7 @@ export const WardrobeComposerComponent = ({ model, done }: ComposerComponentProp
   };
 
   return (
-    <div className="flex flex-col h-screen w-full select-none">
+    <div className="flex flex-col h-full w-full select-none">
       <DressUpDisplay outfits={selectedOutfits} backColor={selectColor} />
       <div className="flex flex-col items-center w-full h-full overflow-y-visible overflow-x-hidden">
         <Box className="relative flex flex-col items-center w-full p-4 bg-transparent rounded-lg">
