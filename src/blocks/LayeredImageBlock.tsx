@@ -401,6 +401,7 @@ export const LayeredImageComposerComponent = ({ model, done }: ComposerComponent
                   }}
                 >
                   <svg
+                    className='hideScreenSmall'
                     style={{
                       width: "12px",
                       height: "auto",
@@ -447,7 +448,7 @@ export const LayeredImageComposerComponent = ({ model, done }: ComposerComponent
                     />
                   </div>
 
-                  <div style={{ flexGrow: "1" }}>
+                  <div className="hideScreenSmall" style={{ flexGrow: "1" }}>
                     <p
                       style={{
                         width: "100%",

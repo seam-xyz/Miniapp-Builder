@@ -66,3 +66,17 @@
     scrollbar-width: none;  /* Firefox */
   }
 
+  .hideScreenSmall {
+    display: inline-block;
+  }
+
+  @media only screen and (max-width:375px) {
+
+    .hideScreenSmall {
+      display: none;
+    }
+
+
+
+
+  }
