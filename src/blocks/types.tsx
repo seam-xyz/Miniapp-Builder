@@ -31,6 +31,7 @@ import CameraIcon from './blockIcons/CameraIcon.png'
 import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
+import LayeredImageIcon from "./blockIcons/LayeredImageIcon.png"
 import Pickrr from "./blockIcons/Pickrr.png"
 import quickpoll from "./blockIcons/quickpoll.png";
 import potatoIcon from './blockIcons/PotatoIcon.png'
@@ -363,15 +364,26 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "razberry", split: 1}],
     fullscreenEdit: false,
   },
-  "Mondrian": {
+  "Mondrian": { 
     type: "Mondrian",
-    displayName: "Mondrian",
+    displayName: "Layered Image",
     displayDescription: "Create works of art in the style of Piet Mondrian",
     icon: MondrianIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
+    fullscreenEdit: false,
+  },
+  "LayeredImage": { 
+    type: "LayeredImage",
+    displayName: "Layered Image",
+    displayDescription: "Tell stories through sequential images",
+    icon: LayeredImageIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "jakeaicher", split: 1.0}],
     fullscreenEdit: false,
   },
   "Bookshelf": {

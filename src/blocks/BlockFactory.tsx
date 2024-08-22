@@ -1,3 +1,4 @@
+import { LayeredImageFeedComponent, LayeredImageComposerComponent } from './LayeredImageBlock'
 import { ColorFeedComponent, ColorComposerComponent } from './ColorApp'
 import { RiddlequestFeedComponent, RiddlequestComposerComponent } from './RiddlequestApp'
 import { QuickPollFeedComponent, QuickPollComposerComponent } from './QuickPollApp'
@@ -87,6 +88,7 @@ export default class BlockFactory {
       case "Voice": return <VoiceFeedComponent model={model} update={update}/>;
       case "Vibecheck": return <VibecheckFeedComponent model={model} update={update}/>;
       case "JustAThought": return <JustAThoughtFeedComponent model={model} update={update}/>;
+      case "LayeredImage": return <LayeredImageFeedComponent model={model}  update={update}/>;
       case "Dizzy": return <DizzyFeedComponent model={model} update={update}/>;
       case "Horoscope": return <HoroscopeFeedComponent model={model} update={update}/>;
       case "MagicCard": return <MagicCardFeedComponent model={model} update={update}/>;
@@ -139,7 +141,8 @@ export default class BlockFactory {
       case "localelocatr": return LocalelocatrComposerComponent(props);
       case "Tatergangs": return TatergangsComposerComponent(props);
       case "JustAThought": return JustAThoughtComposerComponent(props);
-      case "Voice": return VoiceComposerComponent(props);      
+      case "Voice": return VoiceComposerComponent(props);
+      case "LayeredImage": return LayeredImageComposerComponent(props);   
       case "QuickPoll": return QuickPollComposerComponent(props);
       case "Pickrr": return PickrrComposerComponent(props);
       case "Vibecheck": return VibecheckComposerComponent(props);
