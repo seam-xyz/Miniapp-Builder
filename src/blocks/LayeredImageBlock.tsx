@@ -224,7 +224,7 @@ export const LayeredImageComposerComponent = ({ model, done }: ComposerComponent
   }
 
   const Menu = () => {
-    const [isImagesUploaded, setIsImagesUploaded] = useState(false);
+    const [isImagesUploaded, setIsImagesUploaded] = useState(model.data["images"] != undefined);
     const [dragItemIndex, setDragItemIndex] = useState<number | undefined>(undefined);
     const [dragOverItemIndex, setDragOverItemIndex] = useState<number | undefined>(undefined);
     const [isSubtract, setIsSubtract] = useState(false);
@@ -495,7 +495,7 @@ export const LayeredImageComposerComponent = ({ model, done }: ComposerComponent
 
     return (
       <>
-        <div className='hideScroll' style={{ padding: "3px 12px", maxHeight: "90vh", overflow: "hidden", overflowY: "scroll" }}>
+        <div className='hideScroll border-box' style={{ padding: "3px 12px", maxHeight: "90vh", overflow: "hidden", overflowY: "scroll" }}>
           {isImagesUploaded ? layerOrderingMenu : uploadMenu}
         </div>
       </>
