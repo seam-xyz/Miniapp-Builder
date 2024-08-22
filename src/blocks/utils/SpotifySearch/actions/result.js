@@ -65,10 +65,15 @@ export const calculateWeightedScores = (audioFeatures) => {
   });
 
   // Apply weights (optional, set to 1 by default)
-  const weightedScores = {};
-  Object.keys(relevantFeatures).forEach((key) => {
-    weightedScores[key] = normalizedScores[key] * relevantFeatures[key];
-  });
+  const weightedScores = {
+    danceability: normalizedScores.danceability || 0,
+    energy: normalizedScores.energy || 0,
+    speechiness: normalizedScores.speechiness || 0,
+    acousticness: normalizedScores.acousticness || 0,
+    instrumentalness: normalizedScores.instrumentalness || 0,
+    liveness: normalizedScores.liveness || 0,
+    valence: normalizedScores.valence || 0,
+  };
 
   return weightedScores;
 };
