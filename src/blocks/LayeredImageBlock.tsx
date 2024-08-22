@@ -5,6 +5,7 @@ import './assets/LayeredImageBlock/LayeredImageStyles.css';
 import React, { useState, useEffect, useRef, Children } from 'react';
 import FileUploadComponent from './utils/FileUploadComponent';
 import SeamSaveButton from '../components/SeamSaveButton';
+import 'dndtouch2';
 
 const TipCard = (props: { children: any }) => {
   return (
@@ -383,7 +384,7 @@ export const LayeredImageComposerComponent = ({ model, done }: ComposerComponent
             {imgs.map((image: string, index: number) => (
               <div
                 key={index}
-                style={dragOverItemIndex === index ? { width: "100%", outline: "2px solid #2050DF", backgroundColor: "#e4e6eb", padding: "8px 16px", borderRadius: "8px", margin: "7px 0px 16px 0px", opacity: "0.999" } : { width: "100%", backgroundColor: "#e4e6eb", padding: "8px 16px", borderRadius: "8px", margin: "7px 0px 16px 0px", opacity: "0.999" }}
+                style={dragOverItemIndex === index ? { width: "100%", outline: "2px solid #2050DF", backgroundColor: "#e4e6eb", padding: "8px 16px", borderRadius: "8px", margin: "7px 0px 16px 0px", opacity: "0.999",userSelect:"none", touchAction:"none" } : { width: "100%", backgroundColor: "#e4e6eb", padding: "8px 16px", borderRadius: "8px", margin: "7px 0px 16px 0px", opacity: "0.999",userSelect:"none", touchAction:"none" }}
                 draggable="true"
                 onDragStart={() => handleDragStart(index)}
                 onDragOver={handleDragOver}
