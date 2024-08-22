@@ -4,7 +4,7 @@
     src: url('https://storage.googleapis.com/miniapp-resources/Potato/SpicyRice-Regular.ttf');
 }
 
-p, .tater {
+.tater {
     font-family: 'cute', sans-serif;
 }
 

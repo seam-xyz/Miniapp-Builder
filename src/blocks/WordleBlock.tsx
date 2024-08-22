@@ -231,7 +231,7 @@ const WordleEditor = ({
       <Box className="mb-2 w-full flex flex-col items-center">
         <Typography color="error" className="mt-2">{error}</Typography>
         {!isGameOver && (
-          <Box className="flex items-center w-full">
+          <Box className="flex items-center w-full" style={{marginBottom: 'env(safe-area-inset-bottom)'}}>
             <TextField
               value={currentGuess}
               onChange={handleGuessChange}
