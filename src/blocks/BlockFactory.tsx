@@ -1,3 +1,4 @@
+import { ColorFeedComponent, ColorComposerComponent } from './ColorApp'
 import { RiddlequestFeedComponent, RiddlequestComposerComponent } from './RiddlequestApp'
 import { QuickPollFeedComponent, QuickPollComposerComponent } from './QuickPollApp'
 import { PickrrFeedComponent, PickrrComposerComponent } from './PickrrApp'
@@ -95,6 +96,7 @@ export default class BlockFactory {
       case "QuickPoll": return <QuickPollFeedComponent model={model} update={update}/>;
       case "Pickrr": return <PickrrFeedComponent model={model} update={update} />;
       case "Riddlequest": return <RiddlequestFeedComponent model={model} update={update} />;
+      case "Color": return <ColorFeedComponent model={model} update={update} />;
       // new feed components go here
       default: return UnknownFeedComponent({ model, update });
     }
@@ -141,6 +143,7 @@ export default class BlockFactory {
       case "QuickPoll": return QuickPollComposerComponent(props);
       case "Pickrr": return PickrrComposerComponent(props);
       case "Vibecheck": return VibecheckComposerComponent(props);
+      case "Color": return ColorComposerComponent(props);
       case "Riddlequest": return RiddlequestComposerComponent(props);
       case "Wardrobe": return WardrobeComposerComponent(props);
       case "Journal": return JournalComposerComponent(props);

@@ -36,6 +36,7 @@ import quickpoll from "./blockIcons/quickpoll.png";
 import potatoIcon from './blockIcons/PotatoIcon.png'
 import justAThoughtIcon from "./blockIcons/justAThoughtIcon.png";
 import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
+import ColorIcon from './blockIcons/colorCatcher.png';
 import riddleQuestIcon from "./blockIcons/RiddleQuest.png";
 import WardrobeIcon from "./blockIcons/WardrobeIcon.png";
 import JournalIcon from "./blockIcons/journal.png";
@@ -602,6 +603,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: [{username: "seam", split: 1}],
+    fullscreenEdit: false,
+  },
+  "Color": { 
+    type: "Color",
+    displayName: "Color Catcher",
+    displayDescription: "Swap fast how long can you last?",
+    icon: ColorIcon, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "stressedsadness", split: 1.0}],
     fullscreenEdit: false,
   },
   "Riddlequest": { 
