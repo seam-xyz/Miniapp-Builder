@@ -25,7 +25,11 @@ const BlockSelectorModal = ({ selectedBlockType, initialBlockData, setSelectedBl
   const instance = BlockFactory.getComposerComponent({model, done, width});
 
   return (
-    <div ref={divRef} className={isFullscreenEdit ? "h-full" : "mx-4 h-auto"} style={{ overflow: 'visible' }}>
+    <div 
+      ref={divRef} 
+      className={isFullscreenEdit ? "h-full" : "mx-4 h-full"} 
+      style={isFullscreenEdit ? undefined : { height: 'calc(100% - 72px)' }}
+    > 
       {selectedBlockType && instance}
     </div>
   );
