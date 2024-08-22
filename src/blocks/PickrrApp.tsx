@@ -12,40 +12,75 @@ interface Thumbnail {
   votes: number;
 }
 
-export const PickrrFeedComponent = ({ model }: FeedComponentProps) => {
-  const [thumbnails, setThumbnails] = useState<Thumbnail[]>(
-    model.data['thumbnails'] ? JSON.parse(model.data['thumbnails']) : []
-  );
+export const PickrrFeedComponent: React.FC<FeedComponentProps> = ({ model, update }) => {
+  const [thumbnails, setThumbnails] = useState<Thumbnail[]>([]);
   const [votedThumbnails, setVotedThumbnails] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const savedVotes = localStorage.getItem(`voted_${model.uuid}`);
-    if (savedVotes) {
-      setVotedThumbnails(JSON.parse(savedVotes));
+    // Initialize the thumbnails and votedThumbnails from model data
+    const parsedThumbnails = model.data['thumbnails'] 
+      ? JSON.parse(model.data['thumbnails']) 
+      : [];
+    setThumbnails(parsedThumbnails);
+
+    const savedVotes = model.data['votedThumbnails'] 
+      ? JSON.parse(model.data['votedThumbnails']) 
+      : [];
+    setVotedThumbnails(savedVotes);
+  }, [model.data]);
+
+  const handleVote = async (thumbnailId: string) => {
+    if (votedThumbnails.includes(thumbnailId) || isLoading) {
+      return;
     }
-  }, [model.uuid]);
 
-  if (thumbnails.length === 0) {
-    return renderErrorState();
-  }
+    setIsLoading(true);
+    setError(null);
 
-  const handleVote = (thumbnailId: string) => {
-    if (!votedThumbnails.includes(thumbnailId)) {
-      const updatedThumbnails = thumbnails.map(thumb => 
-        thumb.uuid === thumbnailId ? { ...thumb, votes: thumb.votes + 1 } : thumb
-      );
-      setThumbnails(updatedThumbnails);
-      model.data['thumbnails'] = JSON.stringify(updatedThumbnails);
+    // Optimistically update the local state
+    const updatedThumbnails = thumbnails.map(thumb => 
+      thumb.uuid === thumbnailId ? { ...thumb, votes: thumb.votes + 1 } : thumb
+    );
+    const newVotedThumbnails = [...votedThumbnails, thumbnailId];
 
-      const newVotedThumbnails = [...votedThumbnails, thumbnailId];
-      setVotedThumbnails(newVotedThumbnails);
-      localStorage.setItem(`voted_${model.uuid}`, JSON.stringify(newVotedThumbnails));
+    setThumbnails(updatedThumbnails);
+    setVotedThumbnails(newVotedThumbnails);
+
+    // Prepare the updated data to be sent to the backend
+    const updatedData = {
+      ...model.data,
+      thumbnails: JSON.stringify(updatedThumbnails),
+      votedThumbnails: JSON.stringify(newVotedThumbnails),
+    };
+
+    try {
+      // Check if update is a function before calling it
+      if (typeof update === 'function') {
+        await update(updatedData);
+      } else {
+        throw new Error('Update function is not defined');
+      }
+    } catch (error: any) {
+      console.error('Failed to update votes:', error);
+      // Revert the optimistic update
+      setThumbnails(thumbnails);
+      setVotedThumbnails(votedThumbnails);
+      setError(`Failed to update vote: ${error.message}. Please try again.`);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  if (thumbnails.length === 0) {
+    return <div>No thumbnails available.</div>;
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center' }}>
       <h2>{model.data['videoTitle'] || 'YouTube Thumbnail Voting'}</h2>
+      {error && <div style={{ color: 'red' }}>{error}</div>}
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px' }}>
         {thumbnails.map((thumb) => (
           <div key={thumb.uuid} style={{ textAlign: 'center' }}>
@@ -53,13 +88,14 @@ export const PickrrFeedComponent = ({ model }: FeedComponentProps) => {
             <p>Votes: {thumb.votes}</p>
             <button 
               onClick={() => handleVote(thumb.uuid)} 
-              disabled={votedThumbnails.includes(thumb.uuid)}
+              disabled={votedThumbnails.includes(thumb.uuid) || isLoading}
             >
               {votedThumbnails.includes(thumb.uuid) ? 'Voted' : 'Vote'}
             </button>
           </div>
         ))}
       </div>
+      {isLoading && <div>Updating vote...</div>}
     </div>
   );
 };
