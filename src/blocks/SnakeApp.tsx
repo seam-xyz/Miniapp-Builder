@@ -15,6 +15,11 @@ interface Direction {
   y: number;
 }
 
+interface HighScoreEntry {
+  id: number;
+  score: number;
+}
+
 const Snake: React.FC<{ segments: SnakeSegment[], cellSize: number }> = React.memo(({ segments, cellSize }) => (
   <>
     {segments.map((segment, index) => (
@@ -69,7 +74,7 @@ const TouchControls: React.FC<{ onDirectionChange: (direction: Direction) => voi
   </div>
 );
 
-const SnakeGame: React.FC = () => {
+const SnakeGame: React.FC<{ onHighScoreUpdate: (highScore: number) => void }> = ({ onHighScoreUpdate }) => {
   const [snake, setSnake] = useState<SnakeSegment[]>(INITIAL_SNAKE);
   const [direction, setDirection] = useState<Direction>(INITIAL_DIRECTION);
   const [food, setFood] = useState<SnakeSegment>(INITIAL_FOOD);
@@ -81,7 +86,7 @@ const SnakeGame: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const generateFood = useCallback((): SnakeSegment => {
-    let newFood : SnakeSegment ;
+    let newFood: SnakeSegment;
     do {
       newFood = {
         x: Math.floor(Math.random() * GRID_SIZE),
@@ -100,13 +105,11 @@ const SnakeGame: React.FC = () => {
       head.x += direction.x;
       head.y += direction.y;
 
-      // Check collision with walls
       if (head.x < 0 || head.x >= GRID_SIZE || head.y < 0 || head.y >= GRID_SIZE) {
         setGameOver(true);
         return prevSnake;
       }
 
-      // Check collision with self
       if (newSnake.some(segment => segment.x === head.x && segment.y === head.y)) {
         setGameOver(true);
         return prevSnake;
@@ -114,12 +117,15 @@ const SnakeGame: React.FC = () => {
 
       newSnake.unshift(head);
 
-      // Check if snake ate food
       if (head.x === food.x && head.y === food.y) {
         setFood(generateFood());
         setCurrentScore(prevScore => {
           const newScore = prevScore + 1;
-          setHighScore(prevHighScore => Math.max(prevHighScore, newScore));
+          setHighScore(prevHighScore => {
+            const updatedHighScore = Math.max(prevHighScore, newScore);
+            onHighScoreUpdate(updatedHighScore); // Pass updated high score
+            return updatedHighScore;
+          });
           return newScore;
         });
       } else {
@@ -128,12 +134,12 @@ const SnakeGame: React.FC = () => {
 
       return newSnake;
     });
-  }, [direction, food, gameOver, generateFood]);
+  }, [direction, food, gameOver, generateFood, onHighScoreUpdate]);
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (gameOver) return;
-      
+
       switch (e.key) {
         case 'ArrowUp':
           setDirection(prev => prev.y === 1 ? prev : { x: 0, y: -1 });
@@ -216,29 +222,43 @@ const SnakeGame: React.FC = () => {
         {gameOver ? 'Play Again' : 'Restart Game'}
       </button>
       <TouchControls onDirectionChange={setDirection} />
-      <p className="mt-4 text-gray-600">Use arrow keys or touch controls to play!</p>
+      <p className="mt-4 text-gray-500 text-sm">Use arrow keys or touch controls to play.</p>
+    </div>
+  );
+};
+
+export const SnakeComposerComponent: React.FC<{ model: any, done: (model: any) => void }> = ({ model, done }) => {
+  const [highScore, setHighScore] = useState(0);
+
+  return (
+    <div className="w-full max-w-lg mx-auto">
+      <SnakeGame onHighScoreUpdate={(newHighScore) => setHighScore(newHighScore)} />
+      <button 
+        onClick={() => { 
+          const updatedModel = { ...model, highScore };
+          done(updatedModel); // Include high score in the model
+        }}
+        className="mt-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-colors duration-200"
+      >
+        Post
+      </button>
     </div>
   );
 };
 
 export const SnakeFeedComponent: React.FC<{ model: any }> = ({ model }) => {
   return (
-    <div className="w-full max-w-lg mx-auto">
-      <SnakeGame />
-    </div>
-  );
-};
-
-export const SnakeComposerComponent: React.FC<{ model: any, done: (model: any) => void }> = ({ model, done }) => {
-  return (
-    <div className="w-full max-w-lg mx-auto">
-      <SnakeGame />
-      <button 
-        onClick={() => { done(model) }}
-        className="mt-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-colors duration-200"
-      >
-        Post
-      </button>
+    <div className="p-4 bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 hover:bg-white hover:shadow-xl hover:border-transparent  rounded-lg shadow-md w-full max-w-lg mx-auto">
+      <h2 className="text-xl  font-extra-bold text-center py-8 text-gray-800">Ultimate Snake Game!! 🐍</h2>
+      <p className="text-cyan-600 font-semibold text-xl text-lg text-center">Can you beat my High Score<br/>
+        <p 
+          className='py-6 text-orange-600 font-bold text-xl'>
+              {model.highScore} !!
+        </p>
+        <p>
+          Enrolled to Game Using  that <a href="#" className="font-semibold text-pink-900 underline dark:text-pink decoration-pink-500">PINK PLUS</a> sign
+        </p>
+      </p>
     </div>
   );
 };
