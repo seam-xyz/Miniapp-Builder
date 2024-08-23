@@ -14,46 +14,14 @@ import {
 } from "@mui/material";
 import { nanoid } from "nanoid";
 import { FirebaseStorage } from "@capacitor-firebase/storage";
+import { Filesystem, Directory } from '@capacitor/filesystem';
 
 import EditIcon from "@mui/icons-material/Edit";
 import WandIcon from "@mui/icons-material/AutoFixHigh";
 import SendIcon from "@mui/icons-material/Send";
 
-import plainsIcon from "../blocks/assets/MagicCard/icons/plains.png";
-import islandIcon from "../blocks/assets/MagicCard/icons/island.png";
-import swampIcon from "../blocks/assets/MagicCard/icons/swamp.png";
-import mountainIcon from "../blocks/assets/MagicCard/icons/mountain.png";
-import forestIcon from "../blocks/assets/MagicCard/icons/forest.png";
-import tapIcon from "../blocks/assets/MagicCard/icons/tap.png";
-import untapIcon from "../blocks/assets/MagicCard/icons/untap.png";
-import icon1 from "../blocks/assets/MagicCard/icons/1.png";
-import icon2 from "../blocks/assets/MagicCard/icons/2.png";
-import icon3 from "../blocks/assets/MagicCard/icons/3.png";
-import icon4 from "../blocks/assets/MagicCard/icons/4.png";
-import icon5 from "../blocks/assets/MagicCard/icons/5.png";
-import icon6 from "../blocks/assets/MagicCard/icons/6.png";
-import icon7 from "../blocks/assets/MagicCard/icons/7.png";
-import icon8 from "../blocks/assets/MagicCard/icons/8.png";
-import icon9 from "../blocks/assets/MagicCard/icons/9.png";
-import iconX from "../blocks/assets/MagicCard/icons/x.png";
-import landFrame from "../blocks/assets/MagicCard/frames/land-frame.png";
-import artifactFrame from "../blocks/assets/MagicCard/frames/artifact-frame.png";
-import whiteFrame from "../blocks/assets/MagicCard/frames/white-frame.png";
-import blackFrame from "../blocks/assets/MagicCard/frames/black-frame.png";
-import blueFrame from "../blocks/assets/MagicCard/frames/blue-frame.png";
-import greenFrame from "../blocks/assets/MagicCard/frames/green-frame.png";
-import redFrame from "../blocks/assets/MagicCard/frames/red-frame.png";
-
-import landPtBox from "../blocks/assets/MagicCard/ptBoxes/land-pt-box.png";
-import artifactPtBox from "../blocks/assets/MagicCard/ptBoxes/artifact-pt-box.png";
-import whitePtBox from "../blocks/assets/MagicCard/ptBoxes/white-pt-box.png";
-import blackPtBox from "../blocks/assets/MagicCard/ptBoxes/black-pt-box.png";
-import bluePtBox from "../blocks/assets/MagicCard/ptBoxes/blue-pt-box.png";
-import greenPtBox from "../blocks/assets/MagicCard/ptBoxes/green-pt-box.png";
-import redPtBox from "../blocks/assets/MagicCard/ptBoxes/red-pt-box.png";
-
 import "../blocks/assets/MagicCard/magicCard.css";
-
+import { Capacitor } from "@capacitor/core";
 
 const cardColors = ["land", "artifact", "white", "blue", "black", "red", "green"] as const;
 type CardColor = (typeof cardColors)[number];
@@ -1030,12 +998,23 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
     const blob = await (await fetch(dataURL)).blob();
     const name = nanoid();
     const path = `files/${name}`;
+    let uri = path
+
+    // Save the base64 string as a file in the temporary directory
+    if (Capacitor.getPlatform() !== "web") {
+      const savedFile = await Filesystem.writeFile({
+        path: name,
+        data: dataURL,
+        directory: Directory.Cache,
+      });
+      uri = savedFile.uri;
+    }
 
     await FirebaseStorage.uploadFile(
       {
         path,
         blob,
-        uri: path,
+        uri: uri,
       },
       async (event, error) => {
         if (error) {
@@ -1100,7 +1079,7 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
         />
       )}
       <Box style={{ paddingBottom: `calc(env(safe-area-inset-bottom, 24px) + 24px)` }} sx={{ display: 'flex', justifyContent: 'space-between', position: 'fixed', bottom: 0, left: 0, right: 0, p: 3, bgcolor: 'background.paper', boxShadow: 3, zIndex: 1301 }}>
-      {/* <Stack
+        {/* <Stack
         boxShadow={2}
         bottom={0}
         position="absolute"
@@ -1132,7 +1111,7 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
         >
           Preview
         </Button>
-      {/* </Stack> */}
+        {/* </Stack> */}
       </Box>
     </Stack>
   );
