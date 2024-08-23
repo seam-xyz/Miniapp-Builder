@@ -509,7 +509,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
   },
   "Mondrian": { 
     type: "Mondrian",
-    displayName: "Layered Image",
+    displayName: "Mondrian",
     displayDescription: "Create works of art in the style of Piet Mondrian",
     icon: MondrianIcon,
     deprecated: false,
