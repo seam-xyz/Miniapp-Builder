@@ -33,9 +33,6 @@ import distrivialIcon from "./blockIcons/distrivialIcon.png";
 import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
 
 export type BlockModel = {
-  userAnswers: never[];
-  userScore: number;
-  questions: never[];
   type: string;
   data: { [key: string]: string };
   uuid: string; // must be unique to avoid layout issues
@@ -490,11 +487,11 @@ export const BlockTypes: { [key: string]: BlockType } = {
     type: "Distrivial",
     displayName: "Distrivial",
     displayDescription: "Its not trivial, its trivia",
-    icon: distrivialIcon, // TODO: insert your app icon here
+    icon: distrivialIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: "alexjshepler, @basilisk",
+    createdBy: [{ username: "alexjshepler", split: 0.5 }, { username: "basilisk", split: 0.5}],
     fullscreenEdit: false,
   },
 };

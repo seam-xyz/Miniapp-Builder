@@ -49,9 +49,6 @@ export default function App() {
         text: 'Welcome to the Seam Miniapp Builder!',
       },
       uuid: '1',
-      userAnswers: [],
-      userScore: 0,
-      questions: []
     }
   ]);
 

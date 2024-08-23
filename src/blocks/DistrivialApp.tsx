@@ -32,10 +32,12 @@ const fetchQuestions = async (): Promise<Question[]> => {
 
 // DistrivialFeedComponent definition
 export const DistrivialFeedComponent = ({ model }: FeedComponentProps) => {
-  const questions: any[] = model.questions || [];
-  const userScore: number = model.userScore || 0;
-  const userAnswers: any[] = model.userAnswers || [];
-
+  // const questions: any[] = model.questions || [];
+  // const userScore: number = model.userScore || 0;
+  const userAnswers: string[] = model.data['userAnswers'] ? JSON.parse(model.data['userAnswers']) : [];
+  const questions: Question[] = model.data['questions'] ? JSON.parse(model.data['questions']) : [];
+  const userScore: number = parseInt(model.data['userScore'], 10);
+  
   return (
     <div className="results-container">
       <style>{`
@@ -74,7 +76,7 @@ export const DistrivialFeedComponent = ({ model }: FeedComponentProps) => {
         }
       `}</style>
       <h1>User score: {userScore} out of {questions.length}</h1>
-      {questions.map((question: any, index: number) => (
+      {questions.map((question, index) => (
         <div key={index} className="result-row">
           <div className="question-text">{question.question}</div>
           <div
@@ -84,7 +86,7 @@ export const DistrivialFeedComponent = ({ model }: FeedComponentProps) => {
                 : 'answer-incorrect'
             }
           >
-            {userAnswers[index]}
+            {userAnswers[index] || 'Not answered'}
           </div>
         </div>
       ))}
@@ -136,10 +138,9 @@ export const DistrivialComposerComponent = ({ model, done }: ComposerComponentPr
   }
 
   if (currentQuestion >= questions.length) {
-    // Save the current state to the model to persist it for this post
-    (model as any).questions = questions;
-    (model as any).userScore = userScore;
-    (model as any).userAnswers = userAnswers;
+    model.data.userScore = userScore.toString();
+    model.data.questions = JSON.stringify(questions);
+    model.data.userAnswers = JSON.stringify(userAnswers);
 
     done(model);
 
@@ -181,7 +182,7 @@ export const DistrivialComposerComponent = ({ model, done }: ComposerComponentPr
           }
         `}</style>
         <h1>User score: {userScore} out of {questions.length}</h1>
-        {questions.map((question: any, index: number) => (
+        {questions.map((question, index) => (
           <div key={index} className="result-row">
             <div className="question-text">{question.question}</div>
             <div
@@ -191,7 +192,7 @@ export const DistrivialComposerComponent = ({ model, done }: ComposerComponentPr
                   : 'answer-incorrect'
               }
             >
-              {userAnswers[index]}
+              {userAnswers[index] || 'Not answered'}
             </div>
           </div>
         ))}
