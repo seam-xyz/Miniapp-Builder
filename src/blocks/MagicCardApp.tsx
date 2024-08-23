@@ -15,11 +15,12 @@ import {
 import { nanoid } from "nanoid";
 import { FirebaseStorage } from "@capacitor-firebase/storage";
 import { Filesystem, Directory } from '@capacitor/filesystem';
-import { Capacitor } from "@capacitor/core";
 import EditIcon from "@mui/icons-material/Edit";
 import WandIcon from "@mui/icons-material/AutoFixHigh";
 import SendIcon from "@mui/icons-material/Send";
+
 import "../blocks/assets/MagicCard/magicCard.css";
+import { Capacitor } from "@capacitor/core";
 
 const cardColors = ["land", "artifact", "white", "blue", "black", "red", "green"] as const;
 type CardColor = (typeof cardColors)[number];
@@ -1033,42 +1034,44 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
   
     const rescaledCanvas = rescaleCanvas(canvasRef.current, 0.5); // Rescale width and height by 0.5
     const dataURL = rescaledCanvas.toDataURL("image/png");
-  
-    const isWeb = Capacitor.getPlatform() === 'web';
-  
-    try {
-      if (isWeb) {
-        // Web platform: upload directly using blob
-        const blob = await (await fetch(dataURL)).blob();
-        const uploadOptions = {
-          path: `files/${nanoid()}`,
-          blob,
-        };
-        await handleUpload(uploadOptions);
-      } else {
-        // Mobile platform: Save file temporarily and upload
-        const fileName = `${nanoid()}.png`;
-        const writeResult = await Filesystem.writeFile({
-          path: fileName,
-          data: dataURL.split(',')[1], // Get only the base64 string, remove data:image/png;base64,
-          directory: Directory.Cache, // Store in a temporary cache directory
-        });
-  
-        // Convert the file path to a format Firebase Storage can understand
-        const fileUri = Capacitor.convertFileSrc(writeResult.uri);
-  
-        const uploadOptions = {
-          path: `files/${fileName}`,
-          uri: fileUri, // This is the converted URI
-        };
-        await handleUpload(uploadOptions, fileName); // Pass the fileName to handleUpload
-  
-        // Note: Deletion will happen after the upload is complete
-      }
-    } catch (err) {
-      hadError(err);
+    const blob = await (await fetch(dataURL)).blob();
+    const name = nanoid();
+    const path = `files/${name}`;
+    let uri = path
+
+    // Save the base64 string as a file in the temporary directory
+    if (Capacitor.getPlatform() !== "web") {
+      const savedFile = await Filesystem.writeFile({
+        path: name,
+        data: dataURL,
+        directory: Directory.Cache,
+      });
+      uri = savedFile.uri;
     }
-  }, [done, model]);  
+
+    await FirebaseStorage.uploadFile(
+      {
+        path,
+        blob,
+        uri: uri,
+      },
+      async (event, error) => {
+        if (error) {
+          hadError(error);
+          return;
+        }
+
+        if (event && event.completed) {
+          const result = await FirebaseStorage.getDownloadUrl({ path }).catch(hadError);
+          if (result) {
+            setUploading(false);
+            model.data["dataURL"] = result.downloadUrl;
+            done(model);
+          }
+        }
+      }
+    ).catch(hadError);
+  }, [done, model]);
 
   return (
     <div className="flex flex-col items-center justify-between w-full h-full">
@@ -1137,7 +1140,7 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
         >
           Preview
         </Button>
-      {/* </Stack> */}
+        {/* </Stack> */}
       </Box>
     </div>
   );
