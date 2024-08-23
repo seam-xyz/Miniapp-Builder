@@ -38,3 +38,10 @@
         height: 5px;
     }
 }
+
+@font-face {
+    font-family: "SeamCommunityFont-Regular";
+    src: url("https://storage.googleapis.com/miniapp-resources/JustAThought/SeamCommunityFont-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}

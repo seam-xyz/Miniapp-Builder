@@ -62,6 +62,14 @@ const Bookshelf: React.FC<BookshelfProps> = ({ done, model }) => {
     })
   }, []);
 
+  useEffect (() => {
+    document.body.style.backgroundColor = "#F1ECE6";
+
+    return () => {
+      document.body.style.backgroundColor = "#FFFFFF";
+    }
+  })
+
   const searchBooks = async () => {
     if (query && query.length > 0) {
       try {

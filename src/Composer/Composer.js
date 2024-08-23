@@ -194,7 +194,7 @@ function Composer({ addNewPost }) {
         className="flex flex-row justify-center min-w-full min-h-full"
         ref={blockPreviewRef}
       >
-        {BlockFactory.getFeedComponent(blockData)}
+        {BlockFactory.getFeedComponent(blockData, () => {})}
         <div className="flex grow"></div>
       </div>
     );

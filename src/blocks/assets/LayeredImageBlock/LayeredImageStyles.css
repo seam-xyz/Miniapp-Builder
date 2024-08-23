@@ -1,0 +1,82 @@
+
+
+  .LayeredImageBlock-slider {  
+    -webkit-appearance: none;  
+    -moz-appearance: none;    
+    -ms-appearance: none;      
+    appearance: none;          
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    margin-right: 12px;
+    flex-grow: inherit;
+    Border: 2px solid #0051E8;
+  }
+
+  .LayeredImageBlock-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;  
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background: #0051E8;
+  }
+
+  .LayeredImageBlock-slider::-moz-range-thumb {
+    width: 20px;               
+    height: 20px;
+    border-radius: 10px;
+    background: #0051E8;
+    border: none;              
+  }
+
+  .LayeredImageBlock-slider::-ms-thumb {
+    width: 20px;              
+    height: 20px;
+    border-radius: 10px;
+    background: #0051E8;
+    border: none;             
+  }
+
+  .LayeredImageBlock-slider::-ms-track {
+    width: 100%;
+    height: 10px;
+    background: transparent;  
+    border-color: transparent;
+    color: transparent;
+  }
+
+  .LayeredImageBlock-slider::-ms-fill-lower {
+    background: #0051E8;      
+    border-radius: 5px;
+  }
+
+  .LayeredImageBlock-slider::-ms-fill-upper {
+    background: #0051E8;
+    border-radius: 5px;
+  }
+
+  .hideScroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hideScroll {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  .hideScreenSmall {
+    display: inline-block;
+  }
+
+  @media only screen and (max-width:375px) {
+
+    .hideScreenSmall {
+      display: none;
+    }
+
+
+
+
+  }

@@ -6,6 +6,7 @@ import linkIcon from "./blockIcons/Button.png";
 import twitterIcon from "./blockIcons/twitterIcon.png";
 import bookmarkIcon from "./blockIcons/Link.png";
 import mapIcon from "./blockIcons/Map.png";
+import HoroscopeIcon from "./blockIcons/HoroscopeIcon.png";
 import giphyIcon from "./blockIcons/GIPHY.png";
 import profileIcon from "./blockIcons/profileHeaderIcon.png";
 import musicIcon from "./blockIcons/Music.png";
@@ -17,6 +18,7 @@ import photoAlbumIcon from "./blockIcons/photoAlbumIcon.png"
 import flashingTextIcon from "./blockIcons/flashingTextIcon.png";
 import tokenIcon from "./blockIcons/tokenIcon.png";
 import clockIcon from "./blockIcons/clockIcon.png"
+import DizzyIcon from "./blockIcons/DizzyIcon.png"
 import farcasterIcon from "./blockIcons/farcasterIcon.svg"
 import eyesIcon from "./blockIcons/eyeIcon.png"
 import MondrianIcon from './blockIcons/MondrianIcon.png'
@@ -30,7 +32,18 @@ import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
 import distrivialIcon from "./blockIcons/distrivialIcon.png";
+import LayeredImageIcon from "./blockIcons/LayeredImageIcon.png"
+import Pickrr from "./blockIcons/Pickrr.png"
+import quickpoll from "./blockIcons/quickpoll.png";
+import potatoIcon from './blockIcons/PotatoIcon.png'
+import justAThoughtIcon from "./blockIcons/justAThoughtIcon.png";
 import vibecheckIcon from "./blockIcons/vibecheckIcon.png";
+import ColorIcon from './blockIcons/colorCatcher.png';
+import riddleQuestIcon from "./blockIcons/RiddleQuest.png";
+import WardrobeIcon from "./blockIcons/WardrobeIcon.png";
+import JournalIcon from "./blockIcons/journal.png";
+import HaikuraIcon from "./blockIcons/HaikuraIcon.png";
+import MagicCardIcon from "./blockIcons/MagicCardIcon.png";
 
 export type BlockModel = {
   type: string;
@@ -48,6 +61,7 @@ export interface Badge {
 
 export interface FeedComponentProps {
   model: BlockModel;
+  update: (data: { [key: string]: string }) => void;
   width?: number;
 }
 
@@ -351,15 +365,26 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "razberry", split: 1}],
     fullscreenEdit: false,
   },
-  "Mondrian": {
+  "Mondrian": { 
     type: "Mondrian",
-    displayName: "Mondrian",
+    displayName: "Layered Image",
     displayDescription: "Create works of art in the style of Piet Mondrian",
     icon: MondrianIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
+    fullscreenEdit: false,
+  },
+  "LayeredImage": { 
+    type: "LayeredImage",
+    displayName: "Layered Image",
+    displayDescription: "Tell stories through sequential images",
+    icon: LayeredImageIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "jakeaicher", split: 1.0}],
     fullscreenEdit: false,
   },
   "Bookshelf": {
@@ -450,18 +475,29 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
+  "JustAThought": { 
+    type: "JustAThought",
+    displayName: "Just a Thought",
+    displayDescription: "Just a thought in 120 characters or less",
+    icon: justAThoughtIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "emilee", split: 1}],
+    fullscreenEdit: false,
+  },
   "Voice": { 
     type: "Voice",
     displayName: "Voice Note",
     displayDescription: "Use the microphone to record a voice note. The post then allows users to play it back.",
-    icon: voiceNoteIcon, 
+    icon: voiceNoteIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: [{username: "samsam", split: 1}],
     fullscreenEdit: false,
   },
-  "Vibecheck": { 
+  "Vibecheck": {
     type: "Vibecheck",
     displayName: "VibeCheck",
     displayDescription: "Get a vibe check on your favorite Spotify Playlists!",
@@ -471,6 +507,105 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockEdit: true,
     createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
     fullscreenEdit: true,
+  },
+  "Horoscope": {
+    type: "Horoscope",
+    displayName: "Horoscope",
+    displayDescription: "Get your daily dose of cosmic insights with our easy-to-use horoscope generator!",
+    icon: HoroscopeIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "defcon", split: 1.0}],
+    fullscreenEdit: false,
+  },
+  "Dizzy": { 
+    type: "Dizzy",
+    displayName: "dizzy Text",
+    displayDescription: "Create a text input to a continuously flashing RGB color with background contrast!",
+    icon: DizzyIcon, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "shloknemani", split: 1.0}],
+    fullscreenEdit: false,
+  },
+  "Tatergangs": { 
+    type: "Tatergangs",
+    displayName: "Potato Fortunes",
+    displayDescription: "Choose your potato and discover your fate!",
+    icon: potatoIcon, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "roxanne", split: 1}],
+    fullscreenEdit: false,
+  },
+  "MagicCard": { 
+    type: "MagicCard",
+    displayName: "Magic Card Creator",
+    displayDescription: "Create your own Magic: The Gathering card!",
+    icon: MagicCardIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{ username: "ixenbay", split: 1 }],
+    fullscreenEdit: true,
+  },
+  "Journal": { 
+    type: "Journal",
+    displayName: "Journal",
+    displayDescription: "Write or draw whatever that made you happy today :)",
+    icon: JournalIcon, 
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "slothbaby", split: 1.0}],
+    fullscreenEdit: false,
+  },
+  "Haikura": { 
+    type: "Haikura",
+    displayName: "Haikura",
+    displayDescription: "Craft a Haiku, share the magic, and watch your words bloom online! Create, post, and flaunt your poems!",
+    icon: HaikuraIcon, 
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "juanitacathy", split: 0.5}, {username: "akira", split: 0.5}],
+    fullscreenEdit: true,
+  },
+  "Wardrobe": { 
+    type: "Wardrobe",
+    displayName: "Wardrobe",
+    displayDescription: "Dress Up your character",
+    icon: WardrobeIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "manmohansinghraghav", split: 1}],
+    fullscreenEdit: false,
+  },
+  "QuickPoll": { 
+    type: "QuickPoll",
+    displayName: "QuickPoll",
+    displayDescription: "A tool for creating and sharing quick polls on any topic",
+    icon: quickpoll, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "bkaraba", split: 1}], 
+    fullscreenEdit: false,
+  },
+  "Pickrr": { 
+    type: "Pickrr",
+    displayName: "Pickrr",
+    displayDescription: "The ultimate solution for YouTubers struggling to choose the perfect thumbnail.",
+    icon: Pickrr, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "Jay", split: 1}],
+    fullscreenEdit: false,
   },
   "Unknown": {
     type: "Unknown",
@@ -494,4 +629,26 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{ username: "alexjshepler", split: 0.5 }, { username: "basilisk", split: 0.5}],
     fullscreenEdit: false,
   },
+  "Color": { 
+    type: "Color",
+    displayName: "Color Catcher",
+    displayDescription: "Swap fast how long can you last?",
+    icon: ColorIcon, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "stressedsadness", split: 1.0}],
+    fullscreenEdit: false,
+  },
+  "Riddlequest": { 
+    type: "Riddlequest",
+    displayName: "RiddleQuest",
+    displayDescription: "Playing riddle of the day game and share your answer with friends",
+    icon: riddleQuestIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "lanid", split: 1.0}],
+    fullscreenEdit: false,
+},
 };
