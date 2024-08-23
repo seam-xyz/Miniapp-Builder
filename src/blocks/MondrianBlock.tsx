@@ -136,7 +136,7 @@ const MondrianEditor = ({
         squares={squares}
         onSquareClick={handleSquareClick}
       />
-      <Box className="space-between" sx={{ width: '100%', height: 'auto' }}>
+      <Box className="items-center justify-center flex flex-col items-center w-full h-full overflow-y-visible overflow-x-hidden" sx={{ width: '100%', height: '100%', marginBottom: 'env(safe-area-inset-bottom)'}}>
         <Tabs
           className="mb-4"
           value={mode}
@@ -181,7 +181,7 @@ const MondrianEditor = ({
             </div>
           </div>
         ) : (
-          <Grid container className="flex items-center justify-center">
+          <Grid container className="flex items-center w-full h-full justify-center">
             {colors.map((color, index) => (
               <Grid item xs={2} key={color} className="flex items-center justify-center p-0 mb-2">
                 <div className="flex items-center justify-center p-1 bg-[#D6D6D6] rounded-full">
