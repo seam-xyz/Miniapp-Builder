@@ -197,7 +197,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: [{ username: "ixenbay", split: 1 }],
-    fullscreenEdit: true,
+    fullscreenEdit: false,
   },
   "Color": { 
     type: "Color",

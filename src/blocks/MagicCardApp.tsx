@@ -14,46 +14,12 @@ import {
 } from "@mui/material";
 import { nanoid } from "nanoid";
 import { FirebaseStorage } from "@capacitor-firebase/storage";
-
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Capacitor } from "@capacitor/core";
 import EditIcon from "@mui/icons-material/Edit";
 import WandIcon from "@mui/icons-material/AutoFixHigh";
 import SendIcon from "@mui/icons-material/Send";
-
-import plainsIcon from "../blocks/assets/MagicCard/icons/plains.png";
-import islandIcon from "../blocks/assets/MagicCard/icons/island.png";
-import swampIcon from "../blocks/assets/MagicCard/icons/swamp.png";
-import mountainIcon from "../blocks/assets/MagicCard/icons/mountain.png";
-import forestIcon from "../blocks/assets/MagicCard/icons/forest.png";
-import tapIcon from "../blocks/assets/MagicCard/icons/tap.png";
-import untapIcon from "../blocks/assets/MagicCard/icons/untap.png";
-import icon1 from "../blocks/assets/MagicCard/icons/1.png";
-import icon2 from "../blocks/assets/MagicCard/icons/2.png";
-import icon3 from "../blocks/assets/MagicCard/icons/3.png";
-import icon4 from "../blocks/assets/MagicCard/icons/4.png";
-import icon5 from "../blocks/assets/MagicCard/icons/5.png";
-import icon6 from "../blocks/assets/MagicCard/icons/6.png";
-import icon7 from "../blocks/assets/MagicCard/icons/7.png";
-import icon8 from "../blocks/assets/MagicCard/icons/8.png";
-import icon9 from "../blocks/assets/MagicCard/icons/9.png";
-import iconX from "../blocks/assets/MagicCard/icons/x.png";
-import landFrame from "../blocks/assets/MagicCard/frames/land-frame.png";
-import artifactFrame from "../blocks/assets/MagicCard/frames/artifact-frame.png";
-import whiteFrame from "../blocks/assets/MagicCard/frames/white-frame.png";
-import blackFrame from "../blocks/assets/MagicCard/frames/black-frame.png";
-import blueFrame from "../blocks/assets/MagicCard/frames/blue-frame.png";
-import greenFrame from "../blocks/assets/MagicCard/frames/green-frame.png";
-import redFrame from "../blocks/assets/MagicCard/frames/red-frame.png";
-
-import landPtBox from "../blocks/assets/MagicCard/ptBoxes/land-pt-box.png";
-import artifactPtBox from "../blocks/assets/MagicCard/ptBoxes/artifact-pt-box.png";
-import whitePtBox from "../blocks/assets/MagicCard/ptBoxes/white-pt-box.png";
-import blackPtBox from "../blocks/assets/MagicCard/ptBoxes/black-pt-box.png";
-import bluePtBox from "../blocks/assets/MagicCard/ptBoxes/blue-pt-box.png";
-import greenPtBox from "../blocks/assets/MagicCard/ptBoxes/green-pt-box.png";
-import redPtBox from "../blocks/assets/MagicCard/ptBoxes/red-pt-box.png";
-
 import "../blocks/assets/MagicCard/magicCard.css";
-
 
 const cardColors = ["land", "artifact", "white", "blue", "black", "red", "green"] as const;
 type CardColor = (typeof cardColors)[number];
@@ -463,8 +429,7 @@ const MagicCardEditor = forwardRef(
       <Box
         style={{
           overflowY: "auto",
-          marginTop: 72,
-          height: "calc(100vh - 158px)",
+          height: "auto",
           display: "flex",
           justifyContent: "center",
         }}
@@ -478,7 +443,7 @@ const MagicCardEditor = forwardRef(
             }}
           />
         ) : (
-          <Stack component="form" ref={formRef} style={{ height: "100%", padding: 8 }} spacing={2}>
+          <Stack component="form" ref={formRef} style={{ height: "auto", padding: 8 }} spacing={2}>
             <Stack gap={2} direction={"row"} flexWrap="wrap">
               <TextField
                 tabIndex={1}
@@ -1015,48 +980,98 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
     setEditing(false);
   }, []);
 
+  const handleUpload = async (uploadOptions: any, fileName?: string) => {
+    console.log("Handle upload started!");
+    try {
+      await FirebaseStorage.uploadFile(uploadOptions, async (event, error) => {
+        if (error) {
+          console.error("Error during upload: ", error);
+          setUploading(false);
+          return;
+        }
+        console.log("no errors yet, waiting for event completion");
+        if (event && event.completed) {
+          console.log("event completed! starting fetch download url");
+          const result = await FirebaseStorage.getDownloadUrl({ path: uploadOptions.path }).catch(hadError);
+          if (result) {
+            // Only delete the file after successful upload
+            if (fileName) {
+              await Filesystem.deleteFile({
+                path: fileName,
+                directory: Directory.Cache,
+              }).catch((err) => console.error("Failed to delete file: ", err));
+            }
+  
+            setUploading(false);
+            console.log("download URL : ", result.downloadUrl)
+            model.data["dataURL"] = result.downloadUrl;
+            done(model);
+          }
+          else { 
+            console.log("no result? ");
+          }
+        } else {
+          console.log("never finished event?");
+        }
+      });
+    } catch (err) {
+      console.error("Error during upload process: ", err);
+      setUploading(false);
+    }
+  };  
+
   const preview = useCallback(async () => {
     if (canvasRef.current == null) {
       return;
     }
     setUploading(true);
+  
     const hadError = (err: unknown) => {
       console.error("Upload failed:", err);
       setUploading(false);
     };
-
-    const rescaledCanvas = rescaleCanvas(canvasRef.current, 0.5); // rescale width and height by 0.5
+  
+    const rescaledCanvas = rescaleCanvas(canvasRef.current, 0.5); // Rescale width and height by 0.5
     const dataURL = rescaledCanvas.toDataURL("image/png");
-    const blob = await (await fetch(dataURL)).blob();
-    const name = nanoid();
-    const path = `files/${name}`;
-
-    await FirebaseStorage.uploadFile(
-      {
-        path,
-        blob,
-        uri: path,
-      },
-      async (event, error) => {
-        if (error) {
-          hadError(error);
-          return;
-        }
-
-        if (event && event.completed) {
-          const result = await FirebaseStorage.getDownloadUrl({ path }).catch(hadError);
-          if (result) {
-            setUploading(false);
-            model.data["dataURL"] = result.downloadUrl;
-            done(model);
-          }
-        }
+  
+    const isWeb = Capacitor.getPlatform() === 'web';
+  
+    try {
+      if (isWeb) {
+        // Web platform: upload directly using blob
+        const blob = await (await fetch(dataURL)).blob();
+        const uploadOptions = {
+          path: `files/${nanoid()}`,
+          blob,
+        };
+        await handleUpload(uploadOptions);
+      } else {
+        // Mobile platform: Save file temporarily and upload
+        const fileName = `${nanoid()}.png`;
+        const writeResult = await Filesystem.writeFile({
+          path: fileName,
+          data: dataURL.split(',')[1], // Get only the base64 string, remove data:image/png;base64,
+          directory: Directory.Cache, // Store in a temporary cache directory
+        });
+  
+        // Convert the file path to a format Firebase Storage can understand
+        const fileUri = Capacitor.convertFileSrc(writeResult.uri);
+  
+        const uploadOptions = {
+          path: `files/${fileName}`,
+          uri: fileUri, // This is the converted URI
+        };
+        await handleUpload(uploadOptions, fileName); // Pass the fileName to handleUpload
+  
+        // Note: Deletion will happen after the upload is complete
       }
-    ).catch(hadError);
-  }, [done, model]);
+    } catch (err) {
+      hadError(err);
+    }
+  }, [done, model]);  
 
   return (
-    <Stack className="flex w-full h-screen">
+    <div className="flex flex-col items-center justify-between w-full h-full">
       {editing ? (
         <MagicCardEditor
           ref={formRef}
@@ -1099,17 +1114,7 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
           flavorText={flavorText}
         />
       )}
-      <Box style={{ paddingBottom: `calc(env(safe-area-inset-bottom, 24px) + 24px)` }} sx={{ display: 'flex', justifyContent: 'space-between', position: 'fixed', bottom: 0, left: 0, right: 0, p: 3, bgcolor: 'background.paper', boxShadow: 3, zIndex: 1301 }}>
-      {/* <Stack
-        boxShadow={2}
-        bottom={0}
-        position="absolute"
-        spacing={2}
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        className="w-full"
-      > */}
+      <Box style={{ paddingBottom: `calc(env(safe-area-inset-bottom, 24px) + 24px)` }} sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', zIndex: 1301 }}>
         {editing ? (
           <Button
             disabled={generateCardButtonDisabled}
@@ -1134,6 +1139,10 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
         </Button>
       {/* </Stack> */}
       </Box>
-    </Stack>
+    </div>
   );
 };
+function hadError(reason: any): PromiseLike<never> {
+  throw new Error("Function not implemented.");
+}
+
