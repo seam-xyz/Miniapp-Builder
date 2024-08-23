@@ -13,9 +13,13 @@ import { Char_Body, Char_Hair, Char_Eyes, Char_Eyebrows, Char_Eyelashes, Char_Mo
 export const WardrobeFeedComponent = ({ model }: FeedComponentProps) => {
   const Outfit = JSON.parse(model.data.Outfits);
   const BgColor = model.data.BgColor;
+  const brightness = model.data.brightness
   return (
     <div className="relative w-full h-[32em]">
-      <div className={`absolute mt-4 left-1/2 -translate-x-1/2 w-[20em] h-[30em] pointer-events-none rounded-lg shadow-lg ${BgColor}`}>
+      <div
+        className={`absolute mt-4 left-1/2 -translate-x-1/2 w-[20em] h-[30em] pointer-events-none rounded-lg shadow-lg`}
+        style={{ backgroundColor: BgColor, filter: `brightness(${brightness})` }}
+      >
         {Object.keys(Outfit).map((part, index) => (
           <div key={index}>
             {Outfit[part] !== "" ?
@@ -41,15 +45,33 @@ export const WardrobeComposerComponent = ({ model, done }: ComposerComponentProp
     Shoe: Char_BW[8],
   });
 
-  const [selectColor, setColor] = useState(model.data.BgColor ? model.data.BgColor : "bg-white");
-  const [backgroundColor, setBackgroundColor] = useState(selectColor === "bg-white" ? selectColor : selectColor.slice(0, -4));
-  const [colorLevel, setColorLevel] = useState(selectColor === "bg-white" ? "-500" : selectColor.slice(-4, selectColor.length));
+  const [backgroundColor, setBackgroundColor] = useState(model.data.BgColor ?? "rgb(255, 255, 255)");
+  const [colorLevel, setColorLevel] = useState("-500");
 
   const backgroundColors = [
-    'bg-white', 'bg-slate', 'bg-gray', 'bg-zinc', 'bg-neutral', 'bg-stone', 
-    'bg-red', 'bg-orange', 'bg-amber', 'bg-yellow', 'bg-lime', 'bg-green', 
-    'bg-emerald', 'bg-teal', 'bg-cyan', 'bg-sky', 'bg-blue', 'bg-indigo', 
-    'bg-violet', 'bg-purple', 'bg-fuchsia', 'bg-pink', 'bg-rose',
+    'rgb(255, 255, 255)', // white (No intensity for white)
+    'rgb(245, 245, 245)', // slate (offwhite)
+    'rgb(200, 200, 200)', // gray (light gray)
+    'rgb(150, 150, 150)', // zinc (medium gray)
+    'rgb(100, 100, 100)', // neutral (dark gray)
+    'rgb(50, 50, 50)',    // stone (near black)
+    'rgb(239, 68, 68)',   // red (Red-500)
+    'rgb(249, 115, 22)',  // orange (Orange-500)
+    'rgb(245, 158, 11)',  // amber (Amber-500)
+    'rgb(234, 179, 8)',   // yellow (Yellow-500)
+    'rgb(132, 204, 22)',  // lime (Lime-500)
+    'rgb(34, 197, 94)',   // green (Green-500)
+    'rgb(16, 185, 129)',  // emerald (Emerald-500)
+    'rgb(20, 184, 166)',  // teal (Teal-500)
+    'rgb(6, 182, 212)',   // cyan (Cyan-500)
+    'rgb(14, 165, 233)',  // sky (Sky-500)
+    'rgb(59, 130, 246)',  // blue (Blue-500)
+    'rgb(99, 102, 241)',  // indigo (Indigo-500)
+    'rgb(139, 92, 246)',  // violet (Violet-500)
+    'rgb(168, 85, 247)',  // purple (Purple-500)
+    'rgb(217, 70, 239)',  // fuchsia (Fuchsia-500)
+    'rgb(236, 72, 153)',  // pink (Pink-500)
+    'rgb(244, 63, 94)',   // rose (Rose-500)
   ];
 
   const handleDressUp = (part: string, outfit: string) => {
@@ -60,48 +82,46 @@ export const WardrobeComposerComponent = ({ model, done }: ComposerComponentProp
   };
 
   const handleIntensityChange = (event: Event, newValue: number | number[]) => {
-    const newColorLevel = "-" + (newValue as number).toString();
+    const newColorLevel = (newValue as number).toString();
     setColorLevel(newColorLevel);
-    const newColor = backgroundColor + newColorLevel;
-    setColor(newColor);
   };
 
   const handleColorChange = (newValue: string) => {
     setBackgroundColor(newValue);
-    const newColor = newValue + colorLevel;
-    setColor(newColor);
   };
 
   const handleSubmit = () => {
     model.data.Outfits = JSON.stringify(selectedOutfits);
-    model.data.BgColor = selectColor;
+    model.data.BgColor = backgroundColor;
+    model.data.brightness = colorLevel;
     done(model);
   };
 
   return (
     <div className="flex flex-col h-full w-full select-none">
-      <DressUpDisplay outfits={selectedOutfits} backColor={selectColor} />
+      <DressUpDisplay outfits={selectedOutfits} backColor={backgroundColor} brightness={colorLevel} />
       <div className="flex flex-col items-center w-full h-full overflow-y-visible overflow-x-hidden">
         <Box className="relative flex flex-col items-center w-full p-4 bg-transparent rounded-lg">
           <MenuDisplay onDressUp={handleDressUp} />
-          <Slider
+          {/* <Slider
             aria-label="Color Intensity"
-            defaultValue={500}
+            defaultValue={0.8}
             onChange={handleIntensityChange}
-            step={100}
+            step={0.1}
             marks
-            min={100}
-            max={900}
+            min={0.6}
+            max={1}
             color="secondary"
             valueLabelDisplay="off"
             className="mt-4"
-          />
-          <Typography className="text-[#9c27b0] mt-2">Change Intensity</Typography>
+          /> */}
+          {/* <Typography className="text-[#9c27b0] mt-2">Change Intensity</Typography> */}
           <Box className="grid grid-cols-11 border p-2 bg-slate-200 rounded-md mt-4">
             {backgroundColors.map((color, index) => (
               <button
                 key={index}
-                className={`w-10 h-10 m-1 ${color === "bg-white" ? color : color + colorLevel} hover:opacity-75 rounded-full shadow-md`}
+                className={`w-10 h-10 m-1 hover:opacity-75 rounded-full shadow-md`}
+                style={{ backgroundColor: color, filter: `brightness(${colorLevel})` }}
                 onClick={() => handleColorChange(color)}
               ></button>
             ))}
@@ -187,17 +207,17 @@ const MenuDisplay = ({ onDressUp }: { onDressUp: (part: string, outfit: string) 
             {actions[part as keyof typeof actions].map((item: string) => (
               <>
                 {item !== "" ?
-                <Avatar 
-                  key={item} 
-                  src={item} 
-                  onClick={() => onDressUp(part, item)} 
-                  alt='outfit' 
-                  className='hover:bg-slate-200 hover:rounded-none cursor-pointer w-[100px] h-[150px] mx-2' 
-                  sx={{ flexShrink: 0 }}  // Ensure avatars do not shrink to fit
-                />
-                : <DoNotDisturbAltIcon 
-                    className='text-red-600 hover:bg-slate-200 cursor-pointer w-[100px] h-[150px] mx-2' 
-                    sx={{ flexShrink: 0 }} 
+                  <Avatar
+                    key={item}
+                    src={item}
+                    onClick={() => onDressUp(part, item)}
+                    alt='outfit'
+                    className='hover:bg-slate-200 hover:rounded-none cursor-pointer w-[100px] h-[150px] mx-2'
+                    sx={{ flexShrink: 0 }}  // Ensure avatars do not shrink to fit
+                  />
+                  : <DoNotDisturbAltIcon
+                    className='text-red-600 hover:bg-slate-200 cursor-pointer w-[100px] h-[150px] mx-2'
+                    sx={{ flexShrink: 0 }}
                   />}
               </>
             ))}
@@ -208,9 +228,9 @@ const MenuDisplay = ({ onDressUp }: { onDressUp: (part: string, outfit: string) 
   );
 };
 
-const DressUpDisplay = ({ outfits, backColor }: { outfits: { [key: string]: string }; backColor: string }) => {
+const DressUpDisplay = ({ outfits, backColor, brightness }: { outfits: { [key: string]: string }; backColor: string, brightness: string }) => {
   return (
-    <div style={{ zIndex: 3 }} className={`w-full flex items-start justify-center h-[420px] border shadow-md rounded-lg ${backColor}`}>
+    <div style={{ zIndex: 3, backgroundColor: backColor, filter: `brightness(${brightness})` }} className={`w-full flex items-start justify-center h-[420px] border shadow-md rounded-lg`}>
       <div className="relative w-[20em] h-[420px] pointer-events-none">
         {Object.keys(outfits).map((part, index) => (
           <div key={index}>

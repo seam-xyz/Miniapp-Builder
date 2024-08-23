@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ComposerComponentProps, FeedComponentProps } from './types';
 import { getPlaylistTracks, getAudioFeatures, calculateWeightedScores } from './utils/SpotifySearch/actions/result';
 import { Box, TextField } from '@mui/material';
@@ -239,6 +239,14 @@ export const VibecheckComposerComponent = ({ model, done }: ComposerComponentPro
   const [error, setError] = useState<string | null>(null);
   const [showError, setShowError] = useState<boolean>(false);
   const classes = useStyles();
+
+  useEffect (() => {
+    document.body.style.backgroundColor = "#101010";
+
+    return () => {
+      document.body.style.backgroundColor = "#FFFFFF";
+    }
+  })
 
   const triggerErrorAnimation = () => {
     setShowError(false);
