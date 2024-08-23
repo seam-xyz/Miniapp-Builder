@@ -928,7 +928,7 @@ const MagicCard = forwardRef((props: MagicCardProps, ref: React.ForwardedRef<HTM
   ]);
 
   return (
-    <Stack justifyContent="center" alignItems="center" padding={2} style={{ width: "auto", height: "100vh" }}>
+    <Stack justifyContent="center" alignItems="center" padding={2} style={{ width: "auto", height: "auto" }}>
       <canvas
         ref={mergedRef}
         style={{ height: "100%", objectFit: "contain", width: "100%" }}
@@ -980,46 +980,6 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
   const generateCard = useCallback(() => {
     setEditing(false);
   }, []);
-
-  const handleUpload = async (uploadOptions: any, fileName?: string) => {
-    console.log("Handle upload started!");
-    try {
-      await FirebaseStorage.uploadFile(uploadOptions, async (event, error) => {
-        if (error) {
-          console.error("Error during upload: ", error);
-          setUploading(false);
-          return;
-        }
-        console.log("no errors yet, waiting for event completion");
-        if (event && event.completed) {
-          console.log("event completed! starting fetch download url");
-          const result = await FirebaseStorage.getDownloadUrl({ path: uploadOptions.path }).catch(hadError);
-          if (result) {
-            // Only delete the file after successful upload
-            if (fileName) {
-              await Filesystem.deleteFile({
-                path: fileName,
-                directory: Directory.Cache,
-              }).catch((err) => console.error("Failed to delete file: ", err));
-            }
-  
-            setUploading(false);
-            console.log("download URL : ", result.downloadUrl)
-            model.data["dataURL"] = result.downloadUrl;
-            done(model);
-          }
-          else { 
-            console.log("no result? ");
-          }
-        } else {
-          console.log("never finished event?");
-        }
-      });
-    } catch (err) {
-      console.error("Error during upload process: ", err);
-      setUploading(false);
-    }
-  };  
 
   const preview = useCallback(async () => {
     if (canvasRef.current == null) {
