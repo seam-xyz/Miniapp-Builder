@@ -174,7 +174,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: [{username: "Jay", split: 1}],
+    createdBy: [{username: "jayzalani", split: 1}],
     fullscreenEdit: false,
   },
   "Riddlequest": { 
