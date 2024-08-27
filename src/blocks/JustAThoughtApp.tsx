@@ -19,8 +19,9 @@ interface ThoughtEditorProps {
 }
 
 const ThoughtEditor: React.FC<ThoughtEditorProps> = ({ model, done }) => {
+  const defaultBgOptions = ['#80bcbd', '#aad9bb', '#d5f0c1', '#f9f7c9'];
   const [thought, setThought] = useState('');
-  const [bgColor, setBgColor] = useState('#cdcdcd');
+  const [bgColor, setBgColor] = useState(defaultBgOptions[Math.floor(Math.random() * defaultBgOptions.length)]);
   const [textColor, setTextColor] = useState('#000000');
 
   const handleSubmit = () => {
