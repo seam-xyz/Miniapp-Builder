@@ -9,7 +9,7 @@ const seamFontStyle = (textColor: string, bgColor: string) => {
 
 const ThoughtPreview: React.FC<{ content: string, textColor: string, bgColor: string }> = ({ content, textColor, bgColor }) => {
   return (
-    <div className="whitespace-pre items-center" style={seamFontStyle(textColor, bgColor)}>{content}</div>
+    <div className="whitespace-pre-wrap items-center" style={seamFontStyle(textColor, bgColor)}>{content}</div>
   )
 }
 
