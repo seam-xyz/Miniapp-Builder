@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
 
 export const DizzyFeedComponent = ({ model }: FeedComponentProps) => {
-  const wordsUserText = model.data.userText.split(" ");
+  const wordsUserText = model.data.userText.trim().split(" ");  
   const colors = [model.data.userFGColor, model.data.userBGColor];
   const [i, setI] = useState(0);
   const userTextSize = parseInt(model.data.userTextSize);
