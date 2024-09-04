@@ -307,22 +307,7 @@ export const LayeredImageComposerComponent = ({ model, done }: ComposerComponent
 
           <button
             onClick={() => { setIsSubtract(false); }}
-            style={{
-              flex: 1,
-              width: "100%",
-              height: "auto",
-              padding: "12px 16px 12px 16px",
-              margin: "4px 0px",
-              textAlign: "left",
-              overflowWrap: "break-word",
-              whiteSpace: "normal",
-              borderRadius: "8px",
-              backgroundColor: isSubtract ? "#ffffff" : "#2050DF",
-              color: isSubtract ? "#000000" : "#ffffff",
-              borderWidth: "1px",
-              borderStyle: "solid",
-              borderColor: "#2050DF"
-            }}
+            className={`mode-button box-border ${isSubtract ? "": "mode-button-highlight"}`}
           >
             <div style={{ display: "flex", flexDirection: "column", }}>
 
@@ -338,22 +323,7 @@ export const LayeredImageComposerComponent = ({ model, done }: ComposerComponent
 
           <button
             onClick={() => { setIsSubtract(true); }}
-            style={{
-              flex: 1,
-              width: "100%",
-              height: "auto",
-              padding: "12px 16px 12px 16px",
-              margin: "4px 0px",
-              textAlign: "left",
-              overflowWrap: "break-word",
-              whiteSpace: "normal",
-              borderRadius: "8px",
-              backgroundColor: isSubtract ? "#2050DF" : "#ffffff",
-              color: isSubtract ? "#ffffff" : "#000000",
-              borderWidth: "1px",
-              borderStyle: "solid",
-              borderColor: "#2050DF"
-            }}
+            className={`mode-button box-border ${isSubtract ? "mode-button-highlight": ""}`}
           >
             <div style={{ display: "flex", flexDirection: "column", }}>
 
@@ -384,7 +354,7 @@ export const LayeredImageComposerComponent = ({ model, done }: ComposerComponent
             {imgs.map((image: string, index: number) => (
               <div
                 key={index}
-                className={`img-card touch-none select-none ${dragOverItemIndex === index ? "outline-card" : ""}`}
+                className={`img-card touch-none select-none box-border ${dragOverItemIndex === index ? "outline-card" : ""}`}
                 draggable="true"
                 onDragStart={() => handleDragStart(index)}
                 onDragOver={handleDragOver}
