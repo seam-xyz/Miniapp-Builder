@@ -178,7 +178,8 @@ const SliderCounter = (props: { images: string[], count: number, mode: boolean }
           className='slider'
           style={{
             display: "flex",
-            alignItems: "center"
+            alignItems: "center",
+            justifyContent: "space-between"
           }}
         >
           <input
@@ -193,7 +194,7 @@ const SliderCounter = (props: { images: string[], count: number, mode: boolean }
             onTouchEnd={snapValue}
 
           />
-          <p style={{ whiteSpace: 'nowrap', width: "7%", textAlign: "end" }}>{currentImage + 1} / {ImgCount}</p>
+          <p style={{ whiteSpace: 'nowrap', width: "60px", textAlign: "right"}}>{currentImage + 1} / {ImgCount}</p>
         </div>
       </div>
     </div>
