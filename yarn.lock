@@ -1277,6 +1277,11 @@
   dependencies:
     tslib "^2.1.0"
 
+"@capacitor/filesystem@^6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@capacitor/filesystem/-/filesystem-6.0.1.tgz#2c8aa67217c628ee3237555148b021e69df7b198"
+  integrity sha512-eHhXm6tzBIQhErzFnfOE6eA1U+15DHc2212/COfzzGGRk/dyGympoVV3ct2YPVzvpTSxMEW3xFocORv/xD9gFg==
+
 "@capacitor/geolocation@^6.0.0":
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/@capacitor/geolocation/-/geolocation-6.0.0.tgz#f4926033bfeb074cfd947f6541d2101d5c3417f7"
@@ -6250,6 +6255,11 @@ dlv@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/dlv/-/dlv-1.1.3.tgz#5c198a8a11453596e751494d49874bc7732f2e79"
   integrity sha512-+HlytyjlPKnIG8XuRG8WvmBP8xs8P71y+SKKS6ZXWoEgLuePxtDoUEiH7WkdePWrQ5JBpE6aoVqfZfJUQkjXwA==
+
+dndtouch2@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/dndtouch2/-/dndtouch2-1.0.0.tgz#4ddd29067370f00a7fe200228a0356bb6a76bc6f"
+  integrity sha512-ggnY4oMAFPbS7UublMQ2NFOyq4Zd14qoMguffM9aWVyuHc3236hb+M60ZhFJvRLu2UGyZemblFJpt3Spvm4U5g==
 
 dns-equal@^1.0.0:
   version "1.0.0"

@@ -696,7 +696,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
         currentBrush={currentBrush}
         setImageDataURL={props.setImageDataURL}
       />
-      <Box style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} className={`my-4 w-[${props.width}] h-[${props.width}] flex flex-col overflow-y-scroll space-y-4`}>
+      <div style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} className={`my-4 w-[${props.width}] h-full flex flex-col overflow-y-scroll space-y-4`}>
         <CalligraphyToolbarTab
           activeToolbarTab={activeToolbarTab}
           activeColor={activeColor}
@@ -716,7 +716,7 @@ const CalligraphyEdit = (props: CalligraphyEditProps) => {
         <div className="p-3">
           <SeamSaveButton onClick={props.onSave} />
         </div>
-      </Box>
+      </div>
     </div>
   );
 }

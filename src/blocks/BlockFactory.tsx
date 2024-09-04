@@ -1,3 +1,8 @@
+import { LayeredImageFeedComponent, LayeredImageComposerComponent } from './LayeredImageBlock'
+import { ColorFeedComponent, ColorComposerComponent } from './ColorApp'
+import { RiddlequestFeedComponent, RiddlequestComposerComponent } from './RiddlequestApp'
+import { QuickPollFeedComponent, QuickPollComposerComponent } from './QuickPollApp'
+import { PickrrFeedComponent, PickrrComposerComponent } from './PickrrApp'
 import { WardrobeFeedComponent, WardrobeComposerComponent } from './WardrobeApp'
 import { JournalFeedComponent, JournalComposerComponent } from './JournalApp'
 import { HaikuraFeedComponent, HaikuraComposerComponent } from './HaikuraApp'
@@ -83,12 +88,17 @@ export default class BlockFactory {
       case "Voice": return <VoiceFeedComponent model={model} update={update}/>;
       case "Vibecheck": return <VibecheckFeedComponent model={model} update={update}/>;
       case "JustAThought": return <JustAThoughtFeedComponent model={model} update={update}/>;
+      case "LayeredImage": return <LayeredImageFeedComponent model={model}  update={update}/>;
       case "Dizzy": return <DizzyFeedComponent model={model} update={update}/>;
       case "Horoscope": return <HoroscopeFeedComponent model={model} update={update}/>;
       case "MagicCard": return <MagicCardFeedComponent model={model} update={update}/>;
       case "Wardrobe": return <WardrobeFeedComponent model={model} update={update}/>;
       case "Haikura": return <HaikuraFeedComponent model={model} update={update}/>;
       case "Journal": return <JournalFeedComponent model={model} update={update}/>;
+      case "QuickPoll": return <QuickPollFeedComponent model={model} update={update}/>;
+      case "Pickrr": return <PickrrFeedComponent model={model} update={update} />;
+      case "Riddlequest": return <RiddlequestFeedComponent model={model} update={update} />;
+      case "Color": return <ColorFeedComponent model={model} update={update} />;
       // new feed components go here
       default: return UnknownFeedComponent({ model, update });
     }
@@ -132,7 +142,12 @@ export default class BlockFactory {
       case "Tatergangs": return TatergangsComposerComponent(props);
       case "JustAThought": return JustAThoughtComposerComponent(props);
       case "Voice": return VoiceComposerComponent(props);
+      case "LayeredImage": return LayeredImageComposerComponent(props);   
+      case "QuickPoll": return QuickPollComposerComponent(props);
+      case "Pickrr": return PickrrComposerComponent(props);
       case "Vibecheck": return VibecheckComposerComponent(props);
+      case "Color": return ColorComposerComponent(props);
+      case "Riddlequest": return RiddlequestComposerComponent(props);
       case "Wardrobe": return WardrobeComposerComponent(props);
       case "Journal": return JournalComposerComponent(props);
       case "Haikura": return HaikuraComposerComponent(props);

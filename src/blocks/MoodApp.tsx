@@ -160,7 +160,7 @@ const Dial: React.FC<DialProps> = ({ index, onDialChange, color }) => {
   return (
     <div
       ref={dialRef}
-      className="dial relative w-64 h-64 rounded-full flex items-center justify-center"
+      className="dial relative w-64 h-full rounded-full flex items-center justify-center"
       onMouseDown={handleStart}
       onTouchStart={handleStart}
     >

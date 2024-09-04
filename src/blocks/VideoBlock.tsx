@@ -14,11 +14,11 @@ export const VideoFeedComponent = ({ model }: FeedComponentProps) => {
   }
 
   return (
-    <div className="flex relative w-full h-auto">
+    <div className="flex relative items-center justify-center w-full h-full">
       <ReactPlayer
         controls={true}
         url={url}
-        className="w-full h-auto"
+        className="w-full h-full"
       />
     </div>
   );
