@@ -384,7 +384,7 @@ export const LayeredImageComposerComponent = ({ model, done }: ComposerComponent
             {imgs.map((image: string, index: number) => (
               <div
                 key={index}
-                style={dragOverItemIndex === index ? { width: "100%", outline: "2px solid #2050DF", backgroundColor: "#e4e6eb", padding: "8px 16px", borderRadius: "8px", margin: "7px 0px 16px 0px", opacity: "0.999",userSelect:"none", touchAction:"none" } : { width: "100%", backgroundColor: "#e4e6eb", padding: "8px 16px", borderRadius: "8px", margin: "7px 0px 16px 0px", opacity: "0.999",userSelect:"none", touchAction:"none" }}
+                className={`img-card touch-none select-none ${dragOverItemIndex === index ? "outline-card" : ""}`}
                 draggable="true"
                 onDragStart={() => handleDragStart(index)}
                 onDragOver={handleDragOver}

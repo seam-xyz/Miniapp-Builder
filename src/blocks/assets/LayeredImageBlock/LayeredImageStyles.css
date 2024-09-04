@@ -70,6 +70,21 @@
     display: inline-block;
   }
 
+  .img-card{
+  width: 100%;
+  background-color: #e4e6eb;
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin: 7px 0px 16px 0px;
+  opacity: 0.999;
+    
+  }
+
+  .outline-card{
+    outline: 2px solid #2050DF;
+  }
+
+
   @media only screen and (max-width:375px) {
 
     .hideScreenSmall {
