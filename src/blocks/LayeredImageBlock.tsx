@@ -182,7 +182,7 @@ const SliderCounter = (props: { images: string[], count: number, mode: boolean }
           }}
         >
           <input
-            className={'LayeredImageBlock-slider'}
+            className={'LayeredImageBlock-slider touch-none select-none'}
             style={{ background: `linear-gradient(to right, #2050DF ${progress}%, #ccc ${progress}% )` }}
             type='range'
             min={0}
