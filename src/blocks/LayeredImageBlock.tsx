@@ -190,6 +190,7 @@ const SliderCounter = (props: { images: string[], count: number, mode: boolean }
             value={sliderValue}
             onChange={sliderChange}
             onMouseUp={snapValue}
+            onTouchEnd={snapValue}
 
           />
           <p style={{ whiteSpace: 'nowrap', width: "7%", textAlign: "end" }}>{currentImage + 1} / {ImgCount}</p>
