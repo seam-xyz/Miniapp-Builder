@@ -156,7 +156,8 @@ const SliderCounter = (props: { images: string[], count: number, mode: boolean }
               draggable="false"
               style={{
                 width: `100%`,
-                position: modePosition(images.indexOf(image), ImgCount),//images.indexOf(image) === 0 ? "relative": "absolute",
+                borderRadius: "10px",
+                position: modePosition(images.indexOf(image), ImgCount),
                 opacity: modeOpacity(images.indexOf(image), currentImage, ImgCount),
                 zIndex: 0,
                 top: 0,
