@@ -156,7 +156,8 @@ const SliderCounter = (props: { images: string[], count: number, mode: boolean }
               draggable="false"
               style={{
                 width: `100%`,
-                position: modePosition(images.indexOf(image), ImgCount),//images.indexOf(image) === 0 ? "relative": "absolute",
+                borderRadius: "10px",
+                position: modePosition(images.indexOf(image), ImgCount),
                 opacity: modeOpacity(images.indexOf(image), currentImage, ImgCount),
                 zIndex: 0,
                 top: 0,
@@ -177,11 +178,12 @@ const SliderCounter = (props: { images: string[], count: number, mode: boolean }
           className='slider'
           style={{
             display: "flex",
-            alignItems: "center"
+            alignItems: "center",
+            justifyContent: "space-between"
           }}
         >
           <input
-            className={'LayeredImageBlock-slider'}
+            className={'LayeredImageBlock-slider touch-none select-none'}
             style={{ background: `linear-gradient(to right, #2050DF ${progress}%, #ccc ${progress}% )` }}
             type='range'
             min={0}
@@ -189,9 +191,10 @@ const SliderCounter = (props: { images: string[], count: number, mode: boolean }
             value={sliderValue}
             onChange={sliderChange}
             onMouseUp={snapValue}
+            onTouchEnd={snapValue}
 
           />
-          <p style={{ whiteSpace: 'nowrap', width: "7%", textAlign: "end" }}>{currentImage + 1} / {ImgCount}</p>
+          <p style={{ whiteSpace: 'nowrap', width: "60px", textAlign: "right"}}>{currentImage + 1} / {ImgCount}</p>
         </div>
       </div>
     </div>
@@ -307,22 +310,7 @@ export const LayeredImageComposerComponent = ({ model, done }: ComposerComponent
 
           <button
             onClick={() => { setIsSubtract(false); }}
-            style={{
-              flex: 1,
-              width: "100%",
-              height: "auto",
-              padding: "12px 16px 12px 16px",
-              margin: "4px 0px",
-              textAlign: "left",
-              overflowWrap: "break-word",
-              whiteSpace: "normal",
-              borderRadius: "8px",
-              backgroundColor: isSubtract ? "#ffffff" : "#2050DF",
-              color: isSubtract ? "#000000" : "#ffffff",
-              borderWidth: "1px",
-              borderStyle: "solid",
-              borderColor: "#2050DF"
-            }}
+            className={`mode-button box-border ${isSubtract ? "": "mode-button-highlight"}`}
           >
             <div style={{ display: "flex", flexDirection: "column", }}>
 
@@ -338,22 +326,7 @@ export const LayeredImageComposerComponent = ({ model, done }: ComposerComponent
 
           <button
             onClick={() => { setIsSubtract(true); }}
-            style={{
-              flex: 1,
-              width: "100%",
-              height: "auto",
-              padding: "12px 16px 12px 16px",
-              margin: "4px 0px",
-              textAlign: "left",
-              overflowWrap: "break-word",
-              whiteSpace: "normal",
-              borderRadius: "8px",
-              backgroundColor: isSubtract ? "#2050DF" : "#ffffff",
-              color: isSubtract ? "#ffffff" : "#000000",
-              borderWidth: "1px",
-              borderStyle: "solid",
-              borderColor: "#2050DF"
-            }}
+            className={`mode-button box-border ${isSubtract ? "mode-button-highlight": ""}`}
           >
             <div style={{ display: "flex", flexDirection: "column", }}>
 
@@ -384,7 +357,7 @@ export const LayeredImageComposerComponent = ({ model, done }: ComposerComponent
             {imgs.map((image: string, index: number) => (
               <div
                 key={index}
-                style={dragOverItemIndex === index ? { width: "100%", outline: "2px solid #2050DF", backgroundColor: "#e4e6eb", padding: "8px 16px", borderRadius: "8px", margin: "7px 0px 16px 0px", opacity: "0.999",userSelect:"none", touchAction:"none" } : { width: "100%", backgroundColor: "#e4e6eb", padding: "8px 16px", borderRadius: "8px", margin: "7px 0px 16px 0px", opacity: "0.999",userSelect:"none", touchAction:"none" }}
+                className={`img-card touch-none select-none box-border ${dragOverItemIndex === index ? "outline-card" : ""}`}
                 draggable="true"
                 onDragStart={() => handleDragStart(index)}
                 onDragOver={handleDragOver}

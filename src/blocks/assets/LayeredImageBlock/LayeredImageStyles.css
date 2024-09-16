@@ -7,11 +7,11 @@
     appearance: none;          
     padding: 0px;
     margin: 0px;
-    width: 100%;
+    width: 90%;
     height: 10px;
-    border-radius: 5px;
+    border-radius: 20px;
     margin-right: 12px;
-    flex-grow: inherit;
+    flex-grow: 0;
     Border: 2px solid #0051E8;
   }
 
@@ -42,6 +42,7 @@
   .LayeredImageBlock-slider::-ms-track {
     width: 100%;
     height: 10px;
+    border-radius: 20px;
     background: transparent;  
     border-color: transparent;
     color: transparent;
@@ -49,12 +50,12 @@
 
   .LayeredImageBlock-slider::-ms-fill-lower {
     background: #0051E8;      
-    border-radius: 5px;
+    border-radius: 20px;
   }
 
   .LayeredImageBlock-slider::-ms-fill-upper {
     background: #0051E8;
-    border-radius: 5px;
+    border-radius: 20px;
   }
 
   .hideScroll::-webkit-scrollbar {
@@ -69,6 +70,42 @@
   .hideScreenSmall {
     display: inline-block;
   }
+
+  .img-card{
+  width: 100%;
+  background-color: #e4e6eb;
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin: 7px 0px 16px 0px;
+  opacity: 0.999;  
+  }
+
+  .outline-card{
+    outline: 2px solid #2050DF;
+  }
+
+  .mode-button {
+    flex: 1;
+    width: 100%;
+    height: "auto";
+    padding: 12px 16px 12px 16px;
+    margin: 4px 0px;
+    text-align: left;
+    overflow-wrap: break-word;
+    white-space: normal;
+    border-radius: 8px;
+    background-color: white;
+    color: black;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #2050DF;
+  }
+
+  .mode-button-highlight {
+    background-color: #2050DF;
+    color: #ffffff;
+  }
+
 
   @media only screen and (max-width:375px) {
 
