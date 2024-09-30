@@ -858,7 +858,7 @@ const PotatoPersonality = (props: InnerSpudProps) => {
   }
   if (eyes.length) {
     chapters.push(<p className="menu-item">Horoscope</p>)
-    const future = `Your week will be defined by ${horoscope[arms].future}. ${horoscope[arms].def}`
+    const future = `Your week will be defined by ${horoscope[eyes].future}. ${horoscope[eyes].def}`
     chapters.push(<p>{future}</p>);
   }
   if (!eyes.length || !nose.length || !mouth.length || !legs.length || !arms.length){
