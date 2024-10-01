@@ -639,4 +639,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
+  "Seam": { 
+    type: "Seam",
+    displayName: "Seam Meme",
+    displayDescription: "Meme creator that allows users to import popular meme formats, or their own images and caption them.",
+    icon: "SeamIcon", // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "danielgavidia", split: 1.0}],
+    fullscreenEdit: false,
+},
 };
