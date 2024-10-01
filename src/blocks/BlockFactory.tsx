@@ -1,3 +1,4 @@
+import { SeamFeedComponent, SeamComposerComponent } from './SeamApp'
 import { LayeredImageFeedComponent, LayeredImageComposerComponent } from './LayeredImageBlock'
 import { ColorFeedComponent, ColorComposerComponent } from './ColorApp'
 import { RiddlequestFeedComponent, RiddlequestComposerComponent } from './RiddlequestApp'
@@ -99,6 +100,7 @@ export default class BlockFactory {
       case "Pickrr": return <PickrrFeedComponent model={model} update={update} />;
       case "Riddlequest": return <RiddlequestFeedComponent model={model} update={update} />;
       case "Color": return <ColorFeedComponent model={model} update={update} />;
+      case "Seam": return <SeamFeedComponent model={model} update={update} />;
       // new feed components go here
       default: return UnknownFeedComponent({ model, update });
     }
@@ -154,6 +156,7 @@ export default class BlockFactory {
       case "MagicCard": return MagicCardComposerComponent(props);
       case "Horoscope": return HoroscopeComposerComponent(props);
       case "Dizzy": return DizzyComposerComponent(props);
+      case "Seam": return SeamComposerComponent(props);
       // new composer components go here
       default: return UnknownComposerComponent(props);
     }
