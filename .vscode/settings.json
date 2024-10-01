@@ -9,7 +9,7 @@
   "typescript.format.enable": true,
   "json.format.enable": true,
   "html.format.enable": true,
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "eslint.enable": false,
   "prettier.enable": false,
   "files.autoSave": "off",
