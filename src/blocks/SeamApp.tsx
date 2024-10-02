@@ -5,14 +5,23 @@ import image3 from "../blocks/assets/SeamMeme/glasses.jpg"
 import image4 from "../blocks/assets/SeamMeme/think.jpg"
 import Feed from '../Feed';
 
+// icons
+import UndoIcon from '@mui/icons-material/Undo';
+import RedoIcon from '@mui/icons-material/Redo';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import Grid3x3Icon from '@mui/icons-material/Grid3x3';
+import AbcIcon from '@mui/icons-material/Abc';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import CropIcon from '@mui/icons-material/Crop';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+
+// Meme Browser
 const memeCarousels = [
     { title: "Top 10", images: [image1, image2, image3, image4] },
     { title: "Browse Meme Layouts", images: [image1, image2, image3, image4] },
     { title: "Blank Layouts", images: [image1, image2, image3, image4] },
     { title: "Browse Memes", images: [image1, image2, image3, image4] },
 ]
-
-// Meme Browser
 
 interface MemeCarousel {
     title: string;
@@ -66,41 +75,49 @@ const MemeBrowser = () => {
 
 // Meme Editor
 const memeEditorButtons = [
-    { title: "Canvas", icon: "" },
-    { title: "Text", icon: "" },
-    { title: "Media", icon: "" },
-    { title: "Crop", icon: "" },
+    { title: "Canvas", icon: Grid3x3Icon },
+    { title: "Text", icon: AbcIcon },
+    { title: "Media", icon: AddPhotoAlternateIcon },
+    { title: "Crop", icon: CropIcon },
 ]
 
 interface MemeEditorButtonProps {
     title: string;
-    icon: string;
+    icon: React.ElementType;
 }
 
-const MemeEditorButton: React.FC<MemeEditorButtonProps> = ({ title, icon }) => {
+const MemeEditorButton: React.FC<MemeEditorButtonProps> = ({ title, icon: Icon }) => {
     return (
-        <div className='h-24 w-24 border-2 rounded-xl flex flex-row items-center bg-sky-500 text-white font-bold'>
-            <div><img src={icon} alt="" /></div>
-            <div className='w-full text-center'>{title}</div>
-        </div>
+        <button className='p-2 h-24 w-24 border-2 rounded-xl flex flex-col items-center justify-center bg-sky-500 text-white font-bold'>
+            <div className='w-full flex justify-center p-1'>
+                <Icon />
+            </div>
+            <div className='w-full text-center p-1'>{title}</div>
+        </button>
     )
 }
 
 const MemeEditor = () => {
     return (
         <div className='flex flex-col h-full'>
-            <div className='flex justify-between'>
-                <div className='flex flex-row'>
-                    <div>back</div>
-                    <div>forward</div>
+            <div className='flex justify-between m-2'>
+                <div className='flex flex-row text-gray-400 space-x-2'>
+                    <div className='px-2 border-gray-200 border-2 rounded-3xl h-10 w-14 flex justify-center'>
+                        <button className='w-full h-full'><UndoIcon color='inherit' /></button>
+                    </div>
+                    <div className='px-2 border-gray-200 border-2 rounded-3xl h-10 w-14 flex justify-center'>
+                        <button className='w-full h-full'><RedoIcon color='inherit' /></button>
+                    </div>
                 </div>
-                <div>trash</div>
+                <div className='px-2 border-gray-200 border-2 rounded-3xl h-10 w-14 flex justify-center text-gray-400'>
+                    <button className='w-full h-full'><DeleteOutlineIcon color='inherit' /></button>
+                </div>
             </div>
-            <div className='flex-1 border-2 bg-gray-100 rounded-lg'>
-                <div>Icon</div>
-                <div>Tap to Start Creating</div>
-            </div>
-            <div className='flex p-2'>
+            <button className='flex-1 border-2 bg-gray-100 rounded-lg text-gray-400 m-2'>
+                <div className='p-4'><AddCircleOutlineIcon fontSize='large' color='inherit' /></div>
+                <p className='p-4 font-bold'>Tap to Start Creating</p>
+            </button>
+            <div className='flex space-x-2 m-2'>
                 {memeEditorButtons.map((x, index) => {
                     return (
                         <MemeEditorButton key={index} title={x.title} icon={x.icon} />
