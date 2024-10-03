@@ -38,24 +38,21 @@ const memeCarousels = [
 ]
 
 interface MemeCarousel {
-    title: string;
     images: string[];
 }
 
-const MemeCarousel: React.FC<MemeCarousel> = ({ title, images }) => {
+const MemeCarousel: React.FC<MemeCarousel> = ({ images }) => {
     return (
-        <div className='p-2'>
-            <p className='font-bold my-2'>{title}</p>
-            <div className='flex flex-row overflow-x-auto space-x-2 scrollbar-hide'>{images.map((x, index) => {
-                return (
-                    <div
-                        key={index}
-                        className='h-24 w-24 flex-shrink-0'>
-                        <img src={x} alt={`Image ${index}`} className='rounded-xl w-full h-full' />
-                    </div>
-                )
-            })}</div>
-        </div>
+        <div className='grid grid-cols-4 overflow-y-auto scrollbar-hide w-full'>{images.map((x, index) => {
+            return (
+                <div
+                    key={index}
+                    className='h-24 w-full p-1 flex justify-center items-center'>
+                    <img src={x} alt={`Image ${index}`} className='rounded-xl w-full h-full object-cover' />
+                </div>
+            )
+        })}</div>
+
     )
 }
 
@@ -73,8 +70,6 @@ const MemeBrowser = () => {
     const [memeData, setMemeData] = useState<Meme[]>([])
     const [memeUrls, setMemeUrls] = useState<string[]>([])
 
-    // const urls = memeData.map(x => x.url)
-
     const getMemeData = async () => {
         const res = await axios({
             method: "GET",
@@ -82,8 +77,6 @@ const MemeBrowser = () => {
         })
         const memes = res.data.data.memes as Meme[]
         const urls = memes.map(x => x.url)
-        // console.log(memes)
-        // console.log(urls)
         setMemeData(memes)
         setMemeUrls(urls)
     }
@@ -94,31 +87,19 @@ const MemeBrowser = () => {
 
     return (
         <div className='flex flex-col h-full'>
-            <div className='h-[15%] flex flex-col justify-center'>
-                <div className='border-2 border-gray-200 w-full rounded-lg h-12'>
+            <div className='flex flex-col justify-center'>
+                <div className='border-2 border-gray-200 w-full rounded-lg'>
                     <input type="text" name="" id="" placeholder='Search "memes"' className='w-full h-full p-2 rounded-lg' />
                 </div>
-                <div className='flex w-full py-2'>
-                    <div className='border-b-2 flex-1 py-2'>
-                        <button className='w-full'>Browse memes</button>
-                    </div>
-                    <div className='border-b-2 flex-1 py-2'>
-                        <button className='w-full'>Drafts</button>
-                    </div>
-                </div>
             </div>
-            <div className='overflow-y-auto scrollbar-hide h-[70%] my-2'>
-                {/* {memeCarousels.map((x, index) => {
-                    return (
-                        <MemeCarousel key={index} title={x.title} images={x.images} />
-                    )
-                })} */}
-                <MemeCarousel title='Top 10' images={memeUrls.slice(0, 10)} />
-                <MemeCarousel title='Browse Memes' images={memeUrls} />
+            <p className='font-bold py-2 p-1'>Browse Memes</p>
+            <div className='py-2 w-full overflow-y-auto scrollbar-hide flex items-center justify-center'>
+                <MemeCarousel images={memeUrls} />
             </div>
-            <div className='w-full h-[10%] p-1 flex items-center justify-center'>
-                <button className='bg-blue-600 w-full rounded-lg h-full text-white'> Create your own meme </button>
-            </div>
+            {/* <div className='w-full p-1 flex items-center justify-center my-2'>
+                <button className='bg-blue-600 w-full h-full h-16 rounded-lg text-white'> Create your own meme </button>
+            </div> */}
+            <div className='w-full p-1 flex items-center justify-center my-2'></div>
         </div>
     )
 }
@@ -240,7 +221,7 @@ const ChooseMediaComponent = () => {
                         </div>
                     </div>
                 </div>
-                <MemeCarousel title='Popular Memes' images={memeUrls} />
+                {/* <MemeCarousel title='Popular Memes' images={memeUrls} /> */}
             </div>
             <div className='w-full h-[10%] p-1 flex items-center justify-center'>
                 <button className='bg-blue-600 w-full rounded-lg h-full text-white'> Create your own meme </button>
@@ -248,15 +229,16 @@ const ChooseMediaComponent = () => {
         </div>
     )
 }
+// #endregion
 
 // #region: Composer - Seam Composer Component
 export const SeamComposerComponent = ({ model, done }: ComposerComponentProps) => {
     return (
-        <div className='h-full'>
-            {/* <MemeBrowser /> */}
+        <div className='h-full w-full'>
+            <MemeBrowser />
             {/* <MemeEditor /> */}
             {/* <FeedComponent /> */}
-            <ChooseMediaComponent />
+            {/* <ChooseMediaComponent /> */}
             {/* <button onClick={() => { done(model) }} className='bg-blue-300 w-full rounded-lg'> Create your own meme </button> */}
         </div>
     );
