@@ -120,11 +120,11 @@ interface MemeEditorButtonProps {
 
 const MemeEditorButton: React.FC<MemeEditorButtonProps> = ({ title, icon: Icon }) => {
     return (
-        <button className='p-2 h-24 w-24 border-2 rounded-xl flex flex-col items-center justify-center bg-sky-500 text-white font-bold'>
-            <div className='w-full flex justify-center p-1'>
+        <button className='m-2 p-2 w-full flex-grow border-2 rounded-xl flex flex-col items-center justify-center bg-sky-500 text-white font-bold'>
+            <div className='w-full flex justify-center p-1 flex-grow'>
                 <Icon />
             </div>
-            <div className='w-full text-center p-1'>{title}</div>
+            <div className='w-full text-center p-1 flex-grow text-sm'>{title}</div>
         </button>
     )
 }
@@ -145,16 +145,23 @@ const MemeEditor = () => {
                     <button className='w-full h-full'><DeleteOutlineIcon color='inherit' /></button>
                 </div>
             </div>
-            <button className='flex-1 border-2 bg-gray-100 rounded-lg text-gray-400 m-2'>
+            <button className='flex-1 border-2 bg-gray-200 rounded-lg text-gray-400 m-2'>
                 <div className='p-4'><AddCircleOutlineIcon fontSize='large' color='inherit' /></div>
                 <p className='p-4 font-bold'>Tap to Start Creating</p>
             </button>
-            <div className='flex space-x-2 m-2'>
+            <div className='flex justify-between'>
                 {memeEditorButtons.map((x, index) => {
                     return (
                         <MemeEditorButton key={index} title={x.title} icon={x.icon} />
                     )
                 })}
+            </div>
+            <div className='w-full p-1 flex items-center justify-center my-2 border-t-2 border-gray-200'>
+                <div className='bg-black rounded-full m-2'>Image</div>
+                <input className='w-full m-2 text-sm text-gray-400 h-full p-2' placeholder='Say Something...' />
+            </div>
+            <div className='w-full p-1 flex items-center justify-center my-2'>
+                <button className='bg-blue-600 w-full h-full h-16 rounded-lg text-white'> Post </button>
             </div>
         </div>
     )
@@ -235,8 +242,8 @@ const ChooseMediaComponent = () => {
 export const SeamComposerComponent = ({ model, done }: ComposerComponentProps) => {
     return (
         <div className='h-full w-full'>
-            <MemeBrowser />
-            {/* <MemeEditor /> */}
+            {/* <MemeBrowser /> */}
+            <MemeEditor />
             {/* <FeedComponent /> */}
             {/* <ChooseMediaComponent /> */}
             {/* <button onClick={() => { done(model) }} className='bg-blue-300 w-full rounded-lg'> Create your own meme </button> */}
