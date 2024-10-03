@@ -1,3 +1,4 @@
+// #region: imports
 import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
 import image1 from "../blocks/assets/SeamMeme/doge.jpg"
 import image2 from "../blocks/assets/SeamMeme/fine.jpg"
@@ -19,8 +20,9 @@ import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import ShareIcon from '@mui/icons-material/Share';
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+// #endregion
 
-// Meme Browser
+// #region: Composer - Meme Browser
 const memeCarousels = [
     { title: "Top 10", images: [image1, image2, image3, image4] },
     { title: "Browse Meme Layouts", images: [image1, image2, image3, image4] },
@@ -52,33 +54,37 @@ const MemeCarousel: React.FC<MemeCarousel> = ({ title, images }) => {
 
 const MemeBrowser = () => {
     return (
-        <div>
-            <div className='overflow-y-auto scrollbar-hide'>
-                <div className='border-2 w-full h-10'>
-                    <input type="text" name="" id="" placeholder='Search "memes"' className='w-full h-full p-2' />
+        <div className='flex flex-col h-full'>
+            <div className='h-[15%] flex flex-col justify-center'>
+                <div className='border-2 border-gray-200 w-full rounded-lg h-12'>
+                    <input type="text" name="" id="" placeholder='Search "memes"' className='w-full h-full p-2 rounded-lg' />
                 </div>
                 <div className='flex w-full py-2'>
-                    <div className='border-2 flex-1 py-2'>
+                    <div className='border-b-2 flex-1 py-2'>
                         <button className='w-full'>Browse memes</button>
                     </div>
-                    <div className='border-2 flex-1 py-2'>
+                    <div className='border-b-2 flex-1 py-2'>
                         <button className='w-full'>Drafts</button>
                     </div>
                 </div>
-                <div>{memeCarousels.map((x, index) => {
-                    return (
-                        <MemeCarousel title={x.title} images={x.images} />
-                    )
-                })}</div>
             </div>
-            {/* <button className='bg-blue-300 w-full rounded-lg'> Create your own meme </button> */}
+            <div className='overflow-y-auto scrollbar-hide h-[70%] my-2'>
+                {memeCarousels.map((x, index) => {
+                    return (
+                        <MemeCarousel key={index} title={x.title} images={x.images} />
+                    )
+                })}
+            </div>
+            <div className='w-full h-[10%] p-1 flex items-center justify-center'>
+                <button className='bg-blue-600 w-full rounded-lg h-full text-white'> Create your own meme </button>
+            </div>
         </div>
 
     )
 }
+// #endregion
 
-
-// Meme Editor
+// #region: Composer - Meme Editor
 const memeEditorButtons = [
     { title: "Canvas", icon: Grid3x3Icon },
     { title: "Text", icon: AbcIcon },
@@ -132,10 +138,22 @@ const MemeEditor = () => {
         </div>
     )
 }
+// #endregion
 
+// #region: Composer - Seam Composer Component
+export const SeamComposerComponent = ({ model, done }: ComposerComponentProps) => {
+    return (
+        <div className='h-full'>
+            <MemeBrowser />
+            {/* <MemeEditor /> */}
+            {/* <FeedComponent /> */}
+            {/* <button onClick={() => { done(model) }} className='bg-blue-300 w-full rounded-lg'> Create your own meme </button> */}
+        </div>
+    );
+}
+// #endregion
 
-
-// Seam Feed Component
+// #region: Feed
 interface FeedButtonProps {
     count: number;
     icon: React.ElementType;
@@ -162,7 +180,7 @@ const FeedComponent = () => {
         <div className='border-2 border-gray-100 rounded-xl p-2 h-7/8 flex flex-col'>
             <div>
                 <div className='flex items-center'>
-                    <div className='p-1'><img src={image1} alt="" className='rounded-full h-12 w-12' /></div>
+                    <div className='p-1'><img src={image2} alt="" className='rounded-full h-12 w-12' /></div>
                     <div className='flex-grow p-1'>
                         <p className='font-semibold'>Seam meme</p>
                         <p className='font-light text-xs text-gray-400'>Text Block</p>
@@ -178,7 +196,7 @@ const FeedComponent = () => {
             <div className='flex flex-col flex-1/2'>
                 <p className='text-lg'>My first Meme!!</p>
                 <div className='flex-1 p-2 border-2 border-gray-100 mt-2 h-full w-full flex justify-center'>
-                    <img src={image3} alt="Meme" className='h-96 object-none' />
+                    <img src={image2} alt="Meme" className='h-96 object-none' />
                 </div>
                 <div className='flex p-2 w-full justify-between'>
                     <div className='flex space-x-2'>
@@ -201,14 +219,5 @@ export const SeamFeedComponent = ({ model, update }: FeedComponentProps) => {
     return <h1>Hi, I'm in the feed!</h1>;
 }
 
-// Seam Composer Component
-export const SeamComposerComponent = ({ model, done }: ComposerComponentProps) => {
-    return (
-        <div className='h-full'>
-            {/* <MemeBrowser /> */}
-            {/* <MemeEditor /> */}
-            <FeedComponent />
-            {/* <button onClick={() => { done(model) }} className='bg-blue-300 w-full rounded-lg'> Create your own meme </button> */}
-        </div>
-    );
-}
+// #endregion
+

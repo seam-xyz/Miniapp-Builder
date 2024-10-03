@@ -1,4 +1,4 @@
-import { SeamFeedComponent, SeamComposerComponent } from './SeamApp'
+import { SeamFeedComponent, SeamComposerComponent } from './SeamMeme'
 import { LayeredImageFeedComponent, LayeredImageComposerComponent } from './LayeredImageBlock'
 import { ColorFeedComponent, ColorComposerComponent } from './ColorApp'
 import { RiddlequestFeedComponent, RiddlequestComposerComponent } from './RiddlequestApp'
