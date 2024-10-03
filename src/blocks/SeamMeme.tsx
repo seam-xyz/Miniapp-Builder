@@ -6,6 +6,10 @@ import image3 from "../blocks/assets/SeamMeme/glasses.jpg"
 import image4 from "../blocks/assets/SeamMeme/think.jpg"
 import Feed from '../Feed';
 
+// libraries
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
 // icons
 import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
@@ -52,7 +56,39 @@ const MemeCarousel: React.FC<MemeCarousel> = ({ title, images }) => {
     )
 }
 
+interface Meme {
+    box_count: number;
+    captions: number;
+    height: number;
+    id: string;
+    name: string;
+    url: string;
+    width: string;
+}
+
 const MemeBrowser = () => {
+    const [memeData, setMemeData] = useState<Meme[]>([])
+    const [memeUrls, setMemeUrls] = useState<string[]>([])
+
+    // const urls = memeData.map(x => x.url)
+
+    const getMemeData = async () => {
+        const res = await axios({
+            method: "GET",
+            url: "https://api.imgflip.com/get_memes"
+        })
+        const memes = res.data.data.memes as Meme[]
+        const urls = memes.map(x => x.url)
+        // console.log(memes)
+        // console.log(urls)
+        setMemeData(memes)
+        setMemeUrls(urls)
+    }
+
+    useEffect(() => {
+        getMemeData()
+    }, [])
+
     return (
         <div className='flex flex-col h-full'>
             <div className='h-[15%] flex flex-col justify-center'>
@@ -69,11 +105,13 @@ const MemeBrowser = () => {
                 </div>
             </div>
             <div className='overflow-y-auto scrollbar-hide h-[70%] my-2'>
-                {memeCarousels.map((x, index) => {
+                {/* {memeCarousels.map((x, index) => {
                     return (
                         <MemeCarousel key={index} title={x.title} images={x.images} />
                     )
-                })}
+                })} */}
+                <MemeCarousel title='Top 10' images={memeUrls.slice(0, 10)}/>
+                <MemeCarousel title='Browse Memes' images={memeUrls}/>
             </div>
             <div className='w-full h-[10%] p-1 flex items-center justify-center'>
                 <button className='bg-blue-600 w-full rounded-lg h-full text-white'> Create your own meme </button>
