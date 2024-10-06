@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react"
 import axios from "axios"
+import { icons } from "../assets/icons"
+import type { Meme } from "../types/types"
 
 
 const ChooseMediaComponent = () => {
@@ -33,15 +35,15 @@ const ChooseMediaComponent = () => {
             <div className='overflow-y-auto scrollbar-hide h-[70%] my-2'>
                 <div className='flex justify-between my-2'>
                     <button className='rounded-xl bg-gray-100 p-3'>
-                        <div className='text-gray-400'><ImageIcon color='inherit' /></div>
+                        <div className='text-gray-400'><icons.image color='inherit' /></div>
                         <p className='font-bold text-xs'>Import Image</p>
                     </button>
                     <button className='rounded-xl bg-gray-100 p-3'>
-                        <div className='text-gray-400'><VideoLibraryIcon color='inherit' /></div>
+                        <div className='text-gray-400'><icons.video color='inherit' /></div>
                         <p className='font-bold text-xs'>Import Video</p>
                     </button>
                     <button className='rounded-xl bg-gray-100 p-3'>
-                        <div className='text-gray-400'><PhotoCameraIcon color='inherit' /></div>
+                        <div className='text-gray-400'><icons.photo color='inherit' /></div>
                         <p className='font-bold text-xs'>Import Camera</p>
                     </button>
                 </div>

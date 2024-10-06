@@ -1,8 +1,10 @@
+import { icons } from "../assets/icons";
+
 const memeEditorButtons = [
-    { title: "Canvas", icon: Grid3x3Icon },
-    { title: "Text", icon: AbcIcon },
-    { title: "Media", icon: AddPhotoAlternateIcon },
-    { title: "Crop", icon: CropIcon },
+    { title: "Canvas", icon: icons.canvas },
+    { title: "Text", icon: icons.text },
+    { title: "Media", icon: icons.media },
+    { title: "Crop", icon: icons.crop },
 ]
 
 interface MemeEditorButtonProps {

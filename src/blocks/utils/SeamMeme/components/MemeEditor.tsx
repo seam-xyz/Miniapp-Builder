@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react"
+import { icons } from "../assets/icons"
+import { images } from "../assets/images"
 
 const MemeEditor = () => {
     const [text, setText] = useState<string>("")
@@ -69,14 +71,14 @@ const MemeEditor = () => {
             <div className='flex justify-between m-2'>
                 <div className='flex flex-row text-gray-400 space-x-2'>
                     <div className='px-2 border-gray-200 border-2 rounded-3xl h-10 w-14 flex justify-center'>
-                        <button className='w-full h-full'><UndoIcon color='inherit' /></button>
+                        <button className='w-full h-full'><icons.undo color='inherit' /></button>
                     </div>
                     <div className='px-2 border-gray-200 border-2 rounded-3xl h-10 w-14 flex justify-center'>
-                        <button className='w-full h-full'><RedoIcon color='inherit' /></button>
+                        <button className='w-full h-full'><icons.redo color='inherit' /></button>
                     </div>
                 </div>
                 <div className='px-2 border-gray-200 border-2 rounded-3xl h-10 w-14 flex justify-center text-gray-400'>
-                    <button className='w-full h-full'><DeleteOutlineIcon color='inherit' /></button>
+                    <button className='w-full h-full'><icons.delete color='inherit' /></button>
                 </div>
             </div>
 
@@ -89,7 +91,7 @@ const MemeEditor = () => {
                 ) : (
                     <>
                         {/* Show the image before editing */}
-                        <img src={image1} ref={imageRef} alt='editable' className='' />
+                        <img src={images.image1} ref={imageRef} alt='editable' className='' />
                         {/* The canvas, initially hidden */}
                         <canvas ref={canvasRef} className='hidden'></canvas>
                         {overlayText && (
