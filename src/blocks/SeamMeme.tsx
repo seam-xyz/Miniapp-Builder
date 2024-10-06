@@ -4,9 +4,7 @@ import AppComposer from "./utils/SeamMeme/components/AppComposer";
 export const SeamComposerComponent = ({ model, done }: ComposerComponentProps) => {
 	return (
 		<div className="h-full w-full">
-			<AppComposer />
-			{/* <FeedComponent /> */}
-			{/* <button onClick={() => { done(model) }} className='bg-blue-300 w-full rounded-lg'> Create your own meme </button> */}
+			<AppComposer model={model} done={done} />
 		</div>
 	);
 };

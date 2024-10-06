@@ -4,13 +4,21 @@ import { Meme } from "../types/types";
 
 interface MemeEditorProps {
 	meme: Meme;
+	editedMeme: string | null;
+	handleSetEditedMeme: (editedMeme: string | null) => void;
+	handleSubmit: (caption: string) => void;
 }
 
-const MemeEditor: React.FC<MemeEditorProps> = ({ meme }) => {
+const MemeEditor: React.FC<MemeEditorProps> = ({
+	meme,
+	editedMeme,
+	handleSetEditedMeme,
+	handleSubmit,
+}) => {
+	const [caption, setCaption] = useState<string>("");
 	const [text, setText] = useState<string>("");
 	const [overlayText, setOverlayText] = useState<string | null>(null);
 	const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-	const [editedImage, setEditedImage] = useState<string | null>(null);
 
 	const imageRef = useRef<HTMLImageElement | null>(null);
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -36,7 +44,7 @@ const MemeEditor: React.FC<MemeEditorProps> = ({ meme }) => {
 	const resetEdit = () => {
 		setOverlayText(null);
 		setText("");
-		setEditedImage(null);
+		handleSetEditedMeme(null);
 	};
 
 	useEffect(() => {
@@ -64,7 +72,8 @@ const MemeEditor: React.FC<MemeEditorProps> = ({ meme }) => {
 
 				// Convert canvas to a data URL and save it in state
 				const dataURL = canvas.toDataURL();
-				setEditedImage(dataURL);
+				// setEditedImage(dataURL);
+				handleSetEditedMeme(dataURL);
 			}
 		}
 	}, [overlayText]);
@@ -94,13 +103,19 @@ const MemeEditor: React.FC<MemeEditorProps> = ({ meme }) => {
 			{/* original image */}
 			<div className="flex-1 border-2 bg-gray-200 rounded-lg text-gray-400 m-2">
 				{/* Conditionally render the image or canvas */}
-				{editedImage ? (
+				{editedMeme ? (
 					// Show edited image when available
-					<img src={editedImage} alt="edited" />
+					<img src={editedMeme} alt="edited" />
 				) : (
 					<>
 						{/* Show the image before editing */}
-						<img src={meme.url} ref={imageRef} alt="editable" className="" />
+						<img
+							src={meme.url}
+							ref={imageRef}
+							alt="editable"
+							crossOrigin="anonymous"
+							className=""
+						/>
 						{/* The canvas, initially hidden */}
 						<canvas ref={canvasRef} className="hidden"></canvas>
 						{overlayText && (
@@ -139,14 +154,18 @@ const MemeEditor: React.FC<MemeEditorProps> = ({ meme }) => {
 			<div className="w-full p-1 flex items-center justify-center my-2 border-t-2 border-gray-200">
 				<div className="bg-black rounded-full m-2">Image</div>
 				<input
+					value={caption}
+					onChange={(e) => setCaption(e.target.value)}
 					className="w-full m-2 text-sm text-gray-400 h-full p-2"
 					placeholder="Say Something..."
 				/>
 			</div>
 			<div className="w-full p-1 flex items-center justify-center my-2">
-				<button className="bg-blue-600 w-full h-full h-16 rounded-lg text-white">
-					{" "}
-					Post{" "}
+				<button
+					onClick={() => handleSubmit(caption)}
+					className="bg-blue-600 w-full h-full h-16 rounded-lg text-white"
+				>
+					Post
 				</button>
 			</div>
 		</div>

@@ -9,14 +9,40 @@ import getMemes from "../utils/getMemes";
 
 // types
 import type { Meme } from "../types/types";
+import { BlockModel } from "../../../types";
 
-const AppComposer = () => {
+// AppComposer
+interface AppComposerProps {
+	model: BlockModel;
+	done: (data: BlockModel) => void;
+}
+
+const AppComposer = ({ model, done }: AppComposerProps) => {
+	// Browser component state
 	const [memes, setMemes] = useState<Meme[]>([]);
-	const [selectedMeme, setSelectedMeme] = useState<Meme | undefined>(undefined);
+	const [meme, setMeme] = useState<Meme | undefined>(undefined);
 
-	// Handler for selecting a meme
-	const handleSetSelectedMeme = (meme: Meme) => {
-		setSelectedMeme(meme);
+	// Editor component state
+	const [editedMeme, setEditedMeme] = useState<string | null>(null);
+
+	// Browser: Handler for setting a meme
+	const handleSetMeme = (meme: Meme) => {
+		setMeme(meme);
+	};
+
+	// Editor: Handler for setting an edited meme
+	const handleSetEditedMeme = (editedMeme: string | null) => {
+		setEditedMeme(editedMeme);
+	};
+
+	// Editor: Submit a post
+	const handleSubmit = (caption: string) => {
+		if (editedMeme === null) {
+			return;
+		}
+		model.data.caption = caption;
+		model.data.editedMeme = editedMeme;
+		done(model);
 	};
 
 	// Effect for loading memes
@@ -27,12 +53,18 @@ const AppComposer = () => {
 		};
 		fetch();
 	}, []);
+
 	return (
 		<div className="h-full w-full">
-			{!selectedMeme ? (
-				<MemeBrowser memes={memes} handleSetSelectedMeme={handleSetSelectedMeme} />
+			{!meme ? (
+				<MemeBrowser memes={memes} handleSetMeme={handleSetMeme} />
 			) : (
-				<MemeEditor meme={selectedMeme} />
+				<MemeEditor
+					meme={meme}
+					editedMeme={editedMeme}
+					handleSetEditedMeme={handleSetEditedMeme}
+					handleSubmit={handleSubmit}
+				/>
 			)}
 		</div>
 	);

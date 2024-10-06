@@ -3,10 +3,10 @@ import type { Meme } from "../types/types";
 
 interface MemeBrowserProps {
 	memes: Meme[];
-	handleSetSelectedMeme: (meme: Meme) => void;
+	handleSetMeme: (meme: Meme) => void;
 }
 
-const MemeBrowser: React.FC<MemeBrowserProps> = ({ memes, handleSetSelectedMeme }) => {
+const MemeBrowser: React.FC<MemeBrowserProps> = ({ memes, handleSetMeme }) => {
 	const [filteredMemes, setFilteredMemes] = useState<Meme[]>([]);
 	const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -40,7 +40,7 @@ const MemeBrowser: React.FC<MemeBrowserProps> = ({ memes, handleSetSelectedMeme 
 							<button
 								key={index}
 								className="h-24 w-full p-1 flex justify-center items-center"
-								onClick={() => handleSetSelectedMeme(meme)}
+								onClick={() => handleSetMeme(meme)}
 							>
 								<img
 									src={meme.url}
