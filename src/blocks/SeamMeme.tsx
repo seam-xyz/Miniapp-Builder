@@ -1,5 +1,6 @@
 import { BlockModel, ComposerComponentProps, FeedComponentProps } from "./types";
 import AppComposer from "./utils/SeamMeme/components/AppComposer";
+import AppFeed from "./utils/SeamMeme/components/AppFeed";
 
 export const SeamComposerComponent = ({ model, done }: ComposerComponentProps) => {
 	return (
@@ -10,5 +11,9 @@ export const SeamComposerComponent = ({ model, done }: ComposerComponentProps) =
 };
 
 export const SeamFeedComponent = ({ model, update }: FeedComponentProps) => {
-	return <h1>Hi, I'm in the feed!</h1>;
+	return (
+		<div>
+			<AppFeed model={model} update={update} />
+		</div>
+	);
 };

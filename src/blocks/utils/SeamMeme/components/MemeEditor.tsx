@@ -6,7 +6,7 @@ interface MemeEditorProps {
 	meme: Meme;
 	editedMeme: string | null;
 	handleSetEditedMeme: (editedMeme: string | null) => void;
-	handleSubmit: (caption: string) => void;
+	handleSubmit: () => void;
 }
 
 const MemeEditor: React.FC<MemeEditorProps> = ({
@@ -15,7 +15,6 @@ const MemeEditor: React.FC<MemeEditorProps> = ({
 	handleSetEditedMeme,
 	handleSubmit,
 }) => {
-	const [caption, setCaption] = useState<string>("");
 	const [text, setText] = useState<string>("");
 	const [overlayText, setOverlayText] = useState<string | null>(null);
 	const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -151,18 +150,9 @@ const MemeEditor: React.FC<MemeEditorProps> = ({
                     )
                 })}
             </div> */}
-			<div className="w-full p-1 flex items-center justify-center my-2 border-t-2 border-gray-200">
-				<div className="bg-black rounded-full m-2">Image</div>
-				<input
-					value={caption}
-					onChange={(e) => setCaption(e.target.value)}
-					className="w-full m-2 text-sm text-gray-400 h-full p-2"
-					placeholder="Say Something..."
-				/>
-			</div>
 			<div className="w-full p-1 flex items-center justify-center my-2">
 				<button
-					onClick={() => handleSubmit(caption)}
+					onClick={() => handleSubmit()}
 					className="bg-blue-600 w-full h-full h-16 rounded-lg text-white"
 				>
 					Post

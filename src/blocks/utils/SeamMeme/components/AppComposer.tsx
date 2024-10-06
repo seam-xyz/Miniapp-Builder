@@ -36,11 +36,10 @@ const AppComposer = ({ model, done }: AppComposerProps) => {
 	};
 
 	// Editor: Submit a post
-	const handleSubmit = (caption: string) => {
+	const handleSubmit = () => {
 		if (editedMeme === null) {
 			return;
 		}
-		model.data.caption = caption;
 		model.data.editedMeme = editedMeme;
 		done(model);
 	};
