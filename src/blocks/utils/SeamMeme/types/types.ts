@@ -1,4 +1,4 @@
-export interface Meme {
+export type Meme = {
     box_count: number;
     captions: number;
     height: number;

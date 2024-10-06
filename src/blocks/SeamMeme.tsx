@@ -1,12 +1,13 @@
 import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types';
 import MemeEditor from './utils/SeamMeme/components/MemeEditor';
+import MemeBrowser from './utils/SeamMeme/components/MemeBrowser';
 
 
 export const SeamComposerComponent = ({ model, done }: ComposerComponentProps) => {
     return (
         <div className='h-full w-full'>
-            {/* <MemeBrowser /> */}
-            <MemeEditor />
+            <MemeBrowser />
+            {/* <MemeEditor /> */}
             {/* <FeedComponent /> */}
             {/* <ChooseMediaComponent /> */}
             {/* <button onClick={() => { done(model) }} className='bg-blue-300 w-full rounded-lg'> Create your own meme </button> */}
