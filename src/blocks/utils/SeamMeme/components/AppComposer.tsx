@@ -29,10 +29,10 @@ const AppComposer = () => {
 	}, []);
 	return (
 		<div className="h-full w-full">
-			{selectedMeme ? (
+			{!selectedMeme ? (
 				<MemeBrowser memes={memes} handleSetSelectedMeme={handleSetSelectedMeme} />
 			) : (
-				<MemeEditor />
+				<MemeEditor meme={selectedMeme} />
 			)}
 		</div>
 	);
