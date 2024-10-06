@@ -7,7 +7,7 @@ import image4 from "../blocks/assets/SeamMeme/think.jpg"
 import Feed from '../Feed';
 
 // libraries
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
 // icons
@@ -170,6 +170,69 @@ const MemeEditor = () => {
 
 // #region: Meme Editor v2 (with modal)
 const MemeEditor2 = () => {
+    const [text, setText] = useState<string>("")
+    const [overlayText, setOverlayText] = useState<string | null>(null)
+    const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
+    const [editedImage, setEditedImage] = useState<string | null>(null)
+
+    const imageRef = useRef<HTMLImageElement | null>(null)
+    const canvasRef = useRef<HTMLCanvasElement | null>(null)
+
+    console.log("text:", text)
+    console.log("overlayText:", overlayText)
+    console.log("isModalVisible:", isModalVisible)
+
+    const openModal = () => {
+        setIsModalVisible(true)
+        resetEdit()
+    }
+
+    const closeModal = () => {
+        setIsModalVisible(false)
+    }
+
+    const handleTextSubmit = () => {
+        setOverlayText(text)
+        closeModal()
+    }
+
+    const resetEdit = () => {
+        setOverlayText(null);
+        setText("")
+        setEditedImage(null)
+    }
+
+    useEffect(() => {
+        if (overlayText && imageRef.current && canvasRef.current) {
+            const canvas = canvasRef.current;
+            const ctx = canvas.getContext("2d")
+            const image = imageRef.current;
+
+            if (ctx && image) {
+                // Set canvas dimensions to match the image
+                canvas.width = image.width
+                canvas.height = image.height
+
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+                // Draw the image on the canvas
+                ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+
+                // Draw the overlayed text
+                ctx.font = "20px Arial"
+                ctx.fillStyle = "white"
+                ctx.textAlign = "center"
+                ctx.fillText(overlayText, canvas.width / 2, canvas.height / 2)
+
+                // Convert canvas to a data URL and save it in state
+                const dataURL = canvas.toDataURL()
+                setEditedImage(dataURL)
+            }
+        }
+    }, [overlayText])
+
+
     return (
         <div className='flex flex-col h-full'>
             <div className='flex justify-between m-2'>
@@ -185,17 +248,48 @@ const MemeEditor2 = () => {
                     <button className='w-full h-full'><DeleteOutlineIcon color='inherit' /></button>
                 </div>
             </div>
-            <button className='flex-1 border-2 bg-gray-200 rounded-lg text-gray-400 m-2'>
-                <div className='p-4'><AddCircleOutlineIcon fontSize='large' color='inherit' /></div>
-                <p className='p-4 font-bold'>Tap to Start Creating</p>
-            </button>
-            <div className='flex justify-between'>
+
+            {/* original image */}
+            <div className='flex-1 border-2 bg-gray-200 rounded-lg text-gray-400 m-2'>
+                {/* Conditionally render the image or canvas */}
+                {editedImage ? (
+                    // Show edited image when available
+                    <img src={editedImage} alt="edited" />
+                ) : (
+                    <>
+                        {/* Show the image before editing */}
+                        <img src={image1} ref={imageRef} alt='editable' className='' />
+                        {/* The canvas, initially hidden */}
+                        <canvas ref={canvasRef} className='hidden'></canvas>
+                        {overlayText && (
+                            <span className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-lg font-bold pointer-events-none'>
+                                {overlayText}
+                            </span>
+                        )}
+                    </>
+                )}
+            </div>
+            {/* Open text-add modal */}
+            <button onClick={openModal}>Add Text</button>
+            {/* <button onClick={resetEdit}>Reset Edit</button> */}
+
+            {/* Modal */}
+            {isModalVisible && (
+                <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center'>
+                    <div>
+                        <input placeholder='Enter text here' value={text} onChange={(e) => setText(e.target.value)} />
+                        <button onClick={handleTextSubmit}>Submit</button>
+                        <button onClick={closeModal}>Close</button>
+                    </div>
+                </div>
+            )}
+            {/* <div className='flex justify-between'>
                 {memeEditorButtons.map((x, index) => {
                     return (
                         <MemeEditorButton key={index} title={x.title} icon={x.icon} />
                     )
                 })}
-            </div>
+            </div> */}
             <div className='w-full p-1 flex items-center justify-center my-2 border-t-2 border-gray-200'>
                 <div className='bg-black rounded-full m-2'>Image</div>
                 <input className='w-full m-2 text-sm text-gray-400 h-full p-2' placeholder='Say Something...' />
@@ -283,7 +377,7 @@ export const SeamComposerComponent = ({ model, done }: ComposerComponentProps) =
         <div className='h-full w-full'>
             {/* <MemeBrowser /> */}
             {/* <MemeEditor /> */}
-            <MemeEditor2/>
+            <MemeEditor2 />
             {/* <FeedComponent /> */}
             {/* <ChooseMediaComponent /> */}
             {/* <button onClick={() => { done(model) }} className='bg-blue-300 w-full rounded-lg'> Create your own meme </button> */}
