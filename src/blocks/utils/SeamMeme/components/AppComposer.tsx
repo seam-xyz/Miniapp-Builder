@@ -26,7 +26,7 @@ const AppComposer = ({ model, done }: AppComposerProps) => {
 	const [editedMeme, setEditedMeme] = useState<string | null>(null);
 
 	// Browser: Handler for setting a meme
-	const handleSetMeme = (meme: Meme) => {
+	const handleSetMeme = (meme: Meme | undefined) => {
 		setMeme(meme);
 	};
 
@@ -61,6 +61,7 @@ const AppComposer = ({ model, done }: AppComposerProps) => {
 				<MemeEditor
 					meme={meme}
 					editedMeme={editedMeme}
+					handleSetMeme={handleSetMeme}
 					handleSetEditedMeme={handleSetEditedMeme}
 					handleSubmit={handleSubmit}
 				/>
