@@ -18,7 +18,7 @@ const MemeBrowser: React.FC<MemeBrowserProps> = ({ memes, handleSetMeme }) => {
 	}, [searchQuery, memes]);
 
 	return (
-		<div className="flex flex-col h-full">
+		<div className="flex flex-col h-full min-h-screen">
 			{/* Search box */}
 			<div className="flex flex-col justify-center">
 				<div className="border-2 border-gray-200 w-full rounded-lg">
@@ -33,8 +33,8 @@ const MemeBrowser: React.FC<MemeBrowserProps> = ({ memes, handleSetMeme }) => {
 			{/* Browse Memes */}
 			<p className="font-bold py-2 p-1">Browse Memes</p>
 			{/* Memes */}
-			<div className="py-2 w-full overflow-y-auto scrollbar-hide flex items-center justify-center">
-				<div className="grid grid-cols-4 overflow-y-auto scrollbar-hide w-full">
+			<div className="flex-grow w-full overflow-y-auto px-2">
+				<div className="grid grid-cols-4 md:grid-cols-4 gap-1">
 					{filteredMemes.map((meme, index) => {
 						return (
 							<button

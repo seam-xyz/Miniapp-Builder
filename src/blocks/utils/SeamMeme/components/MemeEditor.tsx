@@ -97,45 +97,79 @@ const MemeEditor: React.FC<MemeEditorProps> = ({
 	}, [overlayText]);
 
 	return (
-		<div className="flex flex-col h-full w-full">
+		<div className="flex flex-col h-[80%] justify-between">
 			{/* Undo and Delete buttons */}
-			<div className="flex flex-row-reverse m-2">
-				<div className="px-2 border-gray-200 border-2 rounded-3xl h-10 w-14 flex justify-center text-gray-400 ml-2">
-					<button onClick={() => handleSetMeme(undefined)} className="w-full h-full">
-						<icons.delete color="inherit" />
-					</button>
-				</div>
-				<div className="px-2 border-gray-200 border-2 rounded-3xl h-10 w-14 flex justify-center ml-2">
-					<button onClick={resetEdit} className="w-full h-full">
-						<icons.undo color="inherit" />
-					</button>
+			<div className="h-12 flex justify-end space-x-2">
+				<button
+					onClick={() => handleSetMeme(undefined)}
+					className="w-14 h-full border-2 border-gray-200 rounded-3xl flex items-center justify-center"
+				>
+					<icons.delete className="text-gray-400" />
+				</button>
+				<button
+					onClick={resetEdit}
+					className="w-14 h-full border-2 border-gray-200 rounded-3xl flex items-center justify-center"
+				>
+					<icons.undo className="text-gray-400" />
+				</button>
+			</div>
+
+			{/* Image container */}
+			<div className="h-full relative border-2 bg-gray-200 rounded-lg m-2 overflow-hidden">
+				<div className="absolute inset-0 flex items-center justify-center">
+					{editedMeme ? (
+						<img
+							src={editedMeme}
+							alt="edited"
+							className="max-h-full max-w-full object-contain"
+						/>
+					) : (
+						<>
+							<img
+								src={meme.url}
+								ref={imageRef}
+								alt="editable"
+								crossOrigin="anonymous"
+								className="max-h-full max-w-full object-contain"
+							/>
+							<canvas ref={canvasRef} className="hidden"></canvas>
+							{overlayText && (
+								<div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+									<div className="relative">
+										<span className="absolute inset-0 text-black stroke-text uppercase font-bold text-4xl">
+											{overlayText}
+										</span>
+										<span className="text-white uppercase font-bold text-4xl">
+											{overlayText}
+										</span>
+									</div>
+								</div>
+							)}
+						</>
+					)}
 				</div>
 			</div>
 
-			{/* Original image */}
-			<div className="flex-1 border-2 bg-gray-200 rounded-lg text-gray-400 m-2 flex justify-center items-center">
-				{editedMeme ? (
-					<img src={editedMeme} alt="edited" />
-				) : (
-					<>
-						<img
-							src={meme.url}
-							ref={imageRef}
-							alt="editable"
-							crossOrigin="anonymous"
-							className="w-80 h-80"
-						/>
-						<canvas ref={canvasRef} className="hidden w-72 h-72"></canvas>
-						{overlayText && (
-							<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-4xl font-bold pointer-events-none uppercase relative">
-								<span className="absolute inset-0 text-black stroke-text">
-									{overlayText}
-								</span>
-								<span>{overlayText}</span>
-							</div>
-						)}
-					</>
-				)}
+			{/* Bottom buttons */}
+			<div className="p-2 space-y-2 flex flex-col">
+				<div className="flex justify-center">
+					<button
+						onClick={openModal}
+						className="w-28 border-2 rounded-xl bg-sky-500 text-white font-bold flex flex-col items-center justify-center p-2"
+					>
+						<div className="w-full flex justify-center flex-grow">
+							<icons.text />
+						</div>
+						<div className="text-sm">Text</div>
+					</button>
+				</div>
+
+				<button
+					onClick={() => handleSubmit()}
+					className="w-full h-12 bg-blue-600 rounded-lg text-white font-bold"
+				>
+					Post
+				</button>
 			</div>
 
 			{/* Modal */}
@@ -165,29 +199,6 @@ const MemeEditor: React.FC<MemeEditorProps> = ({
 					</div>
 				</div>
 			)}
-
-			{/* Text Button */}
-			<div className="flex justify-center">
-				<button
-					onClick={openModal}
-					className="m-2 p-2 w-28 border-2 rounded-xl flex flex-col items-center justify-center bg-sky-500 text-white font-bold"
-				>
-					<div className="w-full flex justify-center p-1 flex-grow">
-						<icons.text />
-					</div>
-					<div className="w-full text-center p-1 flex-grow text-sm">Text</div>
-				</button>
-			</div>
-
-			{/* Post */}
-			<div className="w-full p-1 flex items-center justify-center my-2">
-				<button
-					onClick={() => handleSubmit()}
-					className="bg-blue-600 w-full h-full h-16 rounded-lg text-white"
-				>
-					Post
-				</button>
-			</div>
 		</div>
 	);
 };
