@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 // components
 import MemeBrowser from "./MemeBrowser";
 import MemeEditor from "./MemeEditor";
+import Test from "./Test";
 
 // utils
 import getMemes from "../utils/getMemes";
@@ -55,7 +56,7 @@ const AppComposer = ({ model, done }: AppComposerProps) => {
 
 	return (
 		<div className="h-full w-full">
-			{!meme ? (
+			{/* {!meme ? (
 				<MemeBrowser memes={memes} handleSetMeme={handleSetMeme} />
 			) : (
 				<MemeEditor
@@ -65,7 +66,8 @@ const AppComposer = ({ model, done }: AppComposerProps) => {
 					handleSetEditedMeme={handleSetEditedMeme}
 					handleSubmit={handleSubmit}
 				/>
-			)}
+			)} */}
+			<Test />
 		</div>
 	);
 };
