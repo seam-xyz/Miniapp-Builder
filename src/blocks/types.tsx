@@ -628,6 +628,19 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "samsam", split: 1}],
     fullscreenEdit: false,
   },
+
+  "ReviewThings": {
+    type: "ReviewThings",
+    displayName: "Review Things",
+    displayDescription: "Review things with other things on a five point scale",
+    icon: "UnknownIcon",
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "jakeaicher", split: 1}],
+    fullscreenEdit: false,
+  },
+
   "Unknown": {
     type: "Unknown",
     displayName: "Unknown",
