@@ -1,7 +1,5 @@
 import { useRef, useState } from 'react'
 import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
-import SeamSaveButton from '../components/SeamSaveButton';
-import { Preview } from '@mui/icons-material';
 import Picker from '@emoji-mart/react';
 import data from '@emoji-mart/data';
 import { Button } from '@mui/material';
@@ -34,7 +32,6 @@ const EmojiTile = (props: {Emoji: string, DisplayEmoji?: boolean}) => {
 }
 
 const EmojiRating = (props: {Emoji: string, StarRating: number}) => {
-
   return (
     <div className='flex flex-row justify-start gap-2 max-[600px]:gap-0.5'>
       <EmojiTile Emoji={props.Emoji} DisplayEmoji={true}/>
@@ -95,7 +92,6 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
     const formData = new FormData(e.target);
     const payload = Object.fromEntries(formData)
     payload.emoji = currentEmoji
-    console.log(payload)
     props.onSubmit(payload)
   }
 
@@ -157,7 +153,7 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
         className='flex flex-row justify-start gap-5 max-[600px]:items-center'
         >
         <div
-        className='w-fit'
+        className='w-20'
         >
         <input 
         type="number" 
@@ -167,7 +163,7 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
         value={rating}
         onBlur={handleRatingBlur}
         onChange={(e) => {setRating(parseInt(e.target.value, 10));}}
-        className={`${inputTailwindClasses} w-fit block`}
+        className={`${inputTailwindClasses} block`}
         required/>
         </div>
           <EmojiRating Emoji={currentEmoji} StarRating={rating}/>
@@ -229,13 +225,7 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
 
 }
 
-
-
-
 export const ReviewThingsAppFeedComponent = ({ model }: FeedComponentProps) => {
-  
-  
-  
   return (
     <div className='w-full h-fit flex bg-slate-200 rounded-md px-5 py-5 max-[600px]:p-3 flex-col gap-4 max-[600px]:gap-2'>
       <span className='font-bold text-2xl max-[600px]:text-xl'>{model.data['name']}</span>
@@ -273,10 +263,8 @@ export const ReviewThingsAppComposerComponent = ({ model, done }: ComposerCompon
     model.data['rating'] = data.rating
     model.data['unit'] = data.unit
     model.data['note'] = data.description
-    console.log(model)
     done(model)
   }
-  
   
   return (
     <EmojiRatingForm onSubmit={onFinish}/>
