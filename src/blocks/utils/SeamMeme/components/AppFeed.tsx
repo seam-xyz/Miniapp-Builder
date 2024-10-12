@@ -6,11 +6,11 @@ interface AppFeedProps {
 }
 
 const AppFeed = ({ model, update }: AppFeedProps) => {
-	const caption = model.data.caption;
+	// const caption = model.data.caption;
 	const editedMeme = model.data.editedMeme;
 	return (
 		<div>
-			<div>{caption}</div>
+			{/* <div>{caption}</div> */}
 			<div>
 				<img src={editedMeme} />
 			</div>
