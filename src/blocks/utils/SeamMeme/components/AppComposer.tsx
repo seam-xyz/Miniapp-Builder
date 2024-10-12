@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 
 // components
 import MemeBrowser from "./MemeBrowser";
-import MemeEditor from "./MemeEditor";
-import Test from "./Test";
+// import MemeEditor from "./MemeEditor";
+// import Test from "./Test";
+import MemeEditor from "./editor/MemeEditor";
 
 // utils
 import getMemes from "../utils/getMemes";
@@ -11,6 +12,7 @@ import getMemes from "../utils/getMemes";
 // types
 import type { Meme } from "../types/types";
 import { BlockModel } from "../../../types";
+import MemeEditor2 from "./editor/MemeEditor";
 
 // AppComposer
 interface AppComposerProps {
@@ -67,7 +69,12 @@ const AppComposer = ({ model, done }: AppComposerProps) => {
 					handleSubmit={handleSubmit}
 				/>
 			)} */}
-			<Test />
+			{/* <Test /> */}
+			<MemeEditor
+				model={model}
+				done={done}
+				imageSrc="https://images.theconversation.com/files/38926/original/5cwx89t4-1389586191.jpg?ixlib=rb-4.1.0&q=45&auto=format&w=926&fit=clip"
+			/>
 		</div>
 	);
 };
