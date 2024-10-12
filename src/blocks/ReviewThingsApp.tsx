@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
 import SeamSaveButton from '../components/SeamSaveButton';
 import { Preview } from '@mui/icons-material';
@@ -53,6 +53,7 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
   const [currentEmoji, setCurrentEmoji] = useState('🍕');
   const [rating, setRating] = useState(5);
   const [isPickerVisible, setIsPickerVisible] = useState(false);
+  const ratingRef = useRef(null);
 
   const maxCharacters = { // form character limits for each input
     item: 70,
@@ -76,6 +77,16 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
       ...textBoxLength,
       [name]: value.length,
     })
+  }
+
+  const handleRatingBlur = (e:React.FocusEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value)
+    
+    if (value > 5) {
+      setRating(5)
+    } else if (value < 1) {
+      setRating(1)
+    }
   }
 
   const submitForm = (e: any) => {
@@ -151,7 +162,9 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
         name="rating"
         max={5}
         min={1}
+        value={rating}
         defaultValue={5}
+        onBlur={handleRatingBlur}
         onChange={(e) => setRating(Number(e.target.value))}
         className={`${inputTailwindClasses} w-fit block`}
         required/>
