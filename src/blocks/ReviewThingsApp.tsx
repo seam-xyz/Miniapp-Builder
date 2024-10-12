@@ -16,7 +16,6 @@ const EmojiTile = (props: {Emoji: string, DisplayEmoji?: boolean}) => {
       className='w-full text-6xl max-[600px]:text-3xl text-center m-auto' 
       style={{
         display: props.DisplayEmoji ? "inline" : "none",
-
       }}
       >
         {props.Emoji}
@@ -25,7 +24,6 @@ const EmojiTile = (props: {Emoji: string, DisplayEmoji?: boolean}) => {
       className='w-1/2 h-1/2 bg-slate-300 rounded-full'
       style={{
         display: props.DisplayEmoji ? "none" : "inline",
-
       }}
       >
       </div>
@@ -80,13 +78,15 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
   }
 
   const handleRatingBlur = (e:React.FocusEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value)
-    
+    const value = parseInt(e.target.value, 10)
+
     if (value > 5) {
       setRating(5)
     } else if (value < 1) {
       setRating(1)
     }
+
+    e.target.value = value.toString() // changes the input field value to a number without leading zeros
   }
 
   const submitForm = (e: any) => {
@@ -102,6 +102,7 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
   return(
     <form 
     className='flex flex-col gap-5'
+    autoComplete='off'
     onSubmit={submitForm}
     >
       <label
@@ -110,6 +111,7 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
         <input 
         type="text" 
         name='item'
+        autoComplete='off'
         maxLength={maxCharacters.item} 
         onChange={handleTextChange}
         placeholder='e.g. Kiwi Fruit'
@@ -163,9 +165,8 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
         max={5}
         min={1}
         value={rating}
-        defaultValue={5}
         onBlur={handleRatingBlur}
-        onChange={(e) => setRating(Number(e.target.value))}
+        onChange={(e) => {setRating(parseInt(e.target.value, 10));}}
         className={`${inputTailwindClasses} w-fit block`}
         required/>
         </div>
@@ -246,7 +247,7 @@ export const ReviewThingsAppFeedComponent = ({ model }: FeedComponentProps) => {
 
         }}
         >
-          {model.data['rating']}/5
+          {Number(model.data['rating'])}/5
         </span>
 
         <div className='flex flex-col w-full justify-center'>
