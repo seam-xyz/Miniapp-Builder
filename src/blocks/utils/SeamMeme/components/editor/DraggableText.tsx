@@ -51,6 +51,24 @@ const DraggableText: React.FC<DraggableTextProps> = ({
 					border: isSelected ? "1px solid blue" : "none",
 					padding: "2px",
 					userSelect: "none",
+
+					// Meme font style
+					fontFamily: '"Anton", Impact, Arial Black, sans-serif',
+					fontWeight: "normal" as const,
+					textTransform: "uppercase" as const,
+					color: "white",
+					fontSize: "2rem",
+					textAlign: "center" as const,
+					textShadow: `
+					  1px 1px 0 #000,
+					  -1px 1px 0 #000,
+					  1px -1px 0 #000,
+					  -1px -1px 0 #000,
+					  1px 1px 0 #000,
+					  -1px 1px 0 #000,
+					  0px 2px 0 #000,
+					  0px -2px 0 #000
+					`,
 				}}
 			>
 				{textItem.text}

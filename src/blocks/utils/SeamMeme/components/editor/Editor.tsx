@@ -1,11 +1,11 @@
-// MemeEditor.tsx
-
 import React, { useRef, useState } from "react";
-import Draggable, { DraggableEvent, DraggableData } from "react-draggable";
-import DraggableText from "./DraggableText";
+import { DraggableData } from "react-draggable";
 import { icons } from "../../assets/icons";
 import html2canvas from "html2canvas";
 import { BlockModel } from "../../../../types";
+
+// Components
+import DraggableText from "./DraggableText";
 import EditorModal from "./EditorModal";
 
 interface TextOverlay {
@@ -39,19 +39,6 @@ const Editor: React.FC<EditorProps> = ({ model, done, imageSrc }) => {
 			position: { x: 50, y: 50 },
 		};
 		setTexts([...texts, newText]);
-	};
-
-	const updateText = (id: number, newText: string) => {
-		setTexts((prevTexts) =>
-			prevTexts.map((text) => (text.id === id ? { ...text, text: newText } : text))
-		);
-	};
-
-	const deleteText = (id: number) => {
-		setTexts((prevTexts) => prevTexts.filter((text) => text.id !== id));
-		if (selectedTextId === id) {
-			setSelectedTextId(null);
-		}
 	};
 
 	const removeLastOverlay = () => {
@@ -118,7 +105,6 @@ const Editor: React.FC<EditorProps> = ({ model, done, imageSrc }) => {
 
 			{/* Add Text */}
 			<button
-				// onClick={addTextOverlay}
 				onClick={() => changeModalState(true)}
 				className="w-28 border-2 rounded-xl bg-sky-500 text-white font-bold flex flex-col items-center justify-center p-2"
 			>
@@ -127,15 +113,6 @@ const Editor: React.FC<EditorProps> = ({ model, done, imageSrc }) => {
 				</div>
 				<div className="text-sm">Text</div>
 			</button>
-
-			{/* Will add to modal */}
-			{selectedTextId !== null && (
-				<TextEditor
-					textItem={texts.find((text) => text.id === selectedTextId)!}
-					onUpdateText={updateText}
-					onDeleteText={deleteText}
-				/>
-			)}
 
 			{/* Post */}
 			<button
