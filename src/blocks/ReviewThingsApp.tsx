@@ -42,11 +42,15 @@ const EmojiRating = (props: {Emoji: string, StarRating: number, isInput?: boolea
   
   return (
     <div className='flex flex-row justify-start gap-2 max-[600px]:gap-0.5'>
-      <EmojiTile onClick={() => handleClick(1)} isClickable={props.isInput} Emoji={props.Emoji} DisplayEmoji={true}/>
-      <EmojiTile onClick={() => handleClick(2)} isClickable={props.isInput} Emoji={props.Emoji} DisplayEmoji={props.StarRating > 1 ? true : false}/>
-      <EmojiTile onClick={() => handleClick(3)} isClickable={props.isInput} Emoji={props.Emoji} DisplayEmoji={props.StarRating > 2 ? true : false}/>
-      <EmojiTile onClick={() => handleClick(4)} isClickable={props.isInput} Emoji={props.Emoji} DisplayEmoji={props.StarRating > 3 ? true : false}/>
-      <EmojiTile onClick={() => handleClick(5)} isClickable={props.isInput} Emoji={props.Emoji} DisplayEmoji={props.StarRating > 4 ? true : false}/>
+      {[1,2,3,4,5].map((RatingPosition)=> (
+        <EmojiTile 
+        key={RatingPosition} 
+        Emoji={props.Emoji}
+        DisplayEmoji={props.StarRating >= RatingPosition}
+        onClick={() => handleClick(RatingPosition)} 
+        isClickable={props.isInput}  
+        />
+      ))}
     </div>
   )
 }
@@ -56,7 +60,6 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
   const [currentEmoji, setCurrentEmoji] = useState('🍕');
   const [rating, setRating] = useState<number>(5);
   const [isPickerVisible, setIsPickerVisible] = useState(false);
-  const ratingRef = useRef(null);
 
   const maxCharacters = { // form character limits for each input
     item: 70,
