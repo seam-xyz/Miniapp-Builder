@@ -1,12 +1,16 @@
+// Libraries
 import React, { useRef, useState } from "react";
-import { DraggableData } from "react-draggable";
-import { icons } from "../../assets/icons";
+import { icons } from "../assets/icons";
 import html2canvas from "html2canvas";
-import { BlockModel } from "../../../../types";
 
 // Components
-import DraggableText from "./DraggableText";
+import EditorDraggableText from "./EditorDraggableText";
 import EditorModal from "./EditorModal";
+
+// Types
+import { DraggableData } from "react-draggable";
+import { BlockModel } from "../../../types";
+import { Meme } from "../types/types";
 
 interface TextOverlay {
 	id: number;
@@ -17,10 +21,11 @@ interface TextOverlay {
 interface EditorProps {
 	model: BlockModel;
 	done: (data: BlockModel) => void;
-	imageSrc: string;
+	meme: Meme;
+	handleSetMeme: (meme: Meme | undefined) => void;
 }
 
-const Editor: React.FC<EditorProps> = ({ model, done, imageSrc }) => {
+const Editor: React.FC<EditorProps> = ({ model, done, meme, handleSetMeme }) => {
 	const [texts, setTexts] = useState<TextOverlay[]>([]);
 	const [selectedTextId, setSelectedTextId] = useState<number | null>(null);
 	const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -76,7 +81,7 @@ const Editor: React.FC<EditorProps> = ({ model, done, imageSrc }) => {
 
 	return (
 		<div style={{ position: "relative" }} className="flex flex-col items-center space-y-2">
-			{/* Top buttons */}
+			{/* Top buttons with undo and delete meme functionality */}
 			<div className="h-12 flex justify-end space-x-2 w-full">
 				<button
 					onClick={() => removeLastOverlay()}
@@ -84,16 +89,19 @@ const Editor: React.FC<EditorProps> = ({ model, done, imageSrc }) => {
 				>
 					<icons.undo className="text-gray-400" />
 				</button>
-				<button className="w-14 h-full border-2 border-gray-200 rounded-3xl flex items-center justify-center">
+				<button
+					onClick={() => handleSetMeme(undefined)}
+					className="w-14 h-full border-2 border-gray-200 rounded-3xl flex items-center justify-center"
+				>
 					<icons.delete className="text-gray-400" />
 				</button>
 			</div>
 
-			{/* Image */}
+			{/* Image with draggable text */}
 			<div ref={containerRef}>
-				<img src={imageSrc} alt="Meme Background" style={{ width: "100%" }} />
+				<img src={meme.url} alt="Meme Background" style={{ width: "100%" }} />
 				{texts.map((textItem) => (
-					<DraggableText
+					<EditorDraggableText
 						key={textItem.id}
 						textItem={textItem}
 						isSelected={textItem.id === selectedTextId}
@@ -103,7 +111,7 @@ const Editor: React.FC<EditorProps> = ({ model, done, imageSrc }) => {
 				))}
 			</div>
 
-			{/* Add Text */}
+			{/* Add Text button that opens up modal */}
 			<button
 				onClick={() => changeModalState(true)}
 				className="w-28 border-2 rounded-xl bg-sky-500 text-white font-bold flex flex-col items-center justify-center p-2"
@@ -114,7 +122,7 @@ const Editor: React.FC<EditorProps> = ({ model, done, imageSrc }) => {
 				<div className="text-sm">Text</div>
 			</button>
 
-			{/* Post */}
+			{/* Post button that takes user to Feed */}
 			<button
 				onClick={() => handleSubmit()}
 				className="w-full h-12 bg-blue-600 rounded-lg text-white font-bold"
@@ -122,40 +130,10 @@ const Editor: React.FC<EditorProps> = ({ model, done, imageSrc }) => {
 				Post
 			</button>
 
-			{/* Modal */}
+			{/* Modal for adding text */}
 			{modalOpen && (
 				<EditorModal addTextOverlay={addTextOverlay} changeModalState={changeModalState} />
 			)}
-		</div>
-	);
-};
-
-interface TextEditorProps {
-	textItem: TextOverlay;
-	onUpdateText: (id: number, newText: string) => void;
-	onDeleteText: (id: number) => void;
-}
-
-const TextEditor: React.FC<TextEditorProps> = ({ textItem, onUpdateText, onDeleteText }) => {
-	const [inputValue, setInputValue] = useState<string>(textItem.text);
-
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setInputValue(e.target.value);
-	};
-
-	const handleUpdate = () => {
-		onUpdateText(textItem.id, inputValue);
-	};
-
-	const handleDelete = () => {
-		onDeleteText(textItem.id);
-	};
-
-	return (
-		<div className="text-editor">
-			<input type="text" value={inputValue} onChange={handleChange} />
-			<button onClick={handleUpdate}>Update Text</button>
-			<button onClick={handleDelete}>Delete Text</button>
 		</div>
 	);
 };
