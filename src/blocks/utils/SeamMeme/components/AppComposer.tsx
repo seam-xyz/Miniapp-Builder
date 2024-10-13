@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import MemeBrowser from "./MemeBrowser";
 // import MemeEditor from "./MemeEditor";
 // import Test from "./Test";
-import MemeEditor from "./editor/MemeEditor";
+import Editor from "./editor/Editor";
 
 // utils
 import getMemes from "../utils/getMemes";
@@ -12,7 +12,7 @@ import getMemes from "../utils/getMemes";
 // types
 import type { Meme } from "../types/types";
 import { BlockModel } from "../../../types";
-import MemeEditor2 from "./editor/MemeEditor";
+import MemeEditor2 from "./editor/Editor";
 
 // AppComposer
 interface AppComposerProps {
@@ -70,7 +70,7 @@ const AppComposer = ({ model, done }: AppComposerProps) => {
 				/>
 			)} */}
 			{/* <Test /> */}
-			<MemeEditor
+			<Editor
 				model={model}
 				done={done}
 				imageSrc="https://images.theconversation.com/files/38926/original/5cwx89t4-1389586191.jpg?ixlib=rb-4.1.0&q=45&auto=format&w=926&fit=clip"

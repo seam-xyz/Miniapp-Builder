@@ -6,6 +6,7 @@ import DraggableText from "./DraggableText";
 import { icons } from "../../assets/icons";
 import html2canvas from "html2canvas";
 import { BlockModel } from "../../../../types";
+import EditorModal from "./EditorModal";
 
 interface TextOverlay {
 	id: number;
@@ -13,21 +14,28 @@ interface TextOverlay {
 	position: { x: number; y: number };
 }
 
-interface MemeEditorProps {
+interface EditorProps {
 	model: BlockModel;
 	done: (data: BlockModel) => void;
 	imageSrc: string;
 }
 
-const MemeEditor: React.FC<MemeEditorProps> = ({ model, done, imageSrc }) => {
+const Editor: React.FC<EditorProps> = ({ model, done, imageSrc }) => {
 	const [texts, setTexts] = useState<TextOverlay[]>([]);
 	const [selectedTextId, setSelectedTextId] = useState<number | null>(null);
+	const [modalOpen, setModalOpen] = useState<boolean>(false);
 	const containerRef = useRef<HTMLDivElement>(null);
 
-	const addTextOverlay = () => {
+	// Modal
+	const changeModalState = (state: boolean) => {
+		setModalOpen(state);
+	};
+
+	// Text overlay functionality
+	const addTextOverlay = (text: string) => {
 		const newText: TextOverlay = {
 			id: Date.now(),
-			text: "New Text",
+			text: text,
 			position: { x: 50, y: 50 },
 		};
 		setTexts([...texts, newText]);
@@ -110,7 +118,8 @@ const MemeEditor: React.FC<MemeEditorProps> = ({ model, done, imageSrc }) => {
 
 			{/* Add Text */}
 			<button
-				onClick={addTextOverlay}
+				// onClick={addTextOverlay}
+				onClick={() => changeModalState(true)}
 				className="w-28 border-2 rounded-xl bg-sky-500 text-white font-bold flex flex-col items-center justify-center p-2"
 			>
 				<div className="w-full flex justify-center flex-grow">
@@ -135,6 +144,11 @@ const MemeEditor: React.FC<MemeEditorProps> = ({ model, done, imageSrc }) => {
 			>
 				Post
 			</button>
+
+			{/* Modal */}
+			{modalOpen && (
+				<EditorModal addTextOverlay={addTextOverlay} changeModalState={changeModalState} />
+			)}
 		</div>
 	);
 };
@@ -169,4 +183,4 @@ const TextEditor: React.FC<TextEditorProps> = ({ textItem, onUpdateText, onDelet
 	);
 };
 
-export default MemeEditor;
+export default Editor;
