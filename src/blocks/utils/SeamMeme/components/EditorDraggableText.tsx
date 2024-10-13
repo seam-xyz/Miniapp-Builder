@@ -1,25 +1,10 @@
 import { useState } from "react";
 import Draggable, { DraggableEvent, DraggableData } from "react-draggable";
 
-interface TextOverlay {
-	id: number;
-	text: string;
-	position: { x: number; y: number };
-}
+import { EditorDraggableTextProps } from "../types/types";
 
-interface EditorDraggableTextProps {
-	textItem: TextOverlay;
-	isSelected: boolean;
-	onDrag: (id: number, data: DraggableData) => void;
-	onTextClick: (id: number) => void;
-}
-
-const EditorDraggableText: React.FC<EditorDraggableTextProps> = ({
-	textItem,
-	isSelected,
-	onDrag,
-	onTextClick,
-}) => {
+const EditorDraggableText = ({ textItem, onDrag, onTextClick }: EditorDraggableTextProps) => {
+	console.log(`font size: ${textItem.fontSize}`);
 	const [startPosition, setStartPosition] = useState<{ x: number; y: number }>({
 		x: 0,
 		y: 0,
@@ -66,7 +51,7 @@ const EditorDraggableText: React.FC<EditorDraggableTextProps> = ({
 					fontWeight: "normal" as const,
 					textTransform: "uppercase" as const,
 					color: "white",
-					fontSize: "2rem",
+					fontSize: `${textItem.fontSize}px`,
 					textAlign: "center" as const,
 					textShadow: `
 					  1px 1px 0 #000,

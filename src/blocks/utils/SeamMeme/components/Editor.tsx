@@ -9,23 +9,9 @@ import EditorModal from "./EditorModal";
 
 // Types
 import { DraggableData } from "react-draggable";
-import { BlockModel } from "../../../types";
-import { Meme } from "../types/types";
+import { EditorProps, TextOverlay } from "../types/types";
 
-interface TextOverlay {
-	id: number;
-	text: string;
-	position: { x: number; y: number };
-}
-
-interface EditorProps {
-	model: BlockModel;
-	done: (data: BlockModel) => void;
-	meme: Meme;
-	handleSetMeme: (meme: Meme | undefined) => void;
-}
-
-const Editor: React.FC<EditorProps> = ({ model, done, meme, handleSetMeme }) => {
+const Editor = ({ model, done, meme, handleSetMeme }: EditorProps) => {
 	const [texts, setTexts] = useState<TextOverlay[]>([]);
 	const [selectedTextId, setSelectedTextId] = useState<number | null>(null);
 	const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -38,8 +24,6 @@ const Editor: React.FC<EditorProps> = ({ model, done, meme, handleSetMeme }) => 
 
 	// Text overlay functionality
 	const addTextOverlay = (text: string) => {
-		const container = containerRef.current;
-		const containerRect = container?.getBoundingClientRect();
 		const newText: TextOverlay = {
 			id: Date.now(),
 			text: text,
@@ -47,6 +31,7 @@ const Editor: React.FC<EditorProps> = ({ model, done, meme, handleSetMeme }) => 
 				x: 100,
 				y: -200,
 			},
+			fontSize: 32,
 		};
 		setTexts([...texts, newText]);
 	};
@@ -60,13 +45,27 @@ const Editor: React.FC<EditorProps> = ({ model, done, meme, handleSetMeme }) => 
 
 	const handleTextClick = (id: number) => {
 		setSelectedTextId(id);
-		// Implement additional logic for editing, resizing, or deleting
 	};
 
 	const handleDrag = (id: number, data: DraggableData) => {
 		setTexts((prevTexts) =>
 			prevTexts.map((text) =>
 				text.id === id ? { ...text, position: { x: data.x, y: data.y } } : text
+			)
+		);
+	};
+
+	// Text size functionality
+	const getFontSizeOfSelectedText = () => {
+		const selectedText = texts.find((text) => text.id === selectedTextId);
+		return selectedText ? selectedText.fontSize : 32;
+	};
+
+	const handleFontSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const newFontSize = parseInt(e.target.value, 10);
+		setTexts((prevTexts) =>
+			prevTexts.map((text) =>
+				text.id === selectedTextId ? { ...text, fontSize: newFontSize } : text
 			)
 		);
 	};
@@ -131,6 +130,18 @@ const Editor: React.FC<EditorProps> = ({ model, done, meme, handleSetMeme }) => 
 				</div>
 				<div className="text-sm">Text</div>
 			</button>
+
+			{/* Text size slider */}
+			<div className="w-full">
+				<input
+					type="range"
+					min="10"
+					max="100"
+					value={getFontSizeOfSelectedText()}
+					onChange={handleFontSizeChange}
+					className="w-full"
+				/>
+			</div>
 
 			{/* Post button that takes user to Feed */}
 			<button

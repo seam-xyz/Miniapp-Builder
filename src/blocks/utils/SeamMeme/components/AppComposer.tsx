@@ -8,15 +8,9 @@ import Editor from "./Editor";
 import getMemes from "../utils/getMemes";
 
 // types
-import type { Meme } from "../types/types";
-import { BlockModel } from "../../../types";
+import type { AppComposerProps, Meme } from "../types/types";
 
 // AppComposer
-interface AppComposerProps {
-	model: BlockModel;
-	done: (data: BlockModel) => void;
-}
-
 const AppComposer = ({ model, done }: AppComposerProps) => {
 	// Browser component state
 	const [memes, setMemes] = useState<Meme[]>([]);
