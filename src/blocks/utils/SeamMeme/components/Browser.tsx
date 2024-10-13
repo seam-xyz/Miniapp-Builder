@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import type { Meme } from "../types/types";
 
-interface MemeBrowserProps {
+interface Browser {
 	memes: Meme[];
 	handleSetMeme: (meme: Meme) => void;
 }
 
-const MemeBrowser: React.FC<MemeBrowserProps> = ({ memes, handleSetMeme }) => {
+const Browser: React.FC<Browser> = ({ memes, handleSetMeme }) => {
 	const [filteredMemes, setFilteredMemes] = useState<Meme[]>([]);
 	const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -58,4 +58,4 @@ const MemeBrowser: React.FC<MemeBrowserProps> = ({ memes, handleSetMeme }) => {
 	);
 };
 
-export default MemeBrowser;
+export default Browser;

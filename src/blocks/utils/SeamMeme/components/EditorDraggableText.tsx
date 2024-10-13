@@ -7,14 +7,14 @@ interface TextOverlay {
 	position: { x: number; y: number };
 }
 
-interface DraggableTextProps {
+interface EditorDraggableTextProps {
 	textItem: TextOverlay;
 	isSelected: boolean;
 	onDrag: (id: number, data: DraggableData) => void;
 	onTextClick: (id: number) => void;
 }
 
-const DraggableText: React.FC<DraggableTextProps> = ({
+const EditorDraggableText: React.FC<EditorDraggableTextProps> = ({
 	textItem,
 	isSelected,
 	onDrag,
@@ -77,4 +77,4 @@ const DraggableText: React.FC<DraggableTextProps> = ({
 	);
 };
 
-export default DraggableText;
+export default EditorDraggableText;
