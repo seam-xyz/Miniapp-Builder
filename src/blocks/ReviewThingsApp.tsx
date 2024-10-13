@@ -6,22 +6,22 @@ import { Button } from '@mui/material';
 
 
 
-const EmojiTile = (props: {Emoji: string, DisplayEmoji?: boolean}) => {
+const EmojiTile = ({Emoji, DisplayEmoji, isClickable=false, onClick} : {Emoji: string, DisplayEmoji?: boolean,isClickable?:boolean, onClick?: () => void}) => {
 
   return(
-    <div className='w-16 h-16 max-[600px]:w-8 max-[600px]:h-8 flex justify-center items-center'>
+    <div onClick={isClickable ? onClick : undefined} className='w-16 h-16 max-[600px]:w-8 max-[600px]:h-8 flex justify-center items-center'>
       <span 
       className='w-full text-6xl max-[600px]:text-3xl text-center m-auto' 
       style={{
-        display: props.DisplayEmoji ? "inline" : "none",
+        display: DisplayEmoji ? "inline" : "none",
       }}
       >
-        {props.Emoji}
+        {Emoji}
       </span>
       <div 
       className='w-1/2 h-1/2 bg-slate-300 rounded-full'
       style={{
-        display: props.DisplayEmoji ? "none" : "inline",
+        display: DisplayEmoji ? "none" : "inline",
       }}
       >
       </div>
@@ -31,14 +31,22 @@ const EmojiTile = (props: {Emoji: string, DisplayEmoji?: boolean}) => {
 
 }
 
-const EmojiRating = (props: {Emoji: string, StarRating: number}) => {
+const EmojiRating = (props: {Emoji: string, StarRating: number, isInput?: boolean, onRatingChange?: (newRating: number) => void}) => {
+  
+  const handleClick = (rating: number) => {
+    if(props.isInput && props.onRatingChange) {
+      props.onRatingChange(rating);
+    }
+
+  }
+  
   return (
     <div className='flex flex-row justify-start gap-2 max-[600px]:gap-0.5'>
-      <EmojiTile Emoji={props.Emoji} DisplayEmoji={true}/>
-      <EmojiTile Emoji={props.Emoji} DisplayEmoji={props.StarRating > 1 ? true : false}/>
-      <EmojiTile Emoji={props.Emoji} DisplayEmoji={props.StarRating > 2 ? true : false}/>
-      <EmojiTile Emoji={props.Emoji} DisplayEmoji={props.StarRating > 3 ? true : false}/>
-      <EmojiTile Emoji={props.Emoji} DisplayEmoji={props.StarRating > 4 ? true : false}/>
+      <EmojiTile onClick={() => handleClick(1)} isClickable={props.isInput} Emoji={props.Emoji} DisplayEmoji={true}/>
+      <EmojiTile onClick={() => handleClick(2)} isClickable={props.isInput} Emoji={props.Emoji} DisplayEmoji={props.StarRating > 1 ? true : false}/>
+      <EmojiTile onClick={() => handleClick(3)} isClickable={props.isInput} Emoji={props.Emoji} DisplayEmoji={props.StarRating > 2 ? true : false}/>
+      <EmojiTile onClick={() => handleClick(4)} isClickable={props.isInput} Emoji={props.Emoji} DisplayEmoji={props.StarRating > 3 ? true : false}/>
+      <EmojiTile onClick={() => handleClick(5)} isClickable={props.isInput} Emoji={props.Emoji} DisplayEmoji={props.StarRating > 4 ? true : false}/>
     </div>
   )
 }
@@ -46,7 +54,7 @@ const EmojiRating = (props: {Emoji: string, StarRating: number}) => {
 const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
   
   const [currentEmoji, setCurrentEmoji] = useState('🍕');
-  const [rating, setRating] = useState(5);
+  const [rating, setRating] = useState<number>(5);
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const ratingRef = useRef(null);
 
@@ -166,7 +174,7 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
         className={`${inputTailwindClasses} block`}
         required/>
         </div>
-          <EmojiRating Emoji={currentEmoji} StarRating={rating}/>
+          <EmojiRating Emoji={currentEmoji} StarRating={rating} isInput={true} onRatingChange={(newRating) => setRating(newRating)}/>
         </div>
       </label>
 
