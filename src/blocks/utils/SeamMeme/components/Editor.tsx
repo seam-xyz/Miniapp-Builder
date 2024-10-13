@@ -24,8 +24,9 @@ const Editor = ({ model, done, meme, handleSetMeme }: EditorProps) => {
 
 	// Text overlay functionality
 	const addTextOverlay = (text: string) => {
+		const newId = Date.now();
 		const newText: TextOverlay = {
-			id: Date.now(),
+			id: newId,
 			text: text,
 			position: {
 				x: 100,
@@ -34,6 +35,7 @@ const Editor = ({ model, done, meme, handleSetMeme }: EditorProps) => {
 			fontSize: 32,
 		};
 		setTexts([...texts, newText]);
+		setSelectedTextId(newId);
 	};
 
 	const removeLastOverlay = () => {
@@ -84,7 +86,7 @@ const Editor = ({ model, done, meme, handleSetMeme }: EditorProps) => {
 	};
 
 	return (
-		<div style={{ position: "relative" }} className="flex flex-col items-center space-y-2">
+		<div className="flex flex-col items-center h-[80%] justify-between items-center">
 			{/* Top buttons with undo and delete meme functionality */}
 			<div className="h-12 flex justify-end space-x-2 w-full">
 				<button
@@ -102,12 +104,15 @@ const Editor = ({ model, done, meme, handleSetMeme }: EditorProps) => {
 			</div>
 
 			{/* Image with draggable text */}
-			<div ref={containerRef} style={{ position: "relative", display: "inline-block" }}>
+			<div
+				ref={containerRef}
+				style={{ position: "relative", display: "inline-block" }}
+				className="h-[60%] w-full bg-gray-100 rounded-lg p-2 flex justify-center items-center"
+			>
 				<img
 					src={meme.url}
 					alt="Meme Background"
-					style={{ width: "100%" }}
-					className="object-contain"
+					className="h-[100%] max-w-full max-h-full object-contain mx-auto my-auto"
 				/>
 				{texts.map((textItem) => (
 					<EditorDraggableText
@@ -123,7 +128,7 @@ const Editor = ({ model, done, meme, handleSetMeme }: EditorProps) => {
 			{/* Add Text button that opens up modal */}
 			<button
 				onClick={() => changeModalState(true)}
-				className="w-28 border-2 rounded-xl bg-sky-500 text-white font-bold flex flex-col items-center justify-center p-2"
+				className="w-28 border-2 rounded-xl bg-sky-500 text-white font-bold flex flex-col items-center justify-center p-2 m-2"
 			>
 				<div className="w-full flex justify-center flex-grow">
 					<icons.text />
@@ -132,7 +137,7 @@ const Editor = ({ model, done, meme, handleSetMeme }: EditorProps) => {
 			</button>
 
 			{/* Text size slider */}
-			<div className="w-full">
+			<div className="w-full m-2">
 				<input
 					type="range"
 					min="10"
