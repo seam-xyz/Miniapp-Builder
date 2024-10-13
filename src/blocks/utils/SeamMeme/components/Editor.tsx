@@ -38,10 +38,15 @@ const Editor: React.FC<EditorProps> = ({ model, done, meme, handleSetMeme }) => 
 
 	// Text overlay functionality
 	const addTextOverlay = (text: string) => {
+		const container = containerRef.current;
+		const containerRect = container?.getBoundingClientRect();
 		const newText: TextOverlay = {
 			id: Date.now(),
 			text: text,
-			position: { x: 50, y: 50 },
+			position: {
+				x: 100,
+				y: -200,
+			},
 		};
 		setTexts([...texts, newText]);
 	};
@@ -98,8 +103,13 @@ const Editor: React.FC<EditorProps> = ({ model, done, meme, handleSetMeme }) => 
 			</div>
 
 			{/* Image with draggable text */}
-			<div ref={containerRef}>
-				<img src={meme.url} alt="Meme Background" style={{ width: "100%" }} />
+			<div ref={containerRef} style={{ position: "relative", display: "inline-block" }}>
+				<img
+					src={meme.url}
+					alt="Meme Background"
+					style={{ width: "100%" }}
+					className="object-contain"
+				/>
 				{texts.map((textItem) => (
 					<EditorDraggableText
 						key={textItem.id}
