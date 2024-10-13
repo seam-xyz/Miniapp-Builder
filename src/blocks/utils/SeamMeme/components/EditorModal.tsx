@@ -1,9 +1,5 @@
 import { useState } from "react";
-
-interface EditorModalProps {
-	addTextOverlay: (text: string) => void;
-	changeModalState: (state: boolean) => void;
-}
+import { EditorModalProps } from "../types/types";
 
 function checkEmptyString(input: string): boolean {
 	return input.trim().length > 0;

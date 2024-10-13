@@ -1,12 +1,7 @@
 import { useState, useEffect } from "react";
-import type { Meme } from "../types/types";
+import type { BrowserProps, Meme } from "../types/types";
 
-interface Browser {
-	memes: Meme[];
-	handleSetMeme: (meme: Meme) => void;
-}
-
-const Browser: React.FC<Browser> = ({ memes, handleSetMeme }) => {
+const Browser = ({ memes, handleSetMeme }: BrowserProps) => {
 	const [filteredMemes, setFilteredMemes] = useState<Meme[]>([]);
 	const [searchQuery, setSearchQuery] = useState<string>("");
 
