@@ -29,6 +29,10 @@ const EditorDraggableText: React.FC<EditorDraggableTextProps> = ({
 		setStartPosition({ x: data.x, y: data.y });
 	};
 
+	const handleDrag = (_e: DraggableEvent, data: DraggableData) => {
+		onDrag(textItem.id, data);
+	};
+
 	const handleStop = (e: DraggableEvent, data: DraggableData) => {
 		const deltaX = data.x - startPosition.x;
 		const deltaY = data.y - startPosition.y;
@@ -43,12 +47,17 @@ const EditorDraggableText: React.FC<EditorDraggableTextProps> = ({
 	};
 
 	return (
-		<Draggable position={textItem.position} onStart={handleStart} onStop={handleStop}>
+		<Draggable
+			position={textItem.position}
+			onStart={handleStart}
+			onDrag={handleDrag}
+			onStop={handleStop}
+			bounds="parent"
+		>
 			<div
 				style={{
 					position: "absolute",
 					cursor: "move",
-					border: isSelected ? "1px solid blue" : "none",
 					padding: "2px",
 					userSelect: "none",
 
