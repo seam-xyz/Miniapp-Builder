@@ -29,8 +29,8 @@ const Editor = ({ model, done, meme, handleSetMeme }: EditorProps) => {
 			id: newId,
 			text: text,
 			position: {
-				x: 100,
-				y: -200,
+				x: 0,
+				y: 0,
 			},
 			fontSize: 32,
 		};
@@ -109,20 +109,22 @@ const Editor = ({ model, done, meme, handleSetMeme }: EditorProps) => {
 				style={{ position: "relative", display: "inline-block" }}
 				className="h-[60%] w-full bg-gray-100 rounded-lg p-2 flex justify-center items-center"
 			>
-				<img
-					src={meme.url}
-					alt="Meme Background"
-					className="h-[100%] max-w-full max-h-full object-contain mx-auto my-auto"
-				/>
-				{texts.map((textItem) => (
-					<EditorDraggableText
-						key={textItem.id}
-						textItem={textItem}
-						isSelected={textItem.id === selectedTextId}
-						onDrag={handleDrag}
-						onTextClick={handleTextClick}
+				<div className="relative w-full h-full flex justify-center items-center">
+					<img
+						src={meme.url}
+						alt="Meme Background"
+						className="max-w-full max-h-full object-contain mx-auto my-auto"
 					/>
-				))}
+					{texts.map((textItem) => (
+						<EditorDraggableText
+							key={textItem.id}
+							textItem={textItem}
+							isSelected={textItem.id === selectedTextId}
+							onDrag={handleDrag}
+							onTextClick={handleTextClick}
+						/>
+					))}
+				</div>
 			</div>
 
 			{/* Add Text button that opens up modal */}
