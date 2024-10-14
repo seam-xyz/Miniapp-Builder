@@ -41,7 +41,7 @@ const EmojiRating = (props: {Emoji: string, StarRating: number, isInput?: boolea
   }
   
   return (
-    <div className='flex flex-row justify-start gap-2 max-[600px]:gap-0.5'>
+    <div className='flex flex-row justify-start gap-2 max-[600px]:gap-0.5 max-[600px]:my-2'>
       {[1,2,3,4,5].map((RatingPosition)=> (
         <EmojiTile 
         key={RatingPosition} 
@@ -85,7 +85,7 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
     })
   }
 
-  const handleRatingBlur = (e:React.FocusEvent<HTMLInputElement>) => {
+  const handleRatingBlur = (e:React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value, 10)
 
     if (value > 5) {
@@ -95,6 +95,11 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
     }
 
     e.target.value = value.toString() // changes the input field value to a number without leading zeros
+  }
+
+  const handleClick = (e: React.MouseEvent<HTMLInputElement>) => {
+    const input = e.target as HTMLInputElement
+    input.select()
   }
 
   const submitForm = (e: any) => {
@@ -157,29 +162,31 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
           }}/>
       </div>
 
-      <label
-      className='text-base text-slate-600 '
-      > Rating (1-5):
+      
         <div 
-        className='flex flex-row justify-start gap-5 max-[600px]:items-center'
+        className='flex flex-row justify-start gap-5 items-end'
         >
         <div
-        className='w-20'
+        className='w-24'
         >
+        <label
+        className='text-base text-slate-600 '
+        > Rating (1-5):
         <input 
         type="number" 
         name="rating"
         max={5}
         min={1}
         value={rating}
-        onBlur={handleRatingBlur}
-        onChange={(e) => {setRating(parseInt(e.target.value, 10));}}
+        onClick={handleClick}
+        onChange={(e) => {setRating(parseInt(e.target.value, 10)); handleRatingBlur(e);}}
         className={`${inputTailwindClasses} block`}
         required/>
+        </label>
         </div>
           <EmojiRating Emoji={currentEmoji} StarRating={rating} isInput={true} onRatingChange={(newRating) => setRating(newRating)}/>
         </div>
-      </label>
+      
 
       <label
       className='text-base text-slate-600'
