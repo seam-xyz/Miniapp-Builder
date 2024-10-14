@@ -11,7 +11,7 @@ const EmojiTile = ({Emoji, DisplayEmoji, isClickable=false, onClick} : {Emoji: s
   return(
     <div onClick={isClickable ? onClick : undefined} className='w-16 h-16 max-[600px]:w-8 max-[600px]:h-8 flex justify-center items-center'>
       <span 
-      className='w-full text-6xl max-[600px]:text-3xl text-center m-auto' 
+      className={`${isClickable ? "select-none": ""} w-full text-6xl max-[600px]:text-3xl text-center m-auto`} 
       style={{
         display: DisplayEmoji ? "inline" : "none",
       }}
@@ -41,7 +41,7 @@ const EmojiRating = (props: {Emoji: string, StarRating: number, isInput?: boolea
   }
   
   return (
-    <div className='flex flex-row justify-start gap-2 max-[600px]:gap-0.5 max-[600px]:my-2'>
+    <div className={`flex flex-row justify-start gap-2 max-[600px]:gap-0.5 ${props.isInput ? "max-[600px]:my-2" : ""}`}>
       {[1,2,3,4,5].map((RatingPosition)=> (
         <EmojiTile 
         key={RatingPosition} 
@@ -164,25 +164,25 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
 
       
         <div 
-        className='flex flex-row justify-start gap-5 items-end'
+        className='flex flex-row justify-start gap-5 items-end mt-2'
         >
         <div
         className='w-24'
         >
-        <label
-        className='text-base text-slate-600 '
-        > Rating (1-5):
-        <input 
-        type="number" 
-        name="rating"
-        max={5}
-        min={1}
-        value={rating}
-        onClick={handleClick}
-        onChange={(e) => {setRating(parseInt(e.target.value, 10)); handleRatingBlur(e);}}
-        className={`${inputTailwindClasses} block`}
-        required/>
-        </label>
+          <label
+          className='text-base text-slate-600 '
+          > Rating (1-5):
+          <input 
+          type="number" 
+          name="rating"
+          max={5}
+          min={1}
+          value={rating}
+          onClick={handleClick}
+          onChange={(e) => {setRating(parseInt(e.target.value, 10)); handleRatingBlur(e);}}
+          className={`${inputTailwindClasses} block`}
+          required/>
+          </label>
         </div>
           <EmojiRating Emoji={currentEmoji} StarRating={rating} isInput={true} onRatingChange={(newRating) => setRating(newRating)}/>
         </div>
