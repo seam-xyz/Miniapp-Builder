@@ -270,7 +270,7 @@ const ExpandableParagraph = ({children, maxHeight = 100} : {children:any, maxHei
         <Button
         onClick={toggleExpand}
         
-        className='text-seam-black mt-2 text-sm font-normal normal-case float-right mr-1 hover:text-seam-blue'
+        className='text-slate-500 mt-2 text-sm font-normal normal-case float-right mr-1 hover:text-seam-blue'
         style={{
           fontSize: "0.8rem"
         }}
