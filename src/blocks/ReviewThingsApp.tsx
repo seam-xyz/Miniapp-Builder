@@ -53,9 +53,9 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
   const [isPickerVisible, setIsPickerVisible] = useState(false);
 
   const maxCharacters = { // form character limits for each input
-    item: 70,
-    unit: 50,
-    description: 300,
+    item: 60,
+    unit: 60,
+    description: 1000,
   }
 
   const [textBoxLength, setTextBoxLength] = useState({ // current character count of each form input field
@@ -247,7 +247,7 @@ const EmojiReviewFeed = (props: {ModelData: any}) => {
           <span className=' font-medium mx-1 text-2xl max-[600px]:text-lg' >{props.ModelData['unit']}</span>
         </div>
       </div>
-      <span className='text-base font-normal' >{props.ModelData['note']}</span>
+      <span className='text-base max-h-72 font-normal overflow-auto' >{props.ModelData['note']}</span>
     </div>
   )
 }
