@@ -257,7 +257,7 @@ const ExpandableParagraph = ({children, maxHeight = 100} : {children:any, maxHei
     <div>
       <p
       ref={paragraphref}
-      className='text-base font-normal'
+      className='text-base font-normal text-seam-black'
       style={{
         maxHeight: isExpanded ? `${paragraphref.current?.scrollHeight}px` : `${maxHeight}px`,
         overflow: isExpanded ? 'visible' : 'hidden',
@@ -285,16 +285,16 @@ const ExpandableParagraph = ({children, maxHeight = 100} : {children:any, maxHei
 const EmojiReviewFeed = (props: {ModelData: any}) => {
   return(
     <div className='w-full h-fit flex bg-slate-200 rounded-md px-5 py-5 max-[600px]:p-3 flex-col gap-4 max-[600px]:gap-2'>
-      <span className='font-bold text-2xl max-[600px]:text-xl'>{props.ModelData['name']}</span>
+      <span className='font-bold text-2xl text-seam-black max-[600px]:text-xl'>{props.ModelData['name']}</span>
       <div className='-m-1 flex flex-row gap-4 max-[600px]:gap-2'>
         <span 
-        className='font-thin text-center text-8xl max-[600px]:text-6xl'
+        className='font-thin text-center text-8xl text-seam-black max-[600px]:text-6xl'
         >
           {Number(props.ModelData['rating'])}/5
         </span>
         <div className='flex flex-col w-full justify-center'>
           <EmojiRating Emoji={props.ModelData['emoji']} StarRating={Number(props.ModelData['rating'])}/>
-          <span className=' font-medium mx-1 text-2xl max-[600px]:text-lg' >{props.ModelData['unit']}</span>
+          <span className=' font-medium mx-1 text-2xl text-seam-black max-[600px]:text-lg' >{props.ModelData['unit']}</span>
         </div>
       </div>
       <ExpandableParagraph maxHeight={120}>{props.ModelData['note']}</ExpandableParagraph>
