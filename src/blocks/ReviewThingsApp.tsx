@@ -1,10 +1,8 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
 import Picker from '@emoji-mart/react';
 import data from '@emoji-mart/data';
 import { Button } from '@mui/material';
-
-
 
 const EmojiTile = ({Emoji, DisplayEmoji, isClickable=false, onClick} : {Emoji: string, DisplayEmoji?: boolean,isClickable?:boolean, onClick?: () => void}) => {
 
@@ -19,16 +17,10 @@ const EmojiTile = ({Emoji, DisplayEmoji, isClickable=false, onClick} : {Emoji: s
         {Emoji}
       </span>
       <div 
-      className='w-1/2 h-1/2 bg-slate-300 rounded-full'
-      style={{
-        display: DisplayEmoji ? "none" : "inline",
-      }}
-      >
-      </div>
-
+      className={`${DisplayEmoji ? "hidden" : "inline"} w-1/2 h-1/2 bg-slate-300 rounded-full`}
+      ></div>
     </div>
   )
-
 }
 
 const EmojiRating = (props: {Emoji: string, StarRating: number, isInput?: boolean, onRatingChange?: (newRating: number) => void}) => {
@@ -37,7 +29,6 @@ const EmojiRating = (props: {Emoji: string, StarRating: number, isInput?: boolea
     if(props.isInput && props.onRatingChange) {
       props.onRatingChange(rating);
     }
-
   }
   
   return (
@@ -85,7 +76,7 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
     })
   }
 
-  const handleRatingBlur = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const handleRatingBounds = (e:React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value, 10)
 
     if (value > 5) {
@@ -159,35 +150,36 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
         onEmojiSelect={(e: any) => {
           setCurrentEmoji(e.native);
           setIsPickerVisible(!isPickerVisible);
-          }}/>
+        }}/>
       </div>
 
-      
-        <div 
-        className='flex flex-row justify-start gap-5 items-end mt-2'
-        >
+      <div 
+      className='flex flex-row justify-start gap-5 items-end mt-2'
+      >
         <div
         className='w-24'
         >
           <label
           className='text-base text-slate-600 '
           > Rating (1-5):
-          <input 
-          type="number" 
-          name="rating"
-          max={5}
-          min={1}
-          value={rating}
-          onClick={handleClick}
-          onChange={(e) => {setRating(parseInt(e.target.value, 10)); handleRatingBlur(e);}}
-          className={`${inputTailwindClasses} block`}
-          required/>
+            <input 
+            type="number" 
+            name="rating"
+            max={5}
+            min={1}
+            value={rating}
+            onClick={handleClick}
+            onChange={(e) => {
+              setRating(parseInt(e.target.value, 10)); 
+              handleRatingBounds(e);
+            }}
+            className={`${inputTailwindClasses} block`}
+            required/>
           </label>
         </div>
-          <EmojiRating Emoji={currentEmoji} StarRating={rating} isInput={true} onRatingChange={(newRating) => setRating(newRating)}/>
-        </div>
+        <EmojiRating Emoji={currentEmoji} StarRating={rating} isInput={true} onRatingChange={(newRating) => setRating(newRating)}/>
+      </div>
       
-
       <label
       className='text-base text-slate-600'
       > Unit of Measurement:
@@ -217,7 +209,6 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
         rows={5}
         placeholder="e.g. Kiwi's are edible but not pizza shaped."
         className={`${inputTailwindClasses} block`}
-        
         ></textarea>
         <span
         className={characterCountTailwidnClasses}
@@ -225,22 +216,20 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
           {textBoxLength.description}/{maxCharacters.description} characters
         </span>
       </label>
-      
-      <div className="flex justify-between items-center w-full h-[60px] mb-20">
-      <Button 
-      type='submit' 
-      variant='contained'
-      fullWidth
-      save-modal-button className='save-modal-button'
+      <div 
+      className="flex justify-between items-center w-full h-[60px] mb-20"
       >
-      Preview
-      </Button>
+        <Button 
+        type='submit' 
+        variant='contained'
+        fullWidth
+        save-modal-button className='save-modal-button'
+        >
+        Preview
+        </Button>
       </div>
-
     </form>
-
   )
-
 }
 
 const EmojiReviewFeed = (props: {ModelData: any}) => {
