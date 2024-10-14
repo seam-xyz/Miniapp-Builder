@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { BlockModel, ComposerComponentProps, FeedComponentProps } from './types'
 import Picker from '@emoji-mart/react';
 import data from '@emoji-mart/data';
@@ -232,6 +232,56 @@ const EmojiRatingForm = (props: {onSubmit: (data: any) => void}) => {
   )
 }
 
+const ExpandableParagraph = ({children, maxHeight = 100} : {children:any, maxHeight: number}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const paragraphref = useRef<HTMLParagraphElement | null>(null);
+
+  useEffect(() => {
+    if(paragraphref.current && paragraphref.current.scrollHeight > maxHeight){
+      setIsOverflowing(true);
+      
+      if (!isOverflowing) {
+        setIsExpanded(false);
+      }
+    } else {
+      setIsOverflowing(false)
+    }
+  }, [children, maxHeight])
+  
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  }
+
+  return (
+    <div>
+      <p
+      ref={paragraphref}
+      className='text-base font-normal'
+      style={{
+        maxHeight: isExpanded ? `${paragraphref.current?.scrollHeight}px` : `${maxHeight}px`,
+        overflow: isExpanded ? 'visible' : 'hidden',
+        transition: 'max-height 0.3s ease'
+      }}
+      >
+        {children}
+      </p>
+      {isOverflowing && (
+        <Button
+        onClick={toggleExpand}
+        
+        className='text-seam-black mt-2 text-sm font-normal normal-case float-right mr-1 hover:text-seam-blue'
+        style={{
+          fontSize: "0.8rem"
+        }}
+        >
+          {isExpanded ? "Read Less" : "Read More"}
+        </Button>
+      )}
+    </div>
+  )
+}
+
 const EmojiReviewFeed = (props: {ModelData: any}) => {
   return(
     <div className='w-full h-fit flex bg-slate-200 rounded-md px-5 py-5 max-[600px]:p-3 flex-col gap-4 max-[600px]:gap-2'>
@@ -247,7 +297,7 @@ const EmojiReviewFeed = (props: {ModelData: any}) => {
           <span className=' font-medium mx-1 text-2xl max-[600px]:text-lg' >{props.ModelData['unit']}</span>
         </div>
       </div>
-      <span className='text-base max-h-72 font-normal overflow-auto' >{props.ModelData['note']}</span>
+      <ExpandableParagraph maxHeight={120}>{props.ModelData['note']}</ExpandableParagraph>
     </div>
   )
 }
