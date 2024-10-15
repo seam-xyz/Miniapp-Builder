@@ -12,7 +12,7 @@ export const LinkBookmarkFeedComponent = ({ model }: FeedComponentProps) => {
   }
 
   return (
-    <Box style={{ height: '100%', width: '100%' }}>
+    <Box className="h-full w-full bg-[#FEFEFE]">
       <Iframely url={url} style={{ height: '100%', width: '100%' }} />
     </Box>
   );
