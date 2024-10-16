@@ -9,9 +9,9 @@
   "typescript.format.enable": true,
   "json.format.enable": true,
   "html.format.enable": true,
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "eslint.enable": false,
-  "prettier.enable": true,
+  "prettier.enable": false,
   "files.autoSave": "off",
   "prisma-smart-formatter.typescript.defaultFormatter": "esbenp.prettier-vscode",
   "prisma-smart-formatter.typescriptreact.defaultFormatter": "vscode.typescript-language-features"

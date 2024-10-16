@@ -1,17 +1,25 @@
 import { useState, useEffect } from "react";
+import axios from "axios"
 
 // components
 import Browser from "./Browser";
 import Editor from "./Editor";
 
-// utils
-import getMemes from "../utils/getMemes";
-
 // types
-import type { AppComposerProps, Meme } from "../types/types";
+import type { MemeGenAppComposerProps, Meme } from "../types/types";
+
+// Get memes
+const getMemes = async (): Promise<Meme[]> => {
+    const res = await axios({
+        method: "GET",
+        url: "https://api.imgflip.com/get_memes"
+    })
+    const memes = res.data.data.memes
+    return memes
+}
 
 // AppComposer
-const AppComposer = ({ model, done }: AppComposerProps) => {
+const MemeGenAppComposer = ({ model, done }: MemeGenAppComposerProps) => {
 	// Browser component state
 	const [memes, setMemes] = useState<Meme[]>([]);
 	const [meme, setMeme] = useState<Meme | undefined>(undefined);
@@ -41,4 +49,4 @@ const AppComposer = ({ model, done }: AppComposerProps) => {
 	);
 };
 
-export default AppComposer;
+export default MemeGenAppComposer;
