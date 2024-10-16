@@ -1,11 +1,16 @@
 // Libraries
 import React, { useRef, useState } from "react";
-import { icons } from "../assets/icons";
 import html2canvas from "html2canvas";
 
 // Components
 import EditorDraggableText from "./EditorDraggableText";
 import EditorModal from "./EditorModal";
+
+// Icons
+import UndoIcon from '@mui/icons-material/Undo';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import AbcIcon from '@mui/icons-material/Abc';
+
 
 // Types
 import { DraggableData } from "react-draggable";
@@ -93,13 +98,13 @@ const Editor = ({ model, done, meme, handleSetMeme }: EditorProps) => {
 					onClick={() => removeLastOverlay()}
 					className="w-14 h-full border-2 border-gray-200 rounded-3xl flex items-center justify-center"
 				>
-					<icons.undo className="text-gray-400" />
+					<UndoIcon className="text-gray-400" />
 				</button>
 				<button
 					onClick={() => handleSetMeme(undefined)}
 					className="w-14 h-full border-2 border-gray-200 rounded-3xl flex items-center justify-center"
 				>
-					<icons.delete className="text-gray-400" />
+					<DeleteOutlineIcon className="text-gray-400" />
 				</button>
 			</div>
 
@@ -133,7 +138,7 @@ const Editor = ({ model, done, meme, handleSetMeme }: EditorProps) => {
 				className="w-28 border-2 rounded-xl bg-sky-500 text-white font-bold flex flex-col items-center justify-center p-2 m-2"
 			>
 				<div className="w-full flex justify-center flex-grow">
-					<icons.text />
+					<AbcIcon />
 				</div>
 				<div className="text-sm">Text</div>
 			</button>

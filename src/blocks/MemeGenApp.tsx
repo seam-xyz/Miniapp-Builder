@@ -1,6 +1,6 @@
 import { BlockModel, ComposerComponentProps, FeedComponentProps } from "./types";
-import AppComposer from "./utils/SeamMeme/components/AppComposer";
-import AppFeed from "./utils/SeamMeme/components/AppFeed";
+import AppComposer from "./utils/MemeGen/components/AppComposer";
+import AppFeed from "./utils/MemeGen/components/AppFeed";
 
 export const MemeGenComposerComponent = ({ model, done }: ComposerComponentProps) => {
 	return (
