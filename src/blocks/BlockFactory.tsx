@@ -48,6 +48,7 @@ import { MondrianFeedComponent, MondrianComposerComponent } from './MondrianBloc
 import { WordleFeedComponent, WordleComposerComponent } from './WordleBlock'
 import { VoiceFeedComponent, VoiceComposerComponent } from './VoiceApp'
 import { BlockModel, BlockTypes, ComposerComponentProps } from './types'
+import { ReviewThingsAppComposerComponent, ReviewThingsAppFeedComponent } from './ReviewThingsApp'
 
 
 export default class BlockFactory {
@@ -101,6 +102,7 @@ export default class BlockFactory {
       case "Riddlequest": return <RiddlequestFeedComponent model={model} update={update} />;
       case "Color": return <ColorFeedComponent model={model} update={update} />;
       case "Seam": return <SeamFeedComponent model={model} update={update} />;
+      case "ReviewThings": return <ReviewThingsAppFeedComponent model={model} update={update} />;
       // new feed components go here
       default: return UnknownFeedComponent({ model, update });
     }
@@ -157,6 +159,7 @@ export default class BlockFactory {
       case "Horoscope": return HoroscopeComposerComponent(props);
       case "Dizzy": return DizzyComposerComponent(props);
       case "Seam": return SeamComposerComponent(props);
+      case "ReviewThings": return ReviewThingsAppComposerComponent(props);
       // new composer components go here
       default: return UnknownComposerComponent(props);
     }

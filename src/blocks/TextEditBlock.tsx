@@ -27,12 +27,14 @@ export const TextEditFeedComponent = ({ model }: FeedComponentProps) => {
   const onEditorStateChange = (editorState: EditorState) => {};
 
   return (
-    <Editor
-      editorState={EditorState.createWithContent(convertFromRaw(JSON.parse(textState)), linkDecorator)}
-      blockStyleFn={blockStyleFn}
-      onChange={onEditorStateChange}
-      readOnly={true}
-    />
+    <div className="w-full h-full bg-[#FEFEFE] p-3">
+      <Editor
+        editorState={EditorState.createWithContent(convertFromRaw(JSON.parse(textState)), linkDecorator)}
+        blockStyleFn={blockStyleFn}
+        onChange={onEditorStateChange}
+        readOnly={true}
+      />
+    </div>
   );
 }
 
