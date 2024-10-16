@@ -11,7 +11,7 @@ export type Meme = {
 	width: string;
 };
 
-export interface AppComposerProps {
+export interface MemeGenAppComposerProps {
 	model: BlockModel;
 	done: (data: BlockModel) => void;
 }

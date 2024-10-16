@@ -8,10 +8,10 @@ import Editor from "./Editor";
 import getMemes from "../utils/getMemes";
 
 // types
-import type { AppComposerProps, Meme } from "../types/types";
+import type { MemeGenAppComposerProps, Meme } from "../types/types";
 
 // AppComposer
-const AppComposer = ({ model, done }: AppComposerProps) => {
+const MemeGenAppComposer = ({ model, done }: MemeGenAppComposerProps) => {
 	// Browser component state
 	const [memes, setMemes] = useState<Meme[]>([]);
 	const [meme, setMeme] = useState<Meme | undefined>(undefined);
@@ -41,4 +41,4 @@ const AppComposer = ({ model, done }: AppComposerProps) => {
 	);
 };
 
-export default AppComposer;
+export default MemeGenAppComposer;
