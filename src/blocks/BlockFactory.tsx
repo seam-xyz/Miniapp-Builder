@@ -1,4 +1,4 @@
-import { SeamFeedComponent, SeamComposerComponent } from './SeamMeme'
+import { MemeGenFeedComponent, MemeGenComposerComponent } from './MemeGenApp'
 import { LayeredImageFeedComponent, LayeredImageComposerComponent } from './LayeredImageBlock'
 import { ColorFeedComponent, ColorComposerComponent } from './ColorApp'
 import { RiddlequestFeedComponent, RiddlequestComposerComponent } from './RiddlequestApp'
@@ -101,7 +101,7 @@ export default class BlockFactory {
       case "Pickrr": return <PickrrFeedComponent model={model} update={update} />;
       case "Riddlequest": return <RiddlequestFeedComponent model={model} update={update} />;
       case "Color": return <ColorFeedComponent model={model} update={update} />;
-      case "Seam": return <SeamFeedComponent model={model} update={update} />;
+      case "MemeGen": return <MemeGenFeedComponent model={model} update={update} />;
       case "ReviewThings": return <ReviewThingsAppFeedComponent model={model} update={update} />;
       // new feed components go here
       default: return UnknownFeedComponent({ model, update });
@@ -158,7 +158,7 @@ export default class BlockFactory {
       case "MagicCard": return MagicCardComposerComponent(props);
       case "Horoscope": return HoroscopeComposerComponent(props);
       case "Dizzy": return DizzyComposerComponent(props);
-      case "Seam": return SeamComposerComponent(props);
+      case "MemeGen": return MemeGenComposerComponent(props);
       case "ReviewThings": return ReviewThingsAppComposerComponent(props);
       // new composer components go here
       default: return UnknownComposerComponent(props);
