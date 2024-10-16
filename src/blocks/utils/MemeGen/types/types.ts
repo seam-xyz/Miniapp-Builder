@@ -16,11 +16,6 @@ export interface AppComposerProps {
 	done: (data: BlockModel) => void;
 }
 
-export interface AppFeedProps {
-	model: BlockModel;
-	update: (data: { [key: string]: string }) => void;
-}
-
 export interface BrowserProps {
 	memes: Meme[];
 	handleSetMeme: (meme: Meme) => void;

@@ -1,6 +1,5 @@
 import { BlockModel, ComposerComponentProps, FeedComponentProps } from "./types";
 import AppComposer from "./utils/MemeGen/components/AppComposer";
-import AppFeed from "./utils/MemeGen/components/AppFeed";
 
 export const MemeGenComposerComponent = ({ model, done }: ComposerComponentProps) => {
 	return (
@@ -11,9 +10,12 @@ export const MemeGenComposerComponent = ({ model, done }: ComposerComponentProps
 };
 
 export const MemeGenFeedComponent = ({ model, update }: FeedComponentProps) => {
+	const editedMeme = model.data.editedMeme;
+
 	return (
 		<div>
-			<AppFeed model={model} update={update} />
-		</div>
+				<img src={editedMeme} />
+			</div>
 	);
 };
+
