@@ -10,7 +10,7 @@ export const MemeGenComposerComponent = ({ model, done }: ComposerComponentProps
 };
 
 export const MemeGenFeedComponent = ({ model, update }: FeedComponentProps) => {
-  const editedMeme = model.data.editedMeme;
+	const editedMeme = model.data["dataURL"];
 
   return (
     <div>

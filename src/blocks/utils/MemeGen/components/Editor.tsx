@@ -11,6 +11,8 @@ import UndoIcon from '@mui/icons-material/Undo';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import AbcIcon from '@mui/icons-material/Abc';
 
+// Utils
+import { dataLoader } from "./dataLoader";
 
 // Types
 import { DraggableData } from "react-draggable";
@@ -77,18 +79,17 @@ const Editor = ({ model, done, meme, handleSetMeme }: EditorProps) => {
     );
   };
 
-  // Submit new meme image
-  const handleSubmit = async () => {
-    if (containerRef.current) {
-      const canvas = await html2canvas(containerRef.current, {
-        useCORS: true,
-        allowTaint: false,
-      });
-      const dataUrl = canvas.toDataURL("image/png");
-      model.data.editedMeme = dataUrl;
-      done(model);
-    }
-  };
+	// Submit new meme image
+	const handleSubmit = async () => {
+		if (containerRef.current) {
+			const canvas = await html2canvas(containerRef.current, {
+				useCORS: true,
+				allowTaint: false,
+			});
+			const dataURL = canvas.toDataURL("image/png");
+      await dataLoader(dataURL, model, done)
+		}
+	};
 
   return (
     <div className="flex flex-col items-center h-[80%] justify-between items-center">
