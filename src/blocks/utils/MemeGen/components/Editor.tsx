@@ -11,6 +11,8 @@ import UndoIcon from '@mui/icons-material/Undo';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import AbcIcon from '@mui/icons-material/Abc';
 
+// Utils
+import { dataLoader } from "./dataLoader";
 
 // Types
 import { DraggableData } from "react-draggable";
@@ -84,9 +86,8 @@ const Editor = ({ model, done, meme, handleSetMeme }: EditorProps) => {
 				useCORS: true,
 				allowTaint: false,
 			});
-			const dataUrl = canvas.toDataURL("image/png");
-			model.data.editedMeme = dataUrl;
-			done(model);
+			const dataURL = canvas.toDataURL("image/png");
+      await dataLoader(dataURL, model, done)
 		}
 	};
 
