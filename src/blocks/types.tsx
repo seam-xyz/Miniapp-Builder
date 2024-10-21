@@ -662,7 +662,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: [{username: "danielgavidia", split: 1.0}],
+    createdBy: [
+      {username: "danielgavidia", split: 1.0 / 7},
+      { username: "irtizaaftabmiian", split: 1.0 / 7 },
+      { username: "akshayb03", split: 1.0 / 7 },
+      { username: "embo", split: 1.0 / 7 },
+      { username: "emmabrooke1122", split: 1.0 / 7 },
+      { username: "palupadhyaya", split: 1.0 / 7 },
+      { username: "julyjuicej", split: 1.0 / 7 }
+    ],
     fullscreenEdit: false,
 },
 };
