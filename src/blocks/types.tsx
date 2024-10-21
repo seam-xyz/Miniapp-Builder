@@ -44,6 +44,7 @@ import JournalIcon from "./blockIcons/journal.png";
 import HaikuraIcon from "./blockIcons/HaikuraIcon.png";
 import MagicCardIcon from "./blockIcons/MagicCardIcon.png";
 import ReviewThingsIcon from "./blockIcons/ReviewThingsIcon.png";
+import SeamMemeIcon from "./blockIcons/SeamMemeIcon.png";
 
 export type BlockModel = {
   type: string;
@@ -655,9 +656,9 @@ export const BlockTypes: { [key: string]: BlockType } = {
   },
   "MemeGen": { 
     type: "MemeGen",
-    displayName: "MemeGen",
+    displayName: "Seam Meme",
     displayDescription: "Meme creator that allows users to import popular memes and edit them.",
-    icon: "SeamIcon", // TODO: insert your app icon here
+    icon: SeamMemeIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
