@@ -1,10 +1,14 @@
 const SeamPillButton = ({ icon, label, onClick, darkMode, colorOverride, isOnChannelPage, }) => {
   let color = darkMode ? 'white' : 'black';
+  let bgColor = "transparent"
+  if (darkMode !== undefined) {
+    bgColor = darkMode ? "black" : "white";
+  }
 
   return (
     <div
       onClick={onClick}
-      className={`${isOnChannelPage && `bg-${color} bg-opacity-20`} flex border border-black/10 items-center w-auto h-[40px] cursor-pointer rounded-full`}
+      className={`${isOnChannelPage && `bg-${bgColor} bg-opacity-20`} flex border border-black/10 items-center w-auto h-[40px] cursor-pointer rounded-full`}
       style={{
         backgroundColor: colorOverride && colorOverride, // Use `colorOverride` if provided, else fallback to default color
       }}
