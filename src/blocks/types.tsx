@@ -44,6 +44,8 @@ import WardrobeIcon from "./blockIcons/WardrobeIcon.png";
 import JournalIcon from "./blockIcons/journal.png";
 import HaikuraIcon from "./blockIcons/HaikuraIcon.png";
 import MagicCardIcon from "./blockIcons/MagicCardIcon.png";
+import ReviewThingsIcon from "./blockIcons/ReviewThingsIcon.png";
+import SeamMemeIcon from "./blockIcons/SeamMemeIcon.png";
 
 export type BlockModel = {
   type: string;
@@ -90,6 +92,50 @@ export type BlockType = {
 
 // In order of how they should show up in the drop-down
 export const BlockTypes: { [key: string]: BlockType } = {
+  "PixelArt": {
+    type: "PixelArt",
+    displayName: "Pixel Art",
+    displayDescription: "A block to make then display pixel art",
+    icon: pixelArtIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "emilee", split: 1}],
+    fullscreenEdit: false,
+  },
+  "Dizzy": { 
+    type: "Dizzy",
+    displayName: "dizzy Text",
+    displayDescription: "Create a text input to a continuously flashing RGB color with background contrast!",
+    icon: DizzyIcon, 
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "shloknemani", split: 1.0}],
+    fullscreenEdit: false,
+  },
+  "Vibecheck": {
+    type: "Vibecheck",
+    displayName: "VibeCheck",
+    displayDescription: "Get a vibe check on your favorite Spotify Playlists!",
+    icon: vibecheckIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
+    fullscreenEdit: true,
+  },
+  text: {
+    type: "text",
+    displayName: "Text ",
+    displayDescription: "Add text with formatting and links.",
+    icon: textIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "seam", split: 1}],
+    fullscreenEdit: false,
+  },
   profile: {
     type: "profile",
     displayName: "Profile Header ",
@@ -145,17 +191,6 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "defcon", split: 1.0}],
     fullscreenEdit: false,
   },
-  "Dizzy": { 
-    type: "Dizzy",
-    displayName: "dizzy Text",
-    displayDescription: "Create a text input to a continuously flashing RGB color with background contrast!",
-    icon: DizzyIcon, 
-    deprecated: false,
-    doesBlockPost: true,
-    doesBlockEdit: true,
-    createdBy: [{username: "shloknemani", split: 1.0}],
-    fullscreenEdit: false,
-  },
   "Wardrobe": { 
     type: "Wardrobe",
     displayName: "Wardrobe",
@@ -175,7 +210,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: [{username: "Jay", split: 1}],
+    createdBy: [{username: "jayzalani", split: 1}],
     fullscreenEdit: false,
   },
   "Riddlequest": { 
@@ -244,33 +279,11 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "roxanne", split: 1}],
     fullscreenEdit: false,
   },
-  "PixelArt": {
-    type: "PixelArt",
-    displayName: "Pixel Art",
-    displayDescription: "A block to make then display pixel art",
-    icon: pixelArtIcon,
-    deprecated: false,
-    doesBlockPost: true,
-    doesBlockEdit: true,
-    createdBy: [{username: "emilee", split: 1}],
-    fullscreenEdit: false,
-  },
   giphy: {
     type: "giphy",
     displayName: "GIPHY ",
     displayDescription: "Choose a gif.",
     icon: giphyIcon,
-    deprecated: false,
-    doesBlockPost: true,
-    doesBlockEdit: true,
-    createdBy: [{username: "seam", split: 1}],
-    fullscreenEdit: false,
-  },
-  text: {
-    type: "text",
-    displayName: "Text ",
-    displayDescription: "Add text with formatting and links.",
-    icon: textIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
@@ -618,17 +631,19 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "samsam", split: 1}],
     fullscreenEdit: false,
   },
-  "Vibecheck": {
-    type: "Vibecheck",
-    displayName: "VibeCheck",
-    displayDescription: "Get a vibe check on your favorite Spotify Playlists!",
-    icon: vibecheckIcon,
+
+  "ReviewThings": {
+    type: "ReviewThings",
+    displayName: "Review Things",
+    displayDescription: "Review things with other things on a five point scale",
+    icon: ReviewThingsIcon,
     deprecated: false,
     doesBlockPost: true,
     doesBlockEdit: true,
-    createdBy: [{username: "jamesburet", split: 0.5}, {username: "rocco", split: 0.5}],
-    fullscreenEdit: true,
+    createdBy: [{username: "jakeaicher", split: 1}],
+    fullscreenEdit: false,
   },
+
   "Unknown": {
     type: "Unknown",
     displayName: "Unknown",
@@ -671,6 +686,23 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockPost: true,
     doesBlockEdit: true,
     createdBy: [{username: "lanid", split: 1.0}],
+  "MemeGen": { 
+    type: "MemeGen",
+    displayName: "Seam Meme",
+    displayDescription: "Meme creator that allows users to import popular memes and edit them.",
+    icon: SeamMemeIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [
+      {username: "danielgavidia", split: 1.0 / 7},
+      { username: "irtizaaftabmiian", split: 1.0 / 7 },
+      { username: "akshayb03", split: 1.0 / 7 },
+      { username: "embo", split: 1.0 / 7 },
+      { username: "emmabrooke1122", split: 1.0 / 7 },
+      { username: "palupadhyaya", split: 1.0 / 7 },
+      { username: "julyjuicej", split: 1.0 / 7 }
+    ],
     fullscreenEdit: false,
 },
 };

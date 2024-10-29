@@ -754,7 +754,7 @@ const MagicCard = forwardRef((props: MagicCardProps, ref: React.ForwardedRef<HTM
     }
 
     ctx.fillStyle = "black";
-    ctx.textBaseline = "top";
+    ctx.textBaseline = "alphabetic";
     ctx.textAlign = "left";
 
     ctx.drawImage(illustrationImg, 63, 122, ILLUSTRATION_WIDTH, ILLUSTRATION_HEIGHT);
@@ -762,11 +762,26 @@ const MagicCard = forwardRef((props: MagicCardProps, ref: React.ForwardedRef<HTM
     ctx.drawImage(frameImg, 40, 40);
 
     ctx.font = "bold 48px MagicCard";
-    ctx.fillText(props.cardName, 68, 62, 610);
+    ctx.fillText(props.cardName, 68, 100, 610);
 
     ctx.font = "bold 40px MagicCard";
     const textWidth = ctx.measureText(props.type).width;
-    ctx.fillText(props.type, 68, 592, 610);
+    ctx.fillText(props.type, 68, 622, 610);
+
+    // draw subtype
+    if (props.subType !== "") {
+      // line separating type and subtype
+      const spacing = 8;
+      const barWidth = 25;
+      ctx.fillRect(68 + textWidth + spacing, 614, barWidth, 2);
+      // draw subtype
+      ctx.fillText(
+        props.subType,
+        68 + textWidth + spacing * 2 + barWidth,
+        622,
+        610 - textWidth - spacing * 2 - barWidth
+      );
+    }
 
     // draw mana cost
     const manaCostPlaceholders: Array<keyof typeof resources.icons> = [];
@@ -797,23 +812,6 @@ const MagicCard = forwardRef((props: MagicCardProps, ref: React.ForwardedRef<HTM
       x -= manaImageSize + 1.5;
     }
 
-    ctx.font = "bold 40px MagicCard";
-
-    // draw subtype
-    if (props.subType !== "") {
-      // line separating type and subtype
-      const spacing = 8;
-      const barWidth = 25;
-      ctx.fillRect(68 + textWidth + spacing, 614, barWidth, 2);
-      // draw subtype
-      ctx.fillText(
-        props.subType,
-        68 + textWidth + spacing * 2 + barWidth,
-        592,
-        610 - textWidth - spacing * 2 - barWidth
-      );
-    }
-
     // draw power and toughness
     if (props.power !== "" && props.toughness !== "") {
       // draw the pt box
@@ -822,7 +820,7 @@ const MagicCard = forwardRef((props: MagicCardProps, ref: React.ForwardedRef<HTM
       ctx.font = "bold 40px MagicCard";
       ctx.textAlign = "center";
       const ptText = `${props.power}/${props.toughness}`;
-      ctx.fillText(ptText, 542 + ptBoxImg.width / 2, 930, ptBoxImg.width - 50);
+      ctx.fillText(ptText, 542 + ptBoxImg.width / 2, 965, ptBoxImg.width - 50);
       ctx.textAlign = "left";
     }
 
@@ -830,7 +828,7 @@ const MagicCard = forwardRef((props: MagicCardProps, ref: React.ForwardedRef<HTM
     // the rules are centered vertically in the box
     let lineHeight = 35;
     const startX = 68; // starting x
-    const startY = 654; // starting y
+    const startY = 679; // starting y
     let y = startY;
     const maxWidth = 610;
     const maxHeight = 270;
@@ -881,7 +879,7 @@ const MagicCard = forwardRef((props: MagicCardProps, ref: React.ForwardedRef<HTM
             x += partLength;
             lastPartIndex = index + 3; // {x} -> 3 characters
 
-            ctx.drawImage(placeholderImages[icon], x, y + 2, 25, 25);
+            ctx.drawImage(placeholderImages[icon], x, y - 22, 25, 25);
             x += 25; // icon width
           }
 
@@ -928,7 +926,7 @@ const MagicCard = forwardRef((props: MagicCardProps, ref: React.ForwardedRef<HTM
   ]);
 
   return (
-    <Stack justifyContent="center" alignItems="center" padding={2} style={{ width: "auto", height: "100vh" }}>
+    <Stack justifyContent="center" alignItems="center" padding={2} style={{ width: "auto", height: "auto" }}>
       <canvas
         ref={mergedRef}
         style={{ height: "100%", objectFit: "contain", width: "100%" }}
@@ -980,46 +978,6 @@ export const MagicCardComposerComponent = ({ model, done }: ComposerComponentPro
   const generateCard = useCallback(() => {
     setEditing(false);
   }, []);
-
-  const handleUpload = async (uploadOptions: any, fileName?: string) => {
-    console.log("Handle upload started!");
-    try {
-      await FirebaseStorage.uploadFile(uploadOptions, async (event, error) => {
-        if (error) {
-          console.error("Error during upload: ", error);
-          setUploading(false);
-          return;
-        }
-        console.log("no errors yet, waiting for event completion");
-        if (event && event.completed) {
-          console.log("event completed! starting fetch download url");
-          const result = await FirebaseStorage.getDownloadUrl({ path: uploadOptions.path }).catch(hadError);
-          if (result) {
-            // Only delete the file after successful upload
-            if (fileName) {
-              await Filesystem.deleteFile({
-                path: fileName,
-                directory: Directory.Cache,
-              }).catch((err) => console.error("Failed to delete file: ", err));
-            }
-  
-            setUploading(false);
-            console.log("download URL : ", result.downloadUrl)
-            model.data["dataURL"] = result.downloadUrl;
-            done(model);
-          }
-          else { 
-            console.log("no result? ");
-          }
-        } else {
-          console.log("never finished event?");
-        }
-      });
-    } catch (err) {
-      console.error("Error during upload process: ", err);
-      setUploading(false);
-    }
-  };  
 
   const preview = useCallback(async () => {
     if (canvasRef.current == null) {
