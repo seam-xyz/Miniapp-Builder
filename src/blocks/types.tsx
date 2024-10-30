@@ -639,4 +639,15 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
+  "Knife": { 
+    type: "Knife",
+    displayName: "Knife Throw",
+    displayDescription: "Have patience, Sharpen Reflexes, Hit the Target!",
+    icon: "KnifeIcon", // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "manmohansinghraghav", split: 1.0}],
+    fullscreenEdit: false,
+},
 };
