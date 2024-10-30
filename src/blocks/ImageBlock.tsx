@@ -24,7 +24,7 @@ export const ImageFeedComponent = ({ model }: FeedComponentProps) => {
   } else {
     // For multiple images, apply a horizontal scroll with image styling similar to ImageUploadPreview
     return (
-      <div style={{ display: 'flex', overflowX: 'scroll', gap: '10px', alignItems: 'center', backgroundColor: 'white' }}>
+      <div className="hide-scrollbar" style={{ display: 'flex', overflowX: 'scroll', gap: '10px', alignItems: 'center', backgroundColor: 'transparent' }}>
         <ImageWithModal urls={urls} style={{ height: "300px", width: 'auto', maxWidth: '300px' }} />  
       </div>
     );

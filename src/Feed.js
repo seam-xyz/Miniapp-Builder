@@ -47,6 +47,7 @@ function FeedItem({ post }) {
             icon={<MessageSquare size={16} className="text-gray-600" />}
             label={"Comments"}
             onClick={() => {}}
+            darkMode={false}
           />
           <div className="flex-grow"></div>
           <div className="flex gap-2">
@@ -54,6 +55,7 @@ function FeedItem({ post }) {
               icon={<Heart size={16} className="text-gray-600" />}
               label={12}
               onClick={() => {}}
+              darkMode={false}
             />
           </div>
         </div>
