@@ -7,6 +7,7 @@ import 'swiper/css/zoom';
 import { Navigation, Zoom } from 'swiper/modules';
 import { createPortal } from 'react-dom';
 import CloseIcon from '@mui/icons-material/Close';
+import ImageWithFallback from './ImageWithFallback';
 
 // Initialize Swiper modules
 SwiperCore.use([Navigation, Zoom]);
@@ -77,7 +78,15 @@ const ImageWithModal: FC<ImageWithModalProps> = ({ urls, style }) => {
     <>
       <div className="flex cursor-pointer gap-2.5">
         {urls.map((src, index) => (
-          <img key={index} src={downscaledURL(src)} className="object-cover" style={style} alt="Thumbnail" onClick={handleOpen(index)} />
+          <ImageWithFallback
+            key={index}
+            src={downscaledURL(src)}
+            fallbackSrc={src}
+            className="object-cover rounded-[16px]"
+            style={style}
+            alt="Thumbnail"
+            onClick={handleOpen(index)}
+          />
         ))}
       </div>
 

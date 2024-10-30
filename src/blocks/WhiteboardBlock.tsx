@@ -364,7 +364,7 @@ export const WhiteboardFeedComponent = ({ model }: FeedComponentProps) => {
   const { imageData } = model.data;
 
   return (
-    <div className="w-full object-contain border-[4px] border-seam-black border-box">
+    <div className="w-full object-contain border-[4px] bg-[#FEFEFE] rounded-[16px] border-seam-black border-box">
       <img src={imageData} alt='a drawing' className='w-full object-contain'></img>
     </div>
   );

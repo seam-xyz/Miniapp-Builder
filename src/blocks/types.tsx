@@ -43,6 +43,8 @@ import WardrobeIcon from "./blockIcons/WardrobeIcon.png";
 import JournalIcon from "./blockIcons/journal.png";
 import HaikuraIcon from "./blockIcons/HaikuraIcon.png";
 import MagicCardIcon from "./blockIcons/MagicCardIcon.png";
+import ReviewThingsIcon from "./blockIcons/ReviewThingsIcon.png";
+import SeamMemeIcon from "./blockIcons/SeamMemeIcon.png";
 
 export type BlockModel = {
   type: string;
@@ -628,6 +630,19 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "samsam", split: 1}],
     fullscreenEdit: false,
   },
+
+  "ReviewThings": {
+    type: "ReviewThings",
+    displayName: "Review Things",
+    displayDescription: "Review things with other things on a five point scale",
+    icon: ReviewThingsIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "jakeaicher", split: 1}],
+    fullscreenEdit: false,
+  },
+
   "Unknown": {
     type: "Unknown",
     displayName: "Unknown",
@@ -639,4 +654,23 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
+  "MemeGen": { 
+    type: "MemeGen",
+    displayName: "Seam Meme",
+    displayDescription: "Meme creator that allows users to import popular memes and edit them.",
+    icon: SeamMemeIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [
+      {username: "danielgavidia", split: 1.0 / 7},
+      { username: "irtizaaftabmiian", split: 1.0 / 7 },
+      { username: "akshayb03", split: 1.0 / 7 },
+      { username: "embo", split: 1.0 / 7 },
+      { username: "emmabrooke1122", split: 1.0 / 7 },
+      { username: "palupadhyaya", split: 1.0 / 7 },
+      { username: "julyjuicej", split: 1.0 / 7 }
+    ],
+    fullscreenEdit: false,
+},
 };
