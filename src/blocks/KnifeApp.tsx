@@ -153,7 +153,7 @@ const KnifeGameCanvas = ({ width, setImageDataURL, onSave }: KnifeGameCanvasProp
     
     s.setup = () => {
       // Create the canvas
-      let initCanva = s.createCanvas(canvasWidth, 600);
+      let initCanva = s.createCanvas(canvasWidth, 700);
        s.imageMode(s.CENTER);
       // Initialize the target
       target = new Target(s.width / 2, s.height / -10);
