@@ -31,6 +31,7 @@ import CameraIcon from './blockIcons/CameraIcon.png'
 import voiceNoteIcon from './blockIcons/voiceNoteIcon.png'
 import CalligraphyIcon from "./blockIcons/calligraphyIcon.png"
 import localelocatrIcon from "./blockIcons/localelocatrIcon.png";
+import distrivialIcon from "./blockIcons/distrivialIcon.png";
 import LayeredImageIcon from "./blockIcons/LayeredImageIcon.png"
 import Pickrr from "./blockIcons/Pickrr.png"
 import quickpoll from "./blockIcons/quickpoll.png";
@@ -654,6 +655,37 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
+  "Distrivial": { 
+    type: "Distrivial",
+    displayName: "Distrivial",
+    displayDescription: "Its not trivial, its trivia",
+    icon: distrivialIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{ username: "alexjshepler", split: 0.5 }, { username: "basilisk", split: 0.5}],
+    fullscreenEdit: false,
+  },
+  "Color": { 
+    type: "Color",
+    displayName: "Color Catcher",
+    displayDescription: "Swap fast how long can you last?",
+    icon: ColorIcon, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "stressedsadness", split: 1.0}],
+    fullscreenEdit: false,
+  },
+  "Riddlequest": { 
+    type: "Riddlequest",
+    displayName: "RiddleQuest",
+    displayDescription: "Playing riddle of the day game and share your answer with friends",
+    icon: riddleQuestIcon,
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "lanid", split: 1.0}],
   "MemeGen": { 
     type: "MemeGen",
     displayName: "Seam Meme",

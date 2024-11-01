@@ -1,3 +1,4 @@
+import { DistrivialFeedComponent, DistrivialComposerComponent } from './DistrivialApp'
 import { MemeGenFeedComponent, MemeGenComposerComponent } from './MemeGenApp'
 import { LayeredImageFeedComponent, LayeredImageComposerComponent } from './LayeredImageBlock'
 import { ColorFeedComponent, ColorComposerComponent } from './ColorApp'
@@ -54,6 +55,7 @@ import { ReviewThingsAppComposerComponent, ReviewThingsAppFeedComponent } from '
 export default class BlockFactory {
   static getFeedComponent(model: BlockModel, update: ((data: { [key: string]: string; }) => void)) {
     switch (model.type) {
+      case "Distrivial": return <DistrivialFeedComponent model={model} />;
       case "iframe": return <IFrameFeedComponent model={model} update={update}/>;
       case "link": return <LinkFeedComponent model={model}update={update}/>;
       case "image": return <ImageFeedComponent model={model} update={update}/>;
@@ -103,6 +105,7 @@ export default class BlockFactory {
       case "Color": return <ColorFeedComponent model={model} update={update} />;
       case "MemeGen": return <MemeGenFeedComponent model={model} update={update} />;
       case "ReviewThings": return <ReviewThingsAppFeedComponent model={model} update={update} />;
+
       // new feed components go here
       default: return UnknownFeedComponent({ model, update });
     }
@@ -146,6 +149,7 @@ export default class BlockFactory {
       case "Tatergangs": return TatergangsComposerComponent(props);
       case "JustAThought": return JustAThoughtComposerComponent(props);
       case "Voice": return VoiceComposerComponent(props);
+      case "Distrivial": return DistrivialComposerComponent(props);
       case "LayeredImage": return LayeredImageComposerComponent(props);   
       case "QuickPoll": return QuickPollComposerComponent(props);
       case "Pickrr": return PickrrComposerComponent(props);
