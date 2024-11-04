@@ -656,7 +656,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     fullscreenEdit: false,
   },
   "KnifeThrow": { 
-    type: "Knife",
+    type: "KnifeThrow",
     displayName: "Knife Throw",
     displayDescription: "Have patience, Sharpen Reflexes, Hit the Target!",
     icon: KnifeThrowIcon, // TODO: insert your app icon here
