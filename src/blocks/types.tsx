@@ -45,6 +45,7 @@ import HaikuraIcon from "./blockIcons/HaikuraIcon.png";
 import MagicCardIcon from "./blockIcons/MagicCardIcon.png";
 import ReviewThingsIcon from "./blockIcons/ReviewThingsIcon.png";
 import SeamMemeIcon from "./blockIcons/SeamMemeIcon.png";
+import KnifeThrowIcon from "./blockIcons/KnifeThrowIcon.jpeg";
 
 export type BlockModel = {
   type: string;
@@ -654,6 +655,17 @@ export const BlockTypes: { [key: string]: BlockType } = {
     createdBy: [{username: "seam", split: 1}],
     fullscreenEdit: false,
   },
+  "KnifeThrow": { 
+    type: "KnifeThrow",
+    displayName: "Knife Throw",
+    displayDescription: "Have patience, Sharpen Reflexes, Hit the Target!",
+    icon: KnifeThrowIcon, // TODO: insert your app icon here
+    deprecated: false,
+    doesBlockPost: true,
+    doesBlockEdit: true,
+    createdBy: [{username: "manmohansinghraghav", split: 1.0}],
+    fullscreenEdit: false,
+  },
   "MemeGen": { 
     type: "MemeGen",
     displayName: "Seam Meme",
@@ -672,5 +684,5 @@ export const BlockTypes: { [key: string]: BlockType } = {
       { username: "julyjuicej", split: 1.0 / 7 }
     ],
     fullscreenEdit: false,
-},
+  }
 };
