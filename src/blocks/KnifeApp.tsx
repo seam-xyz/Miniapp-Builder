@@ -1,16 +1,17 @@
 import { ComposerComponentProps, FeedComponentProps } from './types';
 import './BlockStyles.css'
 import { useEffect, useRef, useState } from 'react';
-import pizza from './assets/KnifeThrow/Pizza.png';
-import ball from './assets/KnifeThrow/ball.png';
-import donut from './assets/KnifeThrow/donut.png';
-import kiwi from './assets/KnifeThrow/kiwi.png';
-import knife from './assets/KnifeThrow/k3.png';
-import wood from './assets/KnifeThrow/wood.png';
-import playButton from './assets/KnifeThrow/play.png';
-import restartButton from './assets/KnifeThrow/restart.png';
-import shareButton from './assets/KnifeThrow/share.png';
 import p5 from 'p5';
+
+const PIZZA_URL = 'https://firebasestorage.googleapis.com/v0/b/seam-social.appspot.com/o/miniappStatic%2FknifeThrow%2FPizza.png?alt=media';
+const BALL_URL = 'https://firebasestorage.googleapis.com/v0/b/seam-social.appspot.com/o/miniappStatic%2FknifeThrow%2Fball.png?alt=media';
+const DONUT_URL = 'https://firebasestorage.googleapis.com/v0/b/seam-social.appspot.com/o/miniappStatic%2FknifeThrow%2Fdonut.png?alt=media';
+const KIWI_URL = 'https://firebasestorage.googleapis.com/v0/b/seam-social.appspot.com/o/miniappStatic%2FknifeThrow%2Fkiwi.png?alt=media';
+const KNIFE_URL = 'https://firebasestorage.googleapis.com/v0/b/seam-social.appspot.com/o/miniappStatic%2FknifeThrow%2Fk3.png?alt=media';
+const WOOD_URL = 'https://firebasestorage.googleapis.com/v0/b/seam-social.appspot.com/o/miniappStatic%2FknifeThrow%2Fwood.jpg?alt=media';
+const PLAY_BUTTON_URL = 'https://firebasestorage.googleapis.com/v0/b/seam-social.appspot.com/o/miniappStatic%2FknifeThrow%2Fplay.png?alt=media';
+const RESTART_BUTTON_URL = 'https://firebasestorage.googleapis.com/v0/b/seam-social.appspot.com/o/miniappStatic%2FknifeThrow%2Frestart.png?alt=media';
+const SHARE_BUTTON_URL = 'https://firebasestorage.googleapis.com/v0/b/seam-social.appspot.com/o/miniappStatic%2FknifeThrow%2Fshare.png?alt=media';
 
 // https://www.vecteezy.com : Images
 
@@ -142,13 +143,13 @@ const KnifeGameCanvas = ({ width, setImageDataURL, onSave }: KnifeGameCanvasProp
     }
 
     s.preload = () => {
-      let targetImgs = [pizza, ball, donut, kiwi];
+      let targetImgs = [PIZZA_URL, BALL_URL, DONUT_URL, KIWI_URL];
       targetImgs.forEach((img, i) => imgTarget[i] = s.loadImage(img));
-      imgKnife = s.loadImage(knife);
-      imgWood = s.loadImage(wood);
-      imgPlay = s.loadImage(playButton);
-      imgRestart = s.loadImage(restartButton);
-      imgShare = s.loadImage(shareButton);
+      imgKnife = s.loadImage(KNIFE_URL);
+      imgWood = s.loadImage(WOOD_URL);
+      imgPlay = s.loadImage(PLAY_BUTTON_URL);
+      imgRestart = s.loadImage(RESTART_BUTTON_URL);
+      imgShare = s.loadImage(SHARE_BUTTON_URL);
     }
     
     s.setup = () => {
