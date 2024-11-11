@@ -2,6 +2,7 @@ import { ComposerComponentProps, FeedComponentProps } from './types';
 import './BlockStyles.css'
 import { useEffect, useRef, useState } from 'react';
 import p5 from 'p5';
+import { DataUploader } from './utils/DataUploader';
 
 const PIZZA_URL = 'https://firebasestorage.googleapis.com/v0/b/seam-social.appspot.com/o/miniappStatic%2FknifeThrow%2FPizza.png?alt=media';
 const BALL_URL = 'https://firebasestorage.googleapis.com/v0/b/seam-social.appspot.com/o/miniappStatic%2FknifeThrow%2Fball.png?alt=media';
@@ -18,14 +19,13 @@ const SHARE_BUTTON_URL = 'https://firebasestorage.googleapis.com/v0/b/seam-socia
 interface KnifeGameCanvasProps {
   width: number;
   setImageDataURL: (url: string) => void;
-  onSave: () => void;
 }
 
-const KnifeGameCanvas = ({ width, setImageDataURL, onSave }: KnifeGameCanvasProps): JSX.Element => {
+const KnifeGameCanvas = ({ width, setImageDataURL }: KnifeGameCanvasProps): JSX.Element => {
   const canvasDivRef = useRef<HTMLDivElement>(null)
   const [_, setP5Instance] = useState<p5 | null>(null)
   /**A reference object accessible inside the p5 sketch */
-  const p5PassInRef = useRef<KnifeGameCanvasProps>({ width, setImageDataURL, onSave })
+  const p5PassInRef = useRef<KnifeGameCanvasProps>({ width, setImageDataURL })
   const canvasWidth = width
 
   /** /start p5 Sketch Code! */
@@ -284,13 +284,12 @@ const KnifeGameCanvas = ({ width, setImageDataURL, onSave }: KnifeGameCanvasProp
       const canvas: HTMLCanvasElement = s.drawingContext.canvas;
       const imageData = canvas.toDataURL();
       state.current.setImageDataURL(imageData);
-      state.current.onSave();
     }
   }
   /** /end p5 Sketch Code! */
 
   /**Passes information in to the p5 context through ref */
-  useEffect(() => { p5PassInRef.current = { width, setImageDataURL, onSave } }, [width, setImageDataURL, onSave])
+  useEffect(() => { p5PassInRef.current = { width, setImageDataURL } }, [width, setImageDataURL])
 
   useEffect(() => {
     const myP5: p5 = new p5(sketch, canvasDivRef.current!);
@@ -311,8 +310,8 @@ const KnifeGameCanvas = ({ width, setImageDataURL, onSave }: KnifeGameCanvasProp
 export const KnifeFeedComponent = ({ model }: FeedComponentProps) => {
   return (
     <>
-      {model.data["imageData"] ?
-        <img src={model.data["imageData"]} alt="Score" className='w-full object-contain'></img> :
+      {model.data["dataURL"] ?
+        <img src={model.data["dataURL"]} alt="Score" className='w-full object-contain'></img> :
         <div className="h-14 p-4 text-red-600 bg-red-100">Play Atleast 1 game to view score.</div>}
     </>
   );
@@ -320,13 +319,15 @@ export const KnifeFeedComponent = ({ model }: FeedComponentProps) => {
 
 export const KnifeComposerComponent = ({ model, done }: ComposerComponentProps) => {
   //s.to be called inside p5 sketch to save current canvas contents using HTMLCanvas.toDataU = () => )
-  const setImageDataURL = (imageDataURL: string) => model.data["imageData"] = imageDataURL;
+  const setImageDataURL = async (imageDataURL: string) => {
+    await DataUploader(imageDataURL, model, done);
+  }
+
   return (
     <div className='flex flex-col items-center w-full select-none'>
       <KnifeGameCanvas
         width={500}
         setImageDataURL={setImageDataURL}
-        onSave={() => done(model)}
       />
     </div>
   )

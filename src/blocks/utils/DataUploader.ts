@@ -2,10 +2,10 @@ import { nanoid } from "nanoid";
 import { Capacitor } from "@capacitor/core";
 import { FirebaseStorage } from "@capacitor-firebase/storage";
 import { Filesystem, Directory } from '@capacitor/filesystem';
-import { BlockModel } from "../../../types";
+import { BlockModel } from "../types";
 
 
-export async function dataLoader(dataURL: string, model: BlockModel, done: (data: BlockModel) => void): Promise<void> {
+export async function DataUploader(dataURL: string, model: BlockModel, done: (data: BlockModel) => void): Promise<void> {
   // Get uri
   const blob = await (await fetch(dataURL)).blob();
   const name = nanoid();

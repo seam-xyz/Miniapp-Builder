@@ -12,7 +12,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import AbcIcon from '@mui/icons-material/Abc';
 
 // Utils
-import { dataLoader } from "./dataLoader";
+import { DataUploader } from "../../DataUploader";
 
 // Types
 import { DraggableData } from "react-draggable";
@@ -87,7 +87,7 @@ const Editor = ({ model, done, meme, handleSetMeme }: EditorProps) => {
 				allowTaint: false,
 			});
 			const dataURL = canvas.toDataURL("image/png");
-      await dataLoader(dataURL, model, done)
+      await DataUploader(dataURL, model, done)
 		}
 	};
 
