@@ -676,7 +676,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
     doesBlockEdit: true,
     createdBy: [
       {username: "danielgavidia", split: 1.0 / 7},
-      { username: "irtizaaftabmiian", split: 1.0 / 7 },
+      { username: "irtizaaftabmian", split: 1.0 / 7 },
       { username: "akshayb03", split: 1.0 / 7 },
       { username: "embo", split: 1.0 / 7 },
       { username: "emmabrooke1122", split: 1.0 / 7 },
