@@ -62,6 +62,12 @@ const TextEditor: React.FC<TextEditorProps> = ({ data, done }) => {
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [selectedColor, setSelectedColor] = useState<string>('black');
   const editorRef = useRef<any>(null);
+  
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.focus();
+    }
+  }, []);
 
   const focusEditor = () => {
     if (editorRef.current) {
