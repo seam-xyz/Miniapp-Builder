@@ -6,6 +6,8 @@ export default function Iframely(props) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [data, setData] = useState({});
 
+  const truncate = (text, maxLength) => text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+
   useEffect(() => {
     if (props && props.url) {
       fetch(
@@ -20,7 +22,7 @@ export default function Iframely(props) {
             const image = res.links?.thumbnail?.[0]?.href ?? '';
             setData({
               title: res.meta?.title ?? 'No title available',
-              description: res.meta?.description ?? 'No description available',
+              description: truncate(res.meta?.description ?? 'No description available', 255),
               image: image,
               url: res.url ?? 'No URL available',
             });
