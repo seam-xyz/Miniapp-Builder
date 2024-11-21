@@ -45,7 +45,7 @@ const BookDetail: React.FC<BookDetailProps> = ({ title, author, coverImage }) =>
       <div className="w-48 h-auto shadow-lg">
         <img src={coverImage} alt={title} className="w-full h-full object-cover rounded" />
       </div>
-      <div className="mt-12 mb-16 w-16 h-2 bg-[#D5D1CA] rounded"></div>
+      <div className="my-4 w-16 h-2 bg-[#D5D1CA] rounded"></div>
     </div>
   );
 };
