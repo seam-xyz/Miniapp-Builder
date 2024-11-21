@@ -1,3 +1,4 @@
+import { KnifeFeedComponent, KnifeComposerComponent } from './KnifeApp'
 import { MemeGenFeedComponent, MemeGenComposerComponent } from './MemeGenApp'
 import { LayeredImageFeedComponent, LayeredImageComposerComponent } from './LayeredImageBlock'
 import { ColorFeedComponent, ColorComposerComponent } from './ColorApp'
@@ -101,6 +102,7 @@ export default class BlockFactory {
       case "Pickrr": return <PickrrFeedComponent model={model} update={update} />;
       case "Riddlequest": return <RiddlequestFeedComponent model={model} update={update} />;
       case "Color": return <ColorFeedComponent model={model} update={update} />;
+      case "KnifeThrow": return <KnifeFeedComponent model={model} update={update} />;
       case "MemeGen": return <MemeGenFeedComponent model={model} update={update} />;
       case "ReviewThings": return <ReviewThingsAppFeedComponent model={model} update={update} />;
       // new feed components go here
@@ -158,6 +160,7 @@ export default class BlockFactory {
       case "MagicCard": return MagicCardComposerComponent(props);
       case "Horoscope": return HoroscopeComposerComponent(props);
       case "Dizzy": return DizzyComposerComponent(props);
+      case "KnifeThrow": return KnifeComposerComponent(props);
       case "MemeGen": return MemeGenComposerComponent(props);
       case "ReviewThings": return ReviewThingsAppComposerComponent(props);
       // new composer components go here
@@ -177,6 +180,6 @@ export default class BlockFactory {
   }
 
   static doesBlockEditFullscreen(type: string): boolean {
-    return BlockTypes[type].fullscreenEdit
+    return BlockTypes[type]?.fullscreenEdit ?? false
   }
 }
