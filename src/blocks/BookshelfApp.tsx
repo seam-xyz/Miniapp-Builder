@@ -45,7 +45,7 @@ const BookDetail: React.FC<BookDetailProps> = ({ title, author, coverImage }) =>
       <div className="w-48 h-auto shadow-lg">
         <img src={coverImage} alt={title} className="w-full h-full object-cover rounded" />
       </div>
-      <div className="mt-12 mb-16 w-16 h-2 bg-[#D5D1CA] rounded"></div>
+      <div className="my-4 w-16 h-2 bg-[#D5D1CA] rounded"></div>
     </div>
   );
 };
@@ -55,6 +55,7 @@ const Bookshelf: React.FC<BookshelfProps> = ({ done, model }) => {
   const [books, setBooks] = useState<Book[]>([]);
   const [fontLoaded, setFontLoaded] = useState<boolean>(false);
   const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(null);
+  const isMobile = window.innerWidth < 768;
 
   useEffect(() => {
     loadFont("Cormorant Garamond").then(() => {
@@ -121,31 +122,39 @@ const Bookshelf: React.FC<BookshelfProps> = ({ done, model }) => {
           />
         </form>
       </div>
-      <div className="p-4 bg-[#F1ECE6]">
+      <div className={`flex flex-col p-4 bg-[#F1ECE6] ${isMobile ? 'h-full pb-[300px]' : 'h-auto'}`}>
         {books.length > 0 && (
-          <ul>
-            {books.map((book) => (
-              <li key={book.id} className="mb-4 flex items-center" onClick={() => {
-                model.data['title'] = book.volumeInfo.title;
-                model.data['author'] = book.volumeInfo.authors?.join(', ') ?? "Unknown Author";
-                model.data['coverImage'] = book.volumeInfo.imageLinks?.thumbnail ?? "unknown image";
-                done(model);
-              }}>
-                {book.volumeInfo.imageLinks?.thumbnail && (
-                  <img
-                    src={book.volumeInfo.imageLinks.thumbnail}
-                    alt={book.volumeInfo.title}
-                    className="w-12 h-16 mr-4 rounded shadow"
-                  />
-                )}
-                <div>
-                  <h3>{book.volumeInfo.title}</h3>
-                  <p style={{color: "rgba(0, 0, 0, 0.60)"}}>{book.volumeInfo.authors?.join(', ')}</p>
-                </div>
-                <ChevronRight className='ml-auto' />
-              </li>
-            ))}
-          </ul>
+          <div className={`flex-1 ${isMobile ? 'overflow-y-scroll' : 'overflow-y-auto'}`}>
+            <ul className="">
+              {books.map((book) => (
+                <li
+                  key={book.id}
+                  className="mb-4 flex items-center"
+                  onClick={() => {
+                    model.data['title'] = book.volumeInfo.title;
+                    model.data['author'] = book.volumeInfo.authors?.join(', ') ?? "Unknown Author";
+                    model.data['coverImage'] = book.volumeInfo.imageLinks?.thumbnail ?? "unknown image";
+                    done(model);
+                  }}
+                >
+                  {book.volumeInfo.imageLinks?.thumbnail && (
+                    <img
+                      src={book.volumeInfo.imageLinks.thumbnail}
+                      alt={book.volumeInfo.title}
+                      className="w-12 h-16 mr-4 rounded shadow"
+                    />
+                  )}
+                  <div>
+                    <h3>{book.volumeInfo.title}</h3>
+                    <p style={{ color: "rgba(0, 0, 0, 0.60)" }}>
+                      {book.volumeInfo.authors?.join(', ')}
+                    </p>
+                  </div>
+                  <ChevronRight className="ml-auto" />
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </div>
     </div>
