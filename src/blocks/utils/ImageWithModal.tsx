@@ -76,13 +76,13 @@ const ImageWithModal: FC<ImageWithModalProps> = ({ urls, style }) => {
 
   return (
     <>
-      <div className="flex cursor-pointer gap-2.5">
+      <div className="flex cursor-pointer h-full gap-x-2.5">
         {urls.map((src, index) => (
           <ImageWithFallback
             key={index}
             src={downscaledURL(src)}
             fallbackSrc={src}
-            className="object-cover rounded-[16px]"
+            className="object-cover w-auto h-full rounded-[16px]"
             style={style}
             alt="Thumbnail"
             onClick={handleOpen(index)}
