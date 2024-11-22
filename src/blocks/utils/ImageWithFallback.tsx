@@ -35,7 +35,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({ src, fallbackSrc,
     );
   }
 
-  return <img src={imgSrc} {...props} />;
+  return <img className="object-cover h-full w-full" src={imgSrc} {...props} />;
 };
 
 export default ImageWithFallback;
