@@ -13,8 +13,8 @@ export const MemeGenFeedComponent = ({ model, update }: FeedComponentProps) => {
 	const editedMeme = model.data["dataURL"];
 
   return (
-    <div>
-      <img src={editedMeme} />
+    <div className="w-full h-full flex items-center justify-center">
+      <img className="w-full h-full object-cover" src={editedMeme} />
     </div>
   );
 };
