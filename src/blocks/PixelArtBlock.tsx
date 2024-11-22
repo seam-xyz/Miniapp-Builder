@@ -363,7 +363,7 @@ const PixelCanvasWithSize = (props: PixelCanvasProps) => {
       width: '100%',
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'between',
+      alignItems: 'center',
 
     }}>
       <PixelCanvas {...props} />
