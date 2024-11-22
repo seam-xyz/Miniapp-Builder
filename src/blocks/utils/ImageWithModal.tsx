@@ -82,7 +82,7 @@ const ImageWithModal: FC<ImageWithModalProps> = ({ urls, style }) => {
             key={index}
             src={downscaledURL(src)}
             fallbackSrc={src}
-            className="object-cover w-auto h-full rounded-[16px]"
+            className="object-cover w-full h-full rounded-[16px]"
             style={style}
             alt="Thumbnail"
             onClick={handleOpen(index)}
