@@ -17,9 +17,7 @@ export const ImageFeedComponent = ({ model }: FeedComponentProps) => {
   if (urls.length === 1) {
     // For only one image, set it to 100% width with max height of 300px
     return (
-      <div style={{ display: 'block', width: '100%' }}>
-        <ImageWithModal urls={urls} style={{ width: '100%', height: 'auto' }} />
-      </div>
+      <ImageWithModal urls={urls} />
     );
   } else {
     // For multiple images, apply a horizontal scroll with image styling similar to ImageUploadPreview
