@@ -46,11 +46,6 @@ function FlashingText({ content, contentColor, backgroundColor, isAscii, lineHei
   // styles for the box background
   let backgroundStyles = {
     backgroundColor: bgColor,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    width: "100%",
-    height: "100%"
   } as React.CSSProperties;
 
   // styles for the text. specific styles for regular text and ascii art are
@@ -58,22 +53,27 @@ function FlashingText({ content, contentColor, backgroundColor, isAscii, lineHei
   let textStyles = {
     color: textColor,
     backgroundColor: bgColor,
-    margin: "auto",
-    lineHeight: lineHeight
+    lineHeight: lineHeight,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   } as React.CSSProperties;
+
+  let asciiStlyes ={ 
+
+  }
   
   return (
     isAscii === "true" ? (
-        <div style={backgroundStyles}>
-          <pre style={{...textStyles, lineHeight: lineHeightFloat}}>
+        <div className="flex flex-col justify-center w-full h-full p-4" style={backgroundStyles}>
+          <pre className="" style={{...textStyles, lineHeight: lineHeightFloat}}>
             {content}
           </pre>
         </div>
       ) : (
-          <div style={backgroundStyles}>
-          <h1 style={{...textStyles, fontSize: 64, textAlign: "center", lineHeight: 1.4}}>
+        <div className="flex flex-col justify-center w-full h-full p-4" style={backgroundStyles}>
+          <h3 className="flex w-auto overflow-hidden text-center" style={{...textStyles, display: "-webkit-box", WebkitLineClamp: 5, WebkitBoxOrient: "vertical"}}>
             {content}
-          </h1>
+          </h3>
         </div>
       )
   );
@@ -152,19 +152,18 @@ export const FlashingTextComposerComponent = ({ model, done }: ComposerComponent
     let text = data.get('text') as string;
     let transitionDuration = data.get('transitionDuration') as string;
     let isAscii = data.get('ascii');
-
+  
     if (isAscii) {
       model.data['isAscii'] = "true";
       model.data['lineHeight'] = data.get('lineHeight') as string;
-    }
-    else {
+    } else {
       model.data['isAscii'] = "false";
     }
-
+  
     model.data['text'] = text;
     model.data['transitionDuration'] = transitionDuration;
     done(model);
-  };
+  };  
 
   return (
     <Box
