@@ -304,7 +304,7 @@ export const BlockTypes: { [key: string]: BlockType } = {
   video: {
     type: "video",
     displayName: "Video",
-    displayDescription: "Add a video from Youtube, Loom, or Vimeo using a URL.",
+    displayDescription: "Upload a video from your device.",
     icon: videoIcon,
     deprecated: false,
     doesBlockPost: true,
