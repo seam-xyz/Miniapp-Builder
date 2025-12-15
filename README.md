@@ -1,4 +1,10 @@
-# Seam Miniapp Maker
+# Seam has shut down
+
+After 2 years of creating miniapps, sharing art and music, and remixing the internet, Seam shut down on October 28th 2025.
+
+[Read the blog post here.](https://getseam.xyz/blog-pages/blog/goodbye-seam)
+
+## Seam Miniapp Maker
 
 <div align="center">
 
